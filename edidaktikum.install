@@ -13,12 +13,20 @@ function edidaktikum_install() {
 }
 
 /**
+ * Implements hook_uninstall().
+ */
+function edidaktikum_uninstall() {
+  field_delete_field('ed_field_excerpt');
+  field_delete_field('ed_field_content');
+}
+
+/**
  * Creates eDidaktikum fields.
  * @return void
  */
 function edidaktikum_create_fields() {
   edidaktikum_create_field_excerpt();
-  edidaktikum_create_field_description();
+  edidaktikum_create_field_content();
 }
 
 /**
@@ -41,12 +49,12 @@ function edidaktikum_create_field_excerpt() {
 }
 
 /**
- * Creates description field if not exists.
+ * Creates content field if not exists.
  * 
  * @return void
  */
-function edidaktikum_create_field_description() {
-  $field_name = 'ed_field_description';
+function edidaktikum_create_field_content() {
+  $field_name = 'ed_field_content';
   if (!field_info_field($field_name)) {
     $field = array(
       'field_name' => $field_name,
