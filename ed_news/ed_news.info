@@ -1,0 +1,6 @@
+name = News
+description = eDidaktikum news.
+package = eDidaktikum
+core = 7.x
+
+dependencies[] = edidaktikum

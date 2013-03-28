@@ -1,0 +1,110 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the ed_news module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function ed_news_install() {
+  ed_news_create_node();
+  ed_news_create_fields();
+  ed_news_add_fields();
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function ed_news_uninstall() {
+  //@todo Delete something unneeded, probably ed_news node type
+}
+
+/**
+ * Creates the ed_news node type in not exists.
+ */
+function ed_news_create_node() {
+  if (!in_array('ed_news', node_type_get_names())) {
+    $type = array(
+      'type' => 'ed_news',
+      'name' => t('News'),
+      'base' => 'node_content',
+      'custom' => 1,
+      'modified' => 1,
+      'locked' => 0,
+      'title_label' => 'Title',//@todo This might become translatable
+    );
+
+    $type = node_type_set_defaults($type);
+    node_type_save($type);
+  }
+}
+
+/**
+ * Creates news specific fields.
+ */
+function ed_news_create_fields() {
+  //@todo Need to create some fields
+}
+
+/**
+ * Adds fields to ed_news node.
+ */
+function ed_news_add_fields() {
+  ed_news_node_add_field_excerpt();
+  ed_news_node_add_field_content();
+}
+
+/**
+ * Creates excerpt field instance for ed_news if ed_field_excerpt exists and
+ * such instance has not been added to ed_news yet.
+ */
+function ed_news_node_add_field_excerpt() {
+  $field_name = 'ed_field_excerpt';
+  $field = field_info_field($field_name);
+  if (!empty($field) && !field_info_instance('node', $field_name, 'ed_news')) {
+    $instance = array(
+      'field_name' => $field_name,
+      'entity_type' => 'node',
+      'bundle' => 'ed_news',
+      'label' => t('Excerpt'),
+      'description' => '',
+      'required' => TRUE,
+    );
+    field_create_instance($instance);
+  } elseif (empty($field)) {
+    drupal_set_message(t('Field @fieldname does not exist. Field instance for node type @type could not be created.', array('@fieldname' => $field_name, '@type' => 'ed_news')), 'error');
+  }
+}
+
+/**
+ * Created content field instance for ed_news if ed_field_content exists and
+ * such instance has not been added to ed_news yet.
+ */
+function ed_news_node_add_field_content() {
+  $field_name = 'ed_field_content';
+  $field = field_info_field($field_name);
+  if (!empty($field) && !field_info_instance('node', $field_name, 'ed_news')) {
+    $instance = array(
+      'field_name' => $field_name,
+      'entity_type' => 'node',
+      'bundle' => 'ed_news',
+      'label' => t('Content'),
+      'description' => '',
+      'settings' => array(
+        'text_processing' => TRUE,
+      ),
+      'widget' => array(
+        'settings' => array(
+          'rows' => 20,
+        ),
+      ),
+      'required' => TRUE,
+    );
+    field_create_instance($instance);
+  } elseif (empty($field)) {
+    drupal_set_message(t('Field @fieldname does not exist. Field instance for node type @type could not be created.', array('@fieldname' => $field_name, '@type' => 'ed_news')), 'error');
+  }
+}
+
