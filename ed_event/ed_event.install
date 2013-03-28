@@ -1,0 +1,192 @@
+<?php
+
+/**
+ * @file
+ *
+ */
+
+/**
+ * Implements hook_install().
+ */
+function ed_event_install() {
+  ed_event_create_node();
+  ed_event_create_fields();
+  ed_event_node_add_field_excerpt();
+  ed_event_node_add_field_content();
+  ed_event_node_add_field_url();
+  ed_event_node_add_field_location();
+  ed_event_node_add_field_start();
+  ed_event_node_add_field_end();
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function ed_event_uninstall() {
+  field_delete_field('ed_event_field_url');
+  field_delete_field('ed_event_field_location');
+  field_delete_field('ed_event_field_start');
+  field_delete_field('ed_event_field_end');
+}
+
+function ed_event_create_fields() {
+  ed_event_create_field('ed_event_field_url', 'url');
+  ed_event_create_field('ed_event_field_location', 'text');
+  ed_event_create_field('ed_event_field_start', 'datestamp');
+  ed_event_create_field('ed_event_field_end', 'datestamp');
+}
+
+function ed_event_create_node() {
+  if (!in_array('ed_event', node_type_get_names())) {
+    $type = array(
+      'type' => 'ed_event',
+      'name' => t('Event'),
+      'base' => 'node_content',
+      'custom' => 1,
+      'modified' => 1,
+      'locked' => 0,
+      'title_label' => 'Title',  
+    );
+
+    $type = node_type_set_defaults($type);
+    node_type_save($type);
+  }
+}
+
+function ed_event_node_add_field_excerpt() {
+  $field_name = 'ed_field_excerpt';
+  $field = field_info_field($field_name);
+  if (!empty($field) && !field_info_instance('node', $field_name, 'ed_event')) {
+    $instance = array(
+      'field_name' => $field_name,
+      'entity_type' => 'node',
+      'bundle' => 'ed_event',
+      'label' => t('Excerpt'),
+      'description' => '',
+      'required' => FALSE,
+    );
+    field_create_instance($instance);
+  }
+}
+
+function ed_event_node_add_field_content() {
+  $field_name = 'ed_field_content';
+  $field = field_info_field($field_name);
+  if (!empty($field) && !field_info_instance('node', $field_name, 'ed_event')) {
+    $instance = array(
+      'field_name' => $field_name,
+      'entity_type' => 'node',
+      'bundle' => 'ed_event',
+      'label' => t('Content'),
+      'description' => '',
+      'settings' => array(
+        'text_processing' => TRUE,
+      ),
+      'widget' => array(
+        'settings' => array(
+          'rows' => 20,
+        ),
+      ),
+      'required' => FALSE,
+    );
+    field_create_instance($instance);
+  }
+}
+
+function ed_event_create_field($field_name, $field_type) {
+  if (!field_info_field($field_name)) {
+    $field = array(
+      'field_name' => $field_name,
+      'type' => $field_type,
+      'entity_types' => array('node'),
+      'cardinality' => 1,
+      'locked' => FALSE,
+    );
+    $field = field_create_field($field);
+  }
+}
+
+function ed_event_node_add_field_url() {
+  $field_name = 'ed_event_field_url';
+  $field = field_info_field($field_name);
+  if (!empty($field) && !field_info_instance('node', $field_name, 'ed_event')) {
+    $instance = array(
+      'field_name' => $field_name,
+      'entity_type' => 'node',
+      'bundle' => 'ed_event',
+      'label' => t('URL'),
+      'description' => '',
+      'settings' => array(
+        'title_field' => TRUE,
+        'title_fetch' => TRUE,
+      ),
+      'required' => FALSE,
+    );
+    field_create_instance($instance);
+  }
+}
+
+function ed_event_node_add_field_location() {
+  $field_name = 'ed_event_field_location';
+  $field = field_info_field($field_name);
+  if (!empty($field) && !field_info_instance('node', $field_name, 'ed_event')) {
+    $instance = array(
+      'field_name' => $field_name,
+      'entity_type' => 'node',
+      'bundle' => 'ed_event',
+      'label' => t('Location'),
+      'description' => '',
+      'required' => FALSE,
+    );
+    field_create_instance($instance);
+  }
+}
+
+function ed_event_node_add_field_start() {
+  $field_name = 'ed_event_field_start';
+  $field = field_info_field($field_name);
+  if (!empty($field) && !field_info_instance('node', $field_name, 'ed_event')) {
+    $instance = array(
+      'field_name' => $field_name,
+      'entity_type' => 'node',
+      'bundle' => 'ed_event',
+      'label' => t('Start'),
+      'description' => '',
+      'required' => FALSE,
+      'widget' => array(
+        'type' => 'date_popup',
+        'settings' => array(
+          'input_format' => 'd.m.Y - H:i:s',
+          'increment' => '1',
+          'default_value' => 'now',  
+        ), 
+      ),
+    );
+    field_create_instance($instance);
+  }
+}
+
+function ed_event_node_add_field_end() {
+  $field_name = 'ed_event_field_end';
+  $field = field_info_field($field_name);
+  if (!empty($field) && !field_info_instance('node', $field_name, 'ed_event')) {
+    $instance = array(
+      'field_name' => $field_name,
+      'entity_type' => 'node',
+      'bundle' => 'ed_event',
+      'label' => t('End'),
+      'description' => '',
+      'required' => FALSE,
+      'widget' => array(
+        'type' => 'date_popup',
+        'settings' => array(
+          'input_format' => 'd.m.Y - H:i:s',
+          'increment' => '1',
+          'default_value' => 'now',  
+        ), 
+      ),
+    );
+    field_create_instance($instance);
+  }
+}
+
