@@ -1,0 +1,60 @@
+<?php
+
+/**
+ * @file
+ * Install function for eDidaktikum.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function edidaktikum_install() {
+  edidaktikum_create_fields();
+}
+
+/**
+ * Creates eDidaktikum fields.
+ * @return void
+ */
+function edidaktikum_create_fields() {
+  edidaktikum_create_field_excerpt();
+  edidaktikum_create_field_description();
+}
+
+/**
+ * Creates excerpt field if not exists.
+ *
+ * @return void
+ */
+function edidaktikum_create_field_excerpt() {
+  $field_name = 'ed_field_excerpt';
+  if (!field_info_field($field_name)) {
+    $field = array(
+      'field_name' => $field_name,
+      'type' => 'text_long',
+      'entity_types' => array('node'),
+      'cardinality' => 1,
+      'locked' => FALSE,
+    );
+    $field = field_create_field($field);
+  }
+}
+
+/**
+ * Creates description field if not exists.
+ * 
+ * @return void
+ */
+function edidaktikum_create_field_description() {
+  $field_name = 'ed_field_description';
+  if (!field_info_field($field_name)) {
+    $field = array(
+      'field_name' => $field_name,
+      'type' => 'text_long',
+      'entity_types' => array('node'),
+      'cardinality' => 1,
+      'locked' => FALSE,
+    );
+    $field = field_create_field($field);
+  }
+}
