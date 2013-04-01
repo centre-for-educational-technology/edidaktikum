@@ -30,10 +30,13 @@ function ed_news_create_node() {
       'type' => 'ed_news',
       'name' => t('News'),
       'base' => 'node_content',
-      'custom' => 1,
-      'modified' => 1,
-      'locked' => 0,
-      'title_label' => 'Title',//@todo This might become translatable
+      'custom' => FALSE,
+      'modified' => FALSE,
+      'locked' => FALSE,
+      'has_title' => TRUE,
+      'title_label' => t('Title'),
+      'module' => 'ed_news',
+      'orig_type' => 'ed_news',
     );
 
     $type = node_type_set_defaults($type);
