@@ -18,7 +18,28 @@ function ed_news_install() {
  * Implements hook_uninstall().
  */
 function ed_news_uninstall() {
-  //@todo Delete something unneeded, probably ed_news node type
+  //@todo Need to try and install fields from edidaktikum
+  // as they disappear when last node type using them is
+  // removed
+
+  // Remove any ed_news nodes from database
+  $nids = array();
+  $results = db_select('node', 'n')
+    ->fields('n', array('nid'))
+    ->condition('type', 'ed_news', '=')
+    ->execute();
+  foreach ($results as $result) {
+    $nids[] = $result->nid;
+  }
+
+  if (!empty($nids)) {
+    node_delete_multiple($nids);
+  }
+
+  // Delete ed_news node type
+  node_type_delete('ed_news');
+  node_types_rebuild();
+  menu_rebuild();
 }
 
 /**
@@ -28,13 +49,13 @@ function ed_news_create_node() {
   if (!in_array('ed_news', node_type_get_names())) {
     $type = array(
       'type' => 'ed_news',
-      'name' => t('News'),
+      'name' => t('News'), //@todo probably does not need to be translatable
       'base' => 'node_content',
       'custom' => FALSE,
       'modified' => FALSE,
       'locked' => FALSE,
       'has_title' => TRUE,
-      'title_label' => t('Title'),
+      'title_label' => t('Title'), //@todo probably does not need to be translatable
       'module' => 'ed_news',
       'orig_type' => 'ed_news',
     );
