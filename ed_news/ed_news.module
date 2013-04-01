@@ -65,6 +65,10 @@ function ed_news_listing_page() {
           drupal_html_class('old-news'),
         ),
       ),
+      'heading' => array(
+        '#type' => 'markup',
+        '#markup' => '<h2>' . t('Older news') . '</h2>',
+      ),
     );
     $nodes = node_load_multiple($nids);
     $build = node_view_multiple($nodes);
