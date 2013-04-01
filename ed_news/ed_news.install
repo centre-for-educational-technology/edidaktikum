@@ -24,13 +24,10 @@ function ed_news_uninstall() {
 
   // Remove any ed_news nodes from database
   $nids = array();
-  $results = db_select('node', 'n')
+  $query = db_select('node', 'n')
     ->fields('n', array('nid'))
-    ->condition('type', 'ed_news', '=')
-    ->execute();
-  foreach ($results as $result) {
-    $nids[] = $result->nid;
-  }
+    ->condition('n.type', 'ed_news');
+  $nids = $query->execute()->fetchCol();
 
   if (!empty($nids)) {
     node_delete_multiple($nids);
