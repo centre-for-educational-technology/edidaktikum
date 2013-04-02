@@ -24,6 +24,7 @@ function edidaktikum_menu() {
  * eDidaktikum home page.
  */
 function edidaktikum_home_page() {
+  drupal_set_title('');
   $content['preface'] = array(
     '#type' => 'item',
     '#markup' => 'This is going to be homepage.',
