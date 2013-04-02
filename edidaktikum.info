@@ -2,3 +2,5 @@ name = eDidaktikum
 package = eDidaktikum
 core = 7.x
 
+dependencies[] = image
+

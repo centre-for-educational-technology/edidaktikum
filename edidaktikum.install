@@ -18,6 +18,7 @@ function edidaktikum_install() {
 function edidaktikum_uninstall() {
   field_delete_field('ed_field_excerpt');
   field_delete_field('ed_field_content');
+  field_delete_field('ed_field_featured_image');
 }
 
 /**
@@ -40,6 +41,7 @@ function edidaktikum_disable() {
 function edidaktikum_create_fields() {
   edidaktikum_create_field_excerpt();
   edidaktikum_create_field_content();
+  edidaktikum_create_field_featured_image();
 }
 
 /**
@@ -75,3 +77,25 @@ function edidaktikum_create_field_content() {
     $field = field_create_field($field);
   }
 }
+
+/**
+ * Creates featured image field if not exists.
+ */
+function edidaktikum_create_field_featured_image() {
+  $field_name = 'ed_field_featured_image';
+  if (!field_info_field($field_name)) {
+    $field = array(
+      'field_name' => $field_name,
+      'type' => 'image',
+      'entity_types' => array('node'),
+      'cardinality' => 1,
+      'locked' => FALSE,
+      'settings' => array(
+        'uri_scheme' => 'public',
+        'default_image' => 0,
+      ),
+    );
+    $field = field_create_field($field);
+  }
+}
+
