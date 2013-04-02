@@ -31,6 +31,23 @@ function ed_event_listing_page() {
     $content['latest-event'] = node_view($latest, 'teaser');
   } 
 
+  $upcoming_events = ed_event_get_upcoming_events($latest);
+
+  if (!empty($upcoming_events)) {
+    $content['upcoming-events-heading'] = array(
+      '#type' => 'markup',
+      '#markup' => '<h2>' . t('Upcoming events') . '</h2>',
+    );
+    $nodes = node_load_multiple($upcoming_events);
+    $build = node_view_multiple($nodes);
+    $build['pager'] = array(
+      '#theme' => 'pager',
+      '#weight' => 5,
+    );
+    $content['upcoming-events'] = $build;
+  }
+
+
   return $content;
 }
 
@@ -53,5 +70,27 @@ function ed_event_get_latest_event() {
   }
 
   return FALSE;
+}
+
+/**
+ * Upcoming events.
+ */
+function ed_event_get_upcoming_events($exclude_event) {
+  $query = db_select('node', 'n')
+    ->extend('PagerDefault')
+    ->fields('n', array('nid'))
+    ->condition('n.status', 1)
+    ->condition('n.type', 'ed_event')
+    ->addTag('node_access')
+    ->limit(3)
+    ->orderBy('n.created', 'DESC');
+
+  if (!empty($exclude_event)) {
+    $query->condition('n.nid', $exclude_event->nid, '<>');
+  }
+
+  $nids = $query->execute()->fetchCol();
+ 
+  return $nids;
 }
 
