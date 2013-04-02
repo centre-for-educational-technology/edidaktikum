@@ -5,3 +5,29 @@
  * eDidaktikum module.
  */
 
+/**
+ * Implements hook_menu().
+ */
+function edidaktikum_menu() {
+  $items['home'] = array(
+    'title' => 'Home',
+    'page callback' => 'edidaktikum_home_page',
+    'access callback' => TRUE,
+    'weight' => 0,
+    'menu_name' => 'main-menu',
+    'type' => MENU_NORMAL_ITEM,
+  );
+  return $items;
+}
+
+/**
+ * eDidaktikum home page.
+ */
+function edidaktikum_home_page() {
+  $content['preface'] = array(
+    '#type' => 'item',
+    '#markup' => 'This is going to be homepage.',
+  );
+  return $content;
+}
+

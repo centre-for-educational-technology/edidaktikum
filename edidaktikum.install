@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Install function for eDidaktikum.
+ * Install, uninstall, enable and disable functions for eDidaktikum.
  */
 
 /**
@@ -21,8 +21,21 @@ function edidaktikum_uninstall() {
 }
 
 /**
+ * Implements hook_enable().
+ */
+function edidaktikum_enable() {
+  variable_set('site_frontpage', 'home');
+}
+
+/**
+ * Implements hook_disable().
+ */
+function edidaktikum_disable() {
+  variable_set('site_frontpage', 'node');
+}
+
+/**
  * Creates eDidaktikum fields.
- * @return void
  */
 function edidaktikum_create_fields() {
   edidaktikum_create_field_excerpt();
@@ -31,8 +44,6 @@ function edidaktikum_create_fields() {
 
 /**
  * Creates excerpt field if not exists.
- *
- * @return void
  */
 function edidaktikum_create_field_excerpt() {
   $field_name = 'ed_field_excerpt';
@@ -50,8 +61,6 @@ function edidaktikum_create_field_excerpt() {
 
 /**
  * Creates content field if not exists.
- * 
- * @return void
  */
 function edidaktikum_create_field_content() {
   $field_name = 'ed_field_content';
