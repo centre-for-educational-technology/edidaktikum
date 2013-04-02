@@ -9,8 +9,13 @@
  * Implements hook_install().
  */
 function ed_news_install() {
-  ed_news_create_node();
+  // Call edidaktikum_create_fields to get any needed fields to be created.
+  // This is a way to deal with fields disappearing when nodes using those
+  // fields are removed from the system along with field instances.
+  edidaktikum_create_fields();
+
   ed_news_create_fields();
+  ed_news_create_node();
   ed_news_add_fields();
 }
 
@@ -18,10 +23,6 @@ function ed_news_install() {
  * Implements hook_uninstall().
  */
 function ed_news_uninstall() {
-  //@todo Need to try and install fields from edidaktikum
-  // as they disappear when last node type using them is
-  // removed
-
   // Remove any ed_news nodes from database
   $nids = array();
   $query = db_select('node', 'n')
@@ -46,13 +47,13 @@ function ed_news_create_node() {
   if (!in_array('ed_news', node_type_get_names())) {
     $type = array(
       'type' => 'ed_news',
-      'name' => t('News'), //@todo probably does not need to be translatable
+      'name' => 'News',
       'base' => 'node_content',
       'custom' => FALSE,
       'modified' => FALSE,
       'locked' => FALSE,
       'has_title' => TRUE,
-      'title_label' => t('Title'), //@todo probably does not need to be translatable
+      'title_label' => 'Title',
       'module' => 'ed_news',
       'orig_type' => 'ed_news',
     );
@@ -75,6 +76,7 @@ function ed_news_create_fields() {
 function ed_news_add_fields() {
   ed_news_node_add_field_excerpt();
   ed_news_node_add_field_content();
+  ed_news_node_add_field_featured_image();
 }
 
 /**
@@ -101,7 +103,7 @@ function ed_news_node_add_field_excerpt() {
 }
 
 /**
- * Created content field instance for ed_news if ed_field_content exists and
+ * Creates content field instance for ed_news if ed_field_content exists and
  * such instance has not been added to ed_news yet.
  */
 function ed_news_node_add_field_content() {
@@ -123,6 +125,36 @@ function ed_news_node_add_field_content() {
         ),
       ),
       'required' => TRUE,
+    );
+    field_create_instance($instance);
+  }
+  elseif (empty($field)) {
+    drupal_set_message(t('Field @fieldname does not exist. Field instance for node type @type could not be created.', array('@fieldname' => $field_name, '@type' => 'ed_news')), 'error');
+  }
+}
+
+/**
+ * Creates featured image field instance for ed_news if ed_field_featured_image
+ * exists and such instance has not been added to ed_news yet.
+ */
+function ed_news_node_add_field_featured_image() {
+  $field_name = 'ed_field_featured_image';
+  $field = field_info_field($field_name);
+  if (!empty($field) && !field_info_instance('node', $field_name, 'ed_news')) {
+    $instance = array(
+      'field_name' => $field_name,
+      'entity_type' => 'node',
+      'bundle' => 'ed_news',
+      'label' => t('Featured image'),
+      'description' => '',
+      'settings' => array(
+        'file_directory' => 'ed_news_featured_images',
+        'max_filesize' => '5 MB',
+      ),
+      'widget' => array(
+        'type' => 'image_image',
+      ),
+      'required' => FALSE,
     );
     field_create_instance($instance);
   }
