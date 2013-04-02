@@ -5,4 +5,53 @@
  * Event module.
  */
 
+/**
+ * Implements hook_menu().
+ */
+function ed_event_menu() {
+  $items['events'] = array(
+    'title' => t('Events'),
+    'page callback' => 'ed_event_listing_page',
+    'access callback' => TRUE,
+    'weight' => 10,
+    'menu_name' => 'main-menu',
+    'type' => MENU_NORMAL_ITEM,
+  );
+  return $items;
+}
+
+/**
+ * Events listing page.
+ */
+function ed_event_listing_page() {
+  $content = array();
+  
+  $latest = ed_event_get_latest_event();
+  if (!empty($latest)) {
+    $content['latest-event'] = node_view($latest, 'teaser');
+  } 
+
+  return $content;
+}
+
+/**
+ * Latest event.
+ */
+function ed_event_get_latest_event() {
+  $query = db_select('node', 'n')
+    ->fields('n', array('nid'))
+    ->condition('n.status', 1)
+    ->condition('n.type', 'ed_event')
+    ->addTag('node_access')
+    ->range(0, 1)
+    ->orderBy('n.created', 'DESC');
+
+  $nids = $query->execute()->fetchCol();
+  
+  if (!empty($nids)) {
+    return node_load($nids[0]);
+  }
+
+  return FALSE;
+}
 
