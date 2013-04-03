@@ -82,13 +82,17 @@ function ed_event_get_upcoming_events($exclude_event) {
     ->condition('n.status', 1)
     ->condition('n.type', 'ed_event')
     ->addTag('node_access')
-    ->limit(3)
-    ->orderBy('n.created', 'DESC');
+    ->limit(3);
+
+  $query->leftJoin('field_data_ed_event_field_end', 'end', 'n.nid = end.entity_id');
+  $query->condition('end.ed_event_field_end_value', time(), '>');
+  $query->orderBy('end.ed_event_field_end_value', 'ASC');
+
 
   if (!empty($exclude_event)) {
     $query->condition('n.nid', $exclude_event->nid, '<>');
   }
-
+  
   $nids = $query->execute()->fetchCol();
  
   return $nids;

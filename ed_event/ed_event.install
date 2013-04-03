@@ -23,10 +23,9 @@ function ed_event_install() {
  * Implements hook_uninstall().
  */
 function ed_event_uninstall() {
-  field_delete_field('ed_event_field_url');
-  field_delete_field('ed_event_field_location');
-  field_delete_field('ed_event_field_start');
-  field_delete_field('ed_event_field_end');
+  ed_event_delete_ed_event_nodes();
+  node_type_delete('ed_event');
+  node_types_rebuild();  
 }
 
 function ed_event_create_fields() {
@@ -42,10 +41,12 @@ function ed_event_create_node() {
       'type' => 'ed_event',
       'name' => t('Event'),
       'base' => 'node_content',
-      'custom' => 1,
-      'modified' => 1,
-      'locked' => 0,
-      'title_label' => 'Title',  
+      'custom' => TRUE,
+      'modified' => FALSE,
+      'locked' => FALSE,
+      'has_title' => TRUE,
+      'title_label' => t('Title'),
+      'module' => 'ed_event',
     );
 
     $type = node_type_set_defaults($type);
@@ -63,7 +64,7 @@ function ed_event_node_add_field_excerpt() {
       'bundle' => 'ed_event',
       'label' => t('Excerpt'),
       'description' => '',
-      'required' => FALSE,
+      'required' => TRUE,
     );
     field_create_instance($instance);
   }
@@ -87,7 +88,7 @@ function ed_event_node_add_field_content() {
           'rows' => 20,
         ),
       ),
-      'required' => FALSE,
+      'required' => TRUE,
     );
     field_create_instance($instance);
   }
@@ -152,7 +153,7 @@ function ed_event_node_add_field_start() {
       'bundle' => 'ed_event',
       'label' => t('Start'),
       'description' => '',
-      'required' => FALSE,
+      'required' => TRUE,
       'widget' => array(
         'type' => 'date_popup',
         'settings' => array(
@@ -176,7 +177,7 @@ function ed_event_node_add_field_end() {
       'bundle' => 'ed_event',
       'label' => t('End'),
       'description' => '',
-      'required' => FALSE,
+      'required' => TRUE,
       'widget' => array(
         'type' => 'date_popup',
         'settings' => array(
@@ -187,6 +188,20 @@ function ed_event_node_add_field_end() {
       ),
     );
     field_create_instance($instance);
+  }
+}
+
+/**
+ * Deletes all ed_events.
+ */
+function ed_event_delete_ed_event_nodes() {
+  $nids = array();
+  $query = db_select('node', 'n')
+    ->fields('n', array('nid'))
+    ->condition('n.type', 'ed_event');
+  $nids = $query->execute()->fetchCol();
+  if (!empty($nids)) {
+    node_delete_multiple($nids);
   }
 }
 
