@@ -17,6 +17,7 @@ function ed_event_install() {
   ed_event_node_add_field_location();
   ed_event_node_add_field_start();
   ed_event_node_add_field_end();
+  ed_event_node_add_field_featured_image();
 }
 
 /**
@@ -65,6 +66,12 @@ function ed_event_node_add_field_excerpt() {
       'label' => t('Excerpt'),
       'description' => '',
       'required' => TRUE,
+      'display' => array(
+        'teaser' => array(
+          'label' => 'hidden',  
+          'type' => 'text_trimmed',
+        ),  
+      ),
     );
     field_create_instance($instance);
   }
@@ -159,8 +166,10 @@ function ed_event_node_add_field_start() {
         'settings' => array(
           'input_format' => 'd.m.Y - H:i:s',
           'increment' => '1',
-          'default_value' => 'now',  
         ), 
+      ),
+      'settings' => array(
+        'default_value' => 'now',  
       ),
     );
     field_create_instance($instance);
@@ -183,9 +192,34 @@ function ed_event_node_add_field_end() {
         'settings' => array(
           'input_format' => 'd.m.Y - H:i:s',
           'increment' => '1',
-          'default_value' => 'now',  
         ), 
       ),
+      'settings' => array(
+        'default_value' => 'strtotime',
+        'default_value_code' => '+1 days',  
+      ),
+    );
+    field_create_instance($instance);
+  }
+}
+
+function ed_event_node_add_field_featured_image() {
+  $field_name = 'ed_field_featured_image';
+  $field = field_info_field($field_name);
+  if (!empty($field) && !field_info_instance('node', $field_name, 'ed_event')) {
+    $instance = array(
+      'field_name' => $field_name,
+      'entity_type' => 'node',
+      'bundle' => 'ed_event',
+      'label' => t('Featured image'),
+      'description' => '',
+      'settings' => array(
+        'file_directory' => 'ed_event_featured_images',
+      ),
+      'widget' => array(
+        'type' => 'image_image',
+      ),
+      'required' => FALSE,
     );
     field_create_instance($instance);
   }
