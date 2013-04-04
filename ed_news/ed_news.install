@@ -77,6 +77,7 @@ function ed_news_add_fields() {
   ed_news_node_add_field_excerpt();
   ed_news_node_add_field_content();
   ed_news_node_add_field_featured_image();
+  ed_news_node_add_field_category();
 }
 
 /**
@@ -163,3 +164,28 @@ function ed_news_node_add_field_featured_image() {
   }
 }
 
+/**
+ * Creates a taxonomy field instance for ed_news if ed_field_category exists
+ * and such instance has not been added to ed_news yet.
+ */
+function ed_news_node_add_field_category() {
+  $field_name = 'ed_field_category';
+  $field = field_info_field($field_name);
+  if (!empty($field_name) && !field_info_instance('node', $field_name, 'ed_news')) {
+    $instance = array(
+      'field_name' => $field_name,
+      'entity_type' => 'node',
+      'bundle' => 'ed_news',
+      'label' => t('Category'),
+      'description' => '',
+      'widget' => array(
+        'type' => 'options_buttons',
+      ),
+      'required' => TRUE,
+    );
+    field_create_instance($instance);
+  }
+  elseif (empty($field)) {
+    drupal_set_message(t('Field @fieldname does not exist. Field instance for node type @type could not be created.', array('@fieldname' => $field_name, '@type' => 'ed_news')), 'error');
+  }
+}
