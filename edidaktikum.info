@@ -3,4 +3,5 @@ package = eDidaktikum
 core = 7.x
 
 dependencies[] = image
+dependencies[] = taxonomy
 
