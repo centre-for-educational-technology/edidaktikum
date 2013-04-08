@@ -17,6 +17,11 @@ function ed_event_menu() {
     'menu_name' => 'main-menu',
     'type' => MENU_NORMAL_ITEM,
   );
+  $items['events/get/events'] = array(
+    'page callback' => 'ed_event_get_events_ajax',
+    'type' => MENU_CALLBACK,
+    'access callback' => TRUE,  
+  );
   return $items;
 }
 
@@ -24,6 +29,12 @@ function ed_event_menu() {
  * Events listing page.
  */
 function ed_event_listing_page() {
+
+  drupal_add_js(drupal_get_path('module', 'ed_event') . '/js/jquery.eventCalendar.js');
+  drupal_add_css(drupal_get_path('module', 'ed_event') . '/css/eventCalendar.css');
+  drupal_add_css(drupal_get_path('module', 'ed_event') . '/css/eventCalendar_theme_responsive.css');
+  drupal_add_js(drupal_get_path('module', 'ed_event') . '/js/ed_event.js');
+
   $content = array();
   
   $latest = ed_event_get_latest_event();
@@ -47,8 +58,46 @@ function ed_event_listing_page() {
     $content['upcoming-events'] = $build;
   }
 
+  $content['events-calendar'] = array(
+    '#type' => 'markup',
+    '#markup' => '<div id="events_calendar"></div>', 
+  );
 
   return $content;
+}
+
+function ed_event_get_events_ajax() {
+  $events = ed_event_get_all_events();
+  $results = array();
+  foreach ($events as $event_nid) {
+    error_log($event_nid);
+    $event = node_load($event_nid);
+    $excerpt_field = field_get_items('node', $event, 'ed_field_excerpt');
+    $start_field = field_get_items('node', $event, 'ed_event_field_start');
+    $results[] = array(
+      "date" => $start_field[0]['value'] . "000", 
+      "type" => $event->type, 
+      "title" => $event->title, 
+      "description" => $excerpt_field[0]['safe_value'], 
+      "url" => 'node/'.$event->nid,
+    );
+  }
+  drupal_json_output($results);
+}
+
+/**
+ * All events.
+ */
+function ed_event_get_all_events() {
+  $query = db_select('node', 'n')
+    ->fields('n', array('nid'))
+    ->condition('n.status', 1)
+    ->condition('n.type', 'ed_event')
+    ->addTag('node_access')
+    ->range()
+    ->orderBy('n.created', 'DESC');
+  $nids = $query->execute()->fetchCol();
+  return $nids;
 }
 
 /**
@@ -106,8 +155,10 @@ function ed_event_get_upcoming_events($exclude_event) {
 function ed_event_preprocess_node(&$vars) {
   if ($vars['teaser'] && $vars['node']->type == 'ed_event') {
     if (!empty($vars['node']->ed_field_featured_image)) {
-      $image = field_view_field('node', $vars['node'], 'ed_field_featured_image', array('label' => 'hidden'));
+      $image = field_view_field('node', $vars['node'], 'ed_field_featured_image', array('label' => 'hidden', 'settings' => array('image_style' => 'thumbnail')));
       $vars['user_picture'] = render($image);
+    } else {
+      $vars['user_picture'] = '';
     }
   }
 }
