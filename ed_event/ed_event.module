@@ -39,7 +39,7 @@ function ed_event_listing_page() {
   
   $latest = ed_event_get_latest_event();
   if (!empty($latest)) {
-    $content['latest-event'] = node_view($latest, 'teaser');
+    $content['latest-event'] = node_view($latest, 'featured');
   } 
 
   $upcoming_events = ed_event_get_upcoming_events($latest);
@@ -70,12 +70,13 @@ function ed_event_get_events_ajax() {
   $events = ed_event_get_all_events();
   $results = array();
   foreach ($events as $event_nid) {
-    error_log($event_nid);
     $event = node_load($event_nid);
     $excerpt_field = field_get_items('node', $event, 'ed_field_excerpt');
     $start_field = field_get_items('node', $event, 'ed_event_field_start');
+    $end_field = field_get_items('node', $event, 'ed_event_field_end');
     $results[] = array(
       "date" => $start_field[0]['value'] . "000", 
+      "enddate" => $end_field[0]['value'] . "000", 
       "type" => $event->type, 
       "title" => $event->title, 
       "description" => $excerpt_field[0]['safe_value'], 

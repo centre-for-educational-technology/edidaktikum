@@ -96,6 +96,12 @@ function ed_event_node_add_field_content() {
         ),
       ),
       'required' => TRUE,
+      'display' => array(
+        'featured' => array(
+          'label' => 'hidden',  
+          'type' => 'text_default',
+        ),  
+      ),
     );
     field_create_instance($instance);
   }

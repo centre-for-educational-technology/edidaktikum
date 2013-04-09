@@ -47,3 +47,17 @@ function edidaktikum_home_page() {
   return $content;
 }
 
+function edidaktikum_entity_info_alter(&$entity_info) {
+  $entity_info['node']['view modes']['featured'] = array(
+    'label' => t('Featured'),
+    'custom settings' => TRUE,  
+  );
+}
+
+function edidaktikum_preprocess_node(&$vars) {
+  if ($vars['view_mode'] == 'featured') {
+    $vars['theme_hook_suggestions'][] = 'node__featured';
+    $vars['theme_hook_suggestions'][] = 'node__' . $vars['type'] . '__featured';
+  }
+}
+
