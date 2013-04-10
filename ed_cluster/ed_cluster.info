@@ -1,0 +1,8 @@
+name = Cluster
+description = eDidaktikum clusters.
+package = eDidaktikum
+core = 7.x
+
+dependencies[] = edidaktikum
+dependencies[] = og
+

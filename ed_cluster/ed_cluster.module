@@ -1,0 +1,55 @@
+<?php
+
+/**
+ * @file
+ * Cluster module.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function ed_cluster_menu() {
+  $items['clusters'] = array(
+    'title' => t('Clusters'),
+    'page callback' => 'ed_cluster_listing_page',
+    'access callback' => TRUE,
+    'weight' => 20,
+    'menu_name' => 'main-menu',
+    'type' => MENU_NORMAL_ITEM,
+  );
+  return $items;
+}
+
+/**
+ * Clusters listing page.
+ */
+function ed_cluster_listing_page() {
+  $content = array();
+  $og_groups = ed_cluster_get_clusters();
+  if (!empty($og_groups)) {
+    $nodes = node_load_multiple($og_groups);
+    $build = node_view_multiple($nodes);
+    $build['pager'] = array(
+      '#theme' => 'pager',
+      '#weight' => 5,
+    );
+    $content['clusters'] = $build;
+  }
+  return $content;
+}
+
+/**
+ *
+ */
+function ed_cluster_get_clusters() {
+  $query = db_select('node', 'n')
+    ->extend('PagerDefault')
+    ->fields('n', array('nid'))
+    ->condition('n.status', 1)
+    ->condition('n.type', 'ed_cluster')
+    ->addTag('node_access')
+    ->limit(3);
+  $nids = $query->execute()->fetchCol();
+  return $nids;
+}
+

@@ -1,0 +1,103 @@
+<?php
+
+/**
+ * @file
+ *
+ */
+
+/**
+ * Implements hook_install().
+ */
+function ed_cluster_install() {
+  ed_cluster_create_node();
+  ed_cluster_node_add_og_group_field();
+  ed_cluster_node_add_field_excerpt();
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function ed_cluster_uninstall() {
+  ed_cluster_delete_ed_cluster_nodes();
+  ed_cluster_delete_node();
+}
+
+/**
+ * Creates ed_cluster node type.
+ */
+function ed_cluster_create_node() {
+  if (!in_array('ed_cluster', node_type_get_names())) {
+    $type = array(
+      'type' => 'ed_cluster',
+      'name' => t('Cluster'),
+      'base' => 'node_content',
+      'custom' => TRUE,
+      'modified' => FALSE,
+      'locked' => TRUE,
+      'has_title' => TRUE,
+      'title_label' => t('Title'),
+      'module' => 'ed_cluster',
+    );
+    $type = node_type_set_defaults($type);
+    node_type_save($type);
+  }
+}
+
+/**
+ * Adds og group field to ed_cluster node type. 
+ */
+function ed_cluster_node_add_og_group_field() {
+  if (function_exists('og_create_field') && defined('OG_GROUP_FIELD')) {
+    og_create_field(OG_GROUP_FIELD, 'node', 'ed_cluster');
+  }
+}
+
+/**
+ * Adds excerpt field to ed_cluster node type.
+ */
+function ed_cluster_node_add_field_excerpt() {
+  $field_name = 'ed_field_excerpt';
+  $field = field_info_field($field_name);
+  if (!empty($field) && !field_info_instance('node', $field_name, 'ed_cluster')) {
+    $instance = array(
+      'field_name' => $field_name,
+      'entity_type' => 'node',
+      'bundle' => 'ed_cluster',
+      'label' => t('Excerpt'),
+      'description' => '',
+      'required' => TRUE,
+      'display' => array(
+        'teaser' => array(
+          'label' => 'hidden',
+          'type' => 'text_trimmed',
+        ),
+      ),
+    );
+    field_create_instance($instance);
+  }
+}
+
+/**
+ * Deletes node type ed_cluster.
+ */
+function ed_cluster_delete_node() {
+  if (in_array('ed_cluster', node_type_get_names())) {
+    node_type_delete('ed_cluster');
+    node_types_rebuild();
+  }
+}
+
+/**
+ * Deletes all ed_cluster nodes.
+ */
+function ed_cluster_delete_ed_cluster_nodes() {
+  $nids = array();
+  $query = db_select('node', 'n')
+    ->fields('n', array('nid'))
+    ->condition('n.type', 'ed_cluster');
+  $nids = $query->execute()->fetchCol();
+  if (!empty($nids)) {
+    node_delete_multiple($nids);
+  }
+}
+
