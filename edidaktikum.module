@@ -9,42 +9,35 @@
  * Implements hook_menu().
  */
 function edidaktikum_menu() {
+  $items['admin/config/edidaktikum'] = array(
+    'title' => 'eDidaktikum',
+    'description' => 'Administer eDidaktikum modules.',
+    'position' => 'right',
+    'weight' => -10,
+    'page callback' => 'system_admin_menu_block_page',
+    'access arguments' => array('access administration pages'),
+    'file' => 'system.admin.inc',
+    'file path' => drupal_get_path('module', 'system'),
+  );
+  $items['admin/config/edidaktikum/home-page'] = array(
+    'title' => 'eDidaktikum home page',
+    'description' => 'Configure eDidaktikum home page.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('edidaktikum_home_page_admin_form'),
+    'access arguments' => array('access administration pages'),
+    'file' => 'edidaktikum.admin.inc',
+    'type' => MENU_NORMAL_ITEM,
+  );
   $items['home'] = array(
     'title' => 'Home',
     'page callback' => 'edidaktikum_home_page',
     'access callback' => TRUE,
+    'file' => 'edidaktikum.pages.inc',
     'weight' => 0,
     'menu_name' => 'main-menu',
     'type' => MENU_NORMAL_ITEM,
   );
   return $items;
-}
-
-/**
- * eDidaktikum home page.
- */
-function edidaktikum_home_page() {
-  drupal_set_title('');
-  $content['preface'] = array(
-    '#type' => 'item',
-    '#markup' => '<h2>' . t('Latest content') .'</h2>',
-  );
-
-  if (module_exists('ed_news')) {
-    $latest_news = ed_news_get_latest_news();
-    if (!empty($latest_news)) {
-      $content['latest-news'] = node_view($latest_news, 'teaser');
-    }
-  }
-
-  if (module_exists('ed_event')) {
-    $latest_event = ed_event_get_latest_event();
-    if (!empty($latest_event)) {
-      $content['latest-event'] = node_view($latest_event, 'teaser');
-    }
-  }
-
-  return $content;
 }
 
 function edidaktikum_entity_info_alter(&$entity_info) {
