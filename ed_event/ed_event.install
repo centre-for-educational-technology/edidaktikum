@@ -19,7 +19,7 @@ function ed_event_install() {
   ed_event_node_add_field_end();
   ed_event_node_add_field_featured_image();
   ed_event_node_add_field_category();
-  ed_event_node_add_field_og_group_ref();
+  ed_event_node_add_field_og_audience();
 }
 
 /**
@@ -252,22 +252,18 @@ function ed_event_node_add_field_category() {
   }
 }
 
-function ed_event_node_add_field_og_group_ref() {
-  $field_name = 'og_group_ref';
-  $field = field_info_field($field_name);
-  if (!empty($field_name) && !field_info_instance('node', $field_name, 'ed_event')) {
-    $instance = array(
-      'field_name' => $field_name,
-      'entity_type' => 'node',
-      'bundle' => 'ed_event',
-      'label' => t('Cluster'),
-      'description' => '',
-      'widget' => array(
-        'type' => 'options_select',
-      ),
-      'required' => TRUE,
+function ed_event_node_add_field_og_audience() {
+  if (function_exists('og_create_field') && defined('OG_AUDIENCE_FIELD')) { 
+    $og_field = og_fields_info(OG_AUDIENCE_FIELD);
+    $og_field['instance']['label'] = t('Cluster');
+    $og_field['instance']['required'] = TRUE;
+    $og_field['instance']['settings']['behaviors']['prepopulate'] = array(
+      'status' => TRUE,
+      'action' => 'none',
+      'fallback' => 'none',
+      'skip_perm' => FALSE,
     );
-    field_create_instance($instance);
+    og_create_field(OG_AUDIENCE_FIELD, 'node', 'ed_event', $og_field);
   }
 }
 
