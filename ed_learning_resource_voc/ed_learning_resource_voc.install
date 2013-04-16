@@ -1,0 +1,143 @@
+<?php
+
+/**
+ * Implements hook_install().
+ * -Create vocabulary
+ * -add some terms
+ */
+function ed_learning_resource_voc_install() {
+  _create_vocabularies();
+  _add_terms();
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function ed_learning_resource_voc_uninstall() {
+  _remove_vocabulary('ed_learning_resource_type_voc');
+  _remove_vocabulary('ed_learning_resource_language_voc');
+  _remove_vocabulary('ed_learning_resource_tags_voc');
+  _remove_vocabulary('ed_learning_resource_authors_voc');
+}
+
+/**
+ * Create a vocabulary
+ */
+function _create_vocabularies() {
+  _add_vocabulary(t('Learning Resource Types'), 'ed_learning_resource_type_voc', t('A list of different learning resource types'), 1);
+  _add_vocabulary(t('Learning Resource Languages'), 'ed_learning_resource_language_voc', t('A list of different learning resource languages'), 1);
+  _add_vocabulary(t('Learning Resource Tags'), 'ed_learning_resource_tags_voc', t('A list of tags for learning resources'), 1);
+  _add_vocabulary(t('Learning Resource Authors'), 'ed_learning_resource_authors_voc', t('A list of authors for learning resources'), 1);
+}
+
+/**
+ * Add a vocabulary
+ */
+function _add_vocabulary($name, $machine_name, $description, $weight) {
+  $vocabulary = taxonomy_vocabulary_load(variable_get($machine_name - '_vocabulary', 0));
+  if (!$vocabulary) {
+	$edit = array(
+	  'name' => $name,
+	  'machine_name' => $machine_name,
+	  'description' => $description,
+	  'hierarchy' => 1,
+	  'module' => 'ed_learning_resource_voc',
+	  'weight' => $weight,
+	);
+	$vocabulary = (object) $edit;
+	taxonomy_vocabulary_save($vocabulary);
+	variable_set($machine_name . '_vocabulary', $vocabulary->vid);
+  }
+}
+
+/**
+ * Remove vocabulary
+ */
+function _remove_vocabulary($machine_name) {
+  $vid = db_select('taxonomy_vocabulary', 'v')
+    ->fields('v', array('vid'))
+	->condition("v.machine_name", $machine_name)
+	->execute()
+	  ->fetchField();
+  taxonomy_vocabulary_delete($vid);
+}
+/*
+esitlus
+harjutus
+heli
+hindamisvahend
+katse
+kodulehekülg
+kursus
+muu
+mäng
+pilt
+simulatsioon
+sõnastik
+teabeallikas
+tekst
+tunnikava
+töövahend
+video*/
+
+// Add some dummy terms, which can later be modified from the GUI.
+function _add_terms() {
+
+  //Learning Resource types:
+  _create_term('ed_learning_resource_type_voc', t('Presentation'), t('Presentation'));
+  _create_term('ed_learning_resource_type_voc', t('Exercise'), t('Exercise'));
+  _create_term('ed_learning_resource_type_voc', t('Sound'), t('Sound'));
+  _create_term('ed_learning_resource_type_voc', t('Assessment Tool'), t('Assessment Tool'));
+  _create_term('ed_learning_resource_type_voc', t('Attempt'), t('Attempt'));
+  _create_term('ed_learning_resource_type_voc', t('Homesite'), t('Homesite'));
+  _create_term('ed_learning_resource_type_voc', t('Course'), t('Course'));
+  _create_term('ed_learning_resource_type_voc', t('Other'), t('Other'));
+  _create_term('ed_learning_resource_type_voc', t('Game'), t('Game'));
+  _create_term('ed_learning_resource_type_voc', t('Image'), t('Image'));
+  _create_term('ed_learning_resource_type_voc', t('Simulation'), t('Simulation'));
+  _create_term('ed_learning_resource_type_voc', t('Vocabulary'), t('Vocabulary'));
+  _create_term('ed_learning_resource_type_voc', t('Source of Information'), t('Source of Information'));
+  _create_term('ed_learning_resource_type_voc', t('Text'), t('Text'));
+  _create_term('ed_learning_resource_type_voc', t('Lesson Plan'), t('Lesson Plan'));
+  _create_term('ed_learning_resource_type_voc', t('Tool'), t('Tool'));
+  _create_term('ed_learning_resource_type_voc', t('Video'), t('Video'));
+
+  //Learning Resource languages:
+  _create_term('ed_learning_resource_language_voc', t('English'), t('English'));
+  _create_term('ed_learning_resource_language_voc', t('Estonian'), t('Estonian'));
+  _create_term('ed_learning_resource_language_voc', t('Russian'), t('Russian'));
+
+  //Learning Resource tags: @todo put true values here
+  _create_term('ed_learning_resource_tags_voc', t('Mathematics'), t('Mathematics'));
+  _create_term('ed_learning_resource_tags_voc', t('Biology'), t('Biology'));
+  _create_term('ed_learning_resource_tags_voc', t('Chemistry'), t('Chemistry'));
+  _create_term('ed_learning_resource_tags_voc', t('Physics'), t('Physics'));
+  _create_term('ed_learning_resource_tags_voc', t('English'), t('English'));
+  _create_term('ed_learning_resource_tags_voc', t('History'), t('History'));
+
+  //Learning Resource authors: @todo put true values here
+  _create_term('ed_learning_resource_authors_voc', t('Obi-Wan Kenobi'), t('Obi-Wan Kenobi'));
+  _create_term('ed_learning_resource_authors_voc', t('Master Yoda'), t('Master Yoda'));
+  _create_term('ed_learning_resource_authors_voc', t('Mace Windu'), t('Mace Windu'));
+}
+
+/**
+ * Add terms to vocabularies
+ */
+function _create_term($vocab, $term, $desc='', $weight = 0) {
+  $added = NULL;
+  $added = taxonomy_get_term_by_name($term);
+  if ($added == '' || $added == NULL) {
+	$vocabulary = taxonomy_vocabulary_machine_name_load($vocab);
+	$vid = $vocabulary->vid;
+	$new_term = array(
+	  'name' => $term,
+	  'description' => $desc,
+	  'parent' => array(0),
+	  'weight' => $weight,
+	  'vid' => $vid,
+	);
+	$term_obj = (object) $new_term;
+	taxonomy_term_save($term_obj);
+  }
+}

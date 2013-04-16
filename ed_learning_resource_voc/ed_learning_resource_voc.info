@@ -1,0 +1,9 @@
+name = Learning resource vocabularies
+description = Vocabulary to define the initial values used in select fields of content type: Learning resource
+package = eDidaktikum
+core = 7.x
+files[] = ed_learning_resource_voc.install
+files[] = ed_learning_resource_voc.module
+
+dependencies[] = edidaktikum
+dependencies[] = date
