@@ -6,5 +6,7 @@ core = 7.x
 dependencies[] = edidaktikum
 dependencies[] = url
 dependencies[] = date_popup
+dependencies[] = term_reference_tree
 dependencies[] = panels
+dependencies[] = page_manager
 
