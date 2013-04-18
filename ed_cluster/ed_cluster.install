@@ -12,6 +12,8 @@ function ed_cluster_install() {
   ed_cluster_create_node();
   ed_cluster_node_add_og_group_field();
   ed_cluster_node_add_field_excerpt();
+  ed_cluster_node_add_field_content();
+  ed_cluster_node_add_field_category();
 }
 
 /**
@@ -72,6 +74,68 @@ function ed_cluster_node_add_field_excerpt() {
           'type' => 'text_trimmed',
         ),
       ),
+    );
+    field_create_instance($instance);
+  }
+}
+
+/**
+ * Adds content (description) field to ed_cluster node type.
+ */
+function ed_cluster_node_add_field_content() {
+  $field_name = 'ed_field_content';
+  $field = field_info_field($field_name);
+  if (!empty($field) && !field_info_instance('node', $field_name, 'ed_cluster')) {
+    $instance = array(
+      'field_name' => $field_name,
+      'entity_type' => 'node',
+      'bundle' => 'ed_cluster',
+      'label' => t('Content'),
+      'description' => '',
+      'settings' => array(
+        'text_processing' => TRUE,
+      ),
+      'widget' => array(
+        'settings' => array(
+          'rows' => 20,
+        ),
+      ),
+      'required' => TRUE,
+      'display' => array(
+        'default' => array(
+          'label' => 'hidden',
+          'type' => 'text_default',
+        ),
+        'featured' => array(
+          'label' => 'hidden',
+          'type' => 'text_default',
+        ),
+      ),
+    );
+    field_create_instance($instance);
+  }
+}
+
+/**
+ * Adds category field to ed_cluster node type.
+ */
+function ed_cluster_node_add_field_category() {
+  $field_name = 'ed_field_category';
+  $field = field_info_field($field_name);
+  if (!empty($field_name) && !field_info_instance('node', $field_name, 'ed_cluster')) {
+    $instance = array(
+      'field_name' => $field_name,
+      'entity_type' => 'node',
+      'bundle' => 'ed_cluster',
+      'label' => t('Categories'),
+      'description' => '',
+      'widget' => array(
+        'type' => 'term_reference_tree',
+        'settings' => array(
+          'start_minimized' => TRUE,
+        ),
+      ),
+      'required' => TRUE,
     );
     field_create_instance($instance);
   }
