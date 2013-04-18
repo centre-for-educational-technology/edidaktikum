@@ -30,71 +30,30 @@ function ed_learning_resource_form($node, $form_state) {
 /*
  * Implements hook_menu().
  */
+
+
 function ed_learning_resource_menu() {
+
   $items['resources'] = array(
     'title' => t('Resources'),
-	  'page callback' => 'ed_learning_resource_listing_page',
-	  'access callback' => TRUE,
-	  'weight' => 7,
-	  'menu_name' => 'main-menu',
-	  'type' => MENU_NORMAL_ITEM,
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('ed_learning_resource_dynamic_sections'),
+    'access callback' => TRUE,
+    'weight' => 15,
+    'file' => 'ed_learning_resource_ajax.inc',
+    'menu_name' => 'main-menu',
+    'type' => MENU_NORMAL_ITEM,
   );
   return $items;
 }
 
-
-  /*
-   * @return array
-   *   Returns content.
-   */
-function ed_learning_resource_listing_page() {
-  $content = array();
-  $resources = _ed_get_resources();
-  drupal_set_title(t('Learning Resources'));
-  if(!empty($resources)) {
-
-	  $nodes = node_load_multiple($resources);
-	  $build = node_view_multiple($nodes);
-	  $build['pager'] = array(
-	    '#theme' => 'pager',
-	    '#weight' => 5,
-	  );
-	  $content['resources'] = $build;
-
-
-	/*echo "<pre>";
-		print_r($content); // or var_dump()
-	echo "</pre><br>";*/
-
-
-
-	  return $content;
-  }
-  else {
-
-  	$content['resources-heading'] = array(
-	    '#type' => 'markup',
-  	  '#markup' => '<h3>' . t('There are no available Learning Resources.') . '</h3>',
-	  );
-
-	/*
-	echo "<pre>";
-		print_r($content); // or var_dump()
-	echo "</pre><br>";*/
-
-	return $content;
-  }
-}
-
-/*
- * Returns learning resource type nodes.
+/**
+ * Implements hook_ctools_plugin_api().
  */
-
-function _ed_get_resources() {
-  $query = db_select('node', 'n')
-    ->fields('n', array('nid'))
-  	->condition('n.type', 'ed_learning_resource');
-
-	$nids = $query->execute()->fetchCol();
-	return $nids;
+function ed_learning_resource_ctools_plugin_api() {
+  list($module, $api) = func_get_args();
+  error_log($module. " " . $api);
+  if ($module == "page_manager" && $api == "pages_default") {
+    return array("version" => 1);
+  }
 }

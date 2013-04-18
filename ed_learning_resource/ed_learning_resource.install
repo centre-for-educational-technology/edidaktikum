@@ -24,7 +24,24 @@ function ed_learning_resource_install() {
 	  $instance['bundle'] = 'ed_learning_resource';
 	  field_create_instance($instance);
   }
+  ed_learning_resource_add_og_audience();
 }
+
+function ed_learning_resource_add_og_audience() {
+  if(function_exists('og_create_field') && defined('OG_AUDIENCE_FIELD')) {
+    $og_field = og_fields_info(OG_AUDIENCE_FIELD);
+    $og_field['instance']['label'] = t('Cluster');
+    $og_field['instance']['required'] = TRUE;
+    $og_field['instance']['settings']['behaviors']['prepopulate'] = array(
+      'status' => TRUE,
+      'action' => 'none',
+      'fallback' => 'none',
+      'skip_perm' => FALSE,
+    );
+    og_create_field(OG_AUDIENCE_FIELD, 'node', 'ed_learning_resource', $og_field);
+  }
+}
+
 /*
  * Implements hook_uninstall().
  */

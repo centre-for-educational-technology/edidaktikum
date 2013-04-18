@@ -397,6 +397,9 @@ function _ed_learning_resource_installed_instances() {
     'description' => '',
     'widget' => array(
       'type' => 'term_reference_tree',
+      'settings' => array(
+        'start_minimized' => TRUE,
+      ),
     ),
     'required' => TRUE,
     'display' => array(
