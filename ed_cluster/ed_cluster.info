@@ -5,8 +5,9 @@ core = 7.x
 
 dependencies[] = edidaktikum
 dependencies[] = og
-dependencies[] = term_reference_tree
+dependencies[] = og_ui
 dependencies[] = panels
 dependencies[] = page_manager
-
+dependencies[] = views_content
+dependencies[] = term_reference_tree
 
