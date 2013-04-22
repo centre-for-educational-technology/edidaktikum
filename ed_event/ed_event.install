@@ -249,12 +249,17 @@ function ed_event_node_add_field_category() {
       'field_name' => $field_name,
       'entity_type' => 'node',
       'bundle' => 'ed_event',
-      'label' => t('Category'),
+      'label' => t('Categories'),
       'description' => '',
       'widget' => array(
         'type' => 'term_reference_tree',
         'settings' => array(
           'start_minimized' => TRUE,  
+        ),
+      ),
+      'display' => array(
+        'default' => array(
+          'type' => 'term_reference_tree',
         ),
       ),
       'required' => TRUE,
