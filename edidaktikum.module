@@ -27,6 +27,17 @@ function edidaktikum_menu() {
     'access arguments' => array('access administration pages'),
     'file' => 'edidaktikum.admin.inc',
     'type' => MENU_NORMAL_ITEM,
+    'weight' => 0,
+  );
+  $items['admin/config/edidaktikum/contact-page'] = array(
+    'title' => 'eDidaktikum contact page',
+    'description' => 'Configure edidaktikum contact page.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('edidaktikum_contact_page_admin_form'),
+    'access arguments' => array('access administration pages'),
+    'file' => 'edidaktikum.admin.inc',
+    'type' => MENU_NORMAL_ITEM,
+    'weight' => 1,
   );
   $items['home'] = array(
     'title' => 'Home',
@@ -34,6 +45,15 @@ function edidaktikum_menu() {
     'access callback' => TRUE,
     'file' => 'edidaktikum.pages.inc',
     'weight' => 0,
+    'menu_name' => 'main-menu',
+    'type' => MENU_NORMAL_ITEM,
+  );
+  $items['contact'] = array(
+    'title' => 'Contact',
+    'page callback' => 'edidaktikum_contact_page',
+    'access callback' => TRUE,
+    'file' => 'edidaktikum.pages.inc',
+    'weight' => 25,
     'menu_name' => 'main-menu',
     'type' => MENU_NORMAL_ITEM,
   );

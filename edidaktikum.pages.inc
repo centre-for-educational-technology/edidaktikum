@@ -75,3 +75,40 @@ function edidaktikum_home_page() {
   return $content;
 }
 
+/**
+ * eDidaktikum contact page.
+ */
+function edidaktikum_contact_page() {
+
+  drupal_set_title(t('Contact Us'));
+
+  $content['contacts'] = array(
+    '#type' => 'container',
+    '#attributes' => array(
+      'id' => 'contacts',
+    ),
+  );
+  $content['contacts']['contacts-text'] = array(
+    '#type' => 'container',
+    '#attributes' => array(
+      'id' => 'contacts-text',
+    ),
+  );
+  $content['contacts']['contacts-text']['text'] = array(
+    '#type' => 'markup',
+    '#markup' => variable_get('ed_contact_page_contacts_text', ''),
+  );
+  $content['contacts']['logos-text'] = array(
+    '#type' => 'container',
+    '#attributes' => array(
+      'id' => 'logos-text',
+    ),
+  );
+  $content['contacts']['logos-text']['text'] = array(
+    '#type' => 'markup',
+    '#markup' => variable_get('ed_contact_page_logos_text', ''),
+  );
+
+  return $content;
+}
+
