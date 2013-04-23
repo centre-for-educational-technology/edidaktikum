@@ -94,9 +94,13 @@ function edidaktikum_contact_page() {
       'id' => 'contacts-text',
     ),
   );
+  $contacts_text = variable_get('ed_contact_page_contacts_text', '');
+  if (is_array($contacts_text)) {
+    $contacts_text = check_markup($contacts_text['value'], $contacts_text['format']);
+  }
   $content['contacts']['contacts-text']['text'] = array(
     '#type' => 'markup',
-    '#markup' => variable_get('ed_contact_page_contacts_text', ''),
+    '#markup' => $contacts_text,
   );
   $content['contacts']['logos-text'] = array(
     '#type' => 'container',
@@ -104,9 +108,13 @@ function edidaktikum_contact_page() {
       'id' => 'logos-text',
     ),
   );
+  $logos_text = variable_get('ed_contact_page_logos_text', '');
+  if (is_array($logos_text)) {
+    $logos_text = check_markup($logos_text['value'], $logos_text['format']);
+  }
   $content['contacts']['logos-text']['text'] = array(
     '#type' => 'markup',
-    '#markup' => variable_get('ed_contact_page_logos_text', ''),
+    '#markup' => $logos_text,
   );
 
   return $content;
