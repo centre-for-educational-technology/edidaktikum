@@ -55,3 +55,4 @@ function edidaktikum_variable_group_info() {
   );
   return $groups;
 }
+
