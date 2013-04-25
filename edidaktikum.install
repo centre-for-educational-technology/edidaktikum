@@ -12,6 +12,7 @@ function edidaktikum_install() {
   edidaktikum_create_roles();
   edidaktikum_create_vocabulary();
   edidaktikum_create_fields();
+  edidaktikum_set_translatable_variables();
 }
 
 /**
@@ -258,5 +259,21 @@ function edidaktikum_create_field_category() {
     );
     $field = field_create_field($field);
   }
+}
+
+/**
+ * Updates translatable variables list to include our own.
+ */
+function edidaktikum_set_translatable_variables() {
+  $translatable_varibles = array('ed_home_page_intro_image_url', 'ed_home_page_intro_text', 'ed_home_page_tour_text', 'ed_contact_page_contacts_text', 'ed_contact_page_logos_text');
+  $variable_realm_list_language = variable_get('variable_realm_list_language', array());
+
+  if (!empty($variable_realm_list_language)) {
+    $variable_realm_list_language = array_merge($variable_realm_list_language, $translatable_varibles);
+  }
+  else {
+    $variable_realm_list_language = $translatable_varibles;
+  }
+  variable_set('variable_realm_list_language', $variable_realm_list_language);
 }
 
