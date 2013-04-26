@@ -4,4 +4,5 @@ package = eDidaktikum
 core = 7.x
 
 dependencies[] = edidaktikum
+dependencies[] = menu
 
