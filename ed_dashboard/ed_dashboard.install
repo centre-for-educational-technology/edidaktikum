@@ -1,0 +1,55 @@
+<?php
+
+/**
+ * @file
+ * ed_dashboard.install
+ */
+
+/**
+ * Implements hook_install().
+ */
+function ed_dashboard_install() {
+  _ed_dashboard_create_menu();
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function ed_dashboard_uninstall() {
+  _ed_dashboard_delete_menu();
+}
+
+/**
+ * Creates eDidaktikum dashboard menu.
+ */
+function _ed_dashboard_create_menu() {
+  $menu = array(
+   'menu_name' => 'ed-dashboard-menu',
+   'title' => 'eDidaktikum dashboard menu',
+   'description' => 'The eDidaktikum dashboard menu is used on user dashboard pages.',
+  );
+  if (!menu_load($menu['menu_name'])) {
+    menu_save($menu);
+    $menu_block = array(
+      'module' => 'menu',
+      'delta' => $menu['menu_name'],
+      'theme' => 'edidaktikum_theme',
+      'status' => TRUE,
+      'title' => '<none>',
+      'region' => 'header',
+      'visibility' => BLOCK_VISIBILITY_LISTED,
+      'pages' => 'dashboard*',  
+    );
+    $write_result = drupal_write_record('block', $menu_block);
+  }
+}
+
+/**
+ * Deletes eDidaktikum dashboard menu.
+ */
+function _ed_dashboard_delete_menu() {
+  if ($menu = menu_load('ed-dashboard-menu')) {
+    menu_delete($menu);
+  }
+}
+

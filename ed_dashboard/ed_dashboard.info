@@ -1,0 +1,7 @@
+name = Dashboard
+description = eDidaktikum dashboard.
+package = eDidaktikum
+core = 7.x
+
+dependencies[] = edidaktikum
+

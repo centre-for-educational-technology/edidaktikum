@@ -1,0 +1,38 @@
+<?php
+
+/**
+ * @file
+ * eDidaktikum dashboard module.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function ed_dashboard_menu() {
+  $items['dashboard'] = array(
+    'title' => t('Dashboard'),
+    'page callback' => 'ed_dashboard_page',
+    'access callback' => 'user_is_logged_in',
+    'weight' => -5,
+    'menu_name' => 'main-menu',
+    'type' => MENU_NORMAL_ITEM,
+  );
+  $items['dashboard/home'] = array(
+    'title' => t('Dashboard'),
+    'page callback' => 'ed_dashboard_page',
+    'access callback' => 'user_is_logged_in',
+    'weight' => 10,
+    'menu_name' => 'ed-dashboard-menu',
+    'type' => MENU_NORMAL_ITEM,
+  );
+  return $items;
+}
+
+/**
+ * Dashboard page.
+ */
+function ed_dashboard_page() {
+  menu_tree_set_path('main-menu', 'dashboard');
+  return "I'm a dashboard";
+}
+
