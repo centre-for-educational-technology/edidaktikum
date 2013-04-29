@@ -361,9 +361,15 @@
                         eventEndDate = eventDate;
                     }
 
+					if (parseInt(eventHour) <= 9) {
+						eventHour = "0" + parseInt(eventHour);
+					}
 					if (parseInt(eventMinute) <= 9) {
 						eventMinute = "0" + parseInt(eventMinute);
 					}
+                    if (parseInt(eventEndHour) <= 9) {
+                        eventEndHour = "0" + parseInt(eventEndHour);
+                    }
                     if (parseInt(eventEndMinute) <= 9) {
                         eventEndMinute = "0" + parseInt(eventEndMinute);
                     }
@@ -380,13 +386,21 @@
 								if (month === false && eventDate < new Date()) {
 
 								} else {
-                                    
+                                   
                                     eventStringDate = eventDay + "/" + eventMonthToShow + "/" + eventYear;
-									var eventStringEndDate = "";
+                                    if ($.datepicker) {
+                                        eventStringDate = $.datepicker.formatDate('dd/mm/yy', eventDate);
+                                    }
+									
+                                    var eventStringEndDate = "";
                                     if (eventEndDate != eventDate) {
                                         eventStringEndDate = "<em>&nbsp;- " + eventEndDay + "/" + eventEndMonthToShow + "/" + eventEndYear + "</em>";
+                                        if ($.datepicker) {
+                                            eventStringEndDate = "<em>&nbsp;- " + $.datepicker.formatDate('dd/mm/yy', eventEndDate) + "</em>";
+                                        }
                                         eventStringEndDate += "<small>" + eventEndHour + ":" + eventEndMinute + "</small>";
                                     }
+
 									if (event.url) {
 										var eventTitle = '<a href="'+event.url+'" target="' + eventLinkTarget + '" class="eventTitle">' + event.title + '</a>';
 									} else {

@@ -185,6 +185,8 @@ function ed_event_block_info() {
  */
 function ed_event_block_view($block_name='') {
   if ($block_name == 'events_calendar') {
+
+    drupal_add_library('system', 'ui.datepicker');
     
     $content = array();
     $content['events-calendar'] = array(
