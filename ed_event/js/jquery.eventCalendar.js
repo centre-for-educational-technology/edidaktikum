@@ -1,10 +1,9 @@
 /* =
 	jquery.eventCalendar.js
-	version: 0.52
-	date: 04-04-2013
-	authors:
+	version: 0.54
+	date: 18-04-2013
+	author:
 		Jaime Fernandez (@vissit)
-		Nerea Navarro (@nereaestonta)
 	company:
 		Paradigma Tecnologico (@paradigmate)
 */
@@ -41,7 +40,12 @@
 		// show current month
 		dateSlider("current");
 
-		getEvents(eventsOpts.eventsLimit,false,false,false,false);
+        // show todays events onload
+        var currentDate = new Date();
+        var currentYear = currentDate.getFullYear();
+        var currentMonth = currentDate.getMonth();
+        var currentDay = currentDate.getUTCDate();
+		getEvents(eventsOpts.eventsLimit,currentYear,currentMonth,""+currentDay+"",currentDay);
 
 		changeMonth();
 
@@ -326,7 +330,7 @@
 							eventTime = eventDateTime[1].split(":"),
 							eventYear = eventDate[0],
 							eventMonth = parseInt(eventDate[1]) - 1,
-							eventDay = eventDate[2],
+							eventDay = parseInt(eventDate[2]),
 							//eventMonthToShow = eventMonth,
 							eventMonthToShow = parseInt(eventMonth) + 1,
 							eventHour = eventTime[0],
@@ -341,40 +345,74 @@
 							eventMonthToShow = eventMonth + 1,
 							eventHour = eventDate.getHours(),
 							eventMinute = eventDate.getMinutes();
+						if (event.enddate) {
+                            var eventEndDate = new Date(parseInt(event.enddate)),
+                                eventEndYear = eventEndDate.getFullYear(),
+                                eventEndMonth = eventEndDate.getMonth(),
+                                eventEndDay = eventEndDate.getDate(),
+                                eventEndMonthToShow = eventEndMonth + 1,
+                                eventEndHour = eventEndDate.getHours(),
+                                eventEndMinute = eventEndDate.getMinutes();
+                        }
 
 					}
+
+                    if (!eventEndDate) {
+                        eventEndDate = eventDate;
+                    }
 
 					if (parseInt(eventMinute) <= 9) {
 						eventMinute = "0" + parseInt(eventMinute);
 					}
-
+                    if (parseInt(eventEndMinute) <= 9) {
+                        eventEndMinute = "0" + parseInt(eventEndMinute);
+                    }
+                    chosenDate = new Date(year,month,day);
 
 					if (limit === 0 || limit > i) {
 						// if month or day exist then only show matched events
 						if ((month === false || month == eventMonth)
 								&& (day == '' || day == eventDay)
 								&& (year == '' || year == eventYear) // get only events of current year
-							) {
+							    || (eventDate <= chosenDate && chosenDate <= eventEndDate)
+                            ) {
 								// if initial load then load only future events
 								if (month === false && eventDate < new Date()) {
 
 								} else {
-									eventStringDate = eventDay + "/" + eventMonthToShow + "/" + eventYear;
+                                    
+                                    eventStringDate = eventDay + "/" + eventMonthToShow + "/" + eventYear;
+									var eventStringEndDate = "";
+                                    if (eventEndDate != eventDate) {
+                                        eventStringEndDate = "<em>&nbsp;- " + eventEndDay + "/" + eventEndMonthToShow + "/" + eventEndYear + "</em>";
+                                        eventStringEndDate += "<small>" + eventEndHour + ":" + eventEndMinute + "</small>";
+                                    }
 									if (event.url) {
 										var eventTitle = '<a href="'+event.url+'" target="' + eventLinkTarget + '" class="eventTitle">' + event.title + '</a>';
 									} else {
 										var eventTitle = '<span class="eventTitle">'+event.title+'</span>';
 									}
-									events.push('<li id="' + key + '" class="'+event.type+'"><time datetime="'+eventDate+'"><em>' + eventStringDate + '</em><small>'+eventHour+":"+eventMinute+'</small></time>'+eventTitle+'<p class="eventDesc ' + eventDescClass + '">' + event.description + '</p></li>');
+									events.push('<li id="' + key + '" class="'+event.type+'"><time datetime="'+eventDate+'"><em>' + eventStringDate + '</em><small>'+eventHour+":"+eventMinute+'</small>'+eventStringEndDate+'</time>'+eventTitle+'<p class="eventDesc ' + eventDescClass + '">' + event.description + '</p></li>');
 									i++;
 								}
 						}
 					}
 
 					// add mark in the dayList to the days with events
-					if (eventYear == flags.wrap.attr('data-current-year') && eventMonth == flags.wrap.attr('data-current-month')) {
+					/*if (eventYear == flags.wrap.attr('data-current-year') && eventMonth == flags.wrap.attr('data-current-month')) {
 						flags.wrap.find('.currentMonth .eventsCalendar-daysList #dayList_' + parseInt(eventDay)).addClass('dayWithEvents');
-					}
+					}*/
+                    //all days between start and end should be marked as daywithevents
+                    var dayToCheck = 1;
+                    currentYear = flags.wrap.attr('data-current-year');
+                    currentMonth = flags.wrap.attr('data-current-month');
+                    do {
+                        dateToCheck = new Date(currentYear,currentMonth,dayToCheck).getTime();
+                        if (eventDate < dateToCheck+1000*60*60*24 && dateToCheck <= eventEndDate) {
+                            flags.wrap.find('.currentMonth .eventsCalendar-daysList #dayList_' + parseInt(dayToCheck)).addClass('dayWithEvents');
+                        }
+                        dayToCheck++;
+                    } while (dayToCheck <= 31);
 
 				});
 			}
