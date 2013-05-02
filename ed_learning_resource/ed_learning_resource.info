@@ -3,8 +3,8 @@ description = eDidaktikum Learning Resource content type.
 package = eDidaktikum
 core = 7.x
 
-files[] = simple_content_type.install
-files[] = simple_content_type.module
+files[] = ed_learning_resource.install
+files[] = ed_learning_resource.module
 
 dependencies[] = ed_learning_resource_voc
 dependencies[] = term_reference_tree

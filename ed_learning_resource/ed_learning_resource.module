@@ -3,7 +3,7 @@
 require_once('ed_learning_resource_functions.inc');
 
 /*
- * Implements hook_info().
+ * Implements hook_node_info().
  */
 function ed_learning_resource_node_info() {
   $items['ed_learning_resource'] = array(
@@ -30,8 +30,6 @@ function ed_learning_resource_form($node, $form_state) {
 /*
  * Implements hook_menu().
  */
-
-
 function ed_learning_resource_menu() {
 
   $items['resources'] = array(
@@ -46,13 +44,24 @@ function ed_learning_resource_menu() {
   );
   return $items;
 }
+/*
+function ed_learning_resource_block_info() {
+  $blocks['ed_sort_category'] = array(
+    'info' => t('ehm.. i have no idea what i\'m doing'),
+    'status' => 1,
+    'region' => 'sidebar_second',
+    'visibility' => BLOCK_VISIBILITY_LISTED,
+    'pages' => 'resources',
+  );
+  return $blocks;
+}
+*/
 
 /**
  * Implements hook_ctools_plugin_api().
  */
 function ed_learning_resource_ctools_plugin_api() {
   list($module, $api) = func_get_args();
-  error_log($module. " " . $api);
   if ($module == "page_manager" && $api == "pages_default") {
     return array("version" => 1);
   }

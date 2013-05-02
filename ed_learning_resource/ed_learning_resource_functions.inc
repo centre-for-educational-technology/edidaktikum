@@ -398,7 +398,8 @@ function _ed_learning_resource_installed_instances() {
     'widget' => array(
       'type' => 'term_reference_tree',
       'settings' => array(
-        'start_minimized' => TRUE,
+        //'start_minimized' => TRUE,
+        'select_parents' => TRUE,
       ),
     ),
     'required' => TRUE,
@@ -406,6 +407,9 @@ function _ed_learning_resource_installed_instances() {
       'default' => array(
         'label' => 'above',
         'type' => 'term_reference_tree',
+        'settings' => array(
+          //'cascading_selection' => 1,         UURI SEDA VEEL VEIDI!!!!
+        ),
       ),
     ),
   );

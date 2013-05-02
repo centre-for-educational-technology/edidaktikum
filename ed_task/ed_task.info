@@ -1,0 +1,10 @@
+name = Task
+description = eDidaktikum Task content type.
+package = eDidaktikum
+core = 7.x
+
+files[] = ed_task.install
+files[] = ed_task.module
+
+dependencies[] = edidaktikum
+dependencies[] = user_reference
