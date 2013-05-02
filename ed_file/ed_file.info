@@ -1,0 +1,7 @@
+name = File
+description = eDidaktikum files.
+package = eDidaktikum
+core = 7.x
+
+dependencies[] = edidaktikum
+

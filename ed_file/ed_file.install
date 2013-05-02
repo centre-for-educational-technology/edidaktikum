@@ -1,0 +1,66 @@
+<?php
+
+/**
+ * @file
+ * ed_file.install
+ */
+
+/**
+ * Implements hook_install().
+ */
+function ed_file_install() {
+  ed_file_create_ed_file_node_type();
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function ed_file_uninstall() {
+  ed_file_delete_ed_file_nodes();
+  ed_file_delete_ed_file_node_type();
+}
+
+/**
+ * Creates ed_file node type.
+ */
+function ed_file_create_ed_file_node_type() {
+  if (!in_array('ed_file', node_type_get_names())) {
+    $type = array(
+      'type' => 'ed_file',
+      'name' => t('File'),
+      'base' => 'node_content',
+      'custom' => TRUE,
+      'modified' => FALSE,
+      'locked' => FALSE,
+      'has_title' => TRUE,
+      'title_label' => t('Title'),
+      'module' => 'ed_file',
+    );
+    $type = node_type_set_defaults($type);
+    node_type_save($type);
+  }
+}
+
+/**
+ * Deletes all ed_file nodes.
+ */
+function ed_file_delete_ed_file_nodes() {
+  $nids = array();
+  $query = db_select('node', 'n')
+    ->fields('n', array('nid'))
+    ->condition('n.type', 'ed_file');
+  $nids = $query->execute()->fetchCol();
+  if (!empty($nids)) {
+    node_delete_multiple($nids);
+  }
+}
+
+/**
+ * Deletes ed_file node type.
+ */
+function ed_file_delete_ed_file_node_type() {
+  if (!in_array('ed_file', node_type_get_names())) {
+    node_type_delete('ed_file');
+    node_types_rebuild();  
+  }  
+}

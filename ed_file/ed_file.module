@@ -1,0 +1,87 @@
+<?php
+
+/**
+ * @file
+ * eDidaktikum file module.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function ed_file_menu() {
+  $items['dashboard/files'] = array(
+    'title' => t('Files'),
+    'page callback' => 'ed_file_listing_page',
+    'access callback' => 'user_is_logged_in',
+    'weight' => 10,
+    'menu_name' => 'ed-dashboard-menu',
+    'type' => MENU_NORMAL_ITEM,
+  );
+  return $items;
+}
+
+/**
+ * Files listing page.
+ */
+function ed_file_listing_page() {
+  menu_tree_set_path('main-menu', 'dashboard');
+  
+  $content = array();
+
+  $header = array(
+    array(
+      'data' => t('Title'),
+      'field' => 'n.title',
+      'sort' => 'asc',
+    ), 
+    array(
+      'data' => t('Changed'),
+    ),
+  );
+
+
+  $rows = array();
+  //$files = node_load_multiple(ed_file_get_all_files());
+  $files = ed_file_get_all_files($header);
+  foreach ($files as $file) {
+    $rows[] = array(
+      'data' => array(
+        //'title' => $file->title,
+        'title' => l($file->title, 'node/' . $file->nid),
+        //'type' => '-',
+        'changed' => format_date($file->changed, 'short'),
+        //'actions' => l(t('Edit'), 'node/' . $file->nid . '/edit'),
+      ),
+    );
+  }
+
+  $content['table'] = array(
+    '#theme' => 'table',
+    '#attributes' => array(
+      'class' => array('ed-files-table'),
+    ),
+    '#rows' => $rows,
+    '#header' => $header,
+  );
+
+  return $content;
+}
+
+/**
+ * All files.
+ */
+function ed_file_get_all_files($header) {
+  $query = db_select('node', 'n')
+    ->fields('n', array('nid'))
+    ->condition('n.status', 1)
+    ->condition('n.type', 'ed_file')
+    ->addTag('node_access')
+    ->range()
+    ->extend('TableSort');  
+  //->orderBy('n.created', 'DESC');
+  $results = $query->fields('n', array('nid', 'title', 'type', 'changed'))->orderByHeader($header)->execute(); 
+  return $results;
+  $nids = $query->execute()->fetchCol();
+  return $nids;
+}
+
