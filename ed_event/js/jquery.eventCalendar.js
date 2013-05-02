@@ -213,7 +213,10 @@
 	}
 
 	function num_abbrev_str(num) {
-		var len = num.length, last_char = num.charAt(len - 1), abbrev
+		if (eventsOpts.locale != "en") {
+            return num;
+        }
+        var len = num.length, last_char = num.charAt(len - 1), abbrev
 		if (len === 2 && num.charAt(0) === '1') {
 			abbrev = 'th'
 		} else {
@@ -380,13 +383,13 @@
 						if ((month === false || month == eventMonth)
 								&& (day == '' || day == eventDay)
 								&& (year == '' || year == eventYear) // get only events of current year
-							    || (eventDate <= chosenDate && chosenDate <= eventEndDate)
+							    || (day!='' && eventDate <= chosenDate && chosenDate <= eventEndDate)
                             ) {
 								// if initial load then load only future events
 								if (month === false && eventDate < new Date()) {
 
 								} else {
-                                   
+                                    
                                     eventStringDate = eventDay + "/" + eventMonthToShow + "/" + eventYear;
                                     if ($.datepicker) {
                                         eventStringDate = $.datepicker.formatDate('dd/mm/yy', eventDate);
@@ -513,8 +516,9 @@ $.fn.eventCalendar.defaults = {
 	moveSpeed: 500,	// speed of month move when you clic on a new date
 	moveOpacity: 0.15, // month and events fadeOut to this opacity
 	jsonData: "", 	// to load and inline json (not ajax calls)
-	cacheJson: true	// if true plugin get a json only first time and after plugin filter events
+	cacheJson: true,	// if true plugin get a json only first time and after plugin filter events
 					// if false plugin get a new json on each date change
+    locale: 'en'
 };
 
 })(jQuery);

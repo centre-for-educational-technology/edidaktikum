@@ -91,7 +91,6 @@
 			.eventsCalendar-daysList:before, .eventsCalendar-daysList:after { content:""; display:table; }
 			.eventsCalendar-daysList:after { clear: both; }
 			.eventsCalendar-day-header {
-				text-transform:lowercase;
 				text-align:center;
 				font-size:10px;
 				border-bottom:solid 1px #BCBCBC;

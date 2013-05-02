@@ -187,7 +187,7 @@ function ed_event_block_view($block_name='') {
   if ($block_name == 'events_calendar') {
 
     drupal_add_library('system', 'ui.datepicker');
-    
+
     $content = array();
     $content['events-calendar'] = array(
       '#type' => 'markup',
@@ -203,6 +203,11 @@ function ed_event_block_view($block_name='') {
         ),  
       ), 
     );
+
+    global $language;
+    if (file_exists(drupal_get_path('module', 'ed_event') . "/js/jquery.eventCalendar-{$language->language}.js")) {
+      $content['events-calendar']['#attached']['js'][] = drupal_get_path('module', 'ed_event') . "/js/jquery.eventCalendar-{$language->language}.js";
+    }
 
     $block = array(
       'subject' => 'Events calendar',
