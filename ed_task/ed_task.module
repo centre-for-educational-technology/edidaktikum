@@ -95,11 +95,17 @@ function ed_task_listing_page() {
       '#rows' => $rows,
       '#header' => array(t('Tasks by me'), t('Shared To'), t('Due Date')),
     );
+  }else {
+    $content['no-task-made'] = array(
+      '#type' => 'markup',
+      '#markup' => '<h2>' . t('You haven\'t made any tasks') . '</h2>',
+    );
   }
 
 
   // Tasks from groups that the user is associated with.
-  $GLOBALS['user'];
+  $user = $GLOBALS['user'];
+
   if(isset($user->uid)){
     $groups = og_get_groups_by_user();
     foreach($groups['node'] as $group) {
