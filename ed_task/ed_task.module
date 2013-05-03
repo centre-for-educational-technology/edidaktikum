@@ -99,29 +99,31 @@ function ed_task_listing_page() {
 
 
   // Tasks from groups that the user is associated with.
-
-  $groups = og_get_groups_by_user();
-  foreach($groups['node'] as $group){
-    $table_suffix++;
-    $group_title = _ed_get_group_name_from_id($group);
-    $nids = _ed_get_tasks_specific_group($group);
-    $nodes = node_load_multiple($nids);
-    $rows2 = array();
-    foreach($nodes as $node) {
-      $datehelp = strtotime($node->ed_task_due_date['und']['0']['value']);    // Needs testing
-      $rows2[] = array(
-        'data' => array(
-          'task_name' => l($node->title, 'node/' . $node->nid),
-          'posted_by' => $node->name,
-          'due_date' => format_date($datehelp, 'short'),
-        ),
+  $GLOBALS['user'];
+  if(isset($user->uid)){
+    $groups = og_get_groups_by_user();
+    foreach($groups['node'] as $group) {
+      $table_suffix++;
+      $group_title = _ed_get_group_name_from_id($group);
+      $nids = _ed_get_tasks_specific_group($group);
+      $nodes = node_load_multiple($nids);
+      $rows2 = array();
+      foreach($nodes as $node) {
+        $datehelp = strtotime($node->ed_task_due_date['und']['0']['value']);    // Needs testing
+        $rows2[] = array(
+          'data' => array(
+            'task_name' => l($node->title, 'node/' . $node->nid),
+            'posted_by' => $node->name,
+            'due_date' => format_date($datehelp, 'short'),
+          ),
+        );
+      }
+      $content[$table_type.'-'.$table_suffix] = array(
+        '#theme' => 'table',
+        '#rows' => $rows2,
+        '#header' => array($group_title, t('Assigned By'), t('Due Date')),
       );
     }
-    $content[$table_type.'-'.$table_suffix] = array(
-      '#theme' => 'table',
-      '#rows' => $rows2,
-      '#header' => array($group_title, t('Assigned By'), t('Due Date')),
-    );
   }
   return $content;
 }
