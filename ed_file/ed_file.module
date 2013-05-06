@@ -28,29 +28,47 @@ function ed_file_listing_page() {
   
   $content = array();
 
+  $content['add-new'] = array(
+    '#type' => 'markup',
+    '#markup' => '<div>' . t('Add new ') . l(t('file'), 'node/add/ed-file') . t(' or ') . l(t('folder'), 'node/add/ed-file-folder') . '</div>',
+  );
+
   $header = array(
+    array(
+      'data' => '',
+    ),
     array(
       'data' => t('Title'),
       'field' => 'n.title',
       'sort' => 'asc',
     ), 
     array(
+      'data' => t('Type'),
+    ),
+    array(
       'data' => t('Changed'),
+      'field' => 'n.changed',
+      'sort' => 'desc',
+    ),
+    array(
+      'data' => '',
     ),
   );
 
 
   $rows = array();
   //$files = node_load_multiple(ed_file_get_all_files());
-  $files = ed_file_get_all_files($header);
+  $files = ed_file_get_all_files_and_folders($header);
   foreach ($files as $file) {
+    $file_type = ed_file_get_type($file);
+    $icon_class = ed_file_get_icon_class($file_type);
     $rows[] = array(
       'data' => array(
-        //'title' => $file->title,
+        'icon' => "<span class='ed-file-icon {$icon_class}'></span>",
         'title' => l($file->title, 'node/' . $file->nid),
-        //'type' => '-',
+        'type' => $file_type,
         'changed' => format_date($file->changed, 'short'),
-        //'actions' => l(t('Edit'), 'node/' . $file->nid . '/edit'),
+        'actions' => l(t('Edit'), 'node/' . $file->nid . '/edit'),
       ),
     );
   }
@@ -67,14 +85,35 @@ function ed_file_listing_page() {
   return $content;
 }
 
+function ed_file_get_type($node) {
+  if ($node->type == 'ed_file_folder') {
+    return "folder";
+  } else if ($node->type == 'ed_file') {
+    $nid = $node->nid;
+    $full_node = node_load($nid);
+    $file_upload_field = field_get_items('node', $full_node, 'ed_file_field_file_upload');
+    $mimetype = $file_upload_field[0]['filemime'];
+    return $mimetype; 
+  }
+  return "";
+}
+
+function ed_file_get_icon_class($mimetype) {
+  if ($mimetype == 'text/plain') {
+    return "ed-file-icon-txt";
+  }
+  return 'ed-file-icon-' . $mimetype;
+}
+
 /**
  * All files.
  */
-function ed_file_get_all_files($header) {
+function ed_file_get_all_files_and_folders($header) {
+  global $user;
   $query = db_select('node', 'n')
     ->fields('n', array('nid'))
-    ->condition('n.status', 1)
-    ->condition('n.type', 'ed_file')
+    ->condition('n.type', array('ed_file', 'ed_file_folder'), 'in')
+    ->condition('n.uid', $user->uid)
     ->addTag('node_access')
     ->range()
     ->extend('TableSort');  
