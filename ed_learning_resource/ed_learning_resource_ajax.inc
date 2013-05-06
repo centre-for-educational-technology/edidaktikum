@@ -9,11 +9,9 @@ function _ed_get_vid(){
 
 function ed_learning_resource_dynamic_sections($form, &$form_state, $no_js_use = FALSE){
   drupal_set_title(t('Learning Resources'));
+
   $form['#attached']['css'] = array(drupal_get_path('module', 'ed_learning_resource') . '/ajax.css',);
-
   $form['#attached']['js'] = array(drupal_get_path('module', 'ed_learning_resource') . '/ajax.js',);
-
-
 
   $form['content_sort_select'] = array(
     '#type' => 'select',
@@ -60,7 +58,6 @@ function ed_learning_resource_dynamic_sections($form, &$form_state, $no_js_use =
     '#field_name' => '',
     '#token_display' => '',
     '#prefix' => '<div id="category-wrapper">',
-    '#suffix' => '</div>',
   );
 
   $form['content_sort_category'] = array(
@@ -68,10 +65,7 @@ function ed_learning_resource_dynamic_sections($form, &$form_state, $no_js_use =
     '#value' => t('Sort by Category'),
     '#validate' => array(),
     '#limit_validation_errors' => array(),
-
-    '#prefix' => '<div id="category-wrapper-submit">',
     '#suffix' => '</div>',
-    //'#process' => array('ed_learning_resource_dynamic_sections_select_callback'),
   );
 
   $form['selection_fieldset'] = array(

@@ -1,5 +1,5 @@
 <?php
-
+// Table Paging displays quite well with Firefox. Not so well with Chrome.
 require_once('ed_task_functions.inc');
 
 /**
@@ -30,8 +30,8 @@ function ed_task_form($node, $form_state) {
    * Implements hook_menu().
    */
 function ed_task_menu(){
-  $items['test'] = array(
-    'title' => t('test'),
+  $items['tasks'] = array(
+    'title' => t('Tasks'),
     'page callback' => 'ed_task_listing_page',
     'access callback' => TRUE,
     'weight' => 20,
@@ -43,12 +43,13 @@ function ed_task_menu(){
 
 function ed_task_listing_page() {
   $content = array();
+
   $table_suffix = 1;
-  $content['heading'] = array(
+  /*$content['heading'] = array(
     '#type' => 'markup',
     '#markup' => '<h2>' . t('Tasks') . '</h2>',
-  );
-// @todo only display the link if user is authorized to add new tasks?
+  );*/
+// @todo only display the link if user is authorized to add new tasks? Might not be necessary. Only logged in users can see this page in the future.
   $content['add-task'] = array(
     '#type' => 'link',
     '#title' => t('Add new task'),
@@ -62,6 +63,7 @@ function ed_task_listing_page() {
 
   if ( !empty($nodes) ) {
     foreach($nodes as $node) {
+
       if(isset($node->ed_task_to_user['und']['0']['uid']) && !isset($node->ed_task_to_user['und']['1']['uid'])) {
         $user = user_load($node->ed_task_to_user['und']['0']['uid']);
         $username = ", ".$user->name;
@@ -74,7 +76,7 @@ function ed_task_listing_page() {
         $username = '';
       }
 
-      $datehelp = strtotime($node->ed_task_due_date['und']['0']['value']);    // Needs testing
+      $datehelp = strtotime($node->ed_task_due_date['und']['0']['value']);
       if( isset($node->og_group_ref['und']['0']['target_id']) ){
         $shared_to = $node->og_group_ref['und']['0']['target_id'];
       } else {
@@ -85,7 +87,7 @@ function ed_task_listing_page() {
         'data' => array(
           'title' => l($node->title, 'node/' . $node->nid),
           'shared_to' => t(l($group_title, 'node/' . $shared_to).$username),
-          'due_date' => format_date($datehelp, 'short'),
+          'due_date' => format_date($datehelp, 'custom','d/m/Y'),
         ),
       );
     }
@@ -94,7 +96,9 @@ function ed_task_listing_page() {
       '#theme' => 'table',
       '#rows' => $rows,
       '#header' => array(t('Tasks by me'), t('Shared To'), t('Due Date')),
+
     );
+    $content['pager'] = array('#theme' => 'pager');
   }else {
     $content['no-task-made'] = array(
       '#type' => 'markup',
@@ -115,12 +119,12 @@ function ed_task_listing_page() {
       $nodes = node_load_multiple($nids);
       $rows2 = array();
       foreach($nodes as $node) {
-        $datehelp = strtotime($node->ed_task_due_date['und']['0']['value']);    // Needs testing
+        $datehelp = strtotime($node->ed_task_due_date['und']['0']['value']);
         $rows2[] = array(
           'data' => array(
             'task_name' => l($node->title, 'node/' . $node->nid),
             'posted_by' => $node->name,
-            'due_date' => format_date($datehelp, 'short'),
+            'due_date' => format_date($datehelp, 'custom','d/m/Y'),   // Check if displays right date
           ),
         );
       }
@@ -128,6 +132,10 @@ function ed_task_listing_page() {
         '#theme' => 'table',
         '#rows' => $rows2,
         '#header' => array($group_title, t('Assigned By'), t('Due Date')),
+      );
+      $content['pager-'.$table_suffix] = array(
+        '#theme' => 'pager',
+        '#element' => $table_suffix-1,
       );
     }
   }
@@ -154,9 +162,12 @@ function _ed_get_group_name_from_id($id) {
 function _ed_get_cur_user_tasks(){
   $acc = $GLOBALS['user'];
   $query = db_select('node', 'n')
+
     ->fields('n', array('nid'))
     ->condition('n.type', 'ed_task')
     ->condition('n.uid', $acc->uid);
+  $query = $query->extend('TableSort')->extend('PagerDefault')->limit(2); //Small number for testing purposes
+
   $result = $query->execute()->fetchCol();
   $nodes = node_load_multiple($result);
   return $nodes;
@@ -168,7 +179,11 @@ function _ed_get_tasks_specific_group($gid) {
   $query->fields('n', array('nid'))
     ->condition('n.type', 'ed_task')
     ->condition('og.gid', $gid);
+
+  $query = $query->extend('TableSort')->extend('PagerDefault')->limit(2); //Small number for testing purposes
+
   $result = $query->execute()->fetchCol();
+
   return $result;
 }
 

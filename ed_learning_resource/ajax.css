@@ -10,13 +10,6 @@
 html.js .next-button {
   display: none;
 }
-/*
-div#category-wrapper {
-  float:right;
-}
-div#category-wrapper-submit{
-  float:right;
-}*/
 
 
 /* Makes the next/choose button align to the right of the select control */
@@ -24,9 +17,8 @@ div#category-wrapper-submit{
   display: inline-block;
 }
 
-/*
-.form-item-category {
+#category-wrapper{
   display: inline-block;
-  //width: 50%;
-  display:none;
-}*/
+  float: right;
+}
+
