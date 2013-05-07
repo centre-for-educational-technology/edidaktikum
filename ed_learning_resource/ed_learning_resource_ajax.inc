@@ -1,13 +1,14 @@
 <?php
 
-function _ed_get_vid(){
+
+// Get "Category" Vocabulary ID.
+function _ed_get_vid() {
   $vocab = taxonomy_vocabulary_machine_name_load('ed_category');
   $vid = $vocab->vid;
   return $vid;
 }
 
-
-function ed_learning_resource_dynamic_sections($form, &$form_state, $no_js_use = FALSE){
+function ed_learning_resource_dynamic_sections($form, &$form_state, $no_js_use = FALSE) {
   drupal_set_title(t('Learning Resources'));
 
   $form['#attached']['css'] = array(drupal_get_path('module', 'ed_learning_resource') . '/ajax.css',);
@@ -79,20 +80,20 @@ function ed_learning_resource_dynamic_sections($form, &$form_state, $no_js_use =
     $help = (array_values_recursive($cat));
     $form_state['input'] = array();
 
-
-    if(!empty($help)){
+    if(!empty($help)) {
       $resources = _ed_get_resources_category($help);
     }
     else{
       form_set_error('selection_fieldset', 'Please select a category');
     }
-    if(!empty($resources)){
+    if(!empty($resources)) {
       $nodes = node_load_multiple($resources);
       $build = node_view_multiple($nodes);
       $build['pager'] = array(
         '#theme' => 'pager',
         '#weight' => 5,
       );
+      $build['pager'] = array('#theme' => 'pager');
       $form['selection_fieldset']['resources'] = $build;
       return $form;
     }
@@ -103,12 +104,7 @@ function ed_learning_resource_dynamic_sections($form, &$form_state, $no_js_use =
       );
       return $form;
     }
-    //print_r($resources);
-
   }
-
-
-
 
   if( !empty($form_state['values']['content_sort_select']) ) {
     $form_state['input'] = array();
@@ -124,12 +120,12 @@ function ed_learning_resource_dynamic_sections($form, &$form_state, $no_js_use =
             '#theme' => 'pager',
             '#weight' => 5,
           );
+          $build['pager'] = array('#theme' => 'pager');
           $form['selection_fieldset']['resources'] = $build;
         }
         break;
       case t('Earliest First'):
         $resources = _ed_get_resources_date_asc();
-
         if( !empty( $resources ) ) {
           $nodes = node_load_multiple($resources);
           $build = node_view_multiple($nodes);
@@ -137,6 +133,7 @@ function ed_learning_resource_dynamic_sections($form, &$form_state, $no_js_use =
             '#theme' => 'pager',
             '#weight' => 5,
           );
+          $build['pager'] = array('#theme' => 'pager');
           $form['selection_fieldset']['resources'] = $build;
         }
         break;
@@ -149,6 +146,7 @@ function ed_learning_resource_dynamic_sections($form, &$form_state, $no_js_use =
             '#theme' => 'pager',
             '#weight' => 5,
           );
+          $build['pager'] = array('#theme' => 'pager');
           $form['selection_fieldset']['resources'] = $build;
         }
         break;
@@ -159,7 +157,6 @@ function ed_learning_resource_dynamic_sections($form, &$form_state, $no_js_use =
         );
         break;
     }
-
   }
   else{
     $resources = _ed_get_resources_date();
@@ -170,12 +167,10 @@ function ed_learning_resource_dynamic_sections($form, &$form_state, $no_js_use =
         '#theme' => 'pager',
         '#weight' => 5,
       );
+      $build['pager'] = array('#theme' => 'pager');
       $form['selection_fieldset']['resources'] = $build;
     }
   }
-  /*echo "<pre>";
-  print_r($form);
-  echo "</pre>";*/
   return $form;
 }
 
@@ -193,11 +188,16 @@ function ed_learning_resource_dynamic_sections_submit($form, &$form_state) {
 function ed_learning_resource_dynamic_sections_select_callback($form, $form_state) {
   return $form['selection_fieldset'];
 }
+
+
+// Database and helper functions.
+
 function _ed_get_resources_date_asc() {
   $query = db_select('node', 'n')
     ->fields('n', array('nid'))
     ->condition('n.type', 'ed_learning_resource');
   $query->orderBy('n.created', 'ASC');
+  $query = $query->extend('TableSort')->extend('PagerDefault')->limit(2);     // Small number for testing purposes.
   $nids = $query->execute()->fetchCol();
 
   return $nids;
@@ -207,23 +207,37 @@ function _ed_get_resources_date() {
     ->fields('n', array('nid'))
     ->condition('n.type', 'ed_learning_resource');
   $query->orderBy('n.created', 'DESC');
+  $query = $query->extend('TableSort')->extend('PagerDefault')->limit(2);     // Small number for testing purposes.
   $nids = $query->execute()->fetchCol();
 
   return $nids;
 }
-function _ed_get_resources_title(){
+function _ed_get_resources_title() {
   $query = db_select('node', 'n')
     ->fields('n', array('nid'))
     ->condition('n.type', 'ed_learning_resource');
   $query->orderBy('n.title', 'ASC');
+  $query = $query->extend('TableSort')->extend('PagerDefault')->limit(2);     // Small number for testing purposes.
   $nids = $query->execute()->fetchCol();
 
   return $nids;
 }
 
+function _ed_get_resources_category($help) {
+  $query = db_select('node', 'n');
+  $query->join('field_data_ed_field_category', 'cat', 'n.nid = cat.entity_id');
+  $query->fields('n', array('nid'))
+        ->condition('type', 'ed_learning_resource')
+        ->condition('cat.ed_field_category_tid', $help, "IN");
+  $query = $query->extend('TableSort')->extend('PagerDefault')->limit(2);     // Small number for testing purposes.
+  $result = $query->execute()->fetchCol();
+
+  return $result;
+}
+
+// Get all existing values from a tree type array.
 function array_values_recursive($array) {
   $arrayValues = array();
-
   foreach ($array as $value) {
     if (is_scalar($value) OR is_resource($value)) {
       $arrayValues[] = $value;
@@ -233,16 +247,4 @@ function array_values_recursive($array) {
     }
   }
   return $arrayValues;
-}
-
-function _ed_get_resources_category($help){
-  $query = db_select('node', 'n');
-  $query->join('field_data_ed_field_category', 'cat', 'n.nid = cat.entity_id');
-  $query->fields('n', array('nid'))
-        ->condition('type', 'ed_learning_resource')
-        ->condition('cat.ed_field_category_tid', $help, "IN");
-
-  $result = $query->execute()->fetchCol();
-
-  return $result;
 }

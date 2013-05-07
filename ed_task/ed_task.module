@@ -25,17 +25,16 @@ function ed_task_form($node, $form_state) {
   return node_content_form($node, $form_state);
 }
 
-
-  /**
-   * Implements hook_menu().
-   */
+/**
+ * Implements hook_menu().
+ */
 function ed_task_menu(){
   $items['tasks'] = array(
     'title' => t('Tasks'),
     'page callback' => 'ed_task_listing_page',
     'access callback' => TRUE,
-    'weight' => 20,
-    'menu_name' => 'main-menu',     // For easy testing purposes.
+    'weight' => 15,
+    'menu_name' => 'ed-dashboard-menu',     // For easy testing purposes.
     'type' => MENU_NORMAL_ITEM,
   );
   return $items;
@@ -43,12 +42,8 @@ function ed_task_menu(){
 
 function ed_task_listing_page() {
   $content = array();
-
   $table_suffix = 1;
-  /*$content['heading'] = array(
-    '#type' => 'markup',
-    '#markup' => '<h2>' . t('Tasks') . '</h2>',
-  );*/
+
 // @todo only display the link if user is authorized to add new tasks? Might not be necessary. Only logged in users can see this page in the future.
   $content['add-task'] = array(
     '#type' => 'link',
@@ -96,7 +91,6 @@ function ed_task_listing_page() {
       '#theme' => 'table',
       '#rows' => $rows,
       '#header' => array(t('Tasks by me'), t('Shared To'), t('Due Date')),
-
     );
     $content['pager'] = array('#theme' => 'pager');
   }else {
@@ -106,10 +100,8 @@ function ed_task_listing_page() {
     );
   }
 
-
   // Tasks from groups that the user is associated with.
   $user = $GLOBALS['user'];
-
   if(isset($user->uid)){
     $groups = og_get_groups_by_user();
     foreach($groups['node'] as $group) {
@@ -143,9 +135,9 @@ function ed_task_listing_page() {
 }
 
 
-  /**
-   * Helper and database query functions
-   */
+/**
+ * Helper and database query functions
+ */
 function _ed_get_group_name_from_id($id) {
   $query = db_select('node', 'n')
     ->fields('n', array('nid', 'title'))
@@ -162,10 +154,10 @@ function _ed_get_group_name_from_id($id) {
 function _ed_get_cur_user_tasks(){
   $acc = $GLOBALS['user'];
   $query = db_select('node', 'n')
-
     ->fields('n', array('nid'))
     ->condition('n.type', 'ed_task')
     ->condition('n.uid', $acc->uid);
+
   $query = $query->extend('TableSort')->extend('PagerDefault')->limit(2); //Small number for testing purposes
 
   $result = $query->execute()->fetchCol();
