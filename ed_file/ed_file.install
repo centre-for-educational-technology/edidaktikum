@@ -9,11 +9,14 @@
  * Implements hook_install().
  */
 function ed_file_install() {
-  ed_file_create_ed_file_node_type();
   ed_file_create_field_file_upload();
+  ed_file_create_field_ed_file_folder_ref();
+  ed_file_create_ed_file_node_type();
   ed_file_node_add_field_file_upload();
   ed_file_node_add_field_category();
+  ed_file_add_field_ed_file_folder_ref('ed_file');
   ed_file_create_ed_file_folder_node_type();
+  ed_file_add_field_ed_file_folder_ref('ed_file_folder');
   ed_file_set_permissions();
 }
 
@@ -21,9 +24,11 @@ function ed_file_install() {
  * Implements hook_uninstall().
  */
 function ed_file_uninstall() {
-  ed_file_delete_ed_file_nodes();
+  ed_file_delete_ed_files_and_folders();
   ed_file_delete_ed_file_node_type();
   ed_file_delete_ed_file_folder_node_type();
+  field_delete_field('ed_file_folder_ref');
+  field_delete_field('ed_file_field_file_upload');
 }
 
 /**
@@ -71,7 +76,7 @@ function ed_file_create_ed_file_folder_node_type() {
 }
 
 /**
- *
+ * Sets permissions for ed_file and ed_file_folder.
  */
 function ed_file_set_permissions() {
   $permissions = array(
@@ -106,7 +111,54 @@ function ed_file_create_field_file_upload() {
 }
 
 /**
- *
+ * Creates ed_file_folder_ref field if not exists.
+ */
+function ed_file_create_field_ed_file_folder_ref() {
+  $field_name = 'ed_file_folder_ref';
+  if (!field_info_field($field_name)) {
+    $field = array(
+      'field_name' => $field_name,
+      'type' => 'entityreference',
+      'entity_types' => array('node'),
+      'cardinality' => 1,
+      'locked' => FALSE,
+      'settings' => array(
+        'handler_settings' => array(
+          'target_bundles' => array('ed_file_folder'),  
+        ),  
+      ),
+    );
+    $field = field_create_field($field);
+  }
+}
+
+/**
+ * Adds ed_file_folder_ref field to given node type.
+ * 
+ * @param string $node_type
+ *   Node type
+ */
+function ed_file_add_field_ed_file_folder_ref($node_type) {
+  $field_name = 'ed_file_folder_ref';
+  $field = field_info_field($field_name);
+  if (!empty($field) && !field_info_instance('node', $field_name, $node_type)) {
+    $instance = array(
+      'field_name' => $field_name,
+      'entity_type' => 'node',
+      'bundle' => $node_type,
+      'label' => t('Folder'),
+      'description' => '',
+      'required' => FALSE,
+      'widget' => array(
+        'type' => 'options_select',
+      ),
+    );
+    field_create_instance($instance);
+  }
+}
+
+/**
+ * Adds file upload field to ed_file node type.
  */
 function ed_file_node_add_field_file_upload() {
   $field_name = 'ed_file_field_file_upload';
@@ -158,13 +210,13 @@ function ed_file_node_add_field_category() {
 }
   
 /**
- * Deletes all ed_file nodes.
+ * Deletes all ed_file and ed_file_folder nodes.
  */
-function ed_file_delete_ed_file_nodes() {
+function ed_file_delete_ed_files_and_folders() {
   $nids = array();
   $query = db_select('node', 'n')
     ->fields('n', array('nid'))
-    ->condition('n.type', 'ed_file');
+    ->condition('n.type', array('ed_file', 'ed_file_folder'), 'IN');
   $nids = $query->execute()->fetchCol();
   if (!empty($nids)) {
     node_delete_multiple($nids);
