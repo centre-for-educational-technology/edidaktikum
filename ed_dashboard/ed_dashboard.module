@@ -67,10 +67,11 @@ function ed_dashboard_page() {
 }
 
 function ed_dashboard_get_recent_updates() {
+  global $user;
   $query = db_select('node', 'n')
     ->fields('n', array('nid'))
-    ->condition('n.status', 1)
     ->condition('n.type', array('ed_file', 'ed_task'), 'IN')
+    ->condition('n.uid', $user->uid)
     ->addTag('node_access')
     ->range(0, 5)
     ->orderBy('n.changed', 'DESC');
