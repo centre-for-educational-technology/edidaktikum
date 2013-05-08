@@ -33,6 +33,48 @@ function ed_dashboard_menu() {
  */
 function ed_dashboard_page() {
   menu_tree_set_path('main-menu', 'dashboard');
-  return "I'm a dashboard";
+ 
+  $content = array();
+
+  $recent_updates = ed_dashboard_get_recent_updates();
+
+  if (!empty($recent_updates)) {
+
+    $content['recent-updates-heading'] = array(
+      '#type' => 'markup',
+      '#markup' => '<h2>' . t('Recent updates') . '</h2>',
+    );
+
+    $rows = array();
+    foreach ($recent_updates as $update_id) {
+      $update = node_load($update_id);
+      $rows[] = array(
+        'data' => array(
+          'title' => $update->title,
+          'changed' => format_date($update->changed, 'short'),
+        ),
+      );
+    }
+
+    $content['recent-updates-table'] = array(
+      '#theme' => 'table',
+      '#rows' => $rows,
+    );
+  
+  }
+ 
+  return $content; 
+}
+
+function ed_dashboard_get_recent_updates() {
+  $query = db_select('node', 'n')
+    ->fields('n', array('nid'))
+    ->condition('n.status', 1)
+    ->condition('n.type', array('ed_file', 'ed_task'), 'IN')
+    ->addTag('node_access')
+    ->range(0, 5)
+    ->orderBy('n.changed', 'DESC');
+  $nids = $query->execute()->fetchCol();
+  return $nids;
 }
 
