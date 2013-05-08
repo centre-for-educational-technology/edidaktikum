@@ -44,6 +44,16 @@ function ed_file_menu_breadcrumb_alter(&$active_trail, $item) {
 
 }
 
+function ed_file_add_folder_to_breadcrumb($breadcrumb, $folder) {
+  if ($folder->ed_file_folder_ref) {
+    $folder_id = $folder->ed_file_folder_ref['und'][0]['target_id'];
+    $folder = node_load($folder_id);
+    $breadcrumb[] = l($folder->title, 'dashboard/files', array('query' => array('folder' => $folder->nid)));
+    $breadcrumb = ed_file_add_folder_to_breadcrumb($breadcrumb, $folder);
+  }
+  return $breadcrumb;
+}
+
 /**
  * Files listing page.
  */
@@ -58,7 +68,8 @@ function ed_file_listing_page() {
   } 
   $breadcrumb = drupal_get_breadcrumb();
   if ($folder) { 
-    $breadcrumb[] = l('Files', 'dashboard/files');  
+    $breadcrumb[] = l('Files', 'dashboard/files');
+    $breadcrumb = ed_file_add_folder_to_breadcrumb($breadcrumb, $folder); 
     $breadcrumb[] = l($folder->title, 'dashboard/files', array('query' => array('folder' => $folder->nid)));
     drupal_set_breadcrumb($breadcrumb);
     //error_log(print_r($breadcrumb, true));
@@ -114,16 +125,17 @@ function ed_file_listing_page() {
       ),
     );
   }
-
-  $content['table'] = array(
-    '#theme' => 'table',
-    '#attributes' => array(
-      'class' => array('ed-files-table'),
-    ),
-    '#rows' => $rows,
-    '#header' => $header,
-  );
-
+  if (!empty($rows)) {
+    $content['table'] = array(
+      '#theme' => 'table',
+      '#attributes' => array(
+        'class' => array('ed-files-table'),
+      ),
+      '#rows' => $rows,
+      '#header' => $header,
+    );
+    $content['pager'] = array('#theme' => 'pager');
+  }
   return $content;
 }
 
@@ -165,7 +177,8 @@ function ed_file_get_all_files_and_folders($header) {
     ->condition('n.uid', $user->uid)
     ->addTag('node_access')
     ->range()
-    ->extend('TableSort');  
+    ->extend('TableSort')
+    ->extend('PagerDefault')->limit(10);  
   //->orderBy('n.created', 'DESC');
 
   $query->leftJoin('field_data_ed_file_folder_ref', 'folder', 'n.nid = folder.entity_id');
