@@ -153,6 +153,12 @@ function ed_file_add_field_ed_file_folder_ref($node_type) {
         'type' => 'options_select',
       ),
     );
+    $instance['settings']['behaviors']['prepopulate'] = array(
+      'status' => TRUE,
+      'action' => 'none',
+      'fallback' => 'none',
+      'skip_perm' => FALSE,
+    );
     field_create_instance($instance);
   }
 }

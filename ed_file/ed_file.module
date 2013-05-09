@@ -67,19 +67,22 @@ function ed_file_listing_page() {
     $folder = node_load($folder_id);  
   } 
   $breadcrumb = drupal_get_breadcrumb();
+  $url_parameters = array();
   if ($folder) { 
     $breadcrumb[] = l('Files', 'dashboard/files');
     $breadcrumb = ed_file_add_folder_to_breadcrumb($breadcrumb, $folder); 
     $breadcrumb[] = l($folder->title, 'dashboard/files', array('query' => array('folder' => $folder->nid)));
     drupal_set_breadcrumb($breadcrumb);
-    //error_log(print_r($breadcrumb, true));
+    $url_parameters = array('query' => array('ed_file_folder_ref' => $folder->nid));
   }
   
   $content = array();
 
+  $add_file_url = l(t('file'), 'node/add/ed-file', $url_parameters);
+  $add_file_folder_url = l(t('folder'), 'node/add/ed-file-folder', $url_parameters);
   $content['add-new'] = array(
     '#type' => 'markup',
-    '#markup' => '<div>' . t('Add new ') . l(t('file'), 'node/add/ed-file') . t(' or ') . l(t('folder'), 'node/add/ed-file-folder') . '</div>',
+    '#markup' => '<div>' . t('Add new ') . $add_file_url . t(' or ') . $add_file_folder_url . '</div>',
   );
 
   $header = array(
