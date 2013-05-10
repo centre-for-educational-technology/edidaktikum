@@ -1,0 +1,78 @@
+<?php
+
+/**
+ * @file
+ * eDidaktikum portfolio module.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function ed_portfolio_menu() {
+  $items['dashboard/portfolio'] = array(
+    'title' => t('Portfolio'),
+    'page callback' => 'ed_portfolio_listing_page',
+    'access callback' => 'user_is_logged_in',
+    'weight' => 5,
+    'menu_name' => 'ed-dashboard-menu',
+    'type' => MENU_NORMAL_ITEM,
+  );
+  return $items;
+}
+
+/**
+ * Portfolios listing page.
+ */
+function ed_portfolio_listing_page() {
+  menu_tree_set_path('main-menu', 'dashboard');
+
+  $content = array();
+
+  $content['add-new-portfolio'] = array(
+    '#type' => 'link',
+    '#title' => t('Add new portfolio'),
+    '#href' => 'node/add/ed-portfolio',
+  );
+
+  $user_portfolio_ids = ed_portfolio_get_user_portfolios(); 
+  $nodes = node_load_multiple($user_portfolio_ids);
+  $build = node_view_multiple($nodes);
+  /*$build['pager'] = array(
+    '#theme' => 'pager',
+    '#weight' => 5,
+  );*/
+  $content['user-portfolios'] = $build;
+ 
+  //$files = node_load_multiple(ed_file_get_all_files());
+  return $content;
+}
+
+/**
+ * User portfolio ids.
+ */
+function ed_portfolio_get_user_portfolios() {
+  global $user;
+  $query = db_select('node', 'n')
+    ->fields('n', array('nid'))
+    ->condition('n.type', 'ed_portfolio')
+    ->condition('n.uid', $user->uid)
+    ->addTag('node_access')
+    ->range()
+    ->orderBy('n.created', 'DESC');
+  $nids = $query->execute()->fetchCol();
+  return $nids;
+}
+
+/**
+ * Implements hook_field_widget_info().
+ */
+/*function ed_portfolio_field_widget_info() {
+  $widgets['ed_portfolio_items'] = array(
+    'label' => t('Portfolio items'),
+    'description' => t('Widget for drag and drop.'),
+    'field types' => array('entityreference'),
+  );
+
+  return $widgets;
+}*/
+

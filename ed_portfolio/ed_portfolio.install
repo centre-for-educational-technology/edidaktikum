@@ -1,0 +1,136 @@
+<?php
+
+/**
+ * @file
+ * ed_portfolio.install
+ */
+
+/**
+ * Implements hook_install().
+ */
+function ed_portfolio_install() {
+  ed_portfolio_create_ed_portfolio_node_type();
+  ed_portfolio_node_add_field_content();
+  ed_portfolio_node_add_field_featured_image();
+  ed_portfolio_set_permissions();
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function ed_portfolio_uninstall() {
+  ed_portfolio_delete_ed_portfolio_nodes();
+  ed_portfolio_delete_ed_portfolio_node_type();
+}
+
+/**
+ * Creates ed_portfolio node type.
+ */
+function ed_portfolio_create_ed_portfolio_node_type() {
+  if (!in_array('ed_portfolio', node_type_get_names())) {
+    $type = array(
+      'type' => 'ed_portfolio',
+      'name' => t('Portfolio'),
+      'base' => 'node_content',
+      'custom' => TRUE,
+      'modified' => FALSE,
+      'locked' => FALSE,
+      'has_title' => TRUE,
+      'title_label' => t('Title'),
+      'module' => 'ed_file',
+    );
+    $type = node_type_set_defaults($type);
+    node_type_save($type);
+    variable_set('comment_ed_portfolio', COMMENT_NODE_CLOSED);
+  }
+}
+
+function ed_portfolio_node_add_field_content() {
+  $field_name = 'ed_field_content';
+  $field = field_info_field($field_name);
+  if (!empty($field) && !field_info_instance('node', $field_name, 'ed_portfolio')) {
+    $instance = array(
+      'field_name' => $field_name,
+      'entity_type' => 'node',
+      'bundle' => 'ed_portfolio',
+      'label' => t('Description'),
+      'description' => '',
+      'settings' => array(
+        'text_processing' => TRUE,
+      ),
+      'widget' => array(
+        'settings' => array(
+          'rows' => 20,
+        ),
+      ),
+      'required' => FALSE,
+      'display' => array(
+        'default' => array(
+          'label' => 'hidden',
+          'type' => 'text_default',
+        ),
+      ),
+    );
+    field_create_instance($instance);
+  }
+}
+
+function ed_portfolio_node_add_field_featured_image() {
+  $field_name = 'ed_field_featured_image';
+  $field = field_info_field($field_name);
+  if (!empty($field) && !field_info_instance('node', $field_name, 'ed_portfolio')) {
+    $instance = array(
+      'field_name' => $field_name,
+      'entity_type' => 'node',
+      'bundle' => 'ed_portfolio',
+      'label' => t('Featured image'),
+      'description' => '',
+      'settings' => array(
+        'file_directory' => 'ed_portfolio_featured_images',
+      ),
+      'widget' => array(
+        'type' => 'image_image',
+      ),
+      'required' => FALSE,
+    );
+    field_create_instance($instance);
+  }
+}
+
+/**
+ * Sets permissions for ed_portfolio.
+ */
+function ed_portfolio_set_permissions() {
+  $permissions = array(
+    'create ed_portfolio content' => TRUE,  
+    'edit own ed_portfolio content' => TRUE,  
+    'delete own ed_portfolio content' => TRUE,  
+  );
+  user_role_change_permissions(DRUPAL_AUTHENTICATED_RID, $permissions);
+}
+
+/**
+ * Deletes all ed_portfolio nodes.
+ */
+function ed_portfolio_delete_ed_portfolio_nodes() {
+  $nids = array();
+  $query = db_select('node', 'n')
+    ->fields('n', array('nid'))
+    ->condition('n.type', 'ed_portfolio');
+  $nids = $query->execute()->fetchCol();
+  if (!empty($nids)) {
+    node_delete_multiple($nids);
+  }
+}
+
+/**
+ * Deletes ed_portfolio node type.
+ */
+function ed_portfolio_delete_ed_portfolio_node_type() {
+  if (in_array('ed_portfolio', node_type_get_names())) {
+    node_type_delete('ed_portfolio');
+    node_types_rebuild();  
+    variable_del('comment_ed_portfolio');
+  }  
+}
+
