@@ -77,6 +77,10 @@ function ed_event_node_add_field_excerpt() {
           'label' => 'hidden',  
           'type' => 'text_trimmed',
         ),  
+        'front' => array(
+          'label' => 'hidden',  
+          'type' => 'text_trimmed',
+        ),  
       ),
     );
     field_create_instance($instance);
