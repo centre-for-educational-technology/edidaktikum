@@ -96,6 +96,20 @@ function ed_news_node_add_field_excerpt() {
       'label' => t('Excerpt'),
       'description' => '',
       'required' => TRUE,
+      'display' => array(
+        'default' => array(
+          'label' => 'hidden',  
+          'type' => 'text_default',
+        ),
+        'teaser' => array(
+          'label' => 'hidden',  
+          'type' => 'text_trimmed',
+        ),  
+        'front' => array(
+          'label' => 'hidden',  
+          'type' => 'text_trimmed',
+        ),  
+      ),
     );
     field_create_instance($instance);
   }
