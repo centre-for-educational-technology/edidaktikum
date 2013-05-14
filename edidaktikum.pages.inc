@@ -54,9 +54,9 @@ function edidaktikum_home_page() {
       );
       $content['latest-content']['news']['title'] = array(
         '#type' => 'markup',
-        '#markup' => '<h2>' . t('News') .'</h2>',
+        '#markup' => '<h1>' . t('News') .'</h1>',
       );
-      $content['latest-content']['news']['content'] = node_view($latest_news, 'teaser');
+      $content['latest-content']['news']['content'] = node_view($latest_news, 'front');
     }
   }
 
@@ -71,9 +71,9 @@ function edidaktikum_home_page() {
       );
       $content['latest-content']['event']['title'] = array(
         '#type' => 'markup',
-        '#markup' => '<h2>' . t('Event') .'</h2>',
+        '#markup' => '<h1>' . t('Event') .'</h1>',
       );
-      $content['latest-content']['event']['content'] = node_view($latest_event, 'teaser');
+      $content['latest-content']['event']['content'] = node_view($latest_event, 'front');
     }
   }
 

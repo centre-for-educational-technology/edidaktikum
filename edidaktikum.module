@@ -65,12 +65,22 @@ function edidaktikum_entity_info_alter(&$entity_info) {
     'label' => t('Featured'),
     'custom settings' => TRUE,  
   );
+  $entity_info['node']['view modes']['front'] = array(
+    'label' => t('Front'),
+    'custom settings' => TRUE,  
+  );
 }
 
 function edidaktikum_preprocess_node(&$vars) {
   if ($vars['view_mode'] == 'featured') {
+    $vars['featured'] = TRUE;
     $vars['theme_hook_suggestions'][] = 'node__featured';
     $vars['theme_hook_suggestions'][] = 'node__' . $vars['type'] . '__featured';
+  }
+  if ($vars['view_mode'] == 'front') {
+    $vars['front'] = TRUE;
+    $vars['theme_hook_suggestions'][] = 'node__front';
+    $vars['theme_hook_suggestions'][] = 'node__' . $vars['type'] . '__front';
   }
 }
 
