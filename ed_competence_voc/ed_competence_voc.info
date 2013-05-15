@@ -1,0 +1,9 @@
+name = Competence vocabulary
+description = ..
+package = eDidaktikum
+core = 7.x
+files[] = ed_competence_voc.install
+files[] = ed_competence_voc.module
+
+dependencies[] = edidaktikum
+

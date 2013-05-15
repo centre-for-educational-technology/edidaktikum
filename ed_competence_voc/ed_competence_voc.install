@@ -1,0 +1,93 @@
+<?php
+
+
+function ed_competence_voc_install() {
+  _create_comp_voc();
+}
+
+
+
+function _create_comp_voc() {
+  $vocabulary = new stdClass();
+  $vocabulary->name = 'Competence';
+  $vocabulary->description = t('');
+  $vocabulary->machine_name = 'ed_competence_voc';
+  taxonomy_vocabulary_save($vocabulary);
+
+  $terms = array(
+    0 => array(
+      'title' => 'esimene vanem',
+      'description' => '',
+      'weight' => 0,
+      'terms' => array(
+        0 => array(
+          'title' => 'esimese vanema laps1',
+          'description' => '',
+          'weight' => 0,
+        ),
+        1 => array(
+          'title' => 'esimese vanema laps2',
+          'description' => '',
+          'weight' => 1,
+        ),
+      ),
+    ),
+    1 => array(
+      'title' => 'teine vanem',
+      'description' => '',
+      'weight' => 1,
+      'terms' => array(
+        0 => array(
+          'title' => 'teise vanema laps1',
+          'description' => '',
+          'weight' => 0,
+        ),
+        1 => array(
+          'title' => 'teise vanema laps2',
+          'description' => '',
+          'weight' => 1,
+          'terms' => array(
+            0 => array(
+              'title' => 'teise vanema lapselaps',
+              'description' => '',
+              'weight' => 0,
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+
+  foreach($terms as $term) {
+    _ed_competence_voc_save_term($vocabulary->vid, $term);
+  }
+
+}
+
+function _ed_competence_voc_save_term($vid, $one) {
+  $term = new stdClass();
+  $term->name = $one['title'];
+  $term->description = $one['description'];
+  $term->format = 'plain_text';
+  $term->vid = $vid;
+  $term->weight = $one['weight'];
+  $term->parent = isset($one['parent']) ? $one['parent'] : 0;
+  taxonomy_term_save($term);
+  if (isset($one['terms']) && is_array($one['terms']) && sizeof($one['terms']) > 0) {
+    foreach($one['terms'] as $one) {
+      $one['parent'] =  $term->tid;
+      _ed_competence_voc_save_term($vid, $one);
+    }
+  }
+}
+
+function ed_competence_voc_uninstall() {
+  ed_comp_voc_delete_voc();
+}
+
+function ed_comp_voc_delete_voc(){
+  $vocabulary = taxonomy_vocabulary_machine_name_load('ed_competence_voc');
+  if (!empty($vocabulary)) {
+    taxonomy_vocabulary_delete($vocabulary->vid);
+  }
+}
