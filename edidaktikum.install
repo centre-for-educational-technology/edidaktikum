@@ -9,8 +9,10 @@
  * Implements hook_install().
  */
 function edidaktikum_install() {
+  edidaktikum_create_roles();
   edidaktikum_create_vocabulary();
   edidaktikum_create_fields();
+  edidaktikum_set_translatable_variables();
 }
 
 /**
@@ -38,6 +40,33 @@ function edidaktikum_disable() {
   variable_set('site_frontpage', 'node');
 }
 
+/**
+ * Creates custom roles if those do not yet exist.
+ */
+function edidaktikum_create_roles() {
+  // Add Teacher role if not exists.
+  if (user_role_load_by_name('teacher') === FALSE) {
+    $teacher = new stdClass();
+    $teacher->name = 'teacher';
+
+    $administrator = user_role_load_by_name('administrator');
+    // Check if administrator role is defined.
+    if ($administrator !== FALSE) {
+      // Assign weight of an Administrator role to Teacher
+      $teacher->weight = $administrator->weight;
+      // Increment role weight for Administrator
+      $administrator->weight = (int) $administrator->weight + 1;
+
+      user_role_save($administrator);
+    }
+
+    user_role_save($teacher);
+  }
+}
+
+/**
+ * Removes any preset vocabularies created during install.
+ */
 function edidaktikum_delete_vocabulary() {
   $vocabulary = taxonomy_vocabulary_machine_name_load('ed_category');
   if (!empty($vocabulary)) {
@@ -117,7 +146,7 @@ function edidaktikum_create_vocabulary() {
 /**
  * Creates a term and assigns that to a vocabulary. Term data is provided as an
  * array that may hold an additional array of subterms.
- *
+ * 
  * @param $vid
  *   A vocabulary ID.
  * @param $single
@@ -232,4 +261,19 @@ function edidaktikum_create_field_category() {
   }
 }
 
+/**
+ * Updates translatable variables list to include our own.
+ */
+function edidaktikum_set_translatable_variables() {
+  $translatable_varibles = array('ed_home_page_intro_image_url', 'ed_home_page_intro_text', 'ed_home_page_tour_text', 'ed_contact_page_contacts_text', 'ed_contact_page_logos_text');
+  $variable_realm_list_language = variable_get('variable_realm_list_language', array());
+
+  if (!empty($variable_realm_list_language)) {
+    $variable_realm_list_language = array_merge($variable_realm_list_language, $translatable_varibles);
+  }
+  else {
+    $variable_realm_list_language = $translatable_varibles;
+  }
+  variable_set('variable_realm_list_language', $variable_realm_list_language);
+}
 

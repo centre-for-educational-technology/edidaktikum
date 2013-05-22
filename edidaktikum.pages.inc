@@ -30,7 +30,6 @@ function edidaktikum_home_page() {
     '#attributes' => array(
       'id' => 'intro-text',
     ),
-
   );
   $content['intro']['intro-text']['text'] = array(
     '#type' => 'markup',
@@ -87,6 +86,51 @@ function edidaktikum_home_page() {
   $content['tour']['text'] = array(
     '#type' => 'markup',
     '#markup' => variable_get('ed_home_page_tour_text', ''),
+  );
+
+  return $content;
+}
+
+/**
+ * eDidaktikum contact page.
+ */
+function edidaktikum_contact_page() {
+
+  drupal_set_title(t('Contact Us'));
+
+  $content['contacts'] = array(
+    '#type' => 'container',
+    '#attributes' => array(
+      'id' => 'contacts',
+    ),
+  );
+  $content['contacts']['contacts-text'] = array(
+    '#type' => 'container',
+    '#attributes' => array(
+      'id' => 'contacts-text',
+    ),
+  );
+  $contacts_text = variable_get('ed_contact_page_contacts_text', '');
+  if (is_array($contacts_text)) {
+    $contacts_text = check_markup($contacts_text['value'], $contacts_text['format']);
+  }
+  $content['contacts']['contacts-text']['text'] = array(
+    '#type' => 'markup',
+    '#markup' => $contacts_text,
+  );
+  $content['contacts']['logos-text'] = array(
+    '#type' => 'container',
+    '#attributes' => array(
+      'id' => 'logos-text',
+    ),
+  );
+  $logos_text = variable_get('ed_contact_page_logos_text', '');
+  if (is_array($logos_text)) {
+    $logos_text = check_markup($logos_text['value'], $logos_text['format']);
+  }
+  $content['contacts']['logos-text']['text'] = array(
+    '#type' => 'markup',
+    '#markup' => $logos_text,
   );
 
   return $content;
