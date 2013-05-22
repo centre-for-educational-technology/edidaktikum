@@ -35,34 +35,202 @@ function ed_learning_resource_menu() {
   $items['resources'] = array(
     'title' => t('Resources'),
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('ed_learning_resource_dynamic_sections'),
+    'page arguments' => array('ed_learning_resource_listing'),
     'access callback' => TRUE,
     'weight' => 15,
-    'file' => 'ed_learning_resource_ajax.inc',
     'menu_name' => 'main-menu',
     'type' => MENU_NORMAL_ITEM,
   );
   return $items;
 }
-/*
-function ed_learning_resource_block_info() {
-  $blocks['ed_sort_category'] = array(
-    'info' => t('ehm.. i have no idea what i\'m doing'),
-    'status' => 1,
-    'region' => 'sidebar_second',
-    'visibility' => BLOCK_VISIBILITY_LISTED,
-    'pages' => 'resources',
-  );
-  return $blocks;
-}
-*/
 
-/**
- * Implements hook_ctools_plugin_api().
- */
+function ed_learning_resource_listing($form, &$form_state) {
+
+  drupal_set_title(t('Learning Resources'));
+  $form['#attached']['css'] = array(drupal_get_path('module', 'ed_learning_resource') . '/ajax.css',);
+  $form['#attached']['js'] = array(drupal_get_path('module', 'ed_learning_resource') . '/ed_learning_resource_js.js',);
+  //drupal_add_js(drupal_get_path('module', 'ed_learning_resource') . '/ed_learning_resource_js.js');
+
+  $form['content_sort_select'] = array(
+    '#type' => 'select',
+    '#title' => t('Sort By'),
+    '#options' => drupal_map_assoc(array(t('Latest First'), t('Earliest First'), t('Title'), t('Likes(not facebook)'))),
+  );
+
+  $term_reference_tree_path = drupal_get_path('module', 'term_reference_tree');
+  $form['category'] = array(
+    '#type' => 'checkbox_tree',
+    '#title' => t('Filter by Category'),
+    '#vocabulary' => _ed_get_vid(),
+    '#parent_tid' => 0,
+    '#value_key' => 'tid',
+    '#max_choices' => 999,
+    '#leaves_only' => 0,
+    '#start_minimized' => FALSE,
+    '#depth' => 0,
+    '#select_parents' => TRUE,
+    '#attached' => array(
+      'js' => array($term_reference_tree_path . '/term_reference_tree.js'),
+      'css' => array($term_reference_tree_path . '/term_reference_tree.css'),
+    ),
+    '#attributes' => array('class' => array('field-widget-term-reference-tree')),
+    '#element_validate' => array('_term_reference_Tree_widget_validate'),
+    '#value' => array(),
+    '#filter_view' => '',
+    '#max_depth' => '',
+    '#field_name' => '',
+    '#token_display' => '',
+    '#prefix' => '<div id="category-wrapper">',   //Make it collapsible
+    '#suffix' => '</div>',
+  );
+  $form['content_submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Search'),
+    '#validate' => array(),
+    '#limit_validation_errors' => array(),
+  );
+  $form['selection_fieldset'] = array(
+    '#type' => 'fieldset',
+    '#prefix' => '<div id="selection-fieldset-wrapper">',
+    '#suffix' => '</div>',
+  );
+
+
+  $order = t('Latest First');
+
+  if( !empty($form_state['values']['category'])){ // else{show from all categories}
+    $order = ($form_state['values']['content_sort_select']);
+
+    $form['content_sort_select']['#default_value'] = $order;
+    $catAll = $form_state['values']['category'];
+    //$catValues = array();
+    $catValues = array_values_recursive($catAll);
+
+    if( !empty($catValues) ){
+      $resources = _ed_get_resources_category($catValues, $order);
+      $nids = node_load_multiple($resources);
+      $build = node_view_multiple($nids);
+      $build['pager'] = array(
+        '#theme' => 'pager',
+        '#weight' => 5,
+      );
+      //$form .= theme('pager');
+      $form['selection_fieldset']['resources'] = $build;
+    }
+
+  }
+  else{
+
+    if(!empty($form_state['values']['content_sort_select'])){
+      $order = ($form_state['values']['content_sort_select']);
+      //$resources = _ed_get_all_resources($order);
+    }
+    $resources = _ed_get_all_resources($order);
+
+    $nids = node_load_multiple($resources);
+    $build = node_view_multiple($nids);
+    $build['pager'] = array(
+      '#theme' => 'pager',
+      '#weight' => 5,
+    );
+    //$build .= theme('pager');
+    $form['selection_fieldset']['resources'] = $build;
+
+  }
+
+
+
+    return $form;
+}
+
+function ed_learning_resource_listing_submit($form, &$form_state) {
+  switch($form_state['triggering_element']['#value']) {
+    case t('Search'):
+      $form_state['values']['content_sort_select'] = $form_state['input']['content_sort_select'];
+      $help = array_values_recursive($form_state['input']['category']);
+      if(!empty($help)){
+        $form_state['values']['category'] = $help;
+        //dprint_r($help);
+      }
+    default:
+      $form_state['rebuild'] = TRUE;
+  }
+}
+
+function _ed_get_vid() {
+  $vocab = taxonomy_vocabulary_machine_name_load('ed_category');
+  $vid = $vocab->vid;
+  return $vid;
+}
+
 function ed_learning_resource_ctools_plugin_api() {
   list($module, $api) = func_get_args();
   if ($module == "page_manager" && $api == "pages_default") {
     return array("version" => 1);
   }
+}
+
+// Get all existing values from a tree type array.
+function array_values_recursive($array) {
+  $arrayValues = array();
+  foreach ($array as $value) {
+    if (is_scalar($value) OR is_resource($value)) {
+      $arrayValues[] = $value;
+    }
+    elseif (is_array($value)) {
+      $arrayValues = array_merge($arrayValues, array_values_recursive($value));
+    }
+  }
+  return $arrayValues;
+}
+
+function _ed_get_resources_category($cat, $order){
+
+  $query = db_select('node', 'n');
+  $query->join('field_data_ed_field_category', 'cat', 'n.nid = cat.entity_id');
+  $query->fields('n', array('nid'))
+    ->condition('n.type', 'ed_learning_resource')
+    ->condition('cat.ed_field_category_tid', $cat, 'IN');
+  $query = $query->extend('PagerDefault')->limit(2);
+  switch($order){
+    case t('Latest First'):
+      $query->orderBy('n.created', 'DESC');
+      break;
+    case t('Earliest First'):
+      $query->orderBy('n.created', 'ASC');
+      break;
+    case t('Title'):
+      $query->orderBy('n.title', 'ASC');
+      break;
+  }
+
+  //dpq($query);
+  $result = $query->execute()->fetchCol();
+
+  return $result;
+
+}
+
+function _ed_get_all_resources($order) {
+
+  $query = db_select('node', 'n');
+  $query->fields('n', array('nid'))
+    ->condition('n.type', 'ed_learning_resource');
+  $query = $query->extend('PagerDefault')->limit(2);
+  switch($order){
+    case t('Latest First'):
+      $query->orderBy('n.created', 'DESC');
+      break;
+    case t('Earliest First'):
+      $query->orderBy('n.created', 'ASC');
+      break;
+    case t('Title'):
+      $query->orderBy('n.title', 'ASC');
+      break;
+  }
+  //dpq($query);
+  $result = $query->execute()->fetchCol();
+
+  return $result;
+
 }

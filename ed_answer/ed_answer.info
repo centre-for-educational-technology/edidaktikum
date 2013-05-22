@@ -1,0 +1,11 @@
+name = eDidaktikum Answer
+description = eDidaktikum Answer content type to Tasks.
+package = eDidaktikum
+core = 7.x
+
+files[] = ed_module.install
+files[] = ed_answer.module
+
+dependencies[] = edidaktikum
+dependencies[] = ed_task
+dependencies[] = ed_blog

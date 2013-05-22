@@ -1,0 +1,10 @@
+<?php
+
+function ed_user_extra_ctools_plugin_directory($module, $plugin) {
+  if($module == 'entityreference') {
+    return 'plugins/' . $plugin;
+  }
+}
+
+//Maybe integrate this module into the eDidaktikum main module..?
+

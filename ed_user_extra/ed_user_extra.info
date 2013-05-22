@@ -1,0 +1,9 @@
+name = eDidaktikum User extra fields
+description = Adds extra fields to user registration form
+package = eDidaktikum
+core = 7.x
+
+files[] = ed_user_extra.install
+files[] = ed_user_extra.module
+
+dependencies[] = edidaktikum

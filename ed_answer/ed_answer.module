@@ -1,0 +1,19 @@
+<?php
+
+require_once('ed_answer_functions.inc');
+
+function ed_answer_node_info() {
+  $items['ed_answer'] = array(
+    'name' => t('Answer'),
+    'type' => 'ed_answer',
+    'base' => 'node_content',
+    'description' => t('description'),
+    'has_title' => 0,
+    'body_label' => t('body_label'),
+  );
+  return $items;
+}
+
+function ed_answer_form($node, $form_state) {
+  return node_content_form($node, $form_state);
+}

@@ -1,0 +1,9 @@
+name = eDidaktikum Blog
+description = eDidaktikum Blog content type.
+package = eDidaktikum
+core = 7.x
+
+files[] = ed_blog.install
+files[] = ed_blog.module
+
+dependencies[] = edidaktikum

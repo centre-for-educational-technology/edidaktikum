@@ -9,19 +9,20 @@ function _ed_get_vid() {
 }
 
 function ed_learning_resource_dynamic_sections($form, &$form_state, $no_js_use = FALSE) {
+
   drupal_set_title(t('Learning Resources'));
 
   $form['#attached']['css'] = array(drupal_get_path('module', 'ed_learning_resource') . '/ajax.css',);
-  $form['#attached']['js'] = array(drupal_get_path('module', 'ed_learning_resource') . '/ajax.js',);
+  //$form['#attached']['js'] = array(drupal_get_path('module', 'ed_learning_resource') . '/ajax.js',);
 
   $form['content_sort_select'] = array(
     '#type' => 'select',
     '#title' => t('Sort By'),
     '#options' => drupal_map_assoc(array(t('Latest First'), t('Earliest First'), t('Title'), t('Likes'))),
-    '#ajax' => array(
+    /*'#ajax' => array(
       'wrapper' => 'selection-fieldset-wrapper',
       'callback' => 'ed_learning_resource_dynamic_sections_select_callback',
-    ),
+    ),*/
   );
 
   $form['sorting_type_submit'] = array(
@@ -74,7 +75,9 @@ function ed_learning_resource_dynamic_sections($form, &$form_state, $no_js_use =
     '#prefix' => '<div id="selection-fieldset-wrapper">',
     '#suffix' => '</div>',
   );
+
   if( !empty($form_state['values']['category'])) {
+
     $cat = $form_state['values']['category'];
     $help = array();
     $help = (array_values_recursive($cat));
@@ -95,6 +98,7 @@ function ed_learning_resource_dynamic_sections($form, &$form_state, $no_js_use =
       );
       $build['pager'] = array('#theme' => 'pager');
       $form['selection_fieldset']['resources'] = $build;
+
       return $form;
     }
     else{
@@ -102,11 +106,13 @@ function ed_learning_resource_dynamic_sections($form, &$form_state, $no_js_use =
         '#type' => 'markup',
         '#markup' => '<h3>' . t('Learning resources not found') .'</h3>',
       );
+
       return $form;
     }
+
   }
 
-  if( !empty($form_state['values']['content_sort_select']) ) {
+  if( !empty($form_state['values']['content_sort_select'])) {
     $form_state['input'] = array();
     $selection_type = $form_state['values']['content_sort_select'];
 
@@ -158,7 +164,7 @@ function ed_learning_resource_dynamic_sections($form, &$form_state, $no_js_use =
         break;
     }
   }
-  else{
+  else {
     $resources = _ed_get_resources_date();
     if( !empty( $resources ) ) {
       $nodes = node_load_multiple($resources);
@@ -167,26 +173,37 @@ function ed_learning_resource_dynamic_sections($form, &$form_state, $no_js_use =
         '#theme' => 'pager',
         '#weight' => 5,
       );
-      $build['pager'] = array('#theme' => 'pager');
+      //$build['pager'] = array('#theme' => 'pager');
       $form['selection_fieldset']['resources'] = $build;
     }
   }
+
   return $form;
+
 }
 
 function ed_learning_resource_dynamic_sections_submit($form, &$form_state) {
+
   switch($form_state['triggering_element']['#value']) {
     case t('Sort'):
       $form_state['values']['content_sort_select'] = $form_state['input']['content_sort_select'];
     case t('Sort by Category'):
+
       $form_state['values']['category'] = $form_state['input']['category'];
+
     default:
       $form_state['rebuild'] = TRUE;
+
   }
 }
 
+
 function ed_learning_resource_dynamic_sections_select_callback($form, $form_state) {
+  //$form_state['rebuild'] = TRUE;
+
+
   return $form['selection_fieldset'];
+
 }
 
 
@@ -197,7 +214,7 @@ function _ed_get_resources_date_asc() {
     ->fields('n', array('nid'))
     ->condition('n.type', 'ed_learning_resource');
   $query->orderBy('n.created', 'ASC');
-  $query = $query->extend('TableSort')->extend('PagerDefault')->limit(2);     // Small number for testing purposes.
+  $query = $query->extend('PagerDefault')->limit(2);     // Small number for testing purposes.
   $nids = $query->execute()->fetchCol();
 
   return $nids;
@@ -207,7 +224,7 @@ function _ed_get_resources_date() {
     ->fields('n', array('nid'))
     ->condition('n.type', 'ed_learning_resource');
   $query->orderBy('n.created', 'DESC');
-  $query = $query->extend('TableSort')->extend('PagerDefault')->limit(2);     // Small number for testing purposes.
+  $query = $query->extend('PagerDefault')->limit(2);     // Small number for testing purposes.
   $nids = $query->execute()->fetchCol();
 
   return $nids;
@@ -217,7 +234,7 @@ function _ed_get_resources_title() {
     ->fields('n', array('nid'))
     ->condition('n.type', 'ed_learning_resource');
   $query->orderBy('n.title', 'ASC');
-  $query = $query->extend('TableSort')->extend('PagerDefault')->limit(2);     // Small number for testing purposes.
+  $query = $query->extend('PagerDefault')->limit(2);     // Small number for testing purposes.
   $nids = $query->execute()->fetchCol();
 
   return $nids;
@@ -229,7 +246,7 @@ function _ed_get_resources_category($help) {
   $query->fields('n', array('nid'))
         ->condition('type', 'ed_learning_resource')
         ->condition('cat.ed_field_category_tid', $help, "IN");
-  $query = $query->extend('TableSort')->extend('PagerDefault')->limit(2);     // Small number for testing purposes.
+  $query = $query->extend('PagerDefault')->limit(2);     // Small number for testing purposes.
   $result = $query->execute()->fetchCol();
 
   return $result;

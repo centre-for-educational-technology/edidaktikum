@@ -13,6 +13,7 @@
     attach: function() {
       // If ajax is enabled.
       if (Drupal.ajax) {
+
         $('.enabled-for-ajax').removeAttr('disabled');
       }
 

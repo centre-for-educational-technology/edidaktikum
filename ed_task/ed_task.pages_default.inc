@@ -18,7 +18,7 @@ function ed_task_default_page_manager_handlers() {
 
 function _ed_task_edit_page_handler(){
   $handler = new stdClass();
-  $handler->disabled = FALSE;
+  $handler->disabled = FALSE; /* Edit this to true to make a default handler disabled initially */
   $handler->api_version = 1;
   $handler->name = 'node_edit_panel_ed_task';
   $handler->task = 'node_edit';
@@ -49,8 +49,6 @@ function _ed_task_edit_page_handler(){
       'logic' => 'and',
     ),
   );
-
-
   $display = new panels_display();
   $display->layout = 'twocol_stacked';
   $display->layout_settings = array();
@@ -67,32 +65,8 @@ function _ed_task_edit_page_handler(){
   $display->title = '';
   $display->content = array();
   $display->panels = array();
-
   $pane = new stdClass();
-  $pane->pid = 'left-1';
-  $pane->panel = 'left';
-  $pane->type = 'form';
-  $pane->subtype = 'form';
-  $pane->shown = TRUE;
-  $pane->access = array();
-  $pane->configuration = array(
-    'context' => 'argument_node_edit_1',
-    'override_title' => 0,
-    'override_title_text' => '',
-  );
-  $pane->cache = array();
-  $pane->style = array(
-    'settings' => NULL,
-  );
-  $pane->css = array();
-  $pane->extras = array();
-  $pane->position = 0;
-  $pane->locks = '';
-  $display->content['left-1'] = $pane;
-  $display->panels['left'][0] = 'left-1';
-
-  $pane = new stdClass();
-  $pane->pid = 'bottom-1';
+  $pane->pid = 'new-1';
   $pane->panel = 'bottom';
   $pane->type = 'node_form_buttons';
   $pane->subtype = 'node_form_buttons';
@@ -111,12 +85,32 @@ function _ed_task_edit_page_handler(){
   $pane->extras = array();
   $pane->position = 0;
   $pane->locks = '';
-  $display->content['bottom-1'] = $pane;
-  $display->panels['bottom'][0] = 'bottom-1';
-
-
+  $display->content['new-1'] = $pane;
+  $display->panels['bottom'][0] = 'new-1';
   $pane = new stdClass();
-  $pane->pid = 'right-1';
+  $pane->pid = 'new-2';
+  $pane->panel = 'left';
+  $pane->type = 'form';
+  $pane->subtype = 'form';
+  $pane->shown = TRUE;
+  $pane->access = array();
+  $pane->configuration = array(
+    'context' => 'argument_node_edit_1',
+    'override_title' => 0,
+    'override_title_text' => '',
+  );
+  $pane->cache = array();
+  $pane->style = array(
+    'settings' => NULL,
+  );
+  $pane->css = array();
+  $pane->extras = array();
+  $pane->position = 0;
+  $pane->locks = '';
+  $display->content['new-2'] = $pane;
+  $display->panels['left'][0] = 'new-2';
+  $pane = new stdClass();
+  $pane->pid = 'new-3';
   $pane->panel = 'right';
   $pane->type = 'entity_form_field';
   $pane->subtype = 'node:ed_task_due_date';
@@ -136,11 +130,10 @@ function _ed_task_edit_page_handler(){
   $pane->extras = array();
   $pane->position = 0;
   $pane->locks = '';
-  $display->content['right-1'] = $pane;
-  $display->panels['right'][0] = 'right-1';
-
+  $display->content['new-3'] = $pane;
+  $display->panels['right'][0] = 'new-3';
   $pane = new stdClass();
-  $pane->pid = 'right-2';
+  $pane->pid = 'new-4';
   $pane->panel = 'right';
   $pane->type = 'entity_form_field';
   $pane->subtype = 'node:og_group_ref';
@@ -158,19 +151,19 @@ function _ed_task_edit_page_handler(){
   );
   $pane->css = array();
   $pane->extras = array();
-  $pane->position = 0;
+  $pane->position = 1;
   $pane->locks = '';
-  $display->content['right-2'] = $pane;
-  $display->panels['right'][1] = 'right-2';
-
+  $display->content['new-4'] = $pane;
+  $display->panels['right'][1] = 'new-4';
   $pane = new stdClass();
-  $pane->pid = 'right-3';
+  $pane->pid = 'new-5';
   $pane->panel = 'right';
   $pane->type = 'entity_form_field';
-  $pane->subtype = 'node:ed_task_to_user';
+  $pane->subtype = 'node:field_to_user';
   $pane->shown = TRUE;
   $pane->access = array();
   $pane->configuration = array(
+    'label' => '',
     'formatter' => '',
     'context' => 'argument_node_edit_1',
     'override_title' => 0,
@@ -182,14 +175,12 @@ function _ed_task_edit_page_handler(){
   );
   $pane->css = array();
   $pane->extras = array();
-  $pane->position = 0;
-  $pane->locks = '';
-  $display->content['right-3'] = $pane;
-  $display->panels['right'][2] = 'right-3';
-
-
+  $pane->position = 2;
+  $pane->locks = array();
+  $display->content['new-5'] = $pane;
+  $display->panels['right'][2] = 'new-5';
   $pane = new stdClass();
-  $pane->pid = 'right-4';
+  $pane->pid = 'new-6';
   $pane->panel = 'right';
   $pane->type = 'entity_form_field';
   $pane->subtype = 'node:ed_field_category';
@@ -207,25 +198,45 @@ function _ed_task_edit_page_handler(){
   );
   $pane->css = array();
   $pane->extras = array();
-  $pane->position = 0;
+  $pane->position = 3;
   $pane->locks = '';
-  $display->content['right-4'] = $pane;
-  $display->panels['right'][3] = 'right-4';
-
-
-
+  $display->content['new-6'] = $pane;
+  $display->panels['right'][3] = 'new-6';
+  $pane = new stdClass();
+  $pane->pid = 'new-7';
+  $pane->panel = 'right';
+  $pane->type = 'entity_form_field';
+  $pane->subtype = 'node:ed_field_competence';
+  $pane->shown = TRUE;
+  $pane->access = array();
+  $pane->configuration = array(
+    'label' => '',
+    'formatter' => '',
+    'context' => 'argument_node_edit_1',
+    'override_title' => 0,
+    'override_title_text' => '',
+  );
+  $pane->cache = array();
+  $pane->style = array(
+    'settings' => NULL,
+  );
+  $pane->css = array();
+  $pane->extras = array();
+  $pane->position = 4;
+  $pane->locks = array();
+  $display->content['new-7'] = $pane;
+  $display->panels['right'][4] = 'new-7';
   $display->hide_title = PANELS_TITLE_FIXED;
   $display->title_pane = '0';
   $handler->conf['display'] = $display;
-  //$export['node_view_panel_context4'] = $handler;
+
 
   return $handler;
 }
 
 function _ed_task_view_page_handler(){
-
   $handler = new stdClass();
-  $handler->disabled = FALSE;
+  $handler->disabled = FALSE; /* Edit this to true to make a default handler disabled initially */
   $handler->api_version = 1;
   $handler->name = 'node_view_panel_ed_task';
   $handler->task = 'node_view';
@@ -268,14 +279,12 @@ function _ed_task_view_page_handler(){
       'right' => NULL,
       'bottom' => NULL,
       'left' => NULL,
-      'right' => NULL,
     ),
   );
   $display->cache = array();
   $display->title = '%node:title';
   $display->content = array();
   $display->panels = array();
-
   $pane = new stdClass();
   $pane->pid = 'new-1';
   $pane->panel = 'left';
@@ -298,18 +307,14 @@ function _ed_task_view_page_handler(){
   $pane->style = array(
     'settings' => NULL,
   );
-  $pane->css= array();
+  $pane->css = array();
   $pane->extras = array();
-  $pane->position = 1;
+  $pane->position = 0;
   $pane->locks = array();
   $display->content['new-1'] = $pane;
   $display->panels['left'][0] = 'new-1';
-
-
-
-
   $pane = new stdClass();
-  $pane->pid = 'new-3';
+  $pane->pid = 'new-2';
   $pane->panel = 'right';
   $pane->type = 'entity_field';
   $pane->subtype = 'node:ed_task_due_date';
@@ -338,13 +343,12 @@ function _ed_task_view_page_handler(){
   );
   $pane->css = array();
   $pane->extras = array();
-  $pane->position = 3;
+  $pane->position = 0;
   $pane->locks = array();
-  $display->content['new-3'] = $pane;
-  $display->panels['right'][1] = 'new-3';
-
+  $display->content['new-2'] = $pane;
+  $display->panels['right'][0] = 'new-2';
   $pane = new stdClass();
-  $pane->pid = 'new-4';
+  $pane->pid = 'new-3';
   $pane->panel = 'right';
   $pane->type = 'node_created';
   $pane->subtype = 'node_created';
@@ -372,13 +376,12 @@ function _ed_task_view_page_handler(){
   );
   $pane->css = array();
   $pane->extras = array();
-  $pane->position = 4;
+  $pane->position = 1;
   $pane->locks = array();
-  $display->content['new-4'] = $pane;
-  $display->panels['right'][2] = 'new-4';
-
+  $display->content['new-3'] = $pane;
+  $display->panels['right'][1] = 'new-3';
   $pane = new stdClass();
-  $pane->pid = 'new-5';
+  $pane->pid = 'new-4';
   $pane->panel = 'right';
   $pane->type = 'entity_field';
   $pane->subtype = 'node:ed_field_category';
@@ -401,11 +404,38 @@ function _ed_task_view_page_handler(){
   );
   $pane->css = array();
   $pane->extras = array();
-  $pane->position = 0;
+  $pane->position = 2;
+  $pane->locks = array();
+  $display->content['new-4'] = $pane;
+  $display->panels['right'][2] = 'new-4';
+  $pane = new stdClass();
+  $pane->pid = 'new-5';
+  $pane->panel = 'right';
+  $pane->type = 'entity_field';
+  $pane->subtype = 'node:ed_field_competence';
+  $pane->shown = TRUE;
+  $pane->access = array();
+  $pane->configuration = array(
+    'label' => 'title',
+    'formatter' => 'term_reference_tree',
+    'delta_limit' => '0',
+    'delta_offset' => '0',
+    'delta_reversed' => 0,
+    'formatter_settings' => array(),
+    'context' => 'argument_entity_id:node_1',
+    'override_title' => 0,
+    'override_title_text' => '',
+  );
+  $pane->cache = array();
+  $pane->style = array(
+    'settings' => NULL,
+  );
+  $pane->css = array();
+  $pane->extras = array();
+  $pane->position = 3;
   $pane->locks = array();
   $display->content['new-5'] = $pane;
   $display->panels['right'][3] = 'new-5';
-
   $pane = new stdClass();
   $pane->pid = 'new-6';
   $pane->panel = 'right';
@@ -430,12 +460,10 @@ function _ed_task_view_page_handler(){
   );
   $pane->css = array();
   $pane->extras = array();
-  $pane->position = 0;
+  $pane->position = 4;
   $pane->locks = array();
   $display->content['new-6'] = $pane;
   $display->panels['right'][4] = 'new-6';
-
-
   $pane = new stdClass();
   $pane->pid = 'new-7';
   $pane->panel = 'right';
@@ -444,7 +472,6 @@ function _ed_task_view_page_handler(){
   $pane->shown = TRUE;
   $pane->access = array();
   $pane->configuration = array(
-    //'label' => 'inline',
     'formatter' => 'user_reference_default',
     'delta_limit' => 0,
     'delta_offset' => '0',
@@ -460,21 +487,18 @@ function _ed_task_view_page_handler(){
   );
   $pane->css = array();
   $pane->extras = array();
-  $pane->position = 0;
+  $pane->position = 5;
   $pane->locks = array();
   $display->content['new-7'] = $pane;
-  $display->panels['right'][5] ='new-7';
-
-
+  $display->panels['right'][5] = 'new-7';
   $pane = new stdClass();
-  $pane->pid = 'new-2';
+  $pane->pid = 'new-8';
   $pane->panel = 'right';
   $pane->type = 'node_author';
   $pane->subtype = 'node_author';
   $pane->shown = TRUE;
   $pane->access = array();
   $pane->configuration = array(
-
     'link' => 1,
     'context' => 'argument_entity_id:node_1',
     'override_title' => 1,
@@ -486,16 +510,37 @@ function _ed_task_view_page_handler(){
   );
   $pane->css = array();
   $pane->extras = array();
-  $pane->position = 2;
+  $pane->position = 6;
   $pane->locks = array();
-  $display->content['new-2'] = $pane;
-  $display->panels['right'][0] = 'new-2';
-
-
+  $display->content['new-8'] = $pane;
+  $display->panels['right'][6] = 'new-8';
+  $pane = new stdClass();
+  $pane->pid = 'new-9';
+  $pane->panel = 'right';
+  $pane->type = 'entity_field_extra';
+  $pane->subtype = 'node:ed_task_asjandus';
+  $pane->shown = TRUE;
+  $pane->access = array();
+  $pane->configuration = array(
+    'view_mode' => 'full',
+    'context' => 'argument_entity_id:node_1',
+    'override_title' => 0,
+    'override_title_text' => '',
+  );
+  $pane->cache = array();
+  $pane->style = array(
+    'settings' => NULL,
+  );
+  $pane->css = array();
+  $pane->extras = array();
+  $pane->position = 7;
+  $pane->locks = array();
+  $display->content['new-9'] = $pane;
+  $display->panels['right'][7] = 'new-9';
   $display->hide_title = PANELS_TITLE_FIXED;
   $display->title_pane = '0';
   $handler->conf['display'] = $display;
-  //$export['node_view_panel_context'] = $handler;
+
 
   return $handler;
 

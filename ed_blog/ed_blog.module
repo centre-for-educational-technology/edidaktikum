@@ -1,0 +1,142 @@
+<?php
+
+require_once('ed_blog_functions.inc');
+
+/*
+ * Implements hook_info().
+ */
+
+function ed_blog_node_info() {
+  $items['ed_blog'] = array(
+    'name' => t('Blog'),
+    'type' => 'ed_blog',
+    'base' => 'node_content',
+    'description' => t('description'),
+    'has_title' => '1',
+    'title_label' => t('Title'),
+    'body_label' => t('body_label'),
+  );
+  return $items;
+}
+
+/*
+ * Implements hook_form().
+ */
+
+function ed_blog_form($node, $form_state) {
+  return node_content_form($node, $form_state);
+}
+
+/*
+ * Implements hook_menu().
+ */
+
+function ed_blog_menu() {
+  $items['dashboard/blogs'] = array(
+    'title' => t('Blog'),
+    'page callback' => 'ed_blog_listing_page',
+    'access callback' => TRUE,
+    'weight' => 20,
+    'menu_name' => 'ed-dashboard-menu',
+    'type' => MENU_NORMAL_ITEM,
+  );
+  return $items;
+}
+
+function ed_blog_listing_page() {
+  $content = array();
+  drupal_set_title(t('My Blog'));
+
+  $content['add-blog'] = array(
+    '#type' => 'link',
+    '#title' => t('Add new blog post'),
+    '#href' => 'node/add/ed-blog',
+  );
+
+  $table_type = 'pager_table';
+
+  $nids = _ed_get_blogs();
+  $nodes = node_load_multiple($nids);
+  $rows = array();
+
+  foreach($nodes as $node) {
+    if($node->type == 'ed_blog') {
+      $rows[] = array(
+        'data' => array(
+          'type' => _get_type($node),
+          'post_name' => l($node->title, 'node/' . $node->nid),
+          'created' => format_date($node->created, 'custom', 'd/m/Y'),
+        ),
+      );
+    }else{
+      $dueDateTS = _ed_get_due_date($node->field_ref_to_task['und']['0']['target_id']);
+      $dueDate = strtotime($dueDateTS[0]);
+      $rows[] = array(
+        'data' => array(
+          'type' => _get_type($node),
+          'post_name' => l(_get_task_name($node->field_ref_to_task['und']['0']['target_id']), 'node/' . $node->nid) ." (".t('Due Date: '). format_date($dueDate, 'custom','d/m/Y'). ") ",
+          'created' => format_date($node->created, 'custom', 'd/m/Y'),
+        ),
+      );
+    }
+  }
+
+  $content[$table_type] = array(
+    '#theme' => 'table',
+    '#rows' => $rows,
+    '#header' => array(t('Type'), t('Title'), t('Date')),
+  );
+  $content['pager'] = array('#theme' => 'pager');
+  return $content;
+
+}
+function _get_task_name($nid) {
+  $query = db_select('node', 'n')
+    ->fields('n', array('title'))
+    ->condition('nid', $nid);
+
+  $result = $query->execute()->fetchCol();
+
+  return $result[0];
+}
+function _get_type($node){
+  if($node->type == 'ed_blog'){
+    return 'Post';
+  }
+  else{
+    return 'Answer';              // TESTING PURPOSES
+  }
+}
+
+function _ed_get_blogs() {
+  $help = array('ed_blog', 'ed_answer');
+  $query = db_select('node', 'n')
+    ->fields('n', array('nid'));
+  $query->condition('type', $help, 'IN');
+  $query = $query->extend('TableSort')->extend('PagerDefault')->limit(2);
+  $result = $query->execute()->fetchCol();
+
+  return $result;
+}
+
+function _ed_get_due_date($nid) {
+  $query = db_select('field_data_ed_task_due_date', 'n')
+    ->fields('n', array('ed_task_due_date_value'));
+  $query->condition('entity_id', $nid);
+  $result = $query->execute()->fetchCol();
+
+  return $result;
+}
+
+
+
+
+/**
+ * Implements hook_ctools_plugin_api().
+ */
+function ed_blog_ctools_plugin_api() {
+  list($module, $api) = func_get_args();
+  if ($module == "page_manager" && $api == "pages_default") {
+    return array("version" => 1);
+  }
+}

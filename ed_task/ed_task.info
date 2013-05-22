@@ -8,3 +8,4 @@ files[] = ed_task.module
 
 dependencies[] = edidaktikum
 dependencies[] = user_reference
+dependencies[] = ed_competence_voc
