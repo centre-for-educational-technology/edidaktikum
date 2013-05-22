@@ -20,7 +20,7 @@ function _ed_news_node_edit_page_handler() {
   $handler = new stdClass();
 $handler->disabled = FALSE; /* Edit this to true to make a default handler disabled initially */
 $handler->api_version = 1;
-$handler->name = 'node_edit_panel_context';
+$handler->name = 'node_edit_panel_ed_news';
 $handler->task = 'node_edit';
 $handler->subtask = '';
 $handler->handler = 'panel_context';
