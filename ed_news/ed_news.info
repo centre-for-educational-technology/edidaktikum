@@ -4,8 +4,4 @@ package = eDidaktikum
 core = 7.x
 
 dependencies[] = edidaktikum
-dependencies[] = ed_cluster
-dependencies[] = term_reference_tree
-dependencies[] = panels
-dependencies[] = page_manager
 

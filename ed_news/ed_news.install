@@ -78,7 +78,6 @@ function ed_news_add_fields() {
   ed_news_node_add_field_content();
   ed_news_node_add_field_featured_image();
   ed_news_node_add_field_category();
-  ed_news_node_add_field_og_audience();
 }
 
 /**
@@ -194,10 +193,7 @@ function ed_news_node_add_field_category() {
       'label' => t('Category'),
       'description' => '',
       'widget' => array(
-        'type' => 'term_reference_tree',
-        'settings' => array(
-          'start_minimized' => TRUE,
-        ),
+        'type' => 'options_buttons',
       ),
       'required' => TRUE,
     );
@@ -207,24 +203,3 @@ function ed_news_node_add_field_category() {
     drupal_set_message(t('Field @fieldname does not exist. Field instance for node type @type could not be created.', array('@fieldname' => $field_name, '@type' => 'ed_news')), 'error');
   }
 }
-
-/**
- * Creates an audience field instance for ed_news if OG_AUDIENCE_FIELD
- * creation function exsits and field is defined.
- */
-function ed_news_node_add_field_og_audience() {
-  if (function_exists('og_create_field') && defined('OG_AUDIENCE_FIELD')) {
-    $og_field = og_fields_info(OG_AUDIENCE_FIELD);
-    $og_field['instance']['label'] = t('Cluster');
-    $og_field['instance']['required'] = TRUE;
-    $og_field['instance']['settings']['behaviors']['prepopulate'] = array(
-      'status' => TRUE,
-      'action' => 'none',
-      'fallback' => 'none',
-      'skip_perm' => FALSE,
-    );
-    // Function checks if field instance already exists
-    og_create_field(OG_AUDIENCE_FIELD, 'node', 'ed_news', $og_field);
-  }
-}
-

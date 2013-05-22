@@ -4,6 +4,4 @@ core = 7.x
 
 dependencies[] = image
 dependencies[] = taxonomy
-dependencies[] = variable
-dependencies[] = i18n_variable
 
