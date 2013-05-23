@@ -40,9 +40,9 @@ function ed_file_create_ed_file_node_type() {
       'type' => 'ed_file',
       'name' => t('File'),
       'base' => 'node_content',
-      'custom' => TRUE,
+      'custom' => FALSE,
       'modified' => FALSE,
-      'locked' => FALSE,
+      'locked' => TRUE,
       'has_title' => TRUE,
       'title_label' => t('Title'),
       'module' => 'ed_file',
@@ -62,9 +62,9 @@ function ed_file_create_ed_file_folder_node_type() {
       'type' => 'ed_file_folder',
       'name' => t('File folder'),
       'base' => 'node_content',
-      'custom' => TRUE,
+      'custom' => FALSE,
       'modified' => FALSE,
-      'locked' => FALSE,
+      'locked' => TRUE,
       'has_title' => TRUE,
       'title_label' => t('Title'),
       'module' => 'ed_file',
@@ -123,9 +123,14 @@ function ed_file_create_field_ed_file_folder_ref() {
       'cardinality' => 1,
       'locked' => FALSE,
       'settings' => array(
+        'handler' => 'views',
         'handler_settings' => array(
-          'target_bundles' => array('ed_file_folder'),  
-        ),  
+          'view' => array(
+            'view_name' => 'user_ed_file_folders',  
+            'display_name' => 'entityreference',
+            'args' => '', 
+          ),  
+        ), 
       ),
     );
     $field = field_create_field($field);

@@ -20,6 +20,16 @@ function ed_file_menu() {
   return $items;
 }
 
+/**
+ * Implements hook_views_api().
+ */
+function ed_file_views_api() {
+  return array(
+    'api' => 3,
+    'path' => drupal_get_path('module', 'ed_file') . '/includes/views',  
+  );
+}
+
 function ed_file_menu_breadcrumb_alter(&$active_trail, $item) {
   //error_log("alter breadcrumb");
 
