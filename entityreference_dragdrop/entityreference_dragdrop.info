@@ -1,0 +1,7 @@
+name = Entity Reference Drag & Drop
+description = Drag and drop widget
+package = Fields
+core = 7.x
+dependencies[] = entityreference
+dependencies[] = jquery_update
+
