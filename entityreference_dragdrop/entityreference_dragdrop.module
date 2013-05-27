@@ -51,7 +51,9 @@ function entityreference_dragdrop_field_widget_form(&$form, &$form_state, $field
     }
   }
   //error_log(print_r($selected, true));
-  
+
+  $general_title = "<div><label>".$element['#title']."</label></div>";
+
   // Build HTML to represent available options that have not been selected
   $markup_available = '<ul data-ec="' . $ec . '" class="entityreference-dragdrop entityreference-dragdrop-available">';
   foreach ($all_options as $entity_type => $entity_ids) {
@@ -80,7 +82,7 @@ function entityreference_dragdrop_field_widget_form(&$form, &$form_state, $field
     '#type' => 'hidden',
     '#default_value' => implode(',',array_keys($selected)),
     '#element_validate' => array('entityreference_dragdrop_element_validate'),
-    '#suffix' => $markup_available.$markup_selected.'<div class="entityreference-dragdrop-clear"></div>',
+    '#suffix' => $general_title.$markup_available.$markup_selected.'<div class="entityreference-dragdrop-clear"></div>',
     '#attached' => array(
       'js' => array(drupal_get_path('module', 'entityreference_dragdrop') . '/entityreference_dragdrop.js'),
       'css' => array(drupal_get_path('module', 'entityreference_dragdrop') . '/entityreference_dragdrop.css'),
