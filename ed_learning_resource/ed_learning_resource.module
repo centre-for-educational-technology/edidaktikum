@@ -47,9 +47,9 @@ function ed_learning_resource_menu() {
 function ed_learning_resource_listing($form, &$form_state) {
 
   drupal_set_title(t('Learning Resources'));
-  $form['#attached']['css'] = array(drupal_get_path('module', 'ed_learning_resource') . '/ajax.css',);
-  $form['#attached']['js'] = array(drupal_get_path('module', 'ed_learning_resource') . '/ed_learning_resource_js.js',);
-  //drupal_add_js(drupal_get_path('module', 'ed_learning_resource') . '/ed_learning_resource_js.js');
+  //$form['#attached']['css'] = array(drupal_get_path('module', 'ed_learning_resource') . '/ajax.css',);
+  //$form['#attached']['js'] = array(drupal_get_path('module', 'ed_learning_resource') . '/ed_learning_resource_js.js',);
+  drupal_add_js(drupal_get_path('module', 'ed_learning_resource') . '/ed_learning_resource_js.js');
 
   $form['content_sort_select'] = array(
     '#type' => 'select',
@@ -58,6 +58,7 @@ function ed_learning_resource_listing($form, &$form_state) {
   );
 
   $term_reference_tree_path = drupal_get_path('module', 'term_reference_tree');
+  $path = drupal_get_path('module', 'ed_learning_resource');
   $form['category'] = array(
     '#type' => 'checkbox_tree',
     '#title' => t('Filter by Category'),
@@ -71,7 +72,7 @@ function ed_learning_resource_listing($form, &$form_state) {
     '#select_parents' => TRUE,
     '#attached' => array(
       'js' => array($term_reference_tree_path . '/term_reference_tree.js'),
-      'css' => array($term_reference_tree_path . '/term_reference_tree.css'),
+      'css' => array($term_reference_tree_path . '/term_reference_tree.css', $path . '/ed_learning_resource_css.css'),
     ),
     '#attributes' => array('class' => array('field-widget-term-reference-tree')),
     '#element_validate' => array('_term_reference_Tree_widget_validate'),
@@ -80,7 +81,7 @@ function ed_learning_resource_listing($form, &$form_state) {
     '#max_depth' => '',
     '#field_name' => '',
     '#token_display' => '',
-    '#prefix' => '<div id="category">',   //Make it collapsible
+    '#prefix' => '<div id="edit-ed-field-category">',   //Make it collapsible
     '#suffix' => '</div>',
   );
   $form['content_submit'] = array(

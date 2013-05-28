@@ -1,0 +1,15 @@
+
+/* Makes the next/choose button align to the right of the select control */
+.form-item-dropdown-first, .form-item-content-sort-select {
+  display: inline-block;
+}
+
+#edit-ed-field-category{
+  display: inline-block;
+  float: right;
+}
+#edit-category{
+  display: none;
+}
+
+

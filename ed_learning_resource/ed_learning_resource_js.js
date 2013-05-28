@@ -12,6 +12,12 @@
         }
         form.submit();
       });
+    },
+    attach: function(context, settings){
+      $('#edit-ed-field-category', context).find('label[for="edit-category"]').on('click', function(){
+        $('#edit-category').slideToggle("slow");
+      })
+
     }
 
   }
