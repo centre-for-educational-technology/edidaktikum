@@ -1,5 +1,5 @@
 <?php
-// Table Paging displays quite well with Firefox. Not so well with Chrome.
+
 require_once('ed_task_functions.inc');
 
 /**
@@ -34,7 +34,7 @@ function ed_task_menu(){
     'page callback' => 'ed_task_listing_page',
     'access callback' => TRUE,
     'weight' => 15,
-    'menu_name' => 'ed-dashboard-menu',     // For easy testing purposes.
+    'menu_name' => 'ed-dashboard-menu',
     'type' => MENU_NORMAL_ITEM,
   );
   return $items;
@@ -44,7 +44,7 @@ function ed_task_listing_page() {
   $content = array();
   $table_suffix = 1;
 
-// @todo only display the link if user is authorized to add new tasks? Might not be necessary. Only logged in users can see this page in the future.
+
   $content['add-task'] = array(
     '#type' => 'link',
     '#title' => t('Add new task'),
@@ -52,6 +52,9 @@ function ed_task_listing_page() {
   );
 
   $table_type = 'pager_table';
+
+
+
 
   // Tasks that are made by the logged in user.
   $nodes = _ed_get_cur_user_tasks();
@@ -71,18 +74,20 @@ function ed_task_listing_page() {
         $username = '';
       }
 
-      $datehelp = strtotime($node->ed_task_due_date['und']['0']['value']);
+      //$datehelp = strtotime($node->ed_task_due_date['und']['0']['value']);
       if( isset($node->og_group_ref['und']['0']['target_id']) ){
         $shared_to = $node->og_group_ref['und']['0']['target_id'];
       } else {
         $shared_to = '';
       }
       $group_title = _ed_get_group_name_from_id($shared_to);
+      $due_date_field = field_get_items('node', $node, 'ed_task_due_date');
       $rows[] = array(
         'data' => array(
           'title' => l($node->title, 'node/' . $node->nid),
           'shared_to' => t(l($group_title, 'node/' . $shared_to).$username),
-          'due_date' => format_date($datehelp, 'custom','d/m/Y'),
+          //'due_date' => format_date($datehelp, 'custom','d/m/Y'),
+          'due_date' => format_date($due_date_field[0]['value'],'custom','d/m/Y'),
         ),
       );
     }
@@ -100,6 +105,33 @@ function ed_task_listing_page() {
     );
   }
 
+  // Tasks that are directed to the user, not the group.
+  $nodes = _ed_get_tasks_to_user();
+  if(!empty($nodes) ) {
+    foreach($nodes as $node){
+      //$datehelp = strtotime($node->ed_task_due_date['und']['0']['value']);
+      $due_date_field = field_get_items('node', $node, 'ed_task_due_date');
+      $rows_to_user[] = array(
+        'data' => array(
+          'title' => l($node->title, 'node/' . $node->nid),
+          'posted_by' => $node->name,
+          //'due_date' => date('d/m/Y',$datehelp),
+          'due_date' => format_date($due_date_field[0]['value'],'custom','d/m/Y'),
+        ),
+      );
+    }
+    $content[$table_type.'-to-user'] = array(
+      '#theme' => 'table',
+      '#rows' => $rows_to_user,
+      '#header' => array(t('Tasks to me'), t('Assigned By'), t('Due Date')),
+    );
+    $content['pager-to-user'] = array(
+      '#theme' => 'pager',
+      '#element' => 1,
+    );
+  }
+
+
   // Tasks from groups that the user is associated with.
   $user = $GLOBALS['user'];
   if(isset($user->uid)){
@@ -110,60 +142,72 @@ function ed_task_listing_page() {
       $nids = _ed_get_tasks_specific_group($group);
       $nodes = node_load_multiple($nids);
       $rows2 = array();
-      foreach($nodes as $node) {
-        $datehelp = strtotime($node->ed_task_due_date['und']['0']['value']);
-        $rows2[] = array(
-          'data' => array(
-            'task_name' => l($node->title, 'node/' . $node->nid),
-            'posted_by' => $node->name,
-            'due_date' => format_date($datehelp, 'custom','d/m/Y'),   // Check if displays right date
-          ),
+      if(!empty($nodes)){
+        foreach($nodes as $node) {
+          //$datehelp = strtotime($node->ed_task_due_date['und']['0']['value']);
+          $due_date_field = field_get_items('node', $node, 'ed_task_due_date');
+          $rows2[] = array(
+            'data' => array(
+              'task_name' => l($node->title, 'node/' . $node->nid),
+              'posted_by' => $node->name,
+              //'due_date' => format_date($datehelp, 'custom','d/m/Y'),   // Check if displays right date
+              'due_date' => format_date($due_date_field[0]['value'],'custom','d/m/Y'),
+            ),
+          );
+        }
+        $content[$table_type.'-'.$table_suffix] = array(
+          '#theme' => 'table',
+          '#rows' => $rows2,
+          '#header' => array($group_title, t('Assigned By'), t('Due Date')),
+        );
+        $content['pager-'.$table_suffix] = array(
+          '#theme' => 'pager',
+          '#element' => $table_suffix,
         );
       }
-      $content[$table_type.'-'.$table_suffix] = array(
-        '#theme' => 'table',
-        '#rows' => $rows2,
-        '#header' => array($group_title, t('Assigned By'), t('Due Date')),
-      );
-      $content['pager-'.$table_suffix] = array(
-        '#theme' => 'pager',
-        '#element' => $table_suffix-1,
-      );
     }
   }
   return $content;
 }
 
 
-  function ed_task_node_view($node, $view_mode, $langcode) {
-    switch($node->type) {
-      case 'ed_task':
-        $options = array(
-          'attributes' => array(),
-          'query' => array(
-            'field_ref_to_task' => $node->nid,
-          ),
-        );
-
-        $node->content['ed_task_asjandus'] = array(
-          '#type' => 'item',
-          '#title' => t(''),
-          '#markup' => l(t('Answer'), 'node/add/ed-answer', $options),
-        );
-        break;
-    }
+function ed_task_node_view($node, $view_mode, $langcode) {
+  switch($node->type) {
+    case 'ed_task':
+      $options = array(
+        'attributes' => array(),
+        'query' => array(
+          'field_ref_to_task' => $node->nid,
+        ),
+      );
+      $node->content['ed_task_asjandus'] = array(
+        '#type' => 'item',
+        '#title' => t(''),
+        '#markup' => l(t('Answer'), 'node/add/ed-answer', $options),
+        '#prefix' => '<div class="answer">',
+        '#suffix' => '</div>',
+      );
+      break;
   }
+}
 
-  function ed_task_field_extra_fields() {
-    $extra['node']['ed_task']['display'] = array(
-      'ed_task_asjandus' => array(
-        'label' => t('extra fields label'),
-        'description' => t('extra fields descrption'),
-        'weight' => 10,
-      ),
-    );
-    return $extra;
+function ed_task_form_alter(&$form, $form_state, $form_id) {
+  if( $form_id == 'ed_task_node_form'){
+    $form['#attached']['js'] = array(drupal_get_path('module', 'ed_task') . '/ed_task_js.js',);
+    $form['#attached']['css'] = array(drupal_get_path('module', 'ed_task') . '/ed_task_css.css',);
   }
+}
+
+function ed_task_field_extra_fields() {
+  $extra['node']['ed_task']['display'] = array(
+    'ed_task_asjandus' => array(
+      'label' => t('extra fields label'),
+      'description' => t('extra fields descrption'),
+      'weight' => 10,
+    ),
+  );
+  return $extra;
+}
 /**
  * Helper and database query functions
  */
@@ -193,7 +237,20 @@ function _ed_get_cur_user_tasks(){
   $nodes = node_load_multiple($result);
   return $nodes;
 }
+function _ed_get_tasks_to_user(){
+  $acc = $GLOBALS['user'];
+  $query = db_select('node', 'n');
+  $query->join('field_data_field_to_user', 'tu', 'n.nid = tu.entity_id');
+  $query->fields('n', array('nid'))
+    ->condition('n.type', 'ed_task')
+    ->condition('tu.field_to_user_target_id', $acc->uid);
 
+  $query = $query->extend('TableSort')->extend('PagerDefault')->limit(2); //Small number for testing purposes
+
+  $result = $query->execute()->fetchCol();
+  $nodes = node_load_multiple($result);
+  return $nodes;
+}
 function _ed_get_tasks_specific_group($gid) {
   $query=db_select('node', 'n');
   $query->join('og_membership', 'og', 'n.nid = og.etid');
@@ -222,16 +279,7 @@ function _ed_get_group_tasks(){
   $result = $query->execute()->fetchCol();
   return $result;
 }
-/*
-function ed_task_form_alter($form, &$form_state, $form_id){
 
-  $form['ed_field_category']['#attributes'] = array('class' => 'your-class-name');
-
-  dsm($form);
-  dsm($form_state);
-  dsm($form_id);
-  return $form;
-}*/
 
 /**
  * Implements hook_ctools_plugin_api().

@@ -3,7 +3,6 @@
 /**
  * Implements hook_default_page_manager_handlers().
  */
-
 function ed_task_default_page_manager_handlers() {
   $export = array();
 
@@ -196,7 +195,10 @@ function _ed_task_edit_page_handler(){
   $pane->style = array(
     'settings' => NULL,
   );
-  $pane->css = array();
+  $pane->css = array(
+    'css_id' => 'category',
+    'css_class' => '',
+  );
   $pane->extras = array();
   $pane->position = 3;
   $pane->locks = '';
@@ -220,7 +222,10 @@ function _ed_task_edit_page_handler(){
   $pane->style = array(
     'settings' => NULL,
   );
-  $pane->css = array();
+  $pane->css = array(
+    'css_id' => 'competence',
+    'css_class' => '',
+  );
   $pane->extras = array();
   $pane->position = 4;
   $pane->locks = array();
@@ -229,7 +234,6 @@ function _ed_task_edit_page_handler(){
   $display->hide_title = PANELS_TITLE_FIXED;
   $display->title_pane = '0';
   $handler->conf['display'] = $display;
-
 
   return $handler;
 }

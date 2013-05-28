@@ -1,0 +1,12 @@
+#category label[for=edit-ed-field-category-und]{
+  /*background: aliceblue;
+  width: 150%;*/
+}
+
+#category div#edit-ed-field-category-und{
+  display: none;
+}
+
+#competence div#edit-ed-field-competence-und{
+  display: none;
+}

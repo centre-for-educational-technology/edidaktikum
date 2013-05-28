@@ -3,7 +3,7 @@ function _ed_task_installed_fields() {
   $fields['ed_task_due_date'] = array(
     'field_name' => 'ed_task_due_date',
     'label' => t('Due Date'),
-    'type' => 'date',
+    'type' => 'datestamp',
     'cardinality' => 1,
     'settings' => array(
       'input_format' => 'd.m.Y',
