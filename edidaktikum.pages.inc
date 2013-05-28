@@ -76,6 +76,22 @@ function edidaktikum_home_page() {
       $content['latest-content']['event']['content'] = node_view($latest_event, 'front');
     }
   }
+  if (module_exists('ed_learning_resource')) {
+    $latest_resource = _ed_learning_resource_get_latest();
+    if (!empty($latest_resource)) {
+      $content['latest-content']['resource'] = array(
+        '#type' => 'container',
+        '#attributes' => array(
+          'id' => 'latest-resource',
+        ),
+      );
+      $content['latest-content']['resource']['title'] = array(
+        '#type' => 'markup',
+        '#markup' => '<h1>' . t('Learning Resource') . '</h1>',
+      );
+      $content['latest-content']['resource']['content'] = node_view($latest_resource, 'front');
+    }
+  }
 
   $content['tour'] = array(
     '#type' => 'container',
