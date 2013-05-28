@@ -86,3 +86,13 @@ function ed_portfolio_ctools_plugin_api() {
   return $widgets;
 }*/
 
+/**
+ * Implements hook_views_api().
+ */
+function ed_portfolio_views_api() {
+  return array(
+    'api' => 3,
+    'path' => drupal_get_path('module', 'ed_portfolio') . '/includes/views',
+  );
+}
+

@@ -9,9 +9,11 @@
  * Implements hook_install().
  */
 function ed_portfolio_install() {
+  ed_portfolio_create_field_items();
   ed_portfolio_create_ed_portfolio_node_type();
   ed_portfolio_node_add_field_content();
   ed_portfolio_node_add_field_featured_image();
+  ed_portfolio_node_add_field_items();
   ed_portfolio_set_permissions();
 }
 
@@ -21,6 +23,34 @@ function ed_portfolio_install() {
 function ed_portfolio_uninstall() {
   ed_portfolio_delete_ed_portfolio_nodes();
   ed_portfolio_delete_ed_portfolio_node_type();
+  field_delete_field('ed_portfolio_field_items');
+}
+
+/**
+ * Creates portfolio items field if not exists.
+ */
+function ed_portfolio_create_field_items() {
+  $field_name = 'ed_portfolio_field_items';
+  if (!field_info_field($field_name)) {
+    $field = array(
+      'field_name' => $field_name,
+      'type' => 'entityreference',
+      'entity_types' => array('node'),
+      'cardinality' => -1,
+      'locked' => FALSE,
+      'settings' => array(
+        'handler' => 'views',
+        'handler_settings' => array(
+          'view' => array(
+            'view_name' => 'user_ed_portfolio_items',
+            'display_name' => 'entityreference',
+            'args' => '',
+          ),
+        ),
+      ),
+    );
+    $field = field_create_field($field);
+  }
 }
 
 /**
@@ -32,9 +62,9 @@ function ed_portfolio_create_ed_portfolio_node_type() {
       'type' => 'ed_portfolio',
       'name' => t('Portfolio'),
       'base' => 'node_content',
-      'custom' => TRUE,
+      'custom' => FALSE,
       'modified' => FALSE,
-      'locked' => FALSE,
+      'locked' => TRUE,
       'has_title' => TRUE,
       'title_label' => t('Title'),
       'module' => 'ed_file',
@@ -98,6 +128,33 @@ function ed_portfolio_node_add_field_featured_image() {
 }
 
 /**
+ * Adds field ed_portfolio_field_items to ed_portfolio node type.
+ */
+function ed_portfolio_node_add_field_items() {
+  $field_name = 'ed_portfolio_field_items';
+  $field = field_info_field($field_name);
+  if (!empty($field) && !field_info_instance('node', $field_name, 'ed_portfolio')) {
+    $instance = array(
+      'field_name' => $field_name,
+      'entity_type' => 'node',
+      'bundle' => 'ed_portfolio',
+      'label' => t('Portfolio items'),
+      'description' => '',
+      'required' => FALSE,
+      'widget' => array(
+        'type' => 'entityreference_dragdrop',
+      ),
+      'display' => array(
+        'default' => array(
+          'type' => 'entityreference_entities_table',
+        ),
+      ),
+    );
+    field_create_instance($instance);
+  }
+}
+
+/**
  * Sets permissions for ed_portfolio.
  */
 function ed_portfolio_set_permissions() {
@@ -127,7 +184,7 @@ function ed_portfolio_delete_ed_portfolio_nodes() {
  * Deletes ed_portfolio node type.
  */
 function ed_portfolio_delete_ed_portfolio_node_type() {
-  if (in_array('ed_portfolio', node_type_get_names())) {
+  if (array_key_exists('ed_portfolio', node_type_get_names())) {
     node_type_delete('ed_portfolio');
     node_types_rebuild();  
     variable_del('comment_ed_portfolio');

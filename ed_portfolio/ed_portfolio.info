@@ -1,7 +1,10 @@
-name = Portfolio
+name = eDidaktikum portfolio
 description = eDidaktikum portfolio.
 package = eDidaktikum
 core = 7.x
 
 dependencies[] = edidaktikum
+dependencies[] = entityreference
+dependencies[] = entityreference_dragdrop
+dependencies[] = views
 
