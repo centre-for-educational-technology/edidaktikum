@@ -84,3 +84,11 @@ function edidaktikum_preprocess_node(&$vars) {
   }
 }
 
+/**
+ * Implements hook_form_alter().
+ */
+function edidaktikum_form_alter(&$form, $form_state, $form_id) {
+  $form['#attached']['js'] = array(drupal_get_path('module', 'edidaktikum') . '/edidaktikum.js',);
+  $form['#attached']['css'] = array(drupal_get_path('module', 'edidaktikum') . '/edidaktikum.css',);
+}
+
