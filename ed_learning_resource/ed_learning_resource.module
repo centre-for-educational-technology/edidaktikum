@@ -80,7 +80,7 @@ function ed_learning_resource_listing($form, &$form_state) {
     '#max_depth' => '',
     '#field_name' => '',
     '#token_display' => '',
-    '#prefix' => '<div id="category-wrapper">',   //Make it collapsible
+    '#prefix' => '<div id="category">',   //Make it collapsible
     '#suffix' => '</div>',
   );
   $form['content_submit'] = array(
@@ -228,9 +228,21 @@ function _ed_get_all_resources($order) {
       $query->orderBy('n.title', 'ASC');
       break;
   }
-  //dpq($query);
   $result = $query->execute()->fetchCol();
-
   return $result;
+}
 
+function _ed_learning_resource_get_latest() {
+  $query = db_select('node', 'n');
+  $query->fields('n', array('nid'))
+    ->condition('n.type', 'ed_learning_resource')
+    ->condition('n.status', 1)
+    ->range(0,1)
+    ->orderBy('n.created', 'DESC');
+  $nids = $query->execute()->fetchCol();
+
+  if( !empty($nids) ) {
+    return node_load($nids[0]);
+  }
+  return FALSE;
 }

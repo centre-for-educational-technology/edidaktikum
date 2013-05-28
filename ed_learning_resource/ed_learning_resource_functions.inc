@@ -150,6 +150,10 @@ function _ed_learning_resource_installed_instances() {
         'type' => 'text_trimmed',
         'weight' => 5,
       ),
+      'front' => array(
+        'label' => 'hidden',
+        'type' => 'text_trimmed',
+      ),
     ),
   );
 
