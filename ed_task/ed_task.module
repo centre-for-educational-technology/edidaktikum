@@ -29,7 +29,7 @@ function ed_task_form($node, $form_state) {
  * Implements hook_menu().
  */
 function ed_task_menu(){
-  $items['tasks'] = array(
+  $items['dashboard/tasks'] = array(
     'title' => t('Tasks'),
     'page callback' => 'ed_task_listing_page',
     'access callback' => TRUE,
