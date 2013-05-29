@@ -44,7 +44,7 @@ class EntityReferenceSelectFullName extends EntityReference_SelectionHandler_Gen
   }
 
 public function getFullName($entity) {
-	return $entity->field_last_name['und'][0]['value'];
+	return $entity->ed_field_full_name['und'][0]['value'];
 }
 
   protected function __construct($field, $instance = NULL, $entity_type = NULL, $entity = NULL) {
@@ -66,7 +66,7 @@ class EntityReferenceSelectFullName_user extends EntityReferenceSelectFullName {
 
       //This was added to use the "realname" field instead of the regular username:
       //CHANGE THIS:
-      $query->fieldCondition('field_last_name', 'value', $match, $match_operator);
+      $query->fieldCondition('ed_field_full_name', 'value', $match, $match_operator);
     }
 
     // Adding the 'user_access' tag is sadly insufficient for users: core
