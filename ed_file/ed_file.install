@@ -182,6 +182,7 @@ function ed_file_node_add_field_file_upload() {
       'label' => t('Upload file'),
       'description' => '',
       'settings' => array(
+        'file_extensions' => 'txt doc docx xls xlsx ppt pptx pdf png jpg rar zip',
         'file_directory' => 'ed_file_uploads',
       ),
       'required' => TRUE,
