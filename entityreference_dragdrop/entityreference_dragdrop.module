@@ -132,45 +132,48 @@ function entityreference_dragdrop_field_formatter_info() {
 }
 
 /**
-   * Implements hook_field_formatter_view().
-    */
+ * Implements hook_field_formatter_view().
+ */
 function entityreference_dragdrop_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
   
+  $rows = array();
   if ($display['type'] == 'entityreference_entities_table') {
-    
+
     foreach ($items as $delta => $item) {
-//if (!empty($accessible_ids[$item['target_id']]) && !empty($accessible_entity[$item['target_id']])) {
+      $node = node_load($item['target_id']);
+      if ($node) {
         $wrapper = entity_metadata_wrapper('node', $item['target_id']);
-      //}
-      $rows[] = array(
-        'data' => array(
-          'type' => node_type_get_name($wrapper->type->value()),
-          'title' => l($wrapper->label(), $wrapper->url->value()),
-          'changed' => format_date($wrapper->changed->value(), 'short'),
+        $rows[] = array(
+          'data' => array(
+            'type' => node_type_get_name($wrapper->type->value()),
+            'title' => l($wrapper->label(), $wrapper->url->value()),
+            'changed' => format_date($wrapper->changed->value(), 'short'),
+          ),
+        );
+      }
+      
+      $header = array(
+        array(
+          'data' => t('Type'),
+        ),
+        array(
+          'data' => t('Title'),
+        ),
+        array(
+          'data' => t('Changed'),
         ),
       );
 
+      if (!empty($rows)) {
+        $element[0] = array(
+          '#theme' => 'table',
+          '#rows' => $rows,
+          '#header' => $header,
+        );
+        return $element;
+      }
+
     }
-
-    $header = array(
-      array(
-        'data' => t('Type'),
-      ),
-      array(
-        'data' => t('Title'),
-      ),
-      array(
-        'data' => t('Changed'),
-      ),
-    );
-
-    $element[0] = array(
-      '#theme' => 'table',
-      '#rows' => $rows,
-      '#header' => $header,
-    );
-
-    return $element;
 
   }
 
