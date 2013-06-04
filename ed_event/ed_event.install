@@ -266,7 +266,7 @@ function ed_event_node_add_field_category() {
           'type' => 'term_reference_tree',
         ),
       ),
-      'required' => TRUE,
+      'required' => FALSE,
     );
     field_create_instance($instance);
   }

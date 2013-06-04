@@ -14,6 +14,7 @@ function ed_cluster_install() {
   ed_cluster_node_add_field_excerpt();
   ed_cluster_node_add_field_content();
   ed_cluster_node_add_field_category();
+  ed_cluster_node_add_og_group_access_field();
 }
 
 /**
@@ -135,9 +136,18 @@ function ed_cluster_node_add_field_category() {
           'start_minimized' => TRUE,
         ),
       ),
-      'required' => TRUE,
+      'required' => FALSE,
     );
     field_create_instance($instance);
+  }
+}
+
+/**
+ * Adds og group access field to ed_cluster node type. 
+ */
+function ed_cluster_node_add_og_group_access_field() {
+  if (function_exists('og_create_field') && defined('OG_ACCESS_FIELD')) {
+    og_create_field(OG_ACCESS_FIELD, 'node', 'ed_cluster');
   }
 }
 

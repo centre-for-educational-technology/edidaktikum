@@ -199,7 +199,7 @@ function ed_news_node_add_field_category() {
           'start_minimized' => TRUE,
         ),
       ),
-      'required' => TRUE,
+      'required' => FALSE,
     );
     field_create_instance($instance);
   }

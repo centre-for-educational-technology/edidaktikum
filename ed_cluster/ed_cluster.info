@@ -5,6 +5,7 @@ core = 7.x
 
 dependencies[] = edidaktikum
 dependencies[] = og
+dependencies[] = og_access
 dependencies[] = og_ui
 dependencies[] = views_content
 dependencies[] = entityreference_prepopulate
