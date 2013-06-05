@@ -36,7 +36,7 @@ function ed_portfolio_create_field_items() {
       'field_name' => $field_name,
       'type' => 'entityreference',
       'entity_types' => array('node'),
-      'cardinality' => -1,
+      'cardinality' => FIELD_CARDINALITY_UNLIMITED,
       'locked' => FALSE,
       'settings' => array(
         'handler' => 'views',

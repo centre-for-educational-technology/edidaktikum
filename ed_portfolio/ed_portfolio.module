@@ -17,6 +17,11 @@ function ed_portfolio_menu() {
     'menu_name' => 'ed-dashboard-menu',
     'type' => MENU_NORMAL_ITEM,
   );
+  $items['portfolio/%'] = array(
+    'page callback' => 'ed_portfolio_page',
+    'page arguments' => array(1),  
+    'access callback' => TRUE,
+  );
   return $items;
 }
 
@@ -61,6 +66,26 @@ function ed_portfolio_get_user_portfolios() {
     ->orderBy('n.created', 'DESC');
   $nids = $query->execute()->fetchCol();
   return $nids;
+}
+
+function ed_portfolio_page($portfolio_id) {
+  $portfolio = node_load($portfolio_id);
+  if ($portfolio && $portfolio->type == 'ed_portfolio') {
+    echo theme('ed_portfolio_page', array('node_view' => node_view($portfolio, 'entity_view')));
+    return NULL;
+  }
+  return array();
+}
+
+function ed_portfolio_theme($existing, $type, $theme, $path) {
+  return array(
+    'ed_portfolio_page' => array(
+      'variables' => array('node_view' => '', 'site_name' => variable_get('site_name', 'Drupal'), 'front_page' => variable_get('site_frontpage')),
+      'template' => 'ed_portfolio_page',
+      'path' => drupal_get_path('module', 'ed_portfolio'),
+      'render element' => 'element',
+    ), 
+  );  
 }
 
 /**
