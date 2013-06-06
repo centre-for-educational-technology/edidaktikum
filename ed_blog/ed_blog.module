@@ -44,6 +44,8 @@ function ed_blog_menu() {
 }
 
 function ed_blog_listing_page() {
+  menu_tree_set_path('main-menu', 'dashboard');
+
   $content = array();
   drupal_set_title(t('My Blog'));
 

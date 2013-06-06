@@ -41,6 +41,8 @@ function ed_task_menu(){
 }
 
 function ed_task_listing_page() {
+  menu_tree_set_path('main-menu', 'dashboard');
+
   $content = array();
   $table_suffix = 1;
 
