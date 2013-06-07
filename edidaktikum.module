@@ -39,6 +39,16 @@ function edidaktikum_menu() {
     'type' => MENU_NORMAL_ITEM,
     'weight' => 1,
   );
+  $items['admin/config/edidaktikum/promoted-resources'] = array(
+    'title' => 'eDidaktikum Promoted Resources',
+    'description' => 'Choose front page Learning Resource',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('edidaktikum_promoted_resources_page_admin_form'),
+    'access arguments' => array('access administration pages'),
+    'file' => 'edidaktikum.admin.inc',
+    'type' => MENU_NORMAL_ITEM,
+    'weight' => 2,
+  );
   $items['home'] = array(
     'title' => 'Home',
     'page callback' => 'edidaktikum_home_page',
@@ -63,11 +73,11 @@ function edidaktikum_menu() {
 function edidaktikum_entity_info_alter(&$entity_info) {
   $entity_info['node']['view modes']['featured'] = array(
     'label' => t('Featured'),
-    'custom settings' => TRUE,  
+    'custom settings' => TRUE,
   );
   $entity_info['node']['view modes']['front'] = array(
     'label' => t('Front'),
-    'custom settings' => TRUE,  
+    'custom settings' => TRUE,
   );
 }
 

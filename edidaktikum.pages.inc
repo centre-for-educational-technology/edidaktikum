@@ -77,20 +77,20 @@ function edidaktikum_home_page() {
     }
   }
   if (module_exists('ed_learning_resource')) {
-    $latest_resource = _ed_learning_resource_get_latest();
-    if (!empty($latest_resource)) {
-      $content['latest-content']['resource'] = array(
-        '#type' => 'container',
-        '#attributes' => array(
-          'id' => 'latest-resource',
-        ),
-      );
-      $content['latest-content']['resource']['title'] = array(
-        '#type' => 'markup',
-        '#markup' => '<h1>' . t('Learning Resource') . '</h1>',
-      );
-      $content['latest-content']['resource']['content'] = node_view($latest_resource, 'front');
-    }
+    $resource = node_load(variable_get('resource_to_front'));
+      if (!empty($resource)) {
+        $content['latest-content']['resource'] = array(
+          '#type' => 'container',
+          '#attributes' => array(
+           'id' => 'promoted-resource',
+          ),
+        );
+        $content['latest-content']['resource']['title'] = array(
+          '#type' => 'markup',
+          '#markup' => '<h1>' . t('Learning Resource') . '</h1>',
+        );
+        $content['latest-content']['resource']['content'] = node_view($resource, 'front');
+      }
   }
 
   $content['tour'] = array(

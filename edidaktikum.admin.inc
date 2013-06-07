@@ -58,3 +58,21 @@ function edidaktikum_contact_page_admin_form() {
   return system_settings_form($form);
 }
 
+function edidaktikum_promoted_resources_page_admin_form(){
+  $form = array();
+  $nids = ed_get_promoted_resources();
+  $resources = node_load_multiple($nids);
+  $resourcenames = array();
+  foreach($resources as $resource){
+    $resourcenames[] = $resource->title." - ".$resource->name." - ".format_date($resource->created,'custom','d/m/Y');
+  }
+  $form['form']['promoted_resources'] = array(
+    '#type' => 'radios',
+    '#title' => t('Choose Learning Resource to display on front page'),
+    '#options' => $resourcenames,
+    '#default_value' => variable_get('promoted_resources'),
+  );
+  $setnid = $nids[variable_get('promoted_resources')];
+  variable_set('resource_to_front', $setnid);
+  return system_settings_form($form);
+}
