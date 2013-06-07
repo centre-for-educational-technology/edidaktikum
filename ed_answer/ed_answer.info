@@ -9,3 +9,4 @@ files[] = ed_answer.module
 dependencies[] = edidaktikum
 dependencies[] = ed_task
 dependencies[] = ed_blog
+dependencies[] = entityreference_prepopulate

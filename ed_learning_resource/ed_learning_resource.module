@@ -14,7 +14,6 @@ function ed_learning_resource_node_info() {
 	  'has_title' => '1',
 	  'title_label' => t('Title'),
 	  'body_label' => t('body_label'),
-
   );
   return $items;
 }
@@ -31,7 +30,6 @@ function ed_learning_resource_form($node, $form_state) {
  * Implements hook_menu().
  */
 function ed_learning_resource_menu() {
-
   $items['resources'] = array(
     'title' => t('Resources'),
     'page callback' => 'drupal_get_form',
@@ -45,18 +43,13 @@ function ed_learning_resource_menu() {
 }
 
 function ed_learning_resource_listing($form, &$form_state) {
-
   drupal_set_title(t('Learning Resources'));
-  //$form['#attached']['css'] = array(drupal_get_path('module', 'ed_learning_resource') . '/ajax.css',);
-  //$form['#attached']['js'] = array(drupal_get_path('module', 'ed_learning_resource') . '/ed_learning_resource_js.js',);
   drupal_add_js(drupal_get_path('module', 'ed_learning_resource') . '/ed_learning_resource_js.js');
-
   $form['content_sort_select'] = array(
     '#type' => 'select',
     '#title' => t('Sort By'),
     '#options' => drupal_map_assoc(array(t('Latest First'), t('Earliest First'), t('Title'), t('Likes(not facebook)'))),
   );
-
   $term_reference_tree_path = drupal_get_path('module', 'term_reference_tree');
   $path = drupal_get_path('module', 'ed_learning_resource');
   $form['category'] = array(
@@ -96,17 +89,12 @@ function ed_learning_resource_listing($form, &$form_state) {
     '#suffix' => '</div>',
   );
 
-
   $order = t('Latest First');
-
   if( !empty($form_state['values']['category'])){ // else{show from all categories}
     $order = ($form_state['values']['content_sort_select']);
-
     $form['content_sort_select']['#default_value'] = $order;
     $catAll = $form_state['values']['category'];
-    //$catValues = array();
     $catValues = array_values_recursive($catAll);
-
     if( !empty($catValues) ){
       $resources = _ed_get_resources_category($catValues, $order);
       $nids = node_load_multiple($resources);
@@ -115,33 +103,23 @@ function ed_learning_resource_listing($form, &$form_state) {
         '#theme' => 'pager',
         '#weight' => 5,
       );
-      //$form .= theme('pager');
       $form['selection_fieldset']['resources'] = $build;
     }
-
   }
   else{
-
     if(!empty($form_state['values']['content_sort_select'])){
       $order = ($form_state['values']['content_sort_select']);
-      //$resources = _ed_get_all_resources($order);
     }
     $resources = _ed_get_all_resources($order);
-
     $nids = node_load_multiple($resources);
     $build = node_view_multiple($nids);
     $build['pager'] = array(
       '#theme' => 'pager',
       '#weight' => 5,
     );
-    //$build .= theme('pager');
     $form['selection_fieldset']['resources'] = $build;
-
   }
-
-
-
-    return $form;
+  return $form;
 }
 
 function ed_learning_resource_listing_submit($form, &$form_state) {
@@ -151,10 +129,16 @@ function ed_learning_resource_listing_submit($form, &$form_state) {
       $help = array_values_recursive($form_state['input']['category']);
       if(!empty($help)){
         $form_state['values']['category'] = $help;
-        //dprint_r($help);
       }
     default:
       $form_state['rebuild'] = TRUE;
+  }
+}
+
+function ed_learning_resource_preprocess_node(&$vars){
+  if (isset($vars['front']) && $vars['front'] == TRUE && $vars['node']->type == 'ed_learning_resource') {
+    $created = $vars['node']->created;
+    $vars['submitted'] = format_date($created, 'short').", ".$vars['node']->name;
   }
 }
 
@@ -233,17 +217,16 @@ function _ed_get_all_resources($order) {
   return $result;
 }
 
-function _ed_learning_resource_get_latest() {
+function ed_get_promoted_resources(){
   $query = db_select('node', 'n');
   $query->fields('n', array('nid'))
     ->condition('n.type', 'ed_learning_resource')
     ->condition('n.status', 1)
-    ->range(0,1)
+    ->condition('n.promote', 1)
     ->orderBy('n.created', 'DESC');
   $nids = $query->execute()->fetchCol();
-
   if( !empty($nids) ) {
-    return node_load($nids[0]);
+    return $nids;
   }
   return FALSE;
 }

@@ -17,3 +17,104 @@ function ed_answer_node_info() {
 function ed_answer_form($node, $form_state) {
   return node_content_form($node, $form_state);
 }
+
+function ed_answer_form_alter(&$form, &$form_state, $form_id){
+  if( $form_id == 'ed_answer_node_form' ) {
+    $node = node_load($_GET['field_ref_to_task']);
+    $form['task'] = array(
+      '#tree' => TRUE,
+      '#type' => 'fieldset',
+      '#title' => t('task'),
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+    );
+    $form['task']['task_title'] = array(
+      '#type' => 'markup',
+      '#markup' => '<h2>'. l($node->title, 'node/'.$_GET['field_ref_to_task']).'</h2>',
+      '#weight' => -1,
+    );
+    $task_content = field_get_items('node', $node, 'ed_field_content');
+    $task_content_view = field_view_value('node', $node, 'ed_field_content', $task_content[0]);
+    $form['task']['task_content'] = $task_content_view;
+    $task_cat = field_get_items('node', $node, 'ed_field_category');
+    foreach($task_cat as $term){
+      $cat_terms[] = field_view_value('node', $node, 'ed_field_category', $term);
+    }
+    foreach($cat_terms as $term){
+      $test[] = taxonomy_term_load($term['#options']['entity']->tid);
+    }
+    $term_nr = 0;
+    $form['#attached']['js'] = array(drupal_get_path('module', 'ed_answer') . '/ed_answer_js.js',);
+    //dsm($form['#attached']);
+    $form['task']['category'] = array(
+      '#tree' => TRUE,
+      '#type' => 'container',
+      '#prefix' => '<ul class="category-container">',
+      '#suffix' => '</ul>',
+    );
+    $help = 0;
+    foreach($cat_terms as $tid){
+      $form['task']['category'][$help] = array(
+        '#type' => 'markup',
+        '#markup' => t(l(t($tid['#options']['entity']->name), $tid['#href']).'<br />'),
+      );
+      if(ed_answer_check_tid_parents($tid['#options']['entity']->tid)==0){
+       /* $form['test']['test2'][$help]['#prefix'] = '<li>';
+        $form['test']['test2'][$help]['#suffix'] = '</li>';*/
+      }else{
+        $depth = 0;
+        $flag = true;
+        $parent = ed_answer_check_tid_parents($tid['#options']['entity']->tid);
+        $form['task']['category'][$help]['#prefix']='';
+        $form['task']['category'][$help]['#suffix']='';
+        while($flag){
+          if($parent==0){
+            //dsm($depth);
+            for($i = 0;$i<$depth;$i++){
+              //dsm("fdsa: ".$i);
+              $form['task']['category'][$help]['#prefix'].='<ul>';
+            }
+            $form['task']['category'][$help]['#suffix'].='</ul>';
+            $flag = false;
+          }else{
+            $depth++;
+            $parent = ed_answer_check_tid_parents($parent);
+          }
+        }
+      }
+      $help++;
+    }
+    $form['task']['#weight'] = 0;
+  }
+}
+
+function ed_answer_check_tid_parents($tid){
+  $query = db_select('taxonomy_term_hierarchy', 't')
+    ->condition('t.tid', $tid);
+  $query->fields('t', array('parent'));
+  $result = $query->execute()->fetchCol();
+//  if($result[0]!=0){dsm('test: '.$result[0]);}
+  return $result[0];
+}
+
+
+
+function ed_answer_check_tid_parent($tid){
+  $query = db_select('taxonomy_term_hierarchy', 't')
+    ->condition('t.tid', $tid);
+  $query->fields('t', array('parent'));
+  $result = $query->execute()->fetchCol();
+  //dsm($result[0]);
+  if( $result[0]==0){
+    return false;
+  }else{
+    $tere = ed_answer_check_tid_parent($result[0]);
+    if($tere == 0){
+      return true;
+    }else{
+      ed_answer_check_tid_parent($result[0]);
+
+    }
+  }
+
+}
