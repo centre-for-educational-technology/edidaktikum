@@ -21,22 +21,30 @@ function ed_answer_form($node, $form_state) {
 function ed_answer_form_alter(&$form, &$form_state, $form_id){
   if( $form_id == 'ed_answer_node_form' ) {
     $node = node_load($_GET['field_ref_to_task']);
-    $form['task'] = array(
+    $form['ed_field_content']['#weight'] = 1;
+    $form['field_ref_to_task']['und']['#title'] = t('Answer To Task');
+    $form['tabs'] = array(
+      '#type' => 'vertical_tabs',
+      '#weight' => 0,
+    );
+    $form['ed_answer_task'] = array(
       '#tree' => TRUE,
       '#type' => 'fieldset',
-      '#title' => t('task'),
-      '#collapsible' => TRUE,
-      '#collapsed' => TRUE,
+      '#title' => t('Task'),
+      '#collapsible' => FALSE,
+      '#collapsed' => FALSE,
+      '#group' => 'tabs',
     );
-    $form['task']['task_title'] = array(
+    $form['ed_answer_task']['task_title'] = array(
       '#type' => 'markup',
       '#markup' => '<h2>'. l($node->title, 'node/'.$_GET['field_ref_to_task']).'</h2>',
       '#weight' => -1,
     );
     $task_content = field_get_items('node', $node, 'ed_field_content');
     $task_content_view = field_view_value('node', $node, 'ed_field_content', $task_content[0]);
-    $form['task']['task_content'] = $task_content_view;
+    $form['ed_answer_task']['task_content'] = $task_content_view;
     $task_cat = field_get_items('node', $node, 'ed_field_category');
+
     foreach($task_cat as $term){
       $cat_terms[] = field_view_value('node', $node, 'ed_field_category', $term);
     }
@@ -45,8 +53,14 @@ function ed_answer_form_alter(&$form, &$form_state, $form_id){
     }
     $term_nr = 0;
     $form['#attached']['js'] = array(drupal_get_path('module', 'ed_answer') . '/ed_answer_js.js',);
-    //dsm($form['#attached']);
-    $form['task']['category'] = array(
+    $form['ed_answer_task_cat'] = array(
+      '#tree' => TRUE,
+      '#type' => 'fieldset',
+      '#title' => t('Category'),
+      '#group' => 'tabs',
+    );
+
+    $form['ed_answer_task_cat']['category'] = array(
       '#tree' => TRUE,
       '#type' => 'container',
       '#prefix' => '<ul class="category-container">',
@@ -54,27 +68,25 @@ function ed_answer_form_alter(&$form, &$form_state, $form_id){
     );
     $help = 0;
     foreach($cat_terms as $tid){
-      $form['task']['category'][$help] = array(
+      $form['ed_answer_task_cat']['category'][$help] = array(
         '#type' => 'markup',
         '#markup' => t(l(t($tid['#options']['entity']->name), $tid['#href']).'<br />'),
       );
       if(ed_answer_check_tid_parents($tid['#options']['entity']->tid)==0){
-       /* $form['test']['test2'][$help]['#prefix'] = '<li>';
+      /*$form['test']['test2'][$help]['#prefix'] = '<li>';
         $form['test']['test2'][$help]['#suffix'] = '</li>';*/
       }else{
         $depth = 0;
         $flag = true;
         $parent = ed_answer_check_tid_parents($tid['#options']['entity']->tid);
-        $form['task']['category'][$help]['#prefix']='';
-        $form['task']['category'][$help]['#suffix']='';
+        $form['ed_answer_task_cat']['category'][$help]['#prefix']='';
+        $form['ed_answer_task_cat']['category'][$help]['#suffix']='';
         while($flag){
           if($parent==0){
-            //dsm($depth);
             for($i = 0;$i<$depth;$i++){
-              //dsm("fdsa: ".$i);
-              $form['task']['category'][$help]['#prefix'].='<ul>';
+              $form['ed_answer_task_cat']['category'][$help]['#prefix'].='<ul>';
             }
-            $form['task']['category'][$help]['#suffix'].='</ul>';
+            $form['ed_answer_task_cat']['category'][$help]['#suffix'].='</ul>';
             $flag = false;
           }else{
             $depth++;
@@ -84,16 +96,67 @@ function ed_answer_form_alter(&$form, &$form_state, $form_id){
       }
       $help++;
     }
-    $form['task']['#weight'] = 0;
+    $form['ed_answer_task_comp'] = array(
+      '#tree' => TRUE,
+      '#type' => 'fieldset',
+      '#title' => t('Competence'),
+      '#group' => 'tabs',
+    );
+    $form['ed_answer_task_comp']['competence'] = array(
+      '#tree' => TRUE,
+      '#type' => 'container',
+      '#prefix' => '<ul class="competence-container">',
+      '#suffix' => '</ul>',
+    );
+
+    $task_comp = field_get_items('node', $node, 'ed_field_competence');
+
+    foreach($task_comp as $competenceTerm){
+      $comp_terms[] = field_view_value('node', $node, 'ed_field_competence', $competenceTerm);
+    }
+    foreach($comp_terms as $term){
+      $test[] = taxonomy_term_load($term['#options']['entity']->tid);
+    }
+
+    $help2 = 0;
+    foreach($comp_terms as $tid){
+      $form['ed_answer_task_comp']['competence'][$help2] = array(
+        '#type' => 'markup',
+        '#markup' => t(l(t($tid['#options']['entity']->name), $tid['#href']).'<br />'),
+      );
+      if(ed_answer_check_tid_parents($tid['#options']['entity']->tid)==0){
+        /*$form['test']['test2'][$help]['#prefix'] = '<li>';
+          $form['test']['test2'][$help]['#suffix'] = '</li>';*/
+      }else{
+        $depth = 0;
+        $flag = true;
+        $parent = ed_answer_check_tid_parents($tid['#options']['entity']->tid);
+        $form['ed_answer_task_comp']['competence'][$help2]['#prefix']='';
+        $form['ed_answer_task_comp']['competence'][$help2]['#suffix']='';
+        while($flag){
+          if($parent==0){
+            for($i = 0;$i<$depth;$i++){
+              $form['ed_answer_task_comp']['competence'][$help2]['#prefix'].='<ul>';
+            }
+            $form['ed_answer_task_comp']['competence'][$help2]['#suffix'].='</ul>';
+            $flag = false;
+          }else{
+            $depth++;
+            $parent = ed_answer_check_tid_parents($parent);
+          }
+        }
+      }
+      $help2++;
+    }
+
   }
 }
 
-function ed_answer_check_tid_parents($tid){
+  function ed_answer_check_tid_parents($tid){
   $query = db_select('taxonomy_term_hierarchy', 't')
     ->condition('t.tid', $tid);
   $query->fields('t', array('parent'));
   $result = $query->execute()->fetchCol();
-//  if($result[0]!=0){dsm('test: '.$result[0]);}
   return $result[0];
 }
 
@@ -116,5 +179,6 @@ function ed_answer_check_tid_parent($tid){
 
     }
   }
-
 }
+
+
