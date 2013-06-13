@@ -76,7 +76,7 @@ function ed_blog_listing_page() {
       $rows[] = array(
         'data' => array(
           'type' => _get_type($node),
-          'post_name' => l(_get_task_name($node->field_ref_to_task['und']['0']['target_id']), 'node/' . $node->nid) ." (".t('Due Date: '). format_date($dueDate, 'custom','d/m/Y'). ") ",
+          'post_name' => l(_get_task_name($node->field_ref_to_task['und']['0']['target_id']), 'node/' . $node->nid) ." (".t('Due Date: '). format_date($dueDateTS[0], 'custom','d/m/Y'). ") ",
           'created' => format_date($node->created, 'custom', 'd/m/Y'),
         ),
       );
