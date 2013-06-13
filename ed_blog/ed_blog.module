@@ -60,7 +60,7 @@ function ed_blog_listing_page() {
   $nids = _ed_get_blogs();
   $nodes = node_load_multiple($nids);
   $rows = array();
-
+  //had to make a change so i can test an awesome commit...
   foreach($nodes as $node) {
     if($node->type == 'ed_blog') {
       $rows[] = array(
