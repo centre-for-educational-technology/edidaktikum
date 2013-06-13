@@ -49,6 +49,16 @@ function edidaktikum_menu() {
     'type' => MENU_NORMAL_ITEM,
     'weight' => 2,
   );
+  $items['admin/config/edidaktikum/statistics'] = array(
+    'title' => 'eDidaktikum Statistics',
+    'description' => 'Statistics about the eDidaktikum web page',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('edidaktikum_statistics_page_admin_form'),
+    'access arguments' => array('access administration pages'),
+    'file' => 'edidaktikum.admin.inc',
+    'type' => MENU_NORMAL_ITEM,
+    'weight' => 3,
+  );
   $items['home'] = array(
     'title' => 'Home',
     'page callback' => 'edidaktikum_home_page',

@@ -76,3 +76,98 @@ function edidaktikum_promoted_resources_page_admin_form(){
   variable_set('resource_to_front', $setnid);
   return system_settings_form($form);
 }
+
+function edidaktikum_statistics_page_admin_form(){
+  $form = array();
+
+  //@todo think about it
+
+  $form['users'] = array(
+    '#type' => 'markup',
+    '#markup' => t('Users: ').get_user_qt().t(' Teachers: ').get_teachers().t(' Students: ').'<br />',
+  );
+  $form['clusters'] = array(
+    '#type' => 'markup',
+    '#markup' => t('Clusters: ').get_cluster_qt().'<br />',
+  );
+  $form['learning_resources'] = array(
+    '#type' => 'markup',
+    '#markup' => t('Learning Resources: ').get_lr_qt().'<br />',
+  );
+  $form['news'] = array(
+    '#type' => 'markup',
+    '#markup' => t('News: ').get_news_qt().'<br />',
+  );
+  $form['events'] = array(
+    '#type' => 'markup',
+    '#markup' => t('Events: ').get_event_qt().'<br />',
+  );
+  return $form;
+}
+
+function get_event_qt(){
+  $query = db_select('node', 'n')
+    ->fields('n', array('nid'))
+    ->condition('type', 'ed_event');
+  $result = $query->execute();
+  $numresult = $result->rowCount();
+  return $numresult;
+
+}
+
+function get_news_qt(){
+  $query = db_select('node', 'n')
+    ->fields('n', array('nid'))
+    ->condition('type', 'ed_news');
+  $result = $query->execute();
+  $numresult = $result->rowCount();
+
+  return $numresult;
+}
+
+function get_lr_qt(){
+  $query = db_select('node', 'n')
+    ->fields('n', array('nid'))
+    ->condition('type', 'ed_learning_resource');
+  $result = $query->execute();
+  $numresult = $result->rowCount();
+
+  return $numresult;
+}
+function get_teachers(){
+  $query = db_select('users', 'u');
+  $query->join('users_roles', 'ur', 'ur.uid = u.uid');
+  $query->join('role', 'r', 'r.rid = ur.rid');
+  $query->condition('r.name' , 'teacher');
+  $query->fields('u',array('uid'));
+  $result = $query->execute();
+  $numresult = $result->rowCount();
+
+
+  return $numresult;
+
+}
+
+function get_user_qt(){
+  $query = db_select('users', 'u');
+  /*$query->join('users_roles', 'ur', 'ur.uid = u.uid');
+  $query->join('role', 'r', 'r.rid = ur.rid');*/
+  $query->fields('u', array('uid'))
+    ->condition('u.uid', array(0,1), 'NOT IN');
+  $result = $query->execute();
+
+  $numresult = $result->rowCount();
+  //dsm($query);
+  return $numresult;
+}
+
+function get_cluster_qt(){
+  $query = db_select('node', 'n')
+    ->fields('n', array('nid'))
+    ->condition('type', 'ed_cluster');
+  $result = $query->execute();
+  $numresult = $result->rowCount();
+
+  return $numresult;
+}
+
