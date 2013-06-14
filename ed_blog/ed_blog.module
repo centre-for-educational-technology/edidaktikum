@@ -27,6 +27,12 @@ function ed_blog_form($node, $form_state) {
   return node_content_form($node, $form_state);
 }
 
+function ed_blog_form_alter(&$form, &$form_state, $form_id){
+  if( $form_id == 'ed_blog_node_form' ){
+    drupal_set_title(t('New Blog Post'));
+  }
+}
+
 /*
  * Implements hook_menu().
  */
