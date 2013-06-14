@@ -28,8 +28,10 @@ function ed_blog_form($node, $form_state) {
 }
 
 function ed_blog_form_alter(&$form, &$form_state, $form_id){
-  if( $form_id == 'ed_blog_node_form' ){
+  if( $form_id == 'ed_blog_node_form' && arg(2)!='edit'){
     drupal_set_title(t('New Blog Post'));
+  }else if($form_id == 'ed_blog_node_form' && arg(2) == 'edit'){
+    drupal_set_title(t('Edit Blog Post'));
   }
 }
 
