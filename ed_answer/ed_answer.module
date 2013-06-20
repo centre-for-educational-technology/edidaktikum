@@ -18,9 +18,25 @@ function ed_answer_form($node, $form_state) {
   return node_content_form($node, $form_state);
 }
 
+
+function ed_answer_node_view($node, $view_mode, $langcode){
+  dsm($node);
+}
+
+
 function ed_answer_form_alter(&$form, &$form_state, $form_id){
+
   if( $form_id == 'ed_answer_node_form' ) {
-    $node = node_load($_GET['field_ref_to_task']);
+    dsm($form);
+    //$reftotask = 0;
+    if($form['#node']->field_ref_to_task){
+      $reftotask = $form['#node']->field_ref_to_task['und'][0]['target_id'];
+      //$node = node_load($form['#node']->field_ref_to_task['und'][0]['target_id']);
+    }else{
+      $reftotask = $_GET['field_ref_to_task'];
+
+    }
+    $node = node_load($reftotask);
     $form['og_group_ref']['und'][0]['default']['#default_value'] = $node->og_group_ref['und'][0]['target_id'];
     $form['ed_field_content']['#weight'] = 1;
     $form['field_ref_to_task']['und']['#title'] = t('Answer To Task');
@@ -38,7 +54,7 @@ function ed_answer_form_alter(&$form, &$form_state, $form_id){
     );
     $form['ed_answer_task']['task_title'] = array(
       '#type' => 'markup',
-      '#markup' => '<h2>'. l($node->title, 'node/'.$_GET['field_ref_to_task']).'</h2>',
+      '#markup' => '<h2>'. l($node->title, 'node/'.$reftotask).'</h2>',
       '#weight' => -1,
     );
     $task_content = field_get_items('node', $node, 'ed_field_content');
