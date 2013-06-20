@@ -18,15 +18,20 @@ function ed_answer_form($node, $form_state) {
   return node_content_form($node, $form_state);
 }
 
+function ed_answer_node_view($node, $view_mode, $langcode){
+  drupal_set_title($node->field_ref_to_task['und'][0]['entity']->title.t(' - Answer'));
+
+}
+
 
 function ed_answer_form_alter(&$form, &$form_state, $form_id){
 
   if( $form_id == 'ed_answer_node_form' ) {
+    dsm($form);
     if($form['#node']->field_ref_to_task){
       $reftotask = $form['#node']->field_ref_to_task['und'][0]['target_id'];
     }else{
       $reftotask = $_GET['field_ref_to_task'];
-
     }
     $node = node_load($reftotask);
     $form['og_group_ref']['und'][0]['default']['#default_value'] = $node->og_group_ref['und'][0]['target_id'];
