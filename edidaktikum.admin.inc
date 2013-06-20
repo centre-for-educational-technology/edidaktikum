@@ -102,7 +102,21 @@ function edidaktikum_statistics_page_admin_form(){
     '#type' => 'markup',
     '#markup' => t('Events: ').get_event_qt().'<br />',
   );
+  $form['tasks'] = array(
+    '#type' => 'markup',
+    '#markup' => t('Given Tasks: ').get_task_qt().'<br />',
+  );
   return $form;
+}
+
+function get_task_qt(){
+  $query = db_select('node', 'n')
+    ->fields('n', array('nid'))
+    ->condition('type', 'ed_task');
+  $result = $query->execute();
+  $numresult = $result->rowCount();
+
+  return $numresult;
 }
 
 function get_event_qt(){
