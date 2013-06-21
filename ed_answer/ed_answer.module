@@ -19,8 +19,9 @@ function ed_answer_form($node, $form_state) {
 }
 
 function ed_answer_node_view($node, $view_mode, $langcode){
-  drupal_set_title($node->field_ref_to_task['und'][0]['entity']->title.t(' - Answer'));
-
+  if($node->type == 'ed_answer'){
+      drupal_set_title($node->field_ref_to_task['und'][0]['entity']->title.t(' - Answer'));
+  }
 }
 
 
