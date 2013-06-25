@@ -1,0 +1,29 @@
+<?php
+
+
+/**
+ * Implements hook_node_info().
+ */
+
+function ed_subgroup_node_info(){
+  $items['ed_subgroup'] = array(
+    'name' => t('Subgroup'),
+    'type' => 'ed_subgroup',
+    'base' => 'node_content',
+    'description' => t('Subgroups for eDidaktikum Clusters'),
+    'has_title' => 1,
+    'title_label' => t('Title'),
+    'body_label' => t('body_label'),
+  );
+  return $items;
+}
+
+
+/**
+ * Implements hook_form().
+ */
+function ed_subgroup_resource_form($node, $form_state){
+  return node_content_form($node, $form_state);
+}
+
+

@@ -1,0 +1,78 @@
+<?php
+
+require_once('ed_subgroup_functions.inc');
+
+
+/**
+ * Implements hook_install().
+ */
+
+function ed_subgroup_install(){
+  node_types_rebuild();
+  //$types = node_type_get_types();
+
+
+  foreach(_ed_subgroup_installed_instances() as $instance){
+    $instance['entity_type'] = 'node';
+    $instance['bundle'] = 'ed_subgroup';
+    field_create_instance($instance);
+  }
+  ed_subgroup_add_og_group_field();
+  ed_subgroup_add_og_audience();
+  ed_subgroup_add_og_group_access_field();
+}
+
+function ed_subgroup_add_og_group_access_field(){
+  if(function_exists('og_create_field') && defined('OG_ACCESS_FIELD')){
+    og_create_field(OG_ACCESS_FIELD, 'node','ed_subgroup');
+  }
+}
+
+function ed_subgroup_add_og_group_field(){
+  if(function_exists('og_create_field') && defined('OG_GROUP_FIELD')){
+    og_create_field(OG_GROUP_FIELD, 'node', 'ed_subgroup');
+  }
+}
+
+function ed_subgroup_add_og_audience(){
+
+  if(function_exists('og_create_field') && defined('OG_AUDIENCE_FIELD')){
+
+    $og_field = og_fields_info(OG_AUDIENCE_FIELD);
+    $og_field['instance']['label'] = t('Subgroup');
+    $og_field['instance']['required'] = TRUE;
+    $og_field['instance']['settings']['behaviors']['prepopulate'] = array(
+      'status' => TRUE,
+      'action' => 'none',
+      'fallback' => 'none',
+      'skip_perm' => FALSE,
+    );
+    og_create_field(OG_AUDIENCE_FIELD, 'node', 'ed_subgroup', $og_field);
+  }
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+
+function ed_subgroup_uninstall(){
+  $result = db_select('node', 'n')
+    ->fields('n', array('nid'))
+    ->condition('n.type', 'ed_subgroup')
+    ->execute();
+
+  $nids = array();
+  foreach($result as $row){
+    $nids[] = $row->nid;
+  }
+
+  node_delete_multiple($nids);
+
+  $instances = field_info_instances('node', 'ed_subgroup');
+  foreach($instances as  $instance_name => $instance){
+    field_delete_instance($instance);
+  }
+  node_type_delete('ed_subgroup');
+
+  field_purge_batch(1000);
+}
