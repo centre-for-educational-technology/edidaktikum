@@ -80,11 +80,9 @@ function edidaktikum_promoted_resources_page_admin_form(){
 function edidaktikum_statistics_page_admin_form(){
   $form = array();
 
-  //@todo think about it
-
   $form['users'] = array(
     '#type' => 'markup',
-    '#markup' => t('Users: ').get_user_qt().t(' Teachers: ').get_teachers().t(' Students: ').'<br />',
+    '#markup' => t('Users: ').get_user_qt().t(' Teachers: ').get_teachers().t(' Students: ').get_student_qt().'<br />',
   );
   $form['clusters'] = array(
     '#type' => 'markup',
@@ -148,6 +146,19 @@ function get_lr_qt(){
 
   return $numresult;
 }
+
+function get_student_qt(){
+  $query = db_select('users', 'u');
+  $query->join('users_roles', 'ur', 'ur.uid = u.uid');
+  $query->join('role', 'r', 'r.rid = ur.rid');
+  $query->condition('r.name', 'student');
+  $query->fields('u', array('uid'));
+  $result = $query->execute();
+  $numresult = $result->rowCount();
+  return $numresult;
+}
+
+
 function get_teachers(){
   $query = db_select('users', 'u');
   $query->join('users_roles', 'ur', 'ur.uid = u.uid');
@@ -164,14 +175,12 @@ function get_teachers(){
 
 function get_user_qt(){
   $query = db_select('users', 'u');
-  /*$query->join('users_roles', 'ur', 'ur.uid = u.uid');
-  $query->join('role', 'r', 'r.rid = ur.rid');*/
+  $query->join('users_roles', 'ur', 'ur.uid = u.uid');
+  $query->join('role', 'r', 'r.rid = ur.rid');
   $query->fields('u', array('uid'))
-    ->condition('u.uid', array(0,1), 'NOT IN');
+    ->condition('r.name', array('student', 'teacher'));
   $result = $query->execute();
-
   $numresult = $result->rowCount();
-  //dsm($query);
   return $numresult;
 }
 
