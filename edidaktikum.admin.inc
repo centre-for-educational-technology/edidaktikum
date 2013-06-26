@@ -88,6 +88,10 @@ function edidaktikum_statistics_page_admin_form(){
     '#type' => 'markup',
     '#markup' => t('Clusters: ').get_cluster_qt().'<br />',
   );
+  $form['subgroups'] = array(
+    '#type' => 'markup',
+    '#markup' => t('Subgroups: ').get_subgroups_qt().'<br />',
+  );
   $form['learning_resources'] = array(
     '#type' => 'markup',
     '#markup' => t('Learning Resources: ').get_lr_qt().'<br />',
@@ -157,7 +161,16 @@ function get_student_qt(){
   $numresult = $result->rowCount();
   return $numresult;
 }
+function get_subgroups_qt(){
+  $query = db_select('node', 'n')
+    ->fields('n', array('nid'))
+    ->condition('type', 'ed_subgroup');
+  $result = $query->execute();
+  $numresult = $result->rowCount();
 
+  return $numresult;
+
+}
 
 function get_teachers(){
   $query = db_select('users', 'u');
