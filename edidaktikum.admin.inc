@@ -78,35 +78,38 @@ function edidaktikum_promoted_resources_page_admin_form(){
 }
 
 function edidaktikum_statistics_page_admin_form(){
-  $form = array();
 
-  $form['users'] = array(
+  // @todo make a table out of it :)
+
+  $form = array();
+  $form['user-table-heading'] = array(
     '#type' => 'markup',
-    '#markup' => t('Users: ').get_user_qt().t(' Teachers: ').get_teachers().t(' Students: ').get_student_qt().'<br />',
+    '#markup' => '<h2>'.t('Users').'</h2>',
   );
-  $form['clusters'] = array(
-    '#type' => 'markup',
-    '#markup' => t('Clusters: ').get_cluster_qt().'<br />',
+  $form['user-table'] = array(
+    '#theme' => 'table',
+    '#header' => array(t('Role'), t('Qt.')),
+    '#rows' => array(
+      array(t('Teacher'), get_teachers()),
+      array(t('Student'), get_student_qt()),
+      array(t('Total'), get_user_qt()),
+    ),
   );
-  $form['subgroups'] = array(
+  $form['content-table-heading'] = array(
     '#type' => 'markup',
-    '#markup' => t('Subgroups: ').get_subgroups_qt().'<br />',
+    '#markup' => '<h2>'.t('Content Types').'</h2>',
   );
-  $form['learning_resources'] = array(
-    '#type' => 'markup',
-    '#markup' => t('Learning Resources: ').get_lr_qt().'<br />',
-  );
-  $form['news'] = array(
-    '#type' => 'markup',
-    '#markup' => t('News: ').get_news_qt().'<br />',
-  );
-  $form['events'] = array(
-    '#type' => 'markup',
-    '#markup' => t('Events: ').get_event_qt().'<br />',
-  );
-  $form['tasks'] = array(
-    '#type' => 'markup',
-    '#markup' => t('Given Tasks: ').get_task_qt().'<br />',
+  $form['content-table'] = array(
+    '#theme' => 'table',
+    '#header' => array(t('Content Type'), t('Qt.')),
+    '#rows' => array(
+      array(t('Clusters'),get_cluster_qt()),
+      array(t('Subgroups'),get_subgroups_qt()),
+      array(t('Learning Resources'),get_lr_qt()),
+      array(t('News'),get_news_qt()),
+      array(t('Events'),get_event_qt()),
+      array(t('Given Tasks'),get_task_qt()),
+    ),
   );
   return $form;
 }
