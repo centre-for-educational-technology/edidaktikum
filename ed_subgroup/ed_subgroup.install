@@ -8,9 +8,6 @@ require_once('ed_subgroup_functions.inc');
  */
 
 function ed_subgroup_install(){
-  node_types_rebuild();
-  //$types = node_type_get_types();
-
 
   foreach(_ed_subgroup_installed_instances() as $instance){
     $instance['entity_type'] = 'node';
