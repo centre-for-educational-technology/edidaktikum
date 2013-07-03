@@ -19,7 +19,7 @@ function ed_answer_form($node, $form_state) {
 }
 
 function ed_answer_node_view($node, $view_mode, $langcode){
-  if($node->type == 'ed_answer'){
+  if($node->type == 'ed_answer' && $view_mode =='full'){
       drupal_set_title($node->field_ref_to_task['und'][0]['entity']->title.t(' - Answer'));
   }
 }
@@ -181,7 +181,6 @@ function ed_answer_check_tid_parent($tid){
     ->condition('t.tid', $tid);
   $query->fields('t', array('parent'));
   $result = $query->execute()->fetchCol();
-  //dsm($result[0]);
   if( $result[0]==0){
     return false;
   }else{
