@@ -32,7 +32,8 @@ function ed_task_menu(){
   $items['dashboard/tasks'] = array(
     'title' => t('Tasks'),
     'page callback' => 'ed_task_listing_page',
-    'access callback' => TRUE,
+    'access callback' => 'user_is_logged_in',
+    //'access callback' => TRUE,
     'weight' => 15,
     'menu_name' => 'ed-dashboard-menu',
     'type' => MENU_NORMAL_ITEM,
@@ -193,13 +194,6 @@ function ed_task_node_view($node, $view_mode, $langcode) {
   }
 }
 
-function ed_task_form_alter(&$form, $form_state, $form_id) {
-  if( $form_id == 'ed_task_node_form'){
-    $form['#attached']['js'] = array(drupal_get_path('module', 'ed_task') . '/ed_task_js.js',);
-    $form['#attached']['css'] = array(drupal_get_path('module', 'ed_task') . '/ed_task_css.css',);
-  }
-}
-
 function ed_task_field_extra_fields() {
   $extra['node']['ed_task']['display'] = array(
     'ed_task_asjandus' => array(
@@ -210,12 +204,20 @@ function ed_task_field_extra_fields() {
   );
   return $extra;
 }
+function ed_task_form_alter(&$form, $form_state, $form_id) {
+  if( $form_id == 'ed_task_node_form'){
+    $form['#attached']['js'] = array(drupal_get_path('module', 'ed_task') . '/ed_task_js.js',);
+    $form['#attached']['css'] = array(drupal_get_path('module', 'ed_task') . '/ed_task_css.css',);
+  }
+}
+
 /**
  * Helper and database query functions
  */
 function _ed_get_group_name_from_id($id) {
   $query = db_select('node', 'n')
     ->fields('n', array('nid', 'title'))
+    ->addTag('node_access')
     ->condition('nid', $id);
   $result = $query->execute();
   $string = '';
@@ -230,6 +232,7 @@ function _ed_get_cur_user_tasks(){
   $acc = $GLOBALS['user'];
   $query = db_select('node', 'n')
     ->fields('n', array('nid'))
+    ->addTag('node_access')
     ->condition('n.type', 'ed_task')
     ->condition('n.uid', $acc->uid);
 
@@ -244,6 +247,7 @@ function _ed_get_tasks_to_user(){
   $query = db_select('node', 'n');
   $query->join('field_data_field_to_user', 'tu', 'n.nid = tu.entity_id');
   $query->fields('n', array('nid'))
+    ->addTag('node_access')
     ->condition('n.type', 'ed_task')
     ->condition('tu.field_to_user_target_id', $acc->uid);
 
@@ -257,6 +261,7 @@ function _ed_get_tasks_specific_group($gid) {
   $query=db_select('node', 'n');
   $query->join('og_membership', 'og', 'n.nid = og.etid');
   $query->fields('n', array('nid'))
+    ->addTag('node_access')
     ->condition('n.type', 'ed_task')
     ->condition('og.gid', $gid);
 
@@ -276,6 +281,7 @@ function _ed_get_group_tasks(){
   $query = db_select('node','n');
   $query->join('og_membership', 'og','n.nid = og.etid');
   $query->fields('n', array('nid'))
+    ->addTag('node_access')
     ->condition('n.type', 'ed_task')
     ->condition('og.gid', $helper, "IN");
   $result = $query->execute()->fetchCol();

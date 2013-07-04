@@ -22,7 +22,6 @@ function ed_blog_node_info() {
 /*
  * Implements hook_form().
  */
-
 function ed_blog_form($node, $form_state) {
   return node_content_form($node, $form_state);
 }
@@ -43,7 +42,7 @@ function ed_blog_menu() {
   $items['dashboard/blogs'] = array(
     'title' => t('Blog'),
     'page callback' => 'ed_blog_listing_page',
-    'access callback' => TRUE,
+    'access callback' => 'user_is_logged_in',
     'weight' => 20,
     'menu_name' => 'ed-dashboard-menu',
     'type' => MENU_NORMAL_ITEM,
@@ -68,7 +67,6 @@ function ed_blog_listing_page() {
   $nids = _ed_get_blogs();
   $nodes = node_load_multiple($nids);
   $rows = array();
-  //had to make a change so i can test an awesome commit...
   foreach($nodes as $node) {
     if($node->type == 'ed_blog') {
       $rows[] = array(
@@ -102,6 +100,7 @@ function ed_blog_listing_page() {
 }
 function _get_task_name($nid) {
   $query = db_select('node', 'n')
+    ->addTag('node_access')
     ->fields('n', array('title'))
     ->condition('nid', $nid);
 
@@ -121,6 +120,7 @@ function _get_type($node){
 function _ed_get_blogs() {
   $help = array('ed_blog', 'ed_answer');
   $query = db_select('node', 'n')
+    ->addTag('node_access')
     ->fields('n', array('nid'));
   $query->condition('type', $help, 'IN');
   $query = $query->extend('TableSort')->extend('PagerDefault')->limit(2);

@@ -174,6 +174,7 @@ function _ed_get_resources_category($cat, $order){
   $query = db_select('node', 'n');
   $query->join('field_data_ed_field_category', 'cat', 'n.nid = cat.entity_id');
   $query->fields('n', array('nid'))
+    ->addTag('node_access')
     ->condition('n.type', 'ed_learning_resource')
     ->condition('cat.ed_field_category_tid', $cat, 'IN');
   $query = $query->extend('PagerDefault')->limit(2);
@@ -200,6 +201,7 @@ function _ed_get_all_resources($order) {
 
   $query = db_select('node', 'n');
   $query->fields('n', array('nid'))
+    ->addTag('node_access')
     ->condition('n.type', 'ed_learning_resource');
   $query = $query->extend('PagerDefault')->limit(2);
   switch($order){
@@ -220,6 +222,7 @@ function _ed_get_all_resources($order) {
 function ed_get_promoted_resources(){
   $query = db_select('node', 'n');
   $query->fields('n', array('nid'))
+    ->addTag('node_access')
     ->condition('n.type', 'ed_learning_resource')
     ->condition('n.status', 1)
     ->condition('n.promote', 1)

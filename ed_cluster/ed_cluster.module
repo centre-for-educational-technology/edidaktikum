@@ -26,6 +26,14 @@ function ed_cluster_menu() {
 function ed_cluster_listing_page() {
   $content = array();
   $og_groups = ed_cluster_get_clusters();
+  $account = $GLOBALS['user'];
+  if(in_array('teacher', $account->roles)||in_array('administrator', $account->roles)){
+    $content['add-new'] = array(
+      '#type' => 'link',
+      '#title' => t('Add new cluster'),
+      '#href' => 'node/add/ed-cluster',
+    );
+  }
   if (!empty($og_groups)) {
     $nodes = node_load_multiple($og_groups);
     $build = node_view_multiple($nodes);

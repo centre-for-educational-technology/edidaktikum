@@ -78,9 +78,6 @@ function edidaktikum_promoted_resources_page_admin_form(){
 }
 
 function edidaktikum_statistics_page_admin_form(){
-
-  // @todo make a table out of it :)
-
   $form = array();
   $form['user-table-heading'] = array(
     '#type' => 'markup',
@@ -117,6 +114,7 @@ function edidaktikum_statistics_page_admin_form(){
 function get_task_qt(){
   $query = db_select('node', 'n')
     ->fields('n', array('nid'))
+    ->addTag('node_access')
     ->condition('type', 'ed_task');
   $result = $query->execute();
   $numresult = $result->rowCount();
@@ -127,6 +125,7 @@ function get_task_qt(){
 function get_event_qt(){
   $query = db_select('node', 'n')
     ->fields('n', array('nid'))
+    ->addTag('node_access')
     ->condition('type', 'ed_event');
   $result = $query->execute();
   $numresult = $result->rowCount();
@@ -137,6 +136,7 @@ function get_event_qt(){
 function get_news_qt(){
   $query = db_select('node', 'n')
     ->fields('n', array('nid'))
+    ->addTag('node_access')
     ->condition('type', 'ed_news');
   $result = $query->execute();
   $numresult = $result->rowCount();
@@ -147,6 +147,7 @@ function get_news_qt(){
 function get_lr_qt(){
   $query = db_select('node', 'n')
     ->fields('n', array('nid'))
+    ->addTag('node_access')
     ->condition('type', 'ed_learning_resource');
   $result = $query->execute();
   $numresult = $result->rowCount();
@@ -167,6 +168,7 @@ function get_student_qt(){
 function get_subgroups_qt(){
   $query = db_select('node', 'n')
     ->fields('n', array('nid'))
+    ->addTag('node_access')
     ->condition('type', 'ed_subgroup');
   $result = $query->execute();
   $numresult = $result->rowCount();
@@ -179,7 +181,8 @@ function get_teachers(){
   $query = db_select('users', 'u');
   $query->join('users_roles', 'ur', 'ur.uid = u.uid');
   $query->join('role', 'r', 'r.rid = ur.rid');
-  $query->condition('r.name' , 'teacher');
+  $query->condition('r.name' , 'teacher')
+    ->addTag('node_access');
   $query->fields('u',array('uid'));
   $result = $query->execute();
   $numresult = $result->rowCount();
@@ -194,6 +197,7 @@ function get_user_qt(){
   $query->join('users_roles', 'ur', 'ur.uid = u.uid');
   $query->join('role', 'r', 'r.rid = ur.rid');
   $query->fields('u', array('uid'))
+    ->addTag('node_access')
     ->condition('r.name', array('student', 'teacher'));
   $result = $query->execute();
   $numresult = $result->rowCount();
@@ -203,6 +207,7 @@ function get_user_qt(){
 function get_cluster_qt(){
   $query = db_select('node', 'n')
     ->fields('n', array('nid'))
+    ->addTag('node_access')
     ->condition('type', 'ed_cluster');
   $result = $query->execute();
   $numresult = $result->rowCount();
