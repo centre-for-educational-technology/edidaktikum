@@ -59,6 +59,16 @@ function edidaktikum_menu() {
     'type' => MENU_NORMAL_ITEM,
     'weight' => 3,
   );
+  $items['admin/config/edidaktikum/configuration'] = array(
+    'title' => t('eDidaktikum Configuration'),
+    'description' => t('Configuration settings for eDidatkikum'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('edidaktikum_configuration_page_admin_form'),
+    'access arguments' => array('access administration pages'),
+    'file' => 'edidaktikum.admin.inc',
+    'type' => MENU_NORMAL_ITEM,
+    'weight' => 4,
+  );
   $items['home'] = array(
     'title' => 'Home',
     'page callback' => 'edidaktikum_home_page',
@@ -102,6 +112,10 @@ function edidaktikum_preprocess_node(&$vars) {
     $vars['theme_hook_suggestions'][] = 'node__front';
     $vars['theme_hook_suggestions'][] = 'node__' . $vars['type'] . '__front';
   }
+}
+
+function ed_get_paging_nr(){
+  return variable_get('ed_paging');
 }
 
 /**

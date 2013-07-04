@@ -177,7 +177,7 @@ function _ed_get_resources_category($cat, $order){
     ->addTag('node_access')
     ->condition('n.type', 'ed_learning_resource')
     ->condition('cat.ed_field_category_tid', $cat, 'IN');
-  $query = $query->extend('PagerDefault')->limit(2);
+  $query = $query->extend('PagerDefault')->limit(ed_get_paging_nr());
   switch($order){
     case t('Latest First'):
       $query->orderBy('n.created', 'DESC');
@@ -203,7 +203,7 @@ function _ed_get_all_resources($order) {
   $query->fields('n', array('nid'))
     ->addTag('node_access')
     ->condition('n.type', 'ed_learning_resource');
-  $query = $query->extend('PagerDefault')->limit(2);
+  $query = $query->extend('PagerDefault')->limit(ed_get_paging_nr());
   switch($order){
     case t('Latest First'):
       $query->orderBy('n.created', 'DESC');

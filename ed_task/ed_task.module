@@ -236,7 +236,7 @@ function _ed_get_cur_user_tasks(){
     ->condition('n.type', 'ed_task')
     ->condition('n.uid', $acc->uid);
 
-  $query = $query->extend('TableSort')->extend('PagerDefault')->limit(2); //Small number for testing purposes
+  $query = $query->extend('TableSort')->extend('PagerDefault')->limit(ed_get_paging_nr());
 
   $result = $query->execute()->fetchCol();
   $nodes = node_load_multiple($result);
@@ -251,7 +251,7 @@ function _ed_get_tasks_to_user(){
     ->condition('n.type', 'ed_task')
     ->condition('tu.field_to_user_target_id', $acc->uid);
 
-  $query = $query->extend('TableSort')->extend('PagerDefault')->limit(2); //Small number for testing purposes
+  $query = $query->extend('TableSort')->extend('PagerDefault')->limit(ed_get_paging_nr());
 
   $result = $query->execute()->fetchCol();
   $nodes = node_load_multiple($result);
@@ -265,7 +265,7 @@ function _ed_get_tasks_specific_group($gid) {
     ->condition('n.type', 'ed_task')
     ->condition('og.gid', $gid);
 
-  $query = $query->extend('TableSort')->extend('PagerDefault')->limit(2); //Small number for testing purposes
+  $query = $query->extend('TableSort')->extend('PagerDefault')->limit(ed_get_paging_nr());
 
   $result = $query->execute()->fetchCol();
 

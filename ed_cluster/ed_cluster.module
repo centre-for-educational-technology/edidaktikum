@@ -56,7 +56,7 @@ function ed_cluster_get_clusters() {
     ->condition('n.status', 1)
     ->condition('n.type', 'ed_cluster')
     ->addTag('node_access')
-    ->limit(3);
+    ->limit(ed_get_paging_nr());
   $nids = $query->execute()->fetchCol();
   return $nids;
 }

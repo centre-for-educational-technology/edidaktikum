@@ -76,7 +76,19 @@ function edidaktikum_promoted_resources_page_admin_form(){
   variable_set('resource_to_front', $setnid);
   return system_settings_form($form);
 }
+function edidaktikum_configuration_page_admin_form(){
 
+  $form['form']['ed_paging'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Paging'),
+    '#description' => t('How many elements per page'),
+    '#default_value' => variable_get('ed_paging'),
+    '#required' => TRUE,
+  );
+  $pagingnr = variable_get('ed_paging');
+  variable_set('ed_paging', $pagingnr);
+  return system_settings_form($form);
+}
 function edidaktikum_statistics_page_admin_form(){
   $form = array();
   $form['user-table-heading'] = array(

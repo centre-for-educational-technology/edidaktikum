@@ -123,7 +123,7 @@ function _ed_get_blogs() {
     ->addTag('node_access')
     ->fields('n', array('nid'));
   $query->condition('type', $help, 'IN');
-  $query = $query->extend('TableSort')->extend('PagerDefault')->limit(2);
+  $query = $query->extend('TableSort')->extend('PagerDefault')->limit(ed_get_paging_nr());
   $result = $query->execute()->fetchCol();
 
   return $result;

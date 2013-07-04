@@ -24,7 +24,7 @@ function ed_news_listing_page() {
     ->condition('n.status', 1)
     ->condition('n.type', 'ed_news')
     ->addTag('node_access')
-    ->limit(3)//@todo make limit configurable
+    ->limit(ed_get_paging_nr())
     ->orderBy('n.created', 'DESC');
 
   if (!empty($latest)) {
