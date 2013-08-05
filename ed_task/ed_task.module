@@ -17,7 +17,7 @@ function ed_task_node_info() {
   );
   return $items;
 }
-// Testing out netBeans Git integration
+
 
 /**
  * Implements hook_form().
