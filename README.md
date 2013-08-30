@@ -25,7 +25,7 @@ Wysiwyg
 
 There seem to be many ways of adding a visual editor, but this seemed to be pupular and useful enough (allows usage of multiple editors, one at a time).
 
-1. Download the Wysiwyg module from: http://drupal.org/project/wysiwyg2. Enable that using **Modules** menu at admin/modules.
+1. Download the Wysiwyg module from: http://drupal.org/project/wysiwyg. Enable that using **Modules** menu at admin/modules.
 3. Click the **Configure** link that will take to admin/config/content/wysiwyg
     - Follow the **INSTALLATION INSTRUCTIONS** to get any editors
         * Please note that sites/all/library directory might not exist yet and has to be created
