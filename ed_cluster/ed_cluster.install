@@ -15,6 +15,28 @@ function ed_cluster_install() {
   ed_cluster_node_add_field_content();
   ed_cluster_node_add_field_category();
   ed_cluster_node_add_og_group_access_field();
+  ed_cluster_node_add_field_featured_image();
+}
+function ed_cluster_node_add_field_featured_image() {
+  $field_name = 'ed_field_featured_image';
+  $field = field_info_field($field_name);
+  if (!empty($field) && !field_info_instance('node', $field_name, 'ed_cluster')) {
+    $instance = array(
+      'field_name' => $field_name,
+      'entity_type' => 'node',
+      'bundle' => 'ed_cluster',
+      'label' => t('Featured image'),
+      'description' => '',
+      'settings' => array(
+        'file_directory' => 'ed_cluster_featured_images',
+      ),
+      'widget' => array(
+        'type' => 'image_image',
+      ),
+      'required' => FALSE,
+    );
+    field_create_instance($instance);
+  }
 }
 
 /**
