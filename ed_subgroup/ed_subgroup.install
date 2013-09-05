@@ -17,6 +17,28 @@ function ed_subgroup_install(){
   ed_subgroup_add_og_group_field();
   ed_subgroup_add_og_audience();
   ed_subgroup_add_og_group_access_field();
+  ed_subgroup_node_add_field_featured_image();
+}
+function ed_subgroup_node_add_field_featured_image() {
+  $field_name = 'ed_field_featured_image';
+  $field = field_info_field($field_name);
+  if (!empty($field) && !field_info_instance('node', $field_name, 'ed_subgroup')) {
+    $instance = array(
+      'field_name' => $field_name,
+      'entity_type' => 'node',
+      'bundle' => 'ed_subgroup',
+      'label' => t('Featured image'),
+      'description' => '',
+      'settings' => array(
+        'file_directory' => 'ed_subgroup_featured_images',
+      ),
+      'widget' => array(
+        'type' => 'image_image',
+      ),
+      'required' => FALSE,
+    );
+    field_create_instance($instance);
+  }
 }
 
 function ed_subgroup_add_og_group_access_field(){
