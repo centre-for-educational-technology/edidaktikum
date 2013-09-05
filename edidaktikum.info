@@ -1,6 +1,7 @@
 name = eDidaktikum
 package = eDidaktikum
 core = 7.x
+stylesheets[all][] = edidaktikum.css
 
 dependencies[] = image
 dependencies[] = taxonomy
