@@ -61,7 +61,14 @@ function edidaktikum_contact_page_admin_form() {
 function edidaktikum_promoted_resources_page_admin_form(){
   $form = array();
   $nids = ed_get_promoted_resources();
-  $resources = node_load_multiple($nids);
+  if(!$nids){
+    $form['form']['promoted_resources'] = array(
+      '#type' => 'markup',
+      '#markup' => '<h2>'.t('No Promoted Learning Resources Found').'</h2>',
+    );
+    return ($form);
+  }
+  $resources = node_load_multiple($nids);   //@todo Cancel everything if this is empty !!!!!!
   $resourcenames = array();
   foreach($resources as $resource){
     $resourcenames[] = $resource->title." - ".$resource->name." - ".format_date($resource->created,'custom','d/m/Y');
@@ -74,6 +81,7 @@ function edidaktikum_promoted_resources_page_admin_form(){
   );
   $setnid = $nids[variable_get('promoted_resources')];
   variable_set('resource_to_front', $setnid);
+  
   return system_settings_form($form);
 }
 function edidaktikum_configuration_page_admin_form(){
