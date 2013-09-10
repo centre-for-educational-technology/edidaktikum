@@ -50,7 +50,7 @@ function ed_dashboard_page() {
       $update = node_load($update_id);
       $rows[] = array(
         'data' => array(
-          'title' => $update->title,
+          'title' => l($update->title, 'node/' . $update->nid),    //($node->title, 'node/' . $node->nid)
           'changed' => format_date($update->changed, 'short'),
         ),
       );
