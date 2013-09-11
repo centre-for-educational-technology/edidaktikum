@@ -19,12 +19,12 @@ function edidaktikum_home_page() {
       'id' => 'intro',
     ),
   );
-  if (variable_get('ed_home_page_intro_image_url')) {
-    $content['intro']['image'] = array(
-      '#type' => 'markup',
-      '#markup' => '<img src="'.variable_get('ed_home_page_intro_image_url', '').'" />',
-    );
-  }
+  
+  $content['intro']['image'] = array(
+    '#type' => 'markup',
+    '#markup' => '<div id="img"></div>',
+  );
+  
   $content['intro']['intro-text'] = array(
     '#type' => 'container',
     '#attributes' => array(
