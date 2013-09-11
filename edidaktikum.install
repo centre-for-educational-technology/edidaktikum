@@ -23,7 +23,6 @@ function edidaktikum_uninstall() {
   field_delete_field('ed_field_content');
   field_delete_field('ed_field_featured_image');
   field_delete_field('ed_field_category');
-  edidaktikum_delete_vocabulary();
 }
 
 /**
@@ -65,79 +64,39 @@ function edidaktikum_create_roles() {
 }
 
 /**
- * Removes any preset vocabularies created during install.
- */
-function edidaktikum_delete_vocabulary() {
-  $vocabulary = taxonomy_vocabulary_machine_name_load('ed_category');
-  if (!empty($vocabulary)) {
-    taxonomy_vocabulary_delete($vocabulary->vid);
-  }
-}
-
-/**
- * Creates an ed_category vocabulary and fills it with terms.
+ * Creates an ed_category vocabulary and fills it with top level terms.
+ * Vocabulary will only be created if it does not exist yet.
  */
 function edidaktikum_create_vocabulary() {
-  //@todo this should go into standalone include file
+  $ed_category_vocabulary = taxonomy_vocabulary_machine_name_load('ed_category');
+  if (!empty($ed_category_vocabulary)) {
+    return false;
+  }
+
   $vocabulary = new stdClass();
-  $vocabulary->name = 'Category';
+  $vocabulary->name = 'Kategooriad';
   $vocabulary->description = '';
   $vocabulary->machine_name = 'ed_category';
   taxonomy_vocabulary_save($vocabulary);
 
   $terms = array(
     0 => array(
-      'title' => 'uno',
+      'title' => 'Õpetaja koolitus',
       'description' => '',
       'weight' => 0,
-      'terms' => array(
-        0 => array(
-          'title' => 'uno 1',
-          'description' => '',
-          'weight' => 0,
-        ),
-        1 => array(
-          'title' => 'uno 2',
-          'description' => '',
-          'weight' => 1,
-        ),
-      ),
     ),
     1 => array(
-      'title' => 'dos',
+      'title' => 'Kasvatusteadus',
       'description' => '',
       'weight' => 1,
     ),
     2 => array(
-      'title' => 'tres',
+      'title' => 'Riiklik õppekava',
       'description' => '',
       'weight' => 2,
-      'terms' => array(
-        0 => array(
-          'title' => 'tres 1',
-          'description' => '',
-          'weight' => 0,
-        ),
-        1 => array(
-          'title' => 'tres 2',
-          'description' => '',
-          'weight' => 1,
-          'terms' => array(
-            0 => array(
-              'title' => 'tres 2.1',
-              'description' => '',
-              'weight' => 0,
-            ),
-          ),
-        ),
-        2 => array(
-          'title' => 'tres 3',
-          'description' => '',
-          'weight' => 2,
-        ),
-      ),
     ),
   );
+
   foreach ($terms as $single) {
     __edidaktikum_save_term($vocabulary->vid, $single);
   }
@@ -157,7 +116,7 @@ function __edidaktikum_save_term($vid, $single) {
   $term = new stdClass();
   $term->name = $single['title'];
   $term->description = $single['description'];
-  $term->format = 'plain_text'; //@todo a better choce of format is needed
+  $term->format = 'plain_text';
   $term->vid = $vid;
   $term->weight = $single['weight'];
   $term->parent = isset($single['parent']) ? $single['parent'] : 0;
