@@ -28,8 +28,7 @@ function ed_answer_node_view($node, $view_mode, $langcode){
 function ed_answer_form_alter(&$form, &$form_state, $form_id){
 
   if( $form_id == 'ed_answer_node_form' ) {
-    if(isset($form['#node']->field_ref_to_task)){
-      dsm('whut');
+    if(isset($form['#node']->field_ref_to_task)){      
       $reftotask = $form['#node']->field_ref_to_task['und'][0]['target_id'];
     }
     else{
