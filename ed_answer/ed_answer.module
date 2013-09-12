@@ -28,13 +28,17 @@ function ed_answer_node_view($node, $view_mode, $langcode){
 function ed_answer_form_alter(&$form, &$form_state, $form_id){
 
   if( $form_id == 'ed_answer_node_form' ) {
-    if($form['#node']->field_ref_to_task){
+    if(isset($form['#node']->field_ref_to_task)){
+      dsm('whut');
       $reftotask = $form['#node']->field_ref_to_task['und'][0]['target_id'];
-    }else{
+    }
+    else{
       $reftotask = $_GET['field_ref_to_task'];
     }
     $node = node_load($reftotask);
-    $form['og_group_ref']['und'][0]['default']['#default_value'] = $node->og_group_ref['und'][0]['target_id'];
+    if(isset($node->og_group_ref['und'][0]['target_id'])){
+      $form['og_group_ref']['und'][0]['default']['#default_value'] = $node->og_group_ref['und'][0]['target_id'];
+    }
     $form['ed_field_content']['#weight'] = 1;
     $form['field_ref_to_task']['und']['#title'] = t('Answer To Task');
     $form['tabs'] = array(
