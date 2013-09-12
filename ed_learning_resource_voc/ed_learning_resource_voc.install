@@ -89,7 +89,7 @@ function _add_terms() {
   _create_term('ed_learning_resource_type_voc', t('Sound'), t('Sound'));
   _create_term('ed_learning_resource_type_voc', t('Assessment Tool'), t('Assessment Tool'));
   _create_term('ed_learning_resource_type_voc', t('Attempt'), t('Attempt'));
-  _create_term('ed_learning_resource_type_voc', t('Homesite'), t('Homesite'));
+  _create_term('ed_learning_resource_type_voc', t('Website'), t('Website'));
   _create_term('ed_learning_resource_type_voc', t('Course'), t('Course'));
   _create_term('ed_learning_resource_type_voc', t('Other'), t('Other'));
   _create_term('ed_learning_resource_type_voc', t('Game'), t('Game'));
