@@ -25,7 +25,11 @@ function ed_learning_resource_form($node, $form_state) {
   return node_content_form($node, $form_state);
 }
 
-
+function ed_learning_resource_node_view($node, $view_mode, $langcode){
+  if($view_mode == 'front' || $view_mode == 'teaser'){
+    $node->picture = 0;
+  }
+}
 /*
  * Implements hook_menu().
  */
