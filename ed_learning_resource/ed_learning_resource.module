@@ -26,8 +26,14 @@ function ed_learning_resource_form($node, $form_state) {
 }
 
 function ed_learning_resource_node_view($node, $view_mode, $langcode){
-  if($view_mode == 'front' || $view_mode == 'teaser'){
+  if($view_mode == 'front'){
     $node->picture = 0;
+    $node->content['links']['comment'] = 0;
+    
+  }
+  if($view_mode == 'teaser'){
+    $node->picture = 0;
+    drupal_add_css('ul.links.inline {display: none;}', array('group' => CSS_THEME, 'type' => 'inline'));
   }
 }
 /*
