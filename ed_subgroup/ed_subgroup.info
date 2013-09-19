@@ -1,4 +1,4 @@
 name = eDidaktikum subgroup
-description = PS! go to /admin/structure/types/manage/ed-subgroup/fields/og_group_ref and select Cluster from Entity Selection->Target Bundles
+description = PS! go to /admin/structure/types/manage/ed-subgroup/fields/og_group_ref and select Subgroup from Entity Selection->Target Bundles
 package = eDidaktikum
 core = 7.x
