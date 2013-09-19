@@ -14,7 +14,7 @@ function ed_news_listing_page() {
   // Latest news within a container
   $latest = ed_news_get_latest_news();
   if (!empty($latest)) {
-    $content['latest-news'] = node_view($latest, 'full');
+    $content['latest-news'] = node_view($latest, 'teaser');
   }
 
   // Old news within a container
@@ -46,7 +46,7 @@ function ed_news_listing_page() {
     );
     $content['old-news'] = $build;
   }
-
+  
   return $content;
 }
 
