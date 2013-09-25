@@ -55,6 +55,7 @@ function ed_learning_resource_menu() {
 function ed_learning_resource_listing($form, &$form_state) {
   drupal_set_title(t('Learning Resources'));
   drupal_add_js(drupal_get_path('module', 'ed_learning_resource') . '/ed_learning_resource_js.js');
+  $catimgpath = drupal_get_path('module', 'edidaktikum').'/images/menu_icon_small.png';
   $form['content_sort_select'] = array(
     '#type' => 'select',
     '#title' => t('Sort By'),
@@ -64,7 +65,7 @@ function ed_learning_resource_listing($form, &$form_state) {
   $path = drupal_get_path('module', 'ed_learning_resource');
   $form['category'] = array(
     '#type' => 'checkbox_tree',
-    '#title' => t('Filter by Category'),
+    '#title' => t('Filter by Category')." ".'<img src='.$catimgpath.'/>',
     '#vocabulary' => _ed_get_vid(),
     '#parent_tid' => 0,
     '#value_key' => 'tid',

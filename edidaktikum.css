@@ -5,3 +5,17 @@
 #edit-ed-field-competence div#edit-ed-field-competence-und{
   display: none;
 }
+
+
+div[class^="form-item form-type-checkbox-tree form-item-ed-field-category"] label:first-child{
+    padding-right: 25px;
+    background: url('images/menu_icon_small.png') no-repeat top right;
+     
+    display: inline-block;
+}
+div[class^="form-item form-type-checkbox-tree form-item-ed-field-competence"] label:first-child{
+    padding-right: 25px;
+    background: url('images/menu_icon_small.png') no-repeat top right;
+     
+    display: inline-block;
+}
