@@ -28,27 +28,47 @@ function ed_portfolio_menu() {
 /**
  * Portfolios listing page.
  */
-function ed_portfolio_listing_page() {
+
+function ed_portfolio_listing_page(){
   menu_tree_set_path('main-menu', 'dashboard');
-
+  //drupal_add_css('ul.links.inline {display: none;}', array('group' => CSS_THEME, 'type' => 'inline'));
   $content = array();
-
   $content['add-new-portfolio'] = array(
     '#type' => 'link',
     '#title' => t('Add new portfolio'),
     '#href' => 'node/add/ed-portfolio',
   );
-
-  $user_portfolio_ids = ed_portfolio_get_user_portfolios(); 
+  $table_type = 'pager-table';
+  $user_portfolio_ids = ed_portfolio_get_user_portfolios();
   $nodes = node_load_multiple($user_portfolio_ids);
-  $build = node_view_multiple($nodes);
-  /*$build['pager'] = array(
-    '#theme' => 'pager',
-    '#weight' => 5,
-  );*/
-  $content['user-portfolios'] = $build;
- 
-  //$files = node_load_multiple(ed_file_get_all_files());
+  $rows = array();
+  foreach($nodes as $node){
+    if($node->status=='1'){
+      $status = '<span class="pub-portfolio">'.t('Public').'</span>';
+    }else if($node->status=='0'){
+      $status = '<span class="priv-portfolio">'.t('Private').'</span>';
+    }else{
+      $status = t('error');
+    }
+    $rows[] = array(
+      'data' => array(
+        'status' => $status,
+        'title' => l($node->title, 'node/'.$node->nid),
+        'created' => format_date($node->created, 'custom', 'd/m/Y'),
+      ),
+    );
+  }
+  $content[$table_type] = array(
+    '#theme' => 'table',
+    '#rows' => $rows,
+    '#header' => array(t('Status'), t('Title'), t('Date')),
+  );
+  $content['pager'] = array('#theme' => 'pager');
+  
+  drupal_add_css('span.pub-portfolio {color:green;}', array('group' => CSS_THEME, 'type' => 'inline'));
+  drupal_add_css('span.priv-portfolio {color:red;}', array('group' => CSS_THEME, 'type' => 'inline'));
+  
+  
   return $content;
 }
 
