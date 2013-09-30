@@ -175,7 +175,7 @@ function _ed_task_installed_instances() {
         'select_parents' => TRUE,
       ),
     ),
-    'required' => TRUE,
+    'required' => FALSE,
     'display' => array(
       'default' => array(
         'label' => 'inline',
