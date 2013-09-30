@@ -15,7 +15,7 @@ function ed_cluster_default_page_manager_handlers() {
 }
 
 function _ed_cluster_node_view_page_handler() {
-  $handler = new stdClass();
+$handler = new stdClass();
 $handler->disabled = FALSE; /* Edit this to true to make a default handler disabled initially */
 $handler->api_version = 1;
 $handler->name = 'node_view_panel_ed_cluster';
@@ -127,7 +127,7 @@ $display->panels = array();
   $pane->shown = TRUE;
   $pane->access = array();
   $pane->configuration = array(
-    'label' => '',
+    'label' => 'title',
     'formatter' => 'text_default',
     'formatter_settings' => array(),
     'context' => 'argument_entity_id:node_1',
@@ -186,6 +186,7 @@ $display->panels = array();
       'ed_subgroup' => 'ed_subgroup',
       'ed_task' => 'ed_task',
       'ed_event' => 'ed_event',
+      'ed_news' => 'ed_news',
     ),
   );
   $pane->cache = array();
