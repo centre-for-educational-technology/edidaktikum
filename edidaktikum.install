@@ -81,7 +81,7 @@ function edidaktikum_create_vocabulary() {
 
   $terms = array(
     0 => array(
-      'title' => 'Õpetaja koolitus',
+      'title' => 'Õpetajakoolitus',
       'description' => '',
       'weight' => 0,
     ),
