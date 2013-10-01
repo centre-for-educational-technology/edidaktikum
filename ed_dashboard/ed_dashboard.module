@@ -70,7 +70,7 @@ function ed_dashboard_get_recent_updates() {
   global $user;
   $query = db_select('node', 'n')
     ->fields('n', array('nid'))
-    ->condition('n.type', array('ed_file', 'ed_task'), 'IN')
+    ->condition('n.type', array('ed_file', 'ed_task', 'ed_answer', 'ed_portfolio', 'ed_blog'), 'IN')
     ->condition('n.uid', $user->uid)
     ->addTag('node_access')
     ->range(0, 5)
