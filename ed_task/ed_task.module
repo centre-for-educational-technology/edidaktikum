@@ -91,7 +91,7 @@ function ed_task_listing_page() {
           'title' => l($node->title, 'node/' . $node->nid),
           'shared_to' => t(l($group_title, 'node/' . $shared_to).$username),
           //'due_date' => format_date($datehelp, 'custom','d/m/Y'),
-          'due_date' => format_date($due_date_field[0]['value'],'custom','d/m/Y'),
+          'due_date' => format_date($due_date_field[0]['value'],'custom','d/m/Y'),          
         ),
       );
     }
@@ -121,13 +121,14 @@ function ed_task_listing_page() {
           'posted_by' => $node->name,
           //'due_date' => date('d/m/Y',$datehelp),
           'due_date' => format_date($due_date_field[0]['value'],'custom','d/m/Y'),
+          'status' => (_is_task_answered($node->nid) ? t('Answered') : t('Unanswered')),
         ),
       );
     }
     $content[$table_type.'-to-user'] = array(
       '#theme' => 'table',
       '#rows' => $rows_to_user,
-      '#header' => array(t('Tasks to me'), t('Assigned By'), t('Due Date')),
+      '#header' => array(t('Tasks to me'), t('Assigned By'), t('Due Date'), t('Status')),
     );
     $content['pager-to-user'] = array(
       '#theme' => 'pager',
@@ -184,15 +185,43 @@ function ed_task_node_view($node, $view_mode, $langcode) {
           'field_ref_to_task' => $node->nid,
         ),
       );
-      $node->content['ed_task_asjandus'] = array(
-        '#type' => 'item',
-        '#title' => t(''),
-        '#markup' => l(t('Answer'), 'node/add/ed-answer', $options),
-        '#prefix' => '<div class="answer">',
-        '#suffix' => '</div>',
-      );
-      break;
+      $test = _is_task_answered($node->nid);
+      if(_is_task_answered($node->nid)){
+        $node->content['ed_task_asjandus'] = array(
+          '#type' => 'item',
+          '#title' => t(''),
+          '#markup' => l(t('Edit'), 'node/'.  _get_answer_from_task($node->nid).'/edit'),
+          '#prefix' => '<div class="answer">',
+          '#suffix' => '</div>',
+        );
+        
+        break;
+      }  
+      
+      else{
+        $node->content['ed_task_asjandus'] = array(
+          '#type' => 'item',
+          '#title' => t(''),
+          '#markup' => l(t('Answer'), 'node/add/ed-answer', $options),
+          '#prefix' => '<div class="answer">',
+          '#suffix' => '</div>',
+        );
+        break;
+      }
   }
+}
+
+function _get_answer_from_task($task){
+  $acc = $GLOBALS['user'];
+  $query = db_select('node', 'n');
+      $query->join('field_data_field_ref_to_task', 'b', 'n.nid = b.entity_id');
+      $query->fields('n', array('nid'))
+      ->condition('n.uid', $acc->uid)
+      ->condition('n.type', 'ed_answer');
+  $query->condition('b.field_ref_to_task_target_id', $task);
+  
+  $result = $query->execute()->fetchAll();
+  return $result['0']->nid;
 }
 
 function ed_task_field_extra_fields() {
@@ -228,7 +257,25 @@ function _ed_get_group_name_from_id($id) {
   return $string;
 }
 
-
+function _is_task_answered($task_nid){
+  $acc = $GLOBALS['user'];
+  $query = db_select('node', 'n');
+  $query->join('field_data_field_ref_to_task', 'b', 'n.nid = b.entity_id');
+  $query->fields('n', array('nid'))
+      ->condition('b.field_ref_to_task_target_id', $task_nid)
+      ->condition('n.uid', $acc->uid);
+  
+  $result = $query->execute()->fetchAll();
+  if(empty($result)){
+    //return t('Unanswered');
+    return false;
+  }else{
+    //return t('Answered');
+    return true;
+  }
+  
+  return $task_nid;
+}
 function _ed_get_cur_user_tasks(){
   $acc = $GLOBALS['user'];
   $query = db_select('node', 'n')
