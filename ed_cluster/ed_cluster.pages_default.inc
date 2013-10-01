@@ -67,11 +67,85 @@ $display->panels = array();
   $pane->pid = 'new-1';
   $pane->panel = 'left';
   $pane->type = 'entity_field';
-  $pane->subtype = 'node:ed_field_featured_image';
+  $pane->subtype = 'node:ed_field_excerpt';
+  $pane->shown = TRUE;
+  $pane->access = array();
+  $pane->configuration = array(
+    'label' => '',
+    'formatter' => 'text_default',
+    'formatter_settings' => array(),
+    'context' => 'argument_entity_id:node_1',
+    'override_title' => 1,
+    'override_title_text' => '',
+  );
+  $pane->cache = array();
+  $pane->style = array(
+    'settings' => NULL,
+  );
+  $pane->css = array();
+  $pane->extras = array();
+  $pane->position = 0;
+  $pane->locks = '';
+  $display->content['new-1'] = $pane;
+  $display->panels['left'][0] = 'new-1';
+  $pane = new stdClass();
+  $pane->pid = 'new-2';
+  $pane->panel = 'left';
+  $pane->type = 'entity_field';
+  $pane->subtype = 'node:ed_field_content';
   $pane->shown = TRUE;
   $pane->access = array();
   $pane->configuration = array(
     'label' => 'title',
+    'formatter' => 'text_default',
+    'formatter_settings' => array(),
+    'context' => 'argument_entity_id:node_1',
+    'override_title' => 1,
+    'override_title_text' => '',
+  );
+  $pane->cache = array();
+  $pane->style = array(
+    'settings' => NULL,
+  );
+  $pane->css = array();
+  $pane->extras = array();
+  $pane->position = 1;
+  $pane->locks = '';
+  $display->content['new-2'] = $pane;
+  $display->panels['left'][1] = 'new-2';
+  $pane = new stdClass();
+  $pane->pid = 'new-3';
+  $pane->panel = 'left';
+  $pane->type = 'views_panes';
+  $pane->subtype = 'og_nodes-panel_pane_1';
+  $pane->shown = TRUE;
+  $pane->access = array();
+  $pane->configuration = array(
+    'context' => array(
+      0 => 'argument_entity_id:node_1',
+    ),
+    'override_title' => 1,
+    'override_title_text' => 'Group content',
+  );
+  $pane->cache = array();
+  $pane->style = array(
+    'settings' => NULL,
+  );
+  $pane->css = array();
+  $pane->extras = array();
+  $pane->position = 2;
+  $pane->locks = '';
+  $display->content['new-3'] = $pane;
+  $display->panels['left'][2] = 'new-3';
+  $pane = new stdClass();
+  $pane->pid = 'new-4';
+  $pane->panel = 'right';
+  $pane->type = 'entity_field';
+  $pane->subtype = 'node:ed_field_featured_image';
+  $pane->shown = TRUE;
+  $pane->access = array();
+  $pane->configuration = array(
+    'label' => 'hidden',
     'formatter' => 'image',
     'delta_limit' => 0,
     'delta_offset' => '0',
@@ -92,82 +166,8 @@ $display->panels = array();
   $pane->extras = array();
   $pane->position = 0;
   $pane->locks = array();
-  $display->content['new-1'] = $pane;
-  $display->panels['left'][0] = 'new-1';
-  $pane = new stdClass();
-  $pane->pid = 'new-2';
-  $pane->panel = 'left';
-  $pane->type = 'entity_field';
-  $pane->subtype = 'node:ed_field_excerpt';
-  $pane->shown = TRUE;
-  $pane->access = array();
-  $pane->configuration = array(
-    'label' => '',
-    'formatter' => 'text_default',
-    'formatter_settings' => array(),
-    'context' => 'argument_entity_id:node_1',
-    'override_title' => 1,
-    'override_title_text' => '',
-  );
-  $pane->cache = array();
-  $pane->style = array(
-    'settings' => NULL,
-  );
-  $pane->css = array();
-  $pane->extras = array();
-  $pane->position = 1;
-  $pane->locks = '';
-  $display->content['new-2'] = $pane;
-  $display->panels['left'][1] = 'new-2';
-  $pane = new stdClass();
-  $pane->pid = 'new-3';
-  $pane->panel = 'left';
-  $pane->type = 'entity_field';
-  $pane->subtype = 'node:ed_field_content';
-  $pane->shown = TRUE;
-  $pane->access = array();
-  $pane->configuration = array(
-    'label' => 'title',
-    'formatter' => 'text_default',
-    'formatter_settings' => array(),
-    'context' => 'argument_entity_id:node_1',
-    'override_title' => 1,
-    'override_title_text' => '',
-  );
-  $pane->cache = array();
-  $pane->style = array(
-    'settings' => NULL,
-  );
-  $pane->css = array();
-  $pane->extras = array();
-  $pane->position = 2;
-  $pane->locks = '';
-  $display->content['new-3'] = $pane;
-  $display->panels['left'][2] = 'new-3';
-  $pane = new stdClass();
-  $pane->pid = 'new-4';
-  $pane->panel = 'left';
-  $pane->type = 'views_panes';
-  $pane->subtype = 'og_nodes-panel_pane_1';
-  $pane->shown = TRUE;
-  $pane->access = array();
-  $pane->configuration = array(
-    'context' => array(
-      0 => 'argument_entity_id:node_1',
-    ),
-    'override_title' => 1,
-    'override_title_text' => 'Group content',
-  );
-  $pane->cache = array();
-  $pane->style = array(
-    'settings' => NULL,
-  );
-  $pane->css = array();
-  $pane->extras = array();
-  $pane->position = 3;
-  $pane->locks = '';
   $display->content['new-4'] = $pane;
-  $display->panels['left'][3] = 'new-4';
+  $display->panels['right'][0] = 'new-4';
   $pane = new stdClass();
   $pane->pid = 'new-5';
   $pane->panel = 'right';
@@ -195,10 +195,10 @@ $display->panels = array();
   );
   $pane->css = array();
   $pane->extras = array();
-  $pane->position = 0;
+  $pane->position = 1;
   $pane->locks = '';
   $display->content['new-5'] = $pane;
-  $display->panels['right'][0] = 'new-5';
+  $display->panels['right'][1] = 'new-5';
   $pane = new stdClass();
   $pane->pid = 'new-6';
   $pane->panel = 'right';
@@ -219,10 +219,10 @@ $display->panels = array();
   );
   $pane->css = array();
   $pane->extras = array();
-  $pane->position = 1;
+  $pane->position = 2;
   $pane->locks = '';
   $display->content['new-6'] = $pane;
-  $display->panels['right'][1] = 'new-6';
+  $display->panels['right'][2] = 'new-6';
   $pane = new stdClass();
   $pane->pid = 'new-7';
   $pane->panel = 'right';
@@ -246,13 +246,14 @@ $display->panels = array();
   );
   $pane->css = array();
   $pane->extras = array();
-  $pane->position = 2;
+  $pane->position = 3;
   $pane->locks = '';
   $display->content['new-7'] = $pane;
-  $display->panels['right'][2] = 'new-7';
+  $display->panels['right'][3] = 'new-7';
 $display->hide_title = PANELS_TITLE_FIXED;
 $display->title_pane = '0';
 $handler->conf['display'] = $display;
+
 
   return $handler;
 }
