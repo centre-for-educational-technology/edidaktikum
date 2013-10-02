@@ -64,14 +64,13 @@ function ed_task_listing_page() {
   $nodes = _ed_get_cur_user_tasks();
 
   if ( !empty($nodes) ) {
-    foreach($nodes as $node) {
-
-      if(isset($node->ed_task_to_user['und']['0']['uid']) && !isset($node->ed_task_to_user['und']['1']['uid'])) {
-        $user = user_load($node->ed_task_to_user['und']['0']['uid']);
+    foreach($nodes as $node) {      
+      if(isset($node->field_to_user['und']['0']['target_id']) && !isset($node->field_to_user['und']['1']['target_id'])) {
+        $user = user_load($node->field_to_user['und']['0']['target_id']);
         $username = ", ".$user->name;
       }
-      elseif(isset($node->ed_task_to_user['und']['1']['uid'])){
-        $user = user_load($node->ed_task_to_user['und']['0']['uid']);
+      elseif(isset($node->field_to_user['und']['1']['target_id'])){
+        $user = user_load($node->field_to_user['und']['0']['target_id']);
         $username = ", ".$user->name."...";
       }
       else{
@@ -157,13 +156,14 @@ function ed_task_listing_page() {
               'posted_by' => $node->name,
               //'due_date' => format_date($datehelp, 'custom','d/m/Y'),   // Check if displays right date
               'due_date' => format_date($due_date_field[0]['value'],'custom','d/m/Y'),
+              'status' => (_is_task_answered($node->nid) ? t('Answered') : t('Unanswered')),
             ),
           );
         }
         $content[$table_type.'-'.$table_suffix] = array(
           '#theme' => 'table',
           '#rows' => $rows2,
-          '#header' => array($group_title, t('Assigned By'), t('Due Date')),
+          '#header' => array($group_title, t('Assigned By'), t('Due Date'), t('Status')),
         );
         $content['pager-'.$table_suffix] = array(
           '#theme' => 'pager',
@@ -179,24 +179,28 @@ function ed_task_listing_page() {
 function ed_task_node_view($node, $view_mode, $langcode) {
   switch($node->type) {
     case 'ed_task':
+      $acc = $GLOBALS['user'];
+      
+      if($node->uid == $acc->uid && !(recursive_array_search($node->uid, $node->field_to_user))){
+        break;
+      }
       $options = array(
         'attributes' => array(),
         'query' => array(
           'field_ref_to_task' => $node->nid,
         ),
       );
-      $test = _is_task_answered($node->nid);
+      
       if(_is_task_answered($node->nid)){
         $node->content['ed_task_asjandus'] = array(
           '#type' => 'item',
           '#title' => t(''),
           '#markup' => l(t('Edit'), 'node/'.  _get_answer_from_task($node->nid).'/edit'),
-          '#prefix' => '<div class="answer">',
+          '#prefix' => '<div class="edit-answer">',
           '#suffix' => '</div>',
-        );
-        
+        );        
         break;
-      }  
+      }
       
       else{
         $node->content['ed_task_asjandus'] = array(
@@ -214,10 +218,10 @@ function ed_task_node_view($node, $view_mode, $langcode) {
 function _get_answer_from_task($task){
   $acc = $GLOBALS['user'];
   $query = db_select('node', 'n');
-      $query->join('field_data_field_ref_to_task', 'b', 'n.nid = b.entity_id');
-      $query->fields('n', array('nid'))
-      ->condition('n.uid', $acc->uid)
-      ->condition('n.type', 'ed_answer');
+  $query->join('field_data_field_ref_to_task', 'b', 'n.nid = b.entity_id');
+  $query->fields('n', array('nid'))
+    ->condition('n.uid', $acc->uid)
+    ->condition('n.type', 'ed_answer');
   $query->condition('b.field_ref_to_task_target_id', $task);
   
   $result = $query->execute()->fetchAll();
@@ -345,4 +349,14 @@ function ed_task_ctools_plugin_api() {
   if($module == 'page_manager' && $api == 'pages_default') {
     return array('version' => 1);
   }
+}
+
+function recursive_array_search($needle,$haystack) {
+    foreach($haystack as $key=>$value) {
+        $current_key=$key;
+        if($needle===$value OR (is_array($value) && recursive_array_search($needle,$value) !== false)) {
+            return true;
+        }
+    }
+    return false;
 }
