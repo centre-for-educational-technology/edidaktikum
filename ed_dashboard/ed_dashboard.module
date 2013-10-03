@@ -47,18 +47,41 @@ function ed_dashboard_page() {
 
     $rows = array();
     foreach ($recent_updates as $update_id) {
-      $update = node_load($update_id);
-      $rows[] = array(
-        'data' => array(
-          'title' => l($update->title, 'node/' . $update->nid),    //($node->title, 'node/' . $node->nid)
-          'changed' => format_date($update->changed, 'short'),
-        ),
-      );
+      $update = node_load($update_id);      
+      switch($update->type){
+        case 'ed_task':
+          $tere = _is_task_answered($update->nid);          
+          $rows[] = array(
+            'data' => array(
+              'title' => l($update->title, 'node/' . $update->nid).' - '.($tere ? t('Answered'):t('Unanswered')),
+              'changed' => format_date($update->changed, 'short'),
+            ),
+          );
+          break;
+        case'ed_answer':
+          $task = node_load($update->field_ref_to_task['und'][0]['target_id']);
+          $rows[] = array(
+            'data' => array(
+              'title' => l(t('Answer to: ').$task->title, 'node/' . $update->nid. '/edit'),
+              'changed' => format_date($update->changed, 'short'),
+            ),
+          );
+          break;
+        default:          
+          $rows[] = array(
+            'data' => array(
+              'title' => l($update->title, 'node/' . $update->nid),
+              'changed' => format_date($update->changed, 'short'),
+            ),
+          );
+          break;
+      }      
     }
 
     $content['recent-updates-table'] = array(
       '#theme' => 'table',
       '#rows' => $rows,
+      '#header' => array(t('Update'), t('Last Changed')),
     );
   
   }
