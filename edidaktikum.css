@@ -19,3 +19,7 @@ div[class^="form-item form-type-checkbox-tree form-item-ed-field-competence"] la
      
     display: inline-block;
 }
+
+.filter-wrapper{
+    display: none;
+}
