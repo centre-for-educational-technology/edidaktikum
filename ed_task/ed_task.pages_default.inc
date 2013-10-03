@@ -240,55 +240,55 @@ function _ed_task_edit_page_handler(){
 
 function _ed_task_view_page_handler(){
   $handler = new stdClass();
-  $handler->disabled = FALSE; /* Edit this to true to make a default handler disabled initially */
-  $handler->api_version = 1;
-  $handler->name = 'node_view_panel_ed_task';
-  $handler->task = 'node_view';
-  $handler->subtask = '';
-  $handler->handler = 'panel_context';
-  $handler->weight = 0;
-  $handler->conf = array(
-    'title' => 'Task/Assignment',
-    'no_blocks' => 0,
-    'pipeline' => 'standard',
-    'body_classes_to_remove' => '',
-    'body_classes_to_add' => '',
-    'css_id' => '',
-    'css' => '',
-    'contexts' => array(),
-    'relationships' => array(),
-    'access' => array(
-      'plugins' => array(
-        0 => array(
-          'name' => 'node_type',
-          'settings' => array(
-            'type' => array(
-              'ed_task' => 'ed_task',
-            ),
+$handler->disabled = FALSE; /* Edit this to true to make a default handler disabled initially */
+$handler->api_version = 1;
+$handler->name = 'node_view_panel_ed_task';
+$handler->task = 'node_view';
+$handler->subtask = '';
+$handler->handler = 'panel_context';
+$handler->weight = 0;
+$handler->conf = array(
+  'title' => 'Task/Assignment',
+  'no_blocks' => 0,
+  'pipeline' => 'standard',
+  'body_classes_to_remove' => '',
+  'body_classes_to_add' => '',
+  'css_id' => '',
+  'css' => '',
+  'contexts' => array(),
+  'relationships' => array(),
+  'access' => array(
+    'plugins' => array(
+      0 => array(
+        'name' => 'node_type',
+        'settings' => array(
+          'type' => array(
+            'ed_task' => 'ed_task',
           ),
-          'context' => 'argument_entity_id:node_1',
-          'not' => FALSE,
         ),
+        'context' => 'argument_entity_id:node_1',
+        'not' => FALSE,
       ),
-      'logic' => 'or',
     ),
-  );
-  $display = new panels_display();
-  $display->layout = 'twocol_stacked';
-  $display->layout_settings = array();
-  $display->panel_settings = array(
-    'style_settings' => array(
-      'default' => NULL,
-      'top' => NULL,
-      'right' => NULL,
-      'bottom' => NULL,
-      'left' => NULL,
-    ),
-  );
-  $display->cache = array();
-  $display->title = '%node:title';
-  $display->content = array();
-  $display->panels = array();
+    'logic' => 'or',
+  ),
+);
+$display = new panels_display();
+$display->layout = 'twocol_stacked';
+$display->layout_settings = array();
+$display->panel_settings = array(
+  'style_settings' => array(
+    'default' => NULL,
+    'top' => NULL,
+    'right' => NULL,
+    'bottom' => NULL,
+    'left' => NULL,
+  ),
+);
+$display->cache = array();
+$display->title = '%node:title';
+$display->content = array();
+$display->panels = array();
   $pane = new stdClass();
   $pane->pid = 'new-1';
   $pane->panel = 'left';
@@ -498,6 +498,36 @@ function _ed_task_view_page_handler(){
   $pane = new stdClass();
   $pane->pid = 'new-8';
   $pane->panel = 'right';
+  $pane->type = 'entity_field';
+  $pane->subtype = 'node:field_to_user';
+  $pane->shown = TRUE;
+  $pane->access = array();
+  $pane->configuration = array(
+    'label' => 'title',
+    'formatter' => 'entityreference_label',
+    'delta_limit' => '0',
+    'delta_offset' => '0',
+    'delta_reversed' => 0,
+    'formatter_settings' => array(
+      'link' => 0,
+    ),
+    'context' => 'argument_entity_id:node_1',
+    'override_title' => 0,
+    'override_title_text' => '',
+  );
+  $pane->cache = array();
+  $pane->style = array(
+    'settings' => NULL,
+  );
+  $pane->css = array();
+  $pane->extras = array();
+  $pane->position = 6;
+  $pane->locks = array();
+  $display->content['new-8'] = $pane;
+  $display->panels['right'][6] = 'new-8';
+  $pane = new stdClass();
+  $pane->pid = 'new-9';
+  $pane->panel = 'right';
   $pane->type = 'node_author';
   $pane->subtype = 'node_author';
   $pane->shown = TRUE;
@@ -514,12 +544,12 @@ function _ed_task_view_page_handler(){
   );
   $pane->css = array();
   $pane->extras = array();
-  $pane->position = 6;
+  $pane->position = 7;
   $pane->locks = array();
-  $display->content['new-8'] = $pane;
-  $display->panels['right'][6] = 'new-8';
+  $display->content['new-9'] = $pane;
+  $display->panels['right'][7] = 'new-9';
   $pane = new stdClass();
-  $pane->pid = 'new-9';
+  $pane->pid = 'new-10';
   $pane->panel = 'right';
   $pane->type = 'entity_field_extra';
   $pane->subtype = 'node:ed_task_asjandus';
@@ -537,13 +567,13 @@ function _ed_task_view_page_handler(){
   );
   $pane->css = array();
   $pane->extras = array();
-  $pane->position = 7;
+  $pane->position = 8;
   $pane->locks = array();
-  $display->content['new-9'] = $pane;
-  $display->panels['right'][7] = 'new-9';
-  $display->hide_title = PANELS_TITLE_FIXED;
-  $display->title_pane = '0';
-  $handler->conf['display'] = $display;
+  $display->content['new-10'] = $pane;
+  $display->panels['right'][8] = 'new-10';
+$display->hide_title = PANELS_TITLE_FIXED;
+$display->title_pane = '0';
+$handler->conf['display'] = $display;
 
 
   return $handler;
