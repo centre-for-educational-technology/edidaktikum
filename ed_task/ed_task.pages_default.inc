@@ -239,7 +239,7 @@ function _ed_task_edit_page_handler(){
 }
 
 function _ed_task_view_page_handler(){
-  $handler = new stdClass();
+ $handler = new stdClass();
 $handler->disabled = FALSE; /* Edit this to true to make a default handler disabled initially */
 $handler->api_version = 1;
 $handler->name = 'node_view_panel_ed_task';
@@ -392,7 +392,7 @@ $display->panels = array();
   $pane->shown = TRUE;
   $pane->access = array();
   $pane->configuration = array(
-    'label' => 'above',
+    'label' => 'title',
     'formatter' => 'term_reference_tree',
     'delta_limit' => '0',
     'delta_offset' => '0',
@@ -448,11 +448,11 @@ $display->panels = array();
   $pane->shown = TRUE;
   $pane->access = array();
   $pane->configuration = array(
-    'label' => 'inline',
+    'label' => 'title',
     'formatter' => 'og_list_default',
     'delta_limit' => '0',
     'delta_offset' => '0',
-    'delta_reversed' => FALSE,
+    'delta_reversed' => 0,
     'formatter_settings' => array(),
     'context' => 'argument_entity_id:node_1',
     'override_title' => 0,
