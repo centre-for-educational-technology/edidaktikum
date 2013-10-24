@@ -62,7 +62,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: 2013-09-17 13:46+0300\n"
-"PO-Revision-Date: 2013-10-16 15:40+0200\n"
+"PO-Revision-Date: 2013-10-24 11:16+0200\n"
 "Last-Translator: Priit Tammets <tammets@gmail.com>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "MIME-Version: 1.0\n"
@@ -539,27 +539,27 @@ msgstr ""
 #: ed_file/includes/views/ed_file.views_default.inc:94
 #: ed_portfolio/includes/views/ed_portfolio.views_default.inc:96
 msgid "Sort by"
-msgstr ""
+msgstr "Sorteeri"
 
 #: ed_file/includes/views/ed_file.views_default.inc:95
 #: ed_portfolio/includes/views/ed_portfolio.views_default.inc:97
 msgid "Asc"
-msgstr ""
+msgstr "Suurenevalt"
 
 #: ed_file/includes/views/ed_file.views_default.inc:96
 #: ed_portfolio/includes/views/ed_portfolio.views_default.inc:98
 msgid "Desc"
-msgstr ""
+msgstr "Vähenevalt"
 
 #: ed_file/includes/views/ed_file.views_default.inc:97
 #: ed_portfolio/includes/views/ed_portfolio.views_default.inc:99
 msgid "Items per page"
-msgstr ""
+msgstr "Objekte lehel"
 
 #: ed_file/includes/views/ed_file.views_default.inc:98
 #: ed_portfolio/includes/views/ed_portfolio.views_default.inc:100
 msgid "- All -"
-msgstr ""
+msgstr "- Kõik -"
 
 #: ed_file/includes/views/ed_file.views_default.inc:99
 #: ed_portfolio/includes/views/ed_portfolio.views_default.inc:101
@@ -569,27 +569,27 @@ msgstr ""
 #: ed_file/includes/views/ed_file.views_default.inc:100
 #: ed_portfolio/includes/views/ed_portfolio.views_default.inc:102
 msgid "« first"
-msgstr ""
+msgstr "« esimene"
 
 #: ed_file/includes/views/ed_file.views_default.inc:101
 #: ed_portfolio/includes/views/ed_portfolio.views_default.inc:103
 msgid "‹ previous"
-msgstr ""
+msgstr "‹ eelmine"
 
 #: ed_file/includes/views/ed_file.views_default.inc:102
 #: ed_portfolio/includes/views/ed_portfolio.views_default.inc:104
 msgid "next ›"
-msgstr ""
+msgstr "järgmine ›"
 
 #: ed_file/includes/views/ed_file.views_default.inc:103
 #: ed_portfolio/includes/views/ed_portfolio.views_default.inc:105
 msgid "last »"
-msgstr ""
+msgstr "viimane »"
 
 #: ed_file/includes/views/ed_file.views_default.inc:104
 #: ed_portfolio/includes/views/ed_portfolio.views_default.inc:106
 msgid "author"
-msgstr ""
+msgstr "autor"
 
 #: ed_file/includes/views/ed_file.views_default.inc:105
 #: ed_portfolio/includes/views/ed_portfolio.views_default.inc:107
@@ -599,99 +599,99 @@ msgstr ""
 #: ed_learning_resource/ed_learning_resource_ajax.inc:20
 #: ed_learning_resource/ed_learning_resource.module:60
 msgid "Sort By"
-msgstr ""
+msgstr "Sorteeri"
 
 #: ed_learning_resource/ed_learning_resource_ajax.inc:21;120
 #: ed_learning_resource/ed_learning_resource.module:61;102;192;218
 msgid "Latest First"
-msgstr ""
+msgstr "Vanemad eespool"
 
 #: ed_learning_resource/ed_learning_resource_ajax.inc:21;133
 #: ed_learning_resource/ed_learning_resource.module:61;195;221
 msgid "Earliest First"
-msgstr ""
+msgstr "Värskemad eespool"
 
 #: ed_learning_resource/ed_learning_resource_ajax.inc:21;159
 msgid "Likes"
-msgstr ""
+msgstr "Meeldimised"
 
 #: ed_learning_resource/ed_learning_resource_ajax.inc:30;188
 msgid "Sort"
-msgstr ""
+msgstr "Sorteeri"
 
 #: ed_learning_resource/ed_learning_resource_ajax.inc:67;190
 msgid "Sort by Category"
-msgstr ""
+msgstr "Sorteeri kategooria järgi"
 
 #: ed_learning_resource/ed_learning_resource_ajax.inc:107
 msgid "Learning resources not found"
-msgstr ""
+msgstr "Õppematerjale ei leitud"
 
 #: ed_learning_resource/ed_learning_resource_ajax.inc:162
 msgid "Functionality doesn't exist yet"
-msgstr ""
+msgstr "Funktsionaalsus puudub"
 
 #: ed_learning_resource/ed_learning_resource_functions.inc:12;186
 msgid "Methodological Guide"
-msgstr ""
+msgstr "Metodoloogiline juhend"
 
 #: ed_learning_resource/ed_learning_resource_functions.inc:52;252
 msgid "Language"
-msgstr ""
+msgstr "Keel"
 
 #: ed_learning_resource/ed_learning_resource_functions.inc:70
 msgid "Creating Time"
-msgstr ""
+msgstr "Loodud"
 
 #: ed_learning_resource/ed_learning_resource_functions.inc:82;315
 msgid "Tags"
-msgstr ""
+msgstr "Märksõnad"
 
 #: ed_learning_resource/ed_learning_resource_functions.inc:98
 msgid "Author"
-msgstr ""
+msgstr "Autor"
 
 #: ed_learning_resource/ed_learning_resource_functions.inc:114;360
 msgid "Additional Requirements"
-msgstr ""
+msgstr "Lisaks vajalik"
 
 #: ed_learning_resource/ed_learning_resource_functions.inc:316
 msgid ""
 "Separate with commas. E.g. Mathematics, Force training, Jedi Mind Tricks"
-msgstr ""
+msgstr "Eralda palun komaga, näitek: matemaatika, eesti keel, tööõpetus"
 
 #: ed_learning_resource/ed_learning_resource_functions.inc:334
 msgid "Authors"
-msgstr ""
+msgstr "Autorid"
 
 #: ed_learning_resource/ed_learning_resource_functions.inc:335
 msgid "Separate with commas. E.g. Mace Windu, Obi-wan Kenobi"
-msgstr ""
+msgstr "Eralda palun komaga, näiteks: Jaan Kask, Juta Kuusk"
 
 #: ed_learning_resource/ed_learning_resource_functions.inc:386
 msgid "Featured Image"
-msgstr ""
+msgstr "Kaanepilt"
 
 #: ed_learning_resource/ed_learning_resource.module:13
 #: ed_portfolio/ed_portfolio.install:86 ed_task/ed_task_functions.inc:106
 msgid "Description"
-msgstr ""
+msgstr "Kirjeldus"
 
 #: ed_learning_resource/ed_learning_resource.module:44
 msgid "Resources"
-msgstr ""
+msgstr "Õppematerjalid"
 
 #: ed_learning_resource/ed_learning_resource.module:61
 msgid "Likes(not facebook)"
-msgstr ""
+msgstr "Meeldimised"
 
 #: ed_learning_resource/ed_learning_resource.module:67
 msgid "Filter by Category"
-msgstr ""
+msgstr "Sorteeri kategooria järgi"
 
 #: ed_learning_resource/ed_learning_resource.module:92;137
 msgid "Search"
-msgstr ""
+msgstr "Otsi"
 
 #: ed_learning_resource/ed_learning_resource.info:0
 msgid "eDidaktikum Learning Resource content type."
@@ -699,7 +699,7 @@ msgstr ""
 
 #: ed_learning_resource_voc/ed_learning_resource_voc.install:27
 msgid "Learning Resource Types"
-msgstr ""
+msgstr "Õppematerjali tüübid"
 
 #: ed_learning_resource_voc/ed_learning_resource_voc.install:27
 msgid "A list of different learning resource types"
@@ -707,7 +707,7 @@ msgstr ""
 
 #: ed_learning_resource_voc/ed_learning_resource_voc.install:28
 msgid "Learning Resource Languages"
-msgstr ""
+msgstr "Õppematerjali keeled"
 
 #: ed_learning_resource_voc/ed_learning_resource_voc.install:28
 msgid "A list of different learning resource languages"
@@ -731,19 +731,19 @@ msgstr ""
 
 #: ed_learning_resource_voc/ed_learning_resource_voc.install:87;87
 msgid "Presentation"
-msgstr ""
+msgstr "Esitlus"
 
 #: ed_learning_resource_voc/ed_learning_resource_voc.install:88;88
 msgid "Exercise"
-msgstr ""
+msgstr "Harjutus"
 
 #: ed_learning_resource_voc/ed_learning_resource_voc.install:89;89
 msgid "Sound"
-msgstr ""
+msgstr "Heli"
 
 #: ed_learning_resource_voc/ed_learning_resource_voc.install:90;90
 msgid "Assessment Tool"
-msgstr ""
+msgstr "Ülesande tööriist"
 
 #: ed_learning_resource_voc/ed_learning_resource_voc.install:91;91
 msgid "Attempt"
@@ -751,95 +751,95 @@ msgstr ""
 
 #: ed_learning_resource_voc/ed_learning_resource_voc.install:92;92
 msgid "Website"
-msgstr ""
+msgstr "Veebileht"
 
 #: ed_learning_resource_voc/ed_learning_resource_voc.install:93;93
 msgid "Course"
-msgstr ""
+msgstr "Kursus"
 
 #: ed_learning_resource_voc/ed_learning_resource_voc.install:94;94
 msgid "Other"
-msgstr ""
+msgstr "Muu"
 
 #: ed_learning_resource_voc/ed_learning_resource_voc.install:95;95
 msgid "Game"
-msgstr ""
+msgstr "Mäng"
 
 #: ed_learning_resource_voc/ed_learning_resource_voc.install:96;96
 msgid "Image"
-msgstr ""
+msgstr "Foto / illustratsioon"
 
 #: ed_learning_resource_voc/ed_learning_resource_voc.install:97;97
 msgid "Simulation"
-msgstr ""
+msgstr "Simulatsioon"
 
 #: ed_learning_resource_voc/ed_learning_resource_voc.install:98;98
 msgid "Vocabulary"
-msgstr ""
+msgstr "Sõnavara"
 
 #: ed_learning_resource_voc/ed_learning_resource_voc.install:99;99
 msgid "Source of Information"
-msgstr ""
+msgstr "Informatsiooni päritolu"
 
 #: ed_learning_resource_voc/ed_learning_resource_voc.install:100;100
 msgid "Text"
-msgstr ""
+msgstr "Tekst"
 
 #: ed_learning_resource_voc/ed_learning_resource_voc.install:101;101
 msgid "Lesson Plan"
-msgstr ""
+msgstr "Tunniplaan"
 
 #: ed_learning_resource_voc/ed_learning_resource_voc.install:102;102
 msgid "Tool"
-msgstr ""
+msgstr "Töövahend"
 
 #: ed_learning_resource_voc/ed_learning_resource_voc.install:103;103
 msgid "Video"
-msgstr ""
+msgstr "Video"
 
 #: ed_learning_resource_voc/ed_learning_resource_voc.install:106;106;115;115
 msgid "English"
-msgstr ""
+msgstr "Inglise keel"
 
 #: ed_learning_resource_voc/ed_learning_resource_voc.install:107;107
 msgid "Estonian"
-msgstr ""
+msgstr "Eesti keel"
 
 #: ed_learning_resource_voc/ed_learning_resource_voc.install:108;108
 msgid "Russian"
-msgstr ""
+msgstr "Vene keel"
 
 #: ed_learning_resource_voc/ed_learning_resource_voc.install:111;111
 msgid "Mathematics"
-msgstr ""
+msgstr "Matemaatika"
 
 #: ed_learning_resource_voc/ed_learning_resource_voc.install:112;112
 msgid "Biology"
-msgstr ""
+msgstr "Bioloogia"
 
 #: ed_learning_resource_voc/ed_learning_resource_voc.install:113;113
 msgid "Chemistry"
-msgstr ""
+msgstr "Keemia"
 
 #: ed_learning_resource_voc/ed_learning_resource_voc.install:114;114
 msgid "Physics"
-msgstr ""
+msgstr "Füüsika"
 
 #: ed_learning_resource_voc/ed_learning_resource_voc.install:116;116
 msgid "History"
-msgstr ""
+msgstr "Ajalugu"
 
 #: ed_learning_resource_voc/ed_learning_resource_voc.install:119;119
 msgid "Obi-Wan Kenobi"
-msgstr ""
+msgstr "Juku Juurikas"
 
 #: ed_learning_resource_voc/ed_learning_resource_voc.install:120;120
 msgid "Master Yoda"
-msgstr ""
+msgstr "Mari Maasikas"
 
 #: ed_learning_resource_voc/ed_learning_resource_voc.install:121;121
 msgid "Mace Windu"
-msgstr ""
+msgstr "Juta Kuusk"
 
 #: ed_learning_resource_voc/ed_learning_resource_voc.info:0
 msgid "Learning resource vocabularies"
@@ -853,7 +853,7 @@ msgstr ""
 
 #: ed_news/ed_news.pages.inc:39
 msgid "Older news"
-msgstr ""
+msgstr "Vanemad uudised"
 
 #: ed_news/ed_news.install:117;148;178;207
 msgid ""
@@ -863,11 +863,11 @@ msgstr ""
 
 #: ed_news/ed_news.info:0
 msgid "eDidaktikum news."
-msgstr ""
+msgstr "eDidaktikumi uudised."
 
 #: ed_portfolio/ed_portfolio.module:13 ed_portfolio/ed_portfolio.install:63
 msgid "Portfolio"
-msgstr ""
+msgstr "Portfoolio"
 
 #: ed_portfolio/ed_portfolio.module:38
 msgid "Add new portfolio"
@@ -875,27 +875,27 @@ msgstr "Lisa uus portfoolio"
 
 #: ed_portfolio/ed_portfolio.install:141
 msgid "Portfolio items"
-msgstr ""
+msgstr "Portfoolio objektid"
 
 #: ed_portfolio/ed_portfolio.info:0
 msgid "eDidaktikum portfolio"
-msgstr ""
+msgstr "eDidaktikumi portfoolio"
 
 #: ed_portfolio/ed_portfolio.info:0
 msgid "eDidaktikum portfolio."
-msgstr ""
+msgstr "eDidaktikumi portfoolio."
 
 #: ed_subgroup/ed_subgroup.module:10 ed_subgroup/ed_subgroup.install:61
 msgid "Subgroup"
-msgstr ""
+msgstr "Alamgrupp"
 
 #: ed_subgroup/ed_subgroup.module:13
 msgid "Subgroups for eDidaktikum Clusters"
-msgstr ""
+msgstr "Alamgrupp eDidaktikumi gruppide juurde"
 
 #: ed_subgroup/ed_subgroup.info:0
 msgid "eDidaktikum subgroup"
-msgstr ""
+msgstr "eDidaktikumi alamgrupp"
 
 #: ed_subgroup/ed_subgroup.info:0
 msgid ""
@@ -905,15 +905,15 @@ msgstr ""
 
 #: ed_task/ed_task_functions.inc:5 ed_task/ed_task.module:102;130;165
 msgid "Due Date"
-msgstr ""
+msgstr "Tähtaeg"
 
 #: ed_task/ed_task_functions.inc:151
 msgid "category"
-msgstr ""
+msgstr "kategooria"
 
 #: ed_task/ed_task.module:10
 msgid "Task/Assignment"
-msgstr ""
+msgstr "Ülesanne"
 
 #: ed_task/ed_task.module:13
 msgid "Description2"
@@ -921,31 +921,31 @@ msgstr ""
 
 #: ed_task/ed_task.module:34
 msgid "Tasks"
-msgstr ""
+msgstr "Ülesanded"
 
 #: ed_task/ed_task.module:54
 msgid "Add new task"
-msgstr ""
+msgstr "Lisa uus ülesanne"
 
 #: ed_task/ed_task.module:102
 msgid "Tasks by me"
-msgstr ""
+msgstr "Minu antud ülesanded"
 
 #: ed_task/ed_task.module:102
 msgid "Shared To"
-msgstr ""
+msgstr "Jagatud:"
 
 #: ed_task/ed_task.module:108
 msgid "You haven't made any tasks"
-msgstr ""
+msgstr "Sa ei ole loonud veel ühtegi ülesannet"
 
 #: ed_task/ed_task.module:130
 msgid "Tasks to me"
-msgstr ""
+msgstr "Minu antud ülesanded"
 
 #: ed_task/ed_task.module:130;165
 msgid "Assigned By"
-msgstr ""
+msgstr "Ülesande andja"
 
 #: ed_task/ed_task.module:201
 msgid "extra fields label"
@@ -961,11 +961,11 @@ msgstr ""
 
 #: ed_user_extra/ed_user_extra.install:89
 msgid "Full Name"
-msgstr ""
+msgstr "Ees- ja perenimi"
 
 #: ed_user_extra/ed_user_extra.install:101
 msgid "Institution"
-msgstr ""
+msgstr "Institutsioon"
 
 #: ed_user_extra/ed_user_extra.info:0
 msgid "eDidaktikum User extra fields"
@@ -977,11 +977,11 @@ msgstr ""
 
 #: ed_user_extra/plugins/selection/fullname.inc:4
 msgid "Use Full Name"
-msgstr ""
+msgstr "Kasuta täisnime"
 
 #: entityreference_dragdrop/entityreference_dragdrop.module:13
 msgid "Drag & Drop"
-msgstr ""
+msgstr "Drag & Drop"
 
 #: entityreference_dragdrop/entityreference_dragdrop.module:128
 msgid "Entities table"
