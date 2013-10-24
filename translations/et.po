@@ -62,7 +62,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: 2013-09-17 13:46+0300\n"
-"PO-Revision-Date: 2013-10-24 11:16+0200\n"
+"PO-Revision-Date: 2013-10-24 11:24+0200\n"
 "Last-Translator: Priit Tammets <tammets@gmail.com>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "MIME-Version: 1.0\n"
@@ -73,19 +73,19 @@ msgstr ""
 
 #: edidaktikum.admin.inc:12 edidaktikum.variable.inc:11
 msgid "Home page intro image URL"
-msgstr ""
+msgstr "Esilehe kaanepildi URL"
 
 #: edidaktikum.admin.inc:14 edidaktikum.variable.inc:12
 msgid "Intro image to display in home page."
-msgstr ""
+msgstr "Esilehel kuvatav kaanepilt"
 
 #: edidaktikum.admin.inc:19 edidaktikum.variable.inc:18
 msgid "Home page intro text"
-msgstr ""
+msgstr "Esilehel paiknev sissejuhatav tekst"
 
 #: edidaktikum.admin.inc:21 edidaktikum.variable.inc:19
 msgid "Intro text to display in home page."
-msgstr ""
+msgstr "Esilehel kuvatav sissejuhatav tekst."
 
 #: edidaktikum.admin.inc:26 edidaktikum.variable.inc:25
 msgid "Home page tour text"
@@ -97,27 +97,27 @@ msgstr ""
 
 #: edidaktikum.admin.inc:40 edidaktikum.variable.inc:33
 msgid "Contact page contacts text"
-msgstr ""
+msgstr "Kontaktilehe sisu"
 
 #: edidaktikum.admin.inc:42 edidaktikum.variable.inc:34
 msgid "Contacts text to display on contact page."
-msgstr ""
+msgstr "Tekst, mida kuvatakse kontaktilehel."
 
 #: edidaktikum.admin.inc:50 edidaktikum.variable.inc:40
 msgid "Contact page logos text"
-msgstr ""
+msgstr "Logod kontakti lehel"
 
 #: edidaktikum.admin.inc:52 edidaktikum.variable.inc:41
 msgid "Logos text to display on contact page."
-msgstr ""
+msgstr "Logod, mida kuvatakse kontaktilehel"
 
 #: edidaktikum.admin.inc:67
 msgid "No Promoted Learning Resources Found"
-msgstr ""
+msgstr "Ühtegi esiletõstetud õppematerjali ei leitud"
 
 #: edidaktikum.admin.inc:78
 msgid "Choose Learning Resource to display on front page"
-msgstr ""
+msgstr "Vali õppematerjal, mida kuvatakse esilehel"
 
 #: edidaktikum.admin.inc:91
 msgid "Paging"
@@ -251,23 +251,23 @@ msgstr "eDidaktikumi kontaktileht"
 
 #: edidaktikum.module:34
 msgid "Configure edidaktikum contact page."
-msgstr ""
+msgstr "Muuda eDidaktikumi kontaktilehekülge"
 
 #: edidaktikum.module:43
 msgid "eDidaktikum Promoted Resources"
-msgstr ""
+msgstr "eDidaktikumi esiletõstetud õppematerjalid"
 
 #: edidaktikum.module:44
 msgid "Choose front page Learning Resource"
-msgstr ""
+msgstr "Vali esilehel kuvatav õppematerjal"
 
 #: edidaktikum.module:53
 msgid "eDidaktikum Statistics"
-msgstr ""
+msgstr "eDidaktikumi statistika"
 
 #: edidaktikum.module:54
 msgid "Statistics about the eDidaktikum web page"
-msgstr ""
+msgstr "eDidaktikumi üldine statistika"
 
 #: edidaktikum.module:73
 msgid "Home"
@@ -296,7 +296,7 @@ msgstr "kirjeldus"
 #: ed_learning_resource/ed_learning_resource.module:16
 #: ed_subgroup/ed_subgroup.module:16 ed_task/ed_task.module:16
 msgid "body_label"
-msgstr ""
+msgstr "body_label"
 
 #: ed_answer/ed_answer.module:23
 msgid " - Answer"
@@ -384,11 +384,11 @@ msgstr "Kuupäev"
 
 #: ed_blog/ed_blog.info:0
 msgid "eDidaktikum Blog"
-msgstr ""
+msgstr "eDidaktikumi ajaveeb"
 
 #: ed_blog/ed_blog.info:0
 msgid "eDidaktikum Blog content type."
-msgstr ""
+msgstr "eDidaktikumi ajaveebi sisutüüp"
 
 #: ed_cluster/ed_cluster.module:33
 msgid "Add new cluster"
@@ -413,15 +413,15 @@ msgstr "Kategooriad"
 
 #: ed_cluster/ed_cluster.info:0
 msgid "eDidaktikum clusters."
-msgstr ""
+msgstr "eDidaktikumi grupid"
 
 #: ed_competence_voc/ed_competence_voc.info:0
 msgid "Competence vocabulary"
-msgstr ""
+msgstr "Pädevuste sõnavara"
 
 #: ed_competence_voc/ed_competence_voc.info:0
 msgid ".."
-msgstr ""
+msgstr "-"
 
 #: ed_dashboard/ed_dashboard.module:13;21 ed_dashboard/ed_dashboard.info:0
 msgid "Dashboard"
@@ -433,7 +433,7 @@ msgstr "Viimased muudatused"
 
 #: ed_dashboard/ed_dashboard.info:0
 msgid "eDidaktikum dashboard."
-msgstr ""
+msgstr "eDidaktikumi töölaud"
 
 #: ed_event/ed_event.module:45
 msgid "Upcoming events"
@@ -461,7 +461,7 @@ msgstr "Lõpp"
 
 #: ed_event/ed_event.info:0
 msgid "eDidaktikum events."
-msgstr ""
+msgstr "eDidaktikumi sündmused"
 
 #: ed_file/ed_file.module:13
 msgid "Files"
@@ -510,11 +510,11 @@ msgstr "Lae fail üles"
 
 #: ed_file/ed_file.info:0
 msgid "eDidaktikum file"
-msgstr ""
+msgstr "eDidaktikumi failid"
 
 #: ed_file/ed_file.info:0
 msgid "eDidaktikum files and file folders."
-msgstr ""
+msgstr "eDidaktikumi failid ja kaustad"
 
 #: ed_file/includes/views/ed_file.views_default.inc:90
 #: ed_portfolio/includes/views/ed_portfolio.views_default.inc:92
@@ -534,7 +534,7 @@ msgstr ""
 #: ed_file/includes/views/ed_file.views_default.inc:93
 #: ed_portfolio/includes/views/ed_portfolio.views_default.inc:95
 msgid "Reset"
-msgstr ""
+msgstr "Taasta algseis"
 
 #: ed_file/includes/views/ed_file.views_default.inc:94
 #: ed_portfolio/includes/views/ed_portfolio.views_default.inc:96
@@ -715,7 +715,7 @@ msgstr ""
 
 #: ed_learning_resource_voc/ed_learning_resource_voc.install:29
 msgid "Learning Resource Tags"
-msgstr ""
+msgstr "Õppematerjali märksõna"
 
 #: ed_learning_resource_voc/ed_learning_resource_voc.install:29
 msgid "A list of tags for learning resources"
@@ -723,11 +723,11 @@ msgstr ""
 
 #: ed_learning_resource_voc/ed_learning_resource_voc.install:30
 msgid "Learning Resource Authors"
-msgstr ""
+msgstr "Õppematerjali autorid"
 
 #: ed_learning_resource_voc/ed_learning_resource_voc.install:30
 msgid "A list of authors for learning resources"
-msgstr ""
+msgstr "Õppematerjalide autorite nimekiri"
 
 #: ed_learning_resource_voc/ed_learning_resource_voc.install:87;87
 msgid "Presentation"
@@ -747,7 +747,7 @@ msgstr "Ülesande tööriist"
 
 #: ed_learning_resource_voc/ed_learning_resource_voc.install:91;91
 msgid "Attempt"
-msgstr ""
+msgstr "Üritus"
 
 #: ed_learning_resource_voc/ed_learning_resource_voc.install:92;92
 msgid "Website"
@@ -843,7 +843,7 @@ msgstr "Juta Kuusk"
 
 #: ed_learning_resource_voc/ed_learning_resource_voc.info:0
 msgid "Learning resource vocabularies"
-msgstr ""
+msgstr "Õppematerjali sõnavara"
 
 #: ed_learning_resource_voc/ed_learning_resource_voc.info:0
 msgid ""
@@ -917,7 +917,7 @@ msgstr "Ülesanne"
 
 #: ed_task/ed_task.module:13
 msgid "Description2"
-msgstr ""
+msgstr "Kirjeldus2"
 
 #: ed_task/ed_task.module:34
 msgid "Tasks"
