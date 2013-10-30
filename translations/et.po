@@ -62,7 +62,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: 2013-09-17 13:46+0300\n"
-"PO-Revision-Date: 2013-10-30 09:29+0200\n"
+"PO-Revision-Date: 2013-10-30 12:34+0200\n"
 "Last-Translator: Priit Tammets <tammets@gmail.com>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "MIME-Version: 1.0\n"
@@ -286,7 +286,7 @@ msgstr "Sisu"
 
 #: ed_answer/ed_answer.module:7 ed_task/ed_task.module:190
 msgid "Answer"
-msgstr "Vastus"
+msgstr "Vasta"
 
 #: ed_answer/ed_answer.module:10 ed_blog/ed_blog.module:14
 msgid "description"
