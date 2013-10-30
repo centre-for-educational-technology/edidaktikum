@@ -62,7 +62,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: 2013-09-17 13:46+0300\n"
-"PO-Revision-Date: 2013-10-24 11:24+0200\n"
+"PO-Revision-Date: 2013-10-30 09:29+0200\n"
 "Last-Translator: Priit Tammets <tammets@gmail.com>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "MIME-Version: 1.0\n"
@@ -477,7 +477,7 @@ msgstr "kaust"
 
 #: ed_file/ed_file.module:95
 msgid "Add new "
-msgstr "Lisa uus"
+msgstr "Lisa uus "
 
 #: ed_file/ed_file.module:95
 msgid " or "
