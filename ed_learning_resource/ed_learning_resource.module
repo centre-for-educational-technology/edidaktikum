@@ -63,7 +63,7 @@ function ed_learning_resource_listing($form, &$form_state) {
   );
   $term_reference_tree_path = drupal_get_path('module', 'term_reference_tree');
   $path = drupal_get_path('module', 'ed_learning_resource');
-  $form['category'] = array(
+  /*$form['category'] = array(
     '#type' => 'checkbox_tree',
     '#title' => t('Filter by Category')." ".'<img src='.$catimgpath.'/>',
     '#vocabulary' => _ed_get_vid(),
@@ -87,7 +87,7 @@ function ed_learning_resource_listing($form, &$form_state) {
     '#token_display' => '',
     '#prefix' => '<div id="edit-ed-field-category">',   //Make it collapsible
     '#suffix' => '</div>',
-  );
+  );*/
   $form['content_submit'] = array(
     '#type' => 'submit',
     '#value' => t('Search'),
@@ -137,7 +137,8 @@ function ed_learning_resource_listing_submit($form, &$form_state) {
   switch($form_state['triggering_element']['#value']) {
     case t('Search'):
       $form_state['values']['content_sort_select'] = $form_state['input']['content_sort_select'];
-      $help = array_values_recursive($form_state['input']['category']);
+      //$help = array_values_recursive($form_state['input']['category']);
+      $help = array();
       if(!empty($help)){
         $form_state['values']['category'] = $help;
       }
