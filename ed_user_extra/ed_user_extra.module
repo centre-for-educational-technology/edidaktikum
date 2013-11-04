@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * Implements hook_user_view_alter().
+ */
+
+function ed_user_extra_user_view_alter(&$build){
+  drupal_set_title($build['ed_field_full_name']['#items'][0]['value']);
+}
+
+
 function ed_user_extra_ctools_plugin_directory($module, $plugin) {
   if($module == 'entityreference') {
     return 'plugins/' . $plugin;
