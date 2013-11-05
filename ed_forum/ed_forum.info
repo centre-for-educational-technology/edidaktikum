@@ -1,0 +1,9 @@
+name = eDidaktikum Forum
+description = eDidaktikum Forum content type.
+package = eDidaktikum
+core = 7.x
+
+files[] = ed_forum.install
+files[] = ed_forum.module
+
+dependencies[] = edidaktikum

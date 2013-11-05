@@ -1,0 +1,28 @@
+<?php
+
+require_once('ed_forum_functions.inc');
+
+/*
+ * Implements hook_info().
+ */
+
+function ed_forum_node_info() {
+  $items['ed_forum'] = array(
+    'name' => t('Forum'),
+    'type' => 'ed_forum',
+    'base' => 'node_content',
+    'description' => t('description'),
+    'has_title' => '1',
+    'title_label' => t('Title'),
+    'body_label' => t('body_label'),
+  );
+  return $items;
+}
+
+/*
+ * Implements hook_form().
+ */
+function ed_forum_form($node, $form_state) {
+  return node_content_form($node, $form_state);
+}
+
