@@ -126,3 +126,34 @@ function edidaktikum_form_alter(&$form, $form_state, $form_id) {
   $form['#attached']['css'] = array(drupal_get_path('module', 'edidaktikum') . '/edidaktikum.css',);
 }
 
+/*
+ * Implements hook_attach_submit().
+ */
+
+function edidaktikum_field_attach_submit($entity_type, $entity, $form, &$form_state){
+  if($entity->ed_field_category){
+    $parentArray = array();
+    $parents = array(); 
+    foreach($entity->ed_field_category[LANGUAGE_NONE] as $ta){    
+      _check_for_parents($ta['tid'], $parentArray);
+    }
+    if (is_array($parentArray) && sizeof($parentArray) > 0) {
+      foreach ($parentArray as $stid) {
+        if(!in_array(array('tid' => $stid), $entity->ed_field_category[LANGUAGE_NONE])){
+          array_push($entity->ed_field_category[LANGUAGE_NONE], array('tid' => $stid));
+        }        
+      }
+    }
+  }
+}
+
+function _check_for_parents($tid, &$parentArray){
+  $parent = taxonomy_get_parents($tid);
+  if(!empty($parent)) {
+    $parent = reset($parent);    
+    array_push($parentArray, $parent->tid);
+    _check_for_parents($parent->tid, $parentArray);
+  }
+}
+
+
