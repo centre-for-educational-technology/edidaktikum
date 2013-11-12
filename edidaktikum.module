@@ -131,7 +131,7 @@ function edidaktikum_form_alter(&$form, $form_state, $form_id) {
  */
 
 function edidaktikum_field_attach_submit($entity_type, $entity, $form, &$form_state){
-  if($entity->ed_field_category){
+  if(isset($entity->ed_field_category)){
     $parentArray = array();
     $parents = array(); 
     foreach($entity->ed_field_category[LANGUAGE_NONE] as $ta){    
