@@ -17,7 +17,184 @@ function ed_cluster_menu() {
     'menu_name' => 'main-menu',
     'type' => MENU_NORMAL_ITEM,
   );
+  $items['node/%node/task-manager'] = array(
+    'title' => t('Task Manager'),
+    'page callback' => 'ed_task_manager',    
+    'access callback' => 'ed_task_manager_access',
+    'page arguments' => array('node', 1),
+    'access arguments' => array('node', 1),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 50,
+  );
   return $items;
+}
+
+
+function ed_task_manager_access($test, $node){
+  $account = $GLOBALS['user'];
+  $task_nids = ed_get_user_tasks($test, $node);
+  
+  
+  if(!empty($task_nids) && (in_array('teacher', $account->roles)|| in_array('administrator', $account->roles))){
+    $nodes = node_load_multiple($task_nids);
+    foreach($nodes as $nodesingle){
+      if($nodesingle->og_group_ref[LANGUAGE_NONE][0]['target_id'] == $node->nid){         // CHECK FOR ALL og_group_ref's
+        return true;
+      }
+    }
+    return false;
+  }
+  return false;
+}
+
+function ed_get_user_tasks($test, $node){
+  $account = $GLOBALS['user']; 
+  $query = db_select('node','n')
+    ->fields('n', array('nid'))
+    ->condition('n.status', 1)
+    ->condition('n.type', 'ed_task')
+    ->condition('n.uid', $account->uid);
+  $nids = $query->execute()->fetchCol();
+  return $nids;
+}
+
+/**
+ * Task Manager page.
+ */
+function ed_task_manager($test, $node){
+  drupal_add_css(drupal_get_path('module', 'ed_cluster').'/task_manager.css');
+  $account = $GLOBALS['user'];
+  
+  $content = array();
+ 
+  $options = array(
+    'attributes' => array(),
+    'query' => array(
+      'og_group_ref' => $node->nid,
+      'destination' => 'node/'.$node->nid,
+    ),
+  );
+  $content['add-new'] = array(
+      '#type' => 'item',
+      '#title' => t(''),
+      '#markup' => l(t('Add new task'), 'node/add/ed-task', $options),
+      '#href' => 'node/add/ed-task',      
+  );
+  
+  $group_members_uids = _get_users_in_group($node->nid);
+  
+  if (in_array($account->uid, $group_members_uids)) {
+    unset($group_members_uids[array_search($account->uid, $group_members_uids)]);    
+  }
+  
+  $group_members = user_load_multiple($group_members_uids);
+   
+  $header = array(t('Name'));
+  $nodes = node_load_multiple(_ed_get_user_group_tasks($account->uid, $node->nid));
+    
+  foreach($nodes as $node_single){
+    array_push($header, l($node_single->title, 'node/'.$node_single->nid));  
+  }
+  $rows = array();
+  
+  foreach(array_values($group_members) as $index => $member){
+      $rows[] = array(
+        'data' => array(
+          $member->uid => l($member->ed_field_full_name[LANGUAGE_NONE][0]['safe_value'], 'user/'.$member->uid),
+        ),
+      );
+      foreach($nodes as $node_single){
+        if(_ed_check_if_answered($member->uid, $node_single->nid)=='answered'){
+          $rows[$index]['data'][$node_single->nid] = array('data' => '<a href="../'.  _ed_get_answer_nid($member->uid, $node_single->nid)[0].'" style="display:block; text-decoration: none;">&nbsp;</a>', 'class' => _ed_check_if_answered($member->uid, $node_single->nid));          
+        }else{
+          $rows[$index]['data'][$node_single->nid] = array('data' => '', 'class' => _ed_check_if_answered($member->uid, $node_single->nid));
+        }
+      }
+  }
+
+  $content['table'] = array(
+    '#theme' => 'table',
+    '#rows' => $rows,
+    '#header' => $header,
+  );
+  return $content;
+}
+function _ed_get_answer_nid($uid, $tnid){
+  $query = db_select('node', 'n');
+  $query->join('field_data_field_ref_to_task', 'ref', 'n.nid = ref.entity_id');
+  $query->fields('n', array('nid'));
+  $query->condition('n.uid', $uid)
+      ->condition('ref.field_ref_to_task_target_id', $tnid);
+  $result = $query->execute()->fetchCol();
+  return $result;
+}
+function _ed_check_if_answered($uid, $tnid){
+  $query = db_select('node', 'n');
+  $query->join('field_data_field_ref_to_task', 'ref', 'n.nid = ref.entity_id');
+  $query->fields('n', array('nid'));
+  $query->condition('n.uid', $uid);
+  $query->condition('ref.field_ref_to_task_target_id', $tnid);
+  $result = $query->execute()->fetchCol();
+  if(!empty($result)){
+    
+    return "answered";
+  }else{
+    return "unanswered";
+  }
+  
+  
+}
+
+/*
+ * Get all answers from selected user.
+ */
+function _ed_check_for_answers($uid){
+  $query = db_select('node', 'n');
+  $query
+      ->condition('n.type', 'ed_answer')
+      ->condition('n.uid', $uid)
+      ->fields('n', array('nid'));
+  return $query->execute()->fetchCol();
+}
+
+/*
+ * Get all tasks that the user has made for this group
+ */
+function _ed_get_user_group_tasks($uid, $nid){
+  $query = db_select('node', 'n');
+  $query
+      ->condition('n.type', 'ed_task')
+      ->condition('n.uid', $uid)
+      ->fields('n', array('nid'));
+  $result = $query->execute()->fetchCol();
+  
+  $nodes = node_load_multiple($result);
+  $group_tasks = array();
+  foreach($nodes as $node_single){
+    foreach($node_single->og_group_ref[LANGUAGE_NONE] as $item){
+      if($item['target_id']==$nid){
+        array_push($group_tasks, $node_single->nid);
+      }
+    }
+  }
+  
+  return $group_tasks;
+}
+
+/**
+ * Get all users of a group
+ */
+function _get_users_in_group($gid) {
+  $query = db_select('users', 'u');
+ 
+  $query
+    ->condition('u.uid', 0, '<>')
+    ->condition('u.status', 1, '=')
+    ->fields('u', array('uid', 'name'))
+    ->join('og_membership', 'ogm', "ogm.gid = :gid AND u.uid = ogm.etid AND ogm.entity_type = 'user'", array(':gid' => $gid));
+  $result = $query->execute()->fetchCol();
+  
+  return $result;
 }
 
 /**
