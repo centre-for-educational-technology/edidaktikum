@@ -92,8 +92,8 @@ function ed_task_manager($test, $node){
   $header = array(t('Name'));
   $nodes = node_load_multiple(_ed_get_user_group_tasks($account->uid, $node->nid));
     
-  foreach($nodes as $node_single){
-    array_push($header, l($node_single->title, 'node/'.$node_single->nid));  
+  foreach(array_values($nodes) as $key => $node_single){
+    array_push($header, l($key+1, 'node/'.$node_single->nid, array('attributes' => array('title' => $node_single->title))));  
   }
   $rows = array();
   
