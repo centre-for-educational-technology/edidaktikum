@@ -1,0 +1,9 @@
+name = eDidaktikum Page
+description = eDidaktikum Page content type.
+package = eDidaktikum
+core = 7.x
+
+files[] = ed_page.install
+files[] = ed_page.module
+
+dependencies[] = edidaktikum

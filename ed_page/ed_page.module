@@ -1,0 +1,27 @@
+<?php
+
+require_once('ed_page_functions.inc');
+
+/*
+ * Implements hook_info().
+ */
+
+function ed_page_node_info() {
+  $items['ed_page'] = array(
+    'name' => t('Page'),
+    'type' => 'ed_page',
+    'base' => 'node_content',
+    'description' => t('description'),
+    'has_title' => '1',
+    'title_label' => t('Title'),
+    'body_label' => t('body_label'),
+  );
+  return $items;
+}
+
+/*
+ * Implements hook_form().
+ */
+function ed_page_form($node, $form_state) {
+  return node_content_form($node, $form_state);
+}
