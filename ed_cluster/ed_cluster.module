@@ -29,6 +29,109 @@ function ed_cluster_menu() {
   return $items;
 }
 
+/**
+ * Implements hook_field_extra_fields().
+ */
+
+function ed_cluster_field_extra_fields(){
+  
+  $extra['node']['ed_cluster']['display'] = array(
+    'ed_cluster_content' => array(
+      'label' => t('Group content paged'),
+      'description' => t('desc'),
+      'weight' => 10,
+    ),
+  );
+  return $extra;
+}
+
+/**
+ * Implements hook_node_view().
+ */
+
+function ed_cluster_node_view($node, $view_mode, $langcode){
+  switch ($node->type){
+    case 'ed_cluster':      
+      $content_nids = _ed_get_group_content($node->nid);      
+      $content = node_load_multiple($content_nids);
+      //dpm($content);
+      $types = array();
+      foreach($content as $content_single){        
+        $types[] = $content_single->type;
+      }
+      $types_unique = array_unique($types);
+      
+      $options = array(
+        'attributes' => array(),
+        'query' => array(
+          'og_group_ref' => $node->nid,
+          'destination' => 'node/'.$node->nid,
+        ),
+      );
+      foreach($types_unique as $type){
+        $node->content['ed_cluster_content'][$type]['heading'] = array(
+          '#type' => 'markup',
+          '#markup' => '<h2>'.t(ucwords(str_replace('ed', '', str_replace('_',' ',$type)))).'</h2>',
+        );
+        $node->content['ed_cluster_content'][$type]['add'] = array(
+          '#type' => 'item',
+          '#title' => t(''),
+          '#markup' => l(t('Add new ').ucwords(str_replace('ed', '', str_replace('_',' ',$type))), 'node/add/'.str_replace('_', '-',$type), $options),
+        );
+        $last_nodes = _ed_get_last_content_by_type($type, $content);
+        //dpm($last_nodes);
+        foreach($last_nodes as $last_node_single){
+          //dpm($last_node_single->title);
+          /*$node->content['ed_cluster_content'][$type][$last_node_single->nid] = array(
+            '#type' => 'markup',
+            '#markup' => '<p>'.$last_node_single->title.'</p>',
+          );*/
+            $tere = node_view($last_node_single, 'teaser');
+            //dpm($tere);
+            $node->content['ed_cluster_content'][$type][$last_node_single->nid] = $tere;
+        }
+        
+      }
+      //dpm($node);
+     
+      break;
+  }
+}
+
+function _ed_get_last_content_by_type($type, $content){
+  $all_latest_nids = array();
+  foreach($content as $content_single){
+    if($content_single->type == $type){
+      $all_latest_nids[] = $content_single;
+    }
+  }
+  usort($all_latest_nids, "cmp");  
+  $count = 0;
+  $latest_nids = array();
+  foreach($all_latest_nids as $nid){
+    $latest_nids[] = $nid;
+    $count++;
+    if($count==3){
+      break;
+    }
+  }
+  
+  return $latest_nids;
+  
+}
+function cmp($a, $b){
+    return strcmp($b->created, $a->created);
+}
+
+function _ed_get_group_content($gid){
+  $query = db_select('node', 'n');
+  $query->join('og_membership', 'ogm', 'n.nid = ogm.etid');
+  $query->fields('n', array('nid'))
+      ->condition('ogm.gid', $gid)
+      ->distinct();
+  $result = $query->execute()->fetchCol();
+  return $result;
+}
 
 function ed_task_manager_access($test, $node){
   $account = $GLOBALS['user'];
