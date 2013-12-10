@@ -115,38 +115,40 @@ function ed_cluster_field_extra_fields(){
  * Implements hook_node_view().
  */
 function ed_cluster_node_view($node, $view_mode, $langcode){
+  
   switch ($node->type){
-    case 'ed_cluster':      
-      $content_nids = _ed_get_group_content($node->nid);      
-      $content = node_load_multiple($content_nids);
-      //dpm($content);
-      $types = array();
-      foreach($content as $content_single){        
-        $types[] = $content_single->type;
-      }
-      $types_unique = array_unique($types);
-      
-      $options = array(
-        'attributes' => array(),
-        'query' => array(
-          'og_group_ref' => $node->nid,
-          'destination' => 'node/'.$node->nid,
-        ),
-      );
-      foreach($types_unique as $type){
-        if($type!='ed_task' && $type!='ed_answer'){
-          $node->content['ed_cluster_content'][$type]['heading'] = array(
-            '#type' => 'markup',
-            '#markup' => '<h2 class="'.$type.'">'.t(ucwords(str_replace('ed', '', str_replace('_',' ',$type)))).'</h2>'.'<em>'.l(t('Add new'), 'node/add/'.str_replace('_', '-',$type), $options).'</em>',
-          );
-          $last_nodes = _ed_get_last_content_by_type($type, $content);
-          foreach($last_nodes as $last_node_single){
-              $tere = node_view($last_node_single, 'teaser');
-              $node->content['ed_cluster_content'][$type][$last_node_single->nid] = $tere;
+    case 'ed_cluster':
+      if($view_mode=='full'){
+        $content_nids = _ed_get_group_content($node->nid);      
+        $content = node_load_multiple($content_nids);        
+        $types = array();
+        foreach($content as $content_single){        
+          $types[] = $content_single->type;
+        }
+        $types_unique = array_unique($types);
+
+        $options = array(
+          'attributes' => array(),
+          'query' => array(
+            'og_group_ref' => $node->nid,
+            'destination' => 'node/'.$node->nid,
+          ),
+        );
+        foreach($types_unique as $type){
+          if($type!='ed_task' && $type!='ed_answer'){
+            $node->content['ed_cluster_content'][$type]['heading'] = array(
+              '#type' => 'markup',
+              '#markup' => '<h2 class="'.$type.'">'.t(ucwords(str_replace('ed', '', str_replace('_',' ',$type)))).'</h2>'.'<em>'.l(t('Add new'), 'node/add/'.str_replace('_', '-',$type), $options).'</em>',
+            );
+            $last_nodes = _ed_get_last_content_by_type($type, $content);
+            foreach($last_nodes as $last_node_single){
+                $tere = node_view($last_node_single, 'teaser');
+                $node->content['ed_cluster_content'][$type][$last_node_single->nid] = $tere;
+            }
           }
         }
       }
-      break;
+      break;      
   }
 }
 
@@ -227,7 +229,6 @@ function ed_get_user_tasks($test, $node){
  * Task Manager page.
  */
 function ed_task_manager($test, $node){
-  dpm($test);
   drupal_add_css(drupal_get_path('module', 'ed_cluster').'/task_manager.css');
   $account = $GLOBALS['user'];
   
