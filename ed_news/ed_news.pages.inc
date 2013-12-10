@@ -11,6 +11,16 @@
 function ed_news_listing_page() {
   $content = array();
 
+  if(node_access('create', 'ed_news')){
+    $content['add-new'] = array(
+      '#type' => 'link',
+      '#title' => t('Add new news'),
+      '#href' => 'node/add/ed-news',
+      '#prefix' => '<div class="ed-add-new-node ed-add-new-news">',
+      '#suffix' => '</div>',
+    );
+  }
+
   // Latest news within a container
   $latest = ed_news_get_latest_news();
   if (!empty($latest)) {

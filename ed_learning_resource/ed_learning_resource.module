@@ -100,6 +100,16 @@ function ed_learning_resource_listing($form, &$form_state) {
     '#suffix' => '</div>',
   );
 
+  if(node_access('create', 'ed_learning_resource')){
+    $form['selection_fieldset']['add-new'] = array(
+      '#type' => 'link',
+      '#title' => t('Add new learning resource'),
+      '#href' => 'node/add/ed-learning-resource',
+      '#prefix' => '<div class="ed-add-new-node ed-add-new-learning-resource">',
+      '#suffix' => '</div>',
+    );
+  }
+
   $order = t('Latest First');
   if( !empty($form_state['values']['category'])){ // else{show from all categories}
     $order = ($form_state['values']['content_sort_select']);

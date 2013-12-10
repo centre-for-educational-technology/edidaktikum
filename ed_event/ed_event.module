@@ -32,6 +32,16 @@ function ed_event_listing_page() {
 
   $content = array();
 
+  if(node_access('create', 'ed_event')){
+    $content['add-new'] = array(
+      '#type' => 'link',
+      '#title' => t('Add new event'),
+      '#href' => 'node/add/ed-event',
+      '#prefix' => '<div class="ed-add-new-node ed-add-new-event">',
+      '#suffix' => '</div>',
+    );
+  }
+
   $latest = ed_event_get_latest_event();
   if (!empty($latest)) {
     $content['latest-event'] = node_view($latest, 'featured');
