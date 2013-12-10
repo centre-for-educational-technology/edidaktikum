@@ -17,7 +17,6 @@ function ed_learning_resource_dynamic_sections($form, &$form_state, $no_js_use =
 
   $form['content_sort_select'] = array(
     '#type' => 'select',
-    '#title' => t('Sort By'),
     '#options' => drupal_map_assoc(array(t('Latest First'), t('Earliest First'), t('Title'), t('Likes'))),
     /*'#ajax' => array(
       'wrapper' => 'selection-fieldset-wrapper',

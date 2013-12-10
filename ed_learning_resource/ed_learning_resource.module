@@ -58,7 +58,6 @@ function ed_learning_resource_listing($form, &$form_state) {
   $catimgpath = drupal_get_path('module', 'edidaktikum').'/images/menu_icon_small.png';
   $form['content_sort_select'] = array(
     '#type' => 'select',
-    '#title' => t('Sort By'),
     '#options' => drupal_map_assoc(array(t('Latest First'), t('Earliest First'), t('Title'), t('Likes(not facebook)'))),
   );
   $term_reference_tree_path = drupal_get_path('module', 'term_reference_tree');
@@ -90,7 +89,7 @@ function ed_learning_resource_listing($form, &$form_state) {
   );*/
   $form['content_submit'] = array(
     '#type' => 'submit',
-    '#value' => t('Search'),
+    '#value' => t('Sort'),
     '#validate' => array(),
     '#limit_validation_errors' => array(),
   );
