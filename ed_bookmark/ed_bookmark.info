@@ -1,0 +1,9 @@
+name = eDidaktikum Bookmark
+description = eDidaktikum Bookmark content type.
+package = eDidaktikum
+core = 7.x
+
+files[] = ed_bookmark.install
+files[] = ed_bookmark.module
+
+dependencies[] = edidaktikum

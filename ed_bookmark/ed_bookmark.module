@@ -1,0 +1,24 @@
+<?php
+
+require_once('ed_bookmark_functions.inc');
+/*
+ * Implements hook_node_info().
+ */
+function ed_bookmark_node_info() {
+  $items['ed_bookmark'] = array(
+    'name' => t('Bookmark'),
+	  'type' => 'ed_bookmark',
+	  'base' => 'node_content',
+	  'description' => t('Description'),
+	  'has_title' => '1',
+	  'title_label' => t('Title'),	  
+  );
+  return $items;
+}
+
+/*
+ * Implements hook_form().
+ */
+function ed_bookmark_form($node, $form_state) {
+  return node_content_form($node, $form_state);
+}

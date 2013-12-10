@@ -1,0 +1,128 @@
+<?php
+
+require_once('ed_bookmark_functions.inc');
+
+/*
+ * Implements hook_install().
+ */
+
+function ed_bookmark_install(){
+  _ed_bookmark_create_vocabulary();
+  _ed_bookmark_add_terms();
+  foreach (_ed_bookmark_installed_fields() as $field) {
+    field_create_field($field);
+  }
+  foreach (_ed_bookmark_installed_instances() as $instance) {
+    $instance['entity_type'] = 'node';
+    $instance['bundle'] = 'ed_bookmark';
+    field_create_instance($instance);
+  }
+  ed_bookmark_add_og_audience();
+}
+function ed_bookmark_add_og_audience() {
+  if(function_exists('og_create_field') && defined('OG_AUDIENCE_FIELD')) {
+    $og_field = og_fields_info(OG_AUDIENCE_FIELD);
+    $og_field['instance']['label'] = t('Cluster');
+    $og_field['instance']['required'] = TRUE;
+    $og_field['instance']['settings']['behaviors']['prepopulate'] = array(
+      'status' => TRUE,
+      'action' => 'none',
+      'fallback' => 'none',
+      'skip_perm' => FALSE,
+    );
+    og_create_field(OG_AUDIENCE_FIELD, 'node', 'ed_bookmark', $og_field);
+  }
+}
+/*
+ * Implements hook_uninstall().
+ */
+function ed_bookmark_uninstall(){
+  _ed_bookmark_remove_vocabulary('ed_bookmark_voc');
+  
+  $result = db_select('node', 'n')
+    ->fields('n', array('nid'))
+	  ->condition("n.type", 'ed_bookmark')
+	  ->execute();
+
+  $nids = array();
+  foreach ($result as $row) {
+    $nids[] = $row->nid;
+  }
+
+  // delete all nodes
+  node_delete_multiple($nids);
+
+  foreach(array_keys(_ed_bookmark_installed_fields()) as $field) {
+    field_delete_field($field);
+  }
+
+  //delete any remaining field instances
+  $instances = field_info_instances('node', 'ed_bookmark');
+  foreach ($instances as $instance_name => $instance) {
+    field_delete_instance($instance);
+  }
+
+  // Delete Learning Resource content type
+  node_type_delete('ed_bookmark');
+
+  //purge all field information
+  field_purge_batch(1000);
+}
+function _ed_bookmark_remove_vocabulary($machine_name){
+   $vid = db_select('taxonomy_vocabulary', 'v')
+    ->fields('v', array('vid'))
+    ->condition("v.machine_name", $machine_name)
+    ->execute()
+	  ->fetchField();
+  taxonomy_vocabulary_delete($vid);
+}
+
+function _ed_bookmark_create_vocabulary(){
+  $ed_bookmark_vocabulary = taxonomy_vocabulary_machine_name_load('ed_bookmark_voc');
+  if (!empty($ed_category_vocabulary)) {
+    return false;
+  }
+  $vocabulary = new stdClass();
+  $vocabulary->name = 'Bookmark Type';
+  $vocabulary->description = '';
+  $vocabulary->machine_name = 'ed_bookmark_voc';
+  taxonomy_vocabulary_save($vocabulary);
+  
+  $ed_bookmark_tags_vocabulary = taxonomy_vocabulary_machine_name_load('ed_bookmark_tags_voc');
+  if (!empty($ed_bookmark_tags_vocabulary)) {
+    return false;
+  }
+
+  $vocabulary = new stdClass();
+  $vocabulary->name = 'Bookmark tags';
+  $vocabulary->description = '';
+  $vocabulary->machine_name = 'ed_bookmark_tags_voc';
+  taxonomy_vocabulary_save($vocabulary);
+
+}
+
+function _ed_bookmark_add_terms(){
+  _ed_bookmark_create_term('ed_bookmark_voc', t('Group'), t('Group'));
+  _ed_bookmark_create_term('ed_bookmark_voc', t('Network'), t('Network'));
+  _ed_bookmark_create_term('ed_bookmark_voc', t('Webpage'), t('Webpage'));
+  _ed_bookmark_create_term('ed_bookmark_voc', t('Journal'), t('Journal'));
+}
+
+function _ed_bookmark_create_term($vocab, $term, $desc='', $weight = 0){
+  $added = NULL;
+  $added = taxonomy_get_term_by_name($term);
+  if ($added == '' || $added == NULL) {
+	$vocabulary = taxonomy_vocabulary_machine_name_load($vocab);
+	$vid = $vocabulary->vid;
+	$new_term = array(
+	  'name' => $term,
+	  'description' => $desc,
+	  'parent' => array(0),
+	  'weight' => $weight,
+	  'vid' => $vid,
+	);
+	$term_obj = (object) $new_term;
+	taxonomy_term_save($term_obj);
+  }
+}
+

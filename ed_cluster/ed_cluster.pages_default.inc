@@ -205,6 +205,7 @@ $display->panels = array();
     'field_name' => 'og_group_ref',
     'types' => array(
       'ed_blog' => 'ed_blog',
+      'ed_bookmark' => 'ed_bookmark',
       'ed_forum' => 'ed_forum',
       'ed_learning_resource' => 'ed_learning_resource',
       'ed_page' => 'ed_page',
@@ -277,6 +278,7 @@ $display->panels = array();
 $display->hide_title = PANELS_TITLE_FIXED;
 $display->title_pane = '0';
 $handler->conf['display'] = $display;
+
 
 
 
