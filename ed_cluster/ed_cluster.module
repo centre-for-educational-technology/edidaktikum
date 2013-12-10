@@ -374,6 +374,8 @@ function ed_cluster_listing_page() {
       '#type' => 'link',
       '#title' => t('Add new cluster'),
       '#href' => 'node/add/ed-cluster',
+      '#prefix' => '<div class="ed-add-new-node ed-add-new-cluster">',
+      '#suffix' => '</div>',
     );
   }
   if (!empty($og_groups)) {
