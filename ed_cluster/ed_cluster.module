@@ -179,6 +179,7 @@ function _ed_get_group_content($gid){
   $query->join('og_membership', 'ogm', 'n.nid = ogm.etid');
   $query->fields('n', array('nid'))
       ->condition('ogm.gid', $gid)
+      ->condition('n.nid', $gid, '!=')
       ->distinct();
   $result = $query->execute()->fetchCol();
   return $result;
@@ -188,6 +189,7 @@ function _ed_get_group_content_by_type($gid, $type){
   $query->join('og_membership', 'ogm', 'n.nid = ogm.etid');
   $query->fields('n', array('nid'))
       ->condition('ogm.gid', $gid)
+      ->condition('n.nid', $gid, '!=')
       ->condition('n.type', $type)
       ->distinct();
   $result = $query->execute()->fetchCol();
