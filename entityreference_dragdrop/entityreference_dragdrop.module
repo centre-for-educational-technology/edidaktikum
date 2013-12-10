@@ -151,28 +151,27 @@ function entityreference_dragdrop_field_formatter_view($entity_type, $entity, $f
           ),
         );
       }
+    }
       
-      $header = array(
-        array(
-          'data' => t('Type'),
-        ),
-        array(
-          'data' => t('Title'),
-        ),
-        array(
-          'data' => t('Changed'),
-        ),
+    $header = array(
+      array(
+        'data' => t('Type'),
+      ),
+      array(
+        'data' => t('Title'),
+      ),
+      array(
+        'data' => t('Changed'),
+      ),
+    );
+
+    if (!empty($rows)) {
+      $element[0] = array(
+        '#theme' => 'table',
+        '#rows' => $rows,
+        '#header' => $header,
       );
-
-      if (!empty($rows)) {
-        $element[0] = array(
-          '#theme' => 'table',
-          '#rows' => $rows,
-          '#header' => $header,
-        );
-        return $element;
-      }
-
+      return $element;
     }
 
   }
