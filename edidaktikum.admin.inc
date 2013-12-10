@@ -79,11 +79,15 @@ function edidaktikum_promoted_resources_page_admin_form(){
     '#options' => $resourcenames,
     '#default_value' => variable_get('promoted_resources'),
   );
-  $setnid = $nids[variable_get('promoted_resources')];
-  variable_set('resource_to_front', $setnid);
+
+  if (isset($nids[variable_get('promoted_resources')])) {
+    $setnid = $nids[variable_get('promoted_resources')];
+    variable_set('resource_to_front', $setnid);
+  }
   
   return system_settings_form($form);
 }
+
 function edidaktikum_configuration_page_admin_form(){
 
   $form['form']['ed_paging'] = array(
