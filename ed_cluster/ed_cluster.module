@@ -29,61 +29,58 @@ function ed_cluster_menu() {
   $items['node/%node/news'] = array(
     'title' => t('News'),
     'page callback' => 'ed_listing_from_group',    
-    //'access callback' => 'ed_group_content_listing_access',
-    'access callback' => TRUE,
+    'access callback' => 'ed_group_content_listing_access',    
     'page arguments' => array('node', 1, 'ed_news'),
-    //'access arguments' => array('node', 1),
+    'access arguments' => array('node', 1, 'ed_news'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 50,
   );
   $items['node/%node/events'] = array(
     'title' => t('Events'),
     'page callback' => 'ed_listing_from_group',    
-    //'access callback' => 'ed_group_content_listing_access',
-    'access callback' => TRUE,
+    'access callback' => 'ed_group_content_listing_access',    
     'page arguments' => array('node', 1, 'ed_event'),
-    //'access arguments' => array('node', 1),
+    'access arguments' => array('node', 1, 'ed_event'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 50,
   );
   $items['node/%node/learning-resource'] = array(
     'title' => t('Learning Resource'),
     'page callback' => 'ed_listing_from_group',    
-    //'access callback' => 'ed_group_content_listing_access',
-    'access callback' => TRUE,
+    'access callback' => 'ed_group_content_listing_access',    
     'page arguments' => array('node', 1, 'ed_learning_resource'),
-    //'access arguments' => array('node', 1),
+    'access arguments' => array('node', 1, 'ed_learning_resource'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 50,
   );
   $items['node/%node/forum'] = array(
     'title' => t('Forum'),
     'page callback' => 'ed_listing_from_group',    
-    //'access callback' => 'ed_group_content_listing_access',
-    'access callback' => TRUE,
+    'access callback' => 'ed_group_content_listing_access',    
     'page arguments' => array('node', 1, 'ed_forum'),
-    //'access arguments' => array('node', 1),
+    'access arguments' => array('node', 1, 'ed_forum'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 50,
   );
   $items['node/%node/page'] = array(
     'title' => t('Page'),
     'page callback' => 'ed_listing_from_group',    
-    //'access callback' => 'ed_group_content_listing_access',
-    'access callback' => TRUE,
+    'access callback' => 'ed_group_content_listing_access',
     'page arguments' => array('node', 1, 'ed_page'),
-    //'access arguments' => array('node', 1),
+    'access arguments' => array('node', 1, 'ed_page'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 50,
   );
   return $items;
 }
 
-function ed_group_content_listing_access(){
-  
+function ed_group_content_listing_access($filler, $gnode, $type){  
+  $is_group = _ed_is_nid_group($gnode->nid);
+  return $is_group;
 }
 
 function ed_listing_from_group($filler, $gnode, $type){
+  
   $content = array();
   $content_nids = _ed_get_group_content_by_type($gnode->nid, $type);
   $nodes = node_load_multiple($content_nids);
@@ -389,6 +386,18 @@ function ed_cluster_listing_page() {
     $content['clusters'] = $build;
   }
   return $content;
+}
+function _ed_is_nid_group($nid){
+  $query = db_select('node', 'n')
+    ->fields('n', array('nid'))
+    ->condition('n.type', 'ed_cluster')
+    ->condition('n.nid', $nid);
+  $nids = $query->execute()->fetchCol();
+  if(!empty($nids)){
+    return true;
+  }
+  return false;
+  
 }
 
 /**
