@@ -128,42 +128,44 @@ function ed_answer_form_alter(&$form, &$form_state, $form_id){
 
     $task_comp = field_get_items('node', $node, 'ed_field_competence');
 
-    foreach($task_comp as $competenceTerm){
-      $comp_terms[] = field_view_value('node', $node, 'ed_field_competence', $competenceTerm);
-    }
-    foreach($comp_terms as $term){
-      $test[] = taxonomy_term_load($term['#options']['entity']->tid);
-    }
+    if ($task_comp) {
+      foreach($task_comp as $competenceTerm){
+        $comp_terms[] = field_view_value('node', $node, 'ed_field_competence', $competenceTerm);
+      }
+      foreach($comp_terms as $term){
+        $test[] = taxonomy_term_load($term['#options']['entity']->tid);
+      }
 
-    $help2 = 0;
-    foreach($comp_terms as $tid){
-      $form['ed_answer_task_comp']['competence'][$help2] = array(
-        '#type' => 'markup',
-        '#markup' => t(l(t($tid['#options']['entity']->name), $tid['#href']).'<br />'),
-      );
-      if(ed_answer_check_tid_parents($tid['#options']['entity']->tid)==0){
+      $help2 = 0;
+      foreach($comp_terms as $tid){
+        $form['ed_answer_task_comp']['competence'][$help2] = array(
+          '#type' => 'markup',
+          '#markup' => t(l(t($tid['#options']['entity']->name), $tid['#href']).'<br />'),
+        );
+        if(ed_answer_check_tid_parents($tid['#options']['entity']->tid)==0){
         /*$form['test']['test2'][$help]['#prefix'] = '<li>';
-          $form['test']['test2'][$help]['#suffix'] = '</li>';*/
-      }else{
-        $depth = 0;
-        $flag = true;
-        $parent = ed_answer_check_tid_parents($tid['#options']['entity']->tid);
-        $form['ed_answer_task_comp']['competence'][$help2]['#prefix']='';
-        $form['ed_answer_task_comp']['competence'][$help2]['#suffix']='';
-        while($flag){
-          if($parent==0){
-            for($i = 0;$i<$depth;$i++){
-              $form['ed_answer_task_comp']['competence'][$help2]['#prefix'].='<ul>';
+        $form['test']['test2'][$help]['#suffix'] = '</li>';*/
+        }else{
+          $depth = 0;
+          $flag = true;
+          $parent = ed_answer_check_tid_parents($tid['#options']['entity']->tid);
+          $form['ed_answer_task_comp']['competence'][$help2]['#prefix']='';
+          $form['ed_answer_task_comp']['competence'][$help2]['#suffix']='';
+          while($flag){
+            if($parent==0){
+              for($i = 0;$i<$depth;$i++){
+                $form['ed_answer_task_comp']['competence'][$help2]['#prefix'].='<ul>';
+              }
+              $form['ed_answer_task_comp']['competence'][$help2]['#suffix'].='</ul>';
+              $flag = false;
+            }else{
+              $depth++;
+              $parent = ed_answer_check_tid_parents($parent);
             }
-            $form['ed_answer_task_comp']['competence'][$help2]['#suffix'].='</ul>';
-            $flag = false;
-          }else{
-            $depth++;
-            $parent = ed_answer_check_tid_parents($parent);
           }
         }
+        $help2++;
       }
-      $help2++;
     }
 
   }
