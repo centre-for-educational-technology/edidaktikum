@@ -215,7 +215,7 @@ function ed_news_node_add_field_category() {
 function ed_news_node_add_field_og_audience() {
   if (function_exists('og_create_field') && defined('OG_AUDIENCE_FIELD')) {
     $og_field = og_fields_info(OG_AUDIENCE_FIELD);
-    $og_field['instance']['label'] = t('Cluster');
+    $og_field['instance']['label'] = t('Group');
     $og_field['instance']['required'] = TRUE;
     $og_field['instance']['settings']['behaviors']['prepopulate'] = array(
       'status' => TRUE,

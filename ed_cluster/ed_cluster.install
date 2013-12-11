@@ -53,7 +53,7 @@ function ed_cluster_create_node() {
   if (!in_array('ed_cluster', node_type_get_names())) {
     $type = array(
       'type' => 'ed_cluster',
-      'name' => t('Cluster'),
+      'name' => t('Group'),
       'base' => 'node_content',
       'custom' => TRUE,
       'modified' => FALSE,

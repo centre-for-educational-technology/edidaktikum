@@ -1,5 +1,5 @@
 name = Cluster
-description = eDidaktikum clusters.
+description = eDidaktikum groups.
 package = eDidaktikum
 core = 7.x
 

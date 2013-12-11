@@ -10,7 +10,7 @@
  */
 function ed_cluster_menu() {
   $items['clusters'] = array(
-    'title' => t('Clusters'),
+    'title' => t('Groups'),
     'page callback' => 'ed_cluster_listing_page',
     'access callback' => TRUE,
     'weight' => 20,
@@ -374,7 +374,7 @@ function ed_cluster_listing_page() {
   if(in_array('teacher', $account->roles)||in_array('administrator', $account->roles)){
     $content['add-new'] = array(
       '#type' => 'link',
-      '#title' => t('Add new cluster'),
+      '#title' => t('Add new group'),
       '#href' => 'node/add/ed-cluster',
       '#prefix' => '<div class="ed-add-new-node ed-add-new-cluster">',
       '#suffix' => '</div>',

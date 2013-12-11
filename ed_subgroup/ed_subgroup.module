@@ -10,7 +10,7 @@ function ed_subgroup_node_info(){
     'name' => t('Subgroup'),
     'type' => 'ed_subgroup',
     'base' => 'node_content',
-    'description' => t('Subgroups for eDidaktikum Clusters'),
+    'description' => t('Subgroups for eDidaktikum Groups'),
     'has_title' => 1,
     'title_label' => t('Title'),
     'body_label' => t('body_label'),

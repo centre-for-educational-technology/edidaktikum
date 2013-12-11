@@ -124,7 +124,7 @@ function edidaktikum_statistics_page_admin_form(){
     '#theme' => 'table',
     '#header' => array(t('Content Type'), t('Qt.')),
     '#rows' => array(
-      array(t('Clusters'),get_cluster_qt()),
+      array(t('Groups'),get_cluster_qt()),
       array(t('Subgroups'),get_subgroups_qt()),
       array(t('Learning Resources'),get_lr_qt()),
       array(t('News'),get_news_qt()),
