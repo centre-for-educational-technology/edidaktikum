@@ -157,9 +157,17 @@ function ed_learning_resource_listing_submit($form, &$form_state) {
 }
 
 function ed_learning_resource_preprocess_node(&$vars){
-  if (isset($vars['front']) && $vars['front'] == TRUE && $vars['node']->type == 'ed_learning_resource') {
-    $created = $vars['node']->created;
-    $vars['submitted'] = format_date($created, 'short').", ".$vars['node']->name;
+  if ($vars['node']->type == 'ed_learning_resource') {
+    if (isset($vars['front']) && $vars['front'] == TRUE) {
+      $created = $vars['node']->created;
+      $vars['submitted'] = format_date($created, 'short').", ".$vars['node']->name;
+    }
+
+    if ('teaser' === $vars['view_mode']) {
+      if (TRUE === $vars['logged_in'] && $vars['uid'] === $vars['user']->uid) {
+        $vars['classes_array'][] = 'ed-node-mine';
+      }
+    }
   }
 }
 
