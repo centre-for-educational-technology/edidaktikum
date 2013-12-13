@@ -509,7 +509,7 @@ $display->panels = array();
     'delta_offset' => '0',
     'delta_reversed' => 0,
     'formatter_settings' => array(
-      'link' => 0,
+      'link' => 1,
     ),
     'context' => 'argument_entity_id:node_1',
     'override_title' => 0,
