@@ -302,6 +302,13 @@ function ed_file_add_field_ed_file_folder_ref($node_type) {
       'widget' => array(
         'type' => 'options_select',
       ),
+      'display' => array(
+        'default' => array(
+          'settings' => array(
+            'link' => TRUE,
+          ),
+        ),
+      ),
     );
     $instance['settings']['behaviors']['prepopulate'] = array(
       'status' => TRUE,
