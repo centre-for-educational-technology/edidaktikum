@@ -112,6 +112,11 @@ function edidaktikum_preprocess_node(&$vars) {
     $vars['theme_hook_suggestions'][] = 'node__front';
     $vars['theme_hook_suggestions'][] = 'node__' . $vars['type'] . '__front';
   }
+  if ('teaser' === $vars['view_mode'] && $vars['type'] !== 'ed_portfolio') {
+    if (TRUE === $vars['logged_in'] && $vars['uid'] === $vars['user']->uid) {
+      $vars['classes_array'][] = 'ed-node-mine';
+    }
+  }
 }
 
 function ed_get_paging_nr(){

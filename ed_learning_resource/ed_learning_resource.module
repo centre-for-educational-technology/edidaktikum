@@ -162,12 +162,6 @@ function ed_learning_resource_preprocess_node(&$vars){
       $created = $vars['node']->created;
       $vars['submitted'] = format_date($created, 'short').", ".$vars['node']->name;
     }
-
-    if ('teaser' === $vars['view_mode']) {
-      if (TRUE === $vars['logged_in'] && $vars['uid'] === $vars['user']->uid) {
-        $vars['classes_array'][] = 'ed-node-mine';
-      }
-    }
   }
 }
 
