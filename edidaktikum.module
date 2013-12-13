@@ -90,6 +90,19 @@ function edidaktikum_menu() {
   return $items;
 }
 
+/**
+ * Custom callback for user label.
+ * Uses fullname if available.
+ * Defaults to format_username.
+ */
+function edidaktikum_user_label_callback($account) {
+  $fullnames = field_get_items('user', $account, 'ed_field_full_name');
+  if (isset($fullnames[0]['value'])) {
+    return $fullnames[0]['value'];
+  }
+  return format_username($account);
+}
+
 function edidaktikum_entity_info_alter(&$entity_info) {
   $entity_info['node']['view modes']['featured'] = array(
     'label' => t('Featured'),
@@ -99,6 +112,9 @@ function edidaktikum_entity_info_alter(&$entity_info) {
     'label' => t('Front'),
     'custom settings' => TRUE,
   );
+  if (isset($entity_info['user'])) {
+    $entity_info['user']['label callback'] = 'edidaktikum_user_label_callback';
+  }
 }
 
 function edidaktikum_preprocess_node(&$vars) {
