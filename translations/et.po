@@ -62,8 +62,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: 2013-12-11 14:39+0200\n"
-"PO-Revision-Date: 2013-12-11 16:20+0200\n"
-"Last-Translator: Pjotr Savitski <pjotr.savitski@gmail.com>\n"
+"PO-Revision-Date: 2013-12-16 15:08+0200\n"
+"Last-Translator: Priit Tammets <tammets@gmail.com>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
@@ -418,7 +418,7 @@ msgstr "eDidaktikumi ajaveebi sisutüüp"
 
 #: ed_bookmark/ed_bookmark_functions.inc:35
 msgid "Url"
-msgstr ""
+msgstr "Veebiaadress"
 
 #: ed_bookmark/ed_bookmark_functions.inc:46 ed_bookmark/ed_bookmark.module:12
 #: ed_learning_resource/ed_learning_resource.module:13
@@ -432,7 +432,7 @@ msgstr "Veebiaadress"
 
 #: ed_bookmark/ed_bookmark.module:9
 msgid "Bookmark"
-msgstr ""
+msgstr "Järjehoidja"
 
 #: ed_bookmark/ed_bookmark.install:106;106
 msgid "Network"
@@ -440,11 +440,11 @@ msgstr ""
 
 #: ed_bookmark/ed_bookmark.install:107;107
 msgid "Webpage"
-msgstr ""
+msgstr "Veebileht"
 
 #: ed_bookmark/ed_bookmark.install:108;108
 msgid "Journal"
-msgstr ""
+msgstr "Päevik"
 
 #: ed_bookmark/ed_bookmark.info:0
 #, fuzzy
@@ -458,15 +458,15 @@ msgstr "eDidaktikumi ajaveebi sisutüüp"
 
 #: ed_cluster/ed_cluster.module:21
 msgid "Task Manager"
-msgstr ""
+msgstr "Ülesannete haldur"
 
 #: ed_cluster/ed_cluster.module:57 ed_forum/ed_forum.module:11
 msgid "Forum"
-msgstr ""
+msgstr "Foorum"
 
 #: ed_cluster/ed_cluster.module:66 ed_page/ed_page.module:11
 msgid "Page"
-msgstr ""
+msgstr "Lehekülg"
 
 #: ed_cluster/ed_cluster.module:103
 msgid "Group content paged"
@@ -551,7 +551,7 @@ msgstr "Ülesande vastus"
 
 #: ed_dashboard/ed_dashboard.module:84
 msgid "Update"
-msgstr ""
+msgstr "Uuenda"
 
 #: ed_dashboard/ed_dashboard.module:84
 #, fuzzy
@@ -1008,19 +1008,19 @@ msgstr "Lisa uus portfoolio"
 
 #: ed_portfolio/ed_portfolio.module:47
 msgid "Public"
-msgstr ""
+msgstr "Avalik"
 
 #: ed_portfolio/ed_portfolio.module:49
 msgid "Private"
-msgstr ""
+msgstr "Privaatne"
 
 #: ed_portfolio/ed_portfolio.module:51
 msgid "error"
-msgstr ""
+msgstr "viga"
 
 #: ed_portfolio/ed_portfolio.module:64 ed_task/ed_task.module:130;166
 msgid "Status"
-msgstr ""
+msgstr "Staatus"
 
 #: ed_portfolio/ed_portfolio.install:141
 msgid "Portfolio items"
