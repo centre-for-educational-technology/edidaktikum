@@ -44,6 +44,15 @@ function ed_cluster_menu() {
     'type' => MENU_LOCAL_TASK,
     'weight' => 50,
   );
+  $items['node/%node/blog'] = array(
+    'title' => t('Blog'),
+    'page callback' => 'ed_listing_from_group',
+    'access callback' => 'ed_group_content_listing_access',
+    'page arguments' => array('node', 1, 'ed_blog'),
+    'access arguments' => array('node', 1, 'ed_blog'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 50,
+  );
   $items['node/%node/learning-resource'] = array(
     'title' => t('Learning Resource'),
     'page callback' => 'ed_listing_from_group',    
