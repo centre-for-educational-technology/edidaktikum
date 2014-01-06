@@ -176,7 +176,7 @@ function cmp($a, $b){
 
 function _ed_get_group_content($gid){
   $query = db_select('node', 'n');
-  $query->join('og_membership', 'ogm', 'n.nid = ogm.etid');
+  $query->join('og_membership', 'ogm', "n.nid = ogm.etid AND ogm.entity_type = 'node'");
   $query->fields('n', array('nid'))
       ->condition('ogm.gid', $gid)
       ->condition('n.nid', $gid, '!=')
@@ -184,9 +184,10 @@ function _ed_get_group_content($gid){
   $result = $query->execute()->fetchCol();
   return $result;
 }
+
 function _ed_get_group_content_by_type($gid, $type){
   $query = db_select('node', 'n');
-  $query->join('og_membership', 'ogm', 'n.nid = ogm.etid');
+  $query->join('og_membership', 'ogm', "n.nid = ogm.etid AND ogm.entity_type = 'node'");
   $query->fields('n', array('nid'))
       ->condition('ogm.gid', $gid)
       ->condition('n.nid', $gid, '!=')
