@@ -54,6 +54,16 @@ function ed_file_menu_breadcrumb_alter(&$active_trail, $item) {
 
 }
 
+/**
+ * Adds folder url to breadcrumbs if a reference to parent exists.
+ * Please note that the process goes in reverse order.
+ * @param $breadcrumb
+ *  The breadcrumb in reverse order so far
+ * @folder
+ *   Folder of file node
+ * @return
+ *   array with new breadcrumb pushed (please note that the order is reversed)
+ */
 function ed_file_add_folder_to_breadcrumb($breadcrumb, $folder) {
   if ($folder->ed_file_folder_ref) {
     $folder_id = $folder->ed_file_folder_ref['und'][0]['target_id'];
@@ -73,13 +83,14 @@ function ed_file_add_folder_to_breadcrumb($breadcrumb, $folder) {
  *   HTML produced by theme_breadcrumb.
  */
 function ed_file_and_folder_breadcrumb($node = NULL) {
-  $breadcrumb = array(
-    l('Files', 'dashboard/files'),
-  );
+  $breadcrumb = array();
   if ($node) {
-    $breadcrumb = ed_file_add_folder_to_breadcrumb($breadcrumb, $node);
     $breadcrumb[] = $node->title;
+    $breadcrumb = ed_file_add_folder_to_breadcrumb($breadcrumb, $node);
   }
+  $breadcrumb[] = l('Files', 'dashboard/files');
+  // Breadcrumbs are in reverse order, need to change positioning
+  $breadcrumb = array_reverse($breadcrumb);
 
   return theme_breadcrumb(array('breadcrumb' => $breadcrumb));
 }
