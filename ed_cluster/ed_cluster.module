@@ -54,7 +54,7 @@ function ed_cluster_menu() {
     'weight' => 50,
   );
   $items['node/%node/learning-resource'] = array(
-    'title' => t('Learning Resource'),
+    'title' => t('Learning Resources'),
     'page callback' => 'ed_listing_from_group',    
     'access callback' => 'ed_group_content_listing_access',    
     'page arguments' => array('node', 1, 'ed_learning_resource'),
@@ -72,7 +72,7 @@ function ed_cluster_menu() {
     'weight' => 50,
   );
   $items['node/%node/page'] = array(
-    'title' => t('Page'),
+    'title' => t('Pages'),
     'page callback' => 'ed_listing_from_group',    
     'access callback' => 'ed_group_content_listing_access',
     'page arguments' => array('node', 1, 'ed_page'),
