@@ -140,12 +140,20 @@ function ed_cluster_node_view($node, $view_mode, $langcode){
             'destination' => 'node/'.$node->nid,
           ),
         );
+
+        // Check if current user is a member of the group
+        $is_group_member = og_is_member('node', $node->nid);
+
         foreach($types_unique as $type){
           if($type!='ed_task' && $type!='ed_answer'){
             $node->content['ed_cluster_content'][$type]['heading'] = array(
               '#type' => 'markup',
-              '#markup' => '<h2 class="'.$type.'">'.t(ucwords(str_replace('ed', '', str_replace('_',' ',$type)))).'</h2>'.'<em class="ed-og-add-new">'.l(t('Add new'), 'node/add/'.str_replace('_', '-',$type), $options).'</em>',
+              '#markup' => '<h2 class="'.$type.'">'.t(ucwords(str_replace('ed', '', str_replace('_',' ',$type)))).'</h2>',
             );
+            // Add new link is only shown to group members
+            if ($is_group_member) {
+              $node->content['ed_cluster_content'][$type]['heading']['#markup'] .= '<em class="ed-og-add-new">'.l(t('Add new'), 'node/add/'.str_replace('_', '-',$type), $options).'</em>';
+            }
             $last_nodes = _ed_get_last_content_by_type($type, $content);
             foreach($last_nodes as $last_node_single){
                 $tere = node_view($last_node_single, 'teaser');
