@@ -26,12 +26,21 @@ function ed_task_form($node, $form_state) {
   return node_content_form($node, $form_state);
 }
 
+function _ed_task_menu_title() {
+  $unanswered_tasks_count = _ed_get_user_unanswered_tasks_count($GLOBALS['user']);
+  if ($unanswered_tasks_count > 0) {
+    return t('Tasks (@count)', array('@count' => $unanswered_tasks_count));
+  }
+  return t('Tasks');
+}
+
 /**
  * Implements hook_menu().
  */
 function ed_task_menu(){
   $items['dashboard/tasks'] = array(
-    'title' => t('Tasks'),
+    'title' => 'Tasks',
+    'title callback' => '_ed_task_menu_title',
     'page callback' => 'ed_task_listing_page',
     'access callback' => 'user_is_logged_in',
     //'access callback' => TRUE,
@@ -340,6 +349,58 @@ function _ed_get_group_tasks(){
   return $result;
 }
 
+/**
+ * Returns count of unanswered tasks for a user.
+ * @param $account
+ *   User account
+ * @return int
+ *   Number of found unanswered tasks
+ */
+function _ed_get_user_unanswered_tasks_count($account) {
+  static $count;
+
+  if (isset($count)) {
+    return $count;
+  }
+  $task_nids = array();
+
+  $query = db_select('node', 'n');
+  $query->join('field_data_field_to_user', 'tu', 'n.nid = tu.entity_id');
+  $query->fields('n', array('nid'))
+    ->addTag('node_access')
+    ->condition('n.type', 'ed_task')
+    ->condition('tu.field_to_user_target_id', $account->uid);
+
+  // Get all task identifiers given directly to a user
+  $task_nids = $query->execute()->fetchCol();
+
+  $groups = og_get_groups_by_user($account, 'node');
+  if ($groups && is_array($groups) && sizeof($groups) > 0) {
+    $query = db_select('node', 'n');
+    $query->join('og_membership', 'og', 'n.nid = og.etid');
+    $query->fields('n', array('nid'))
+      ->addTag('node_access')
+      ->condition('n.type', 'ed_task')
+      ->condition('og.gid', $groups, "IN");
+
+    // Merge all task identifiers given to user groups
+    // Make sure that identifiers are unique
+    $task_nids = array_unique(array_merge($task_nids, $query->execute()->fetchCol()));
+  }
+
+  $count = sizeof($task_nids);
+
+  $query = db_select('node', 'n')
+    ->fields('n', array('nid'))
+    ->addTag('node_access')
+    ->condition('n.type', 'ed_answer')
+    ->condition('n.uid', $account->uid);
+
+  // Substract the number of answers created by user
+  $count -= $query->countQuery()->execute()->fetchField();
+
+  return $count;
+}
 
 /**
  * Implements hook_ctools_plugin_api().
