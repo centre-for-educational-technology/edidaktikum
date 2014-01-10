@@ -17,53 +17,53 @@ function ed_task_default_page_manager_handlers() {
 
 function _ed_task_edit_page_handler(){
   $handler = new stdClass();
-  $handler->disabled = FALSE; /* Edit this to true to make a default handler disabled initially */
-  $handler->api_version = 1;
-  $handler->name = 'node_edit_panel_ed_task';
-  $handler->task = 'node_edit';
-  $handler->subtask = '';
-  $handler->handler = 'panel_context';
-  $handler->weight = 0;
-  $handler->conf = array(
-    'title' => 'Task add/edit',
-    'no_blocks' => 0,
-    'pipeline' => 'standard',
-    'css_id' => '',
-    'css' => '',
-    'contexts' => array(),
-    'relationships' => array(),
-    'access' => array(
-      'plugins' => array(
-        0 => array(
-          'name' => 'node_type',
-          'settings' => array(
-            'type' => array(
-              'ed_task' => 'ed_task',
-            ),
+$handler->disabled = FALSE; /* Edit this to true to make a default handler disabled initially */
+$handler->api_version = 1;
+$handler->name = 'node_edit_panel_ed_task';
+$handler->task = 'node_edit';
+$handler->subtask = '';
+$handler->handler = 'panel_context';
+$handler->weight = 0;
+$handler->conf = array(
+  'title' => 'Task add/edit',
+  'no_blocks' => 0,
+  'pipeline' => 'standard',
+  'css_id' => '',
+  'css' => '',
+  'contexts' => array(),
+  'relationships' => array(),
+  'access' => array(
+    'plugins' => array(
+      0 => array(
+        'name' => 'node_type',
+        'settings' => array(
+          'type' => array(
+            'ed_task' => 'ed_task',
           ),
-          'context' => 'argument_node_edit_1',
-          'not' => FALSE,
         ),
+        'context' => 'argument_node_edit_1',
+        'not' => FALSE,
       ),
-      'logic' => 'and',
     ),
-  );
-  $display = new panels_display();
-  $display->layout = 'twocol_stacked';
-  $display->layout_settings = array();
-  $display->panel_settings = array(
-    'style_settings' => array(
-      'default' => NULL,
-      'top' => NULL,
-      'left' => NULL,
-      'right' => NULL,
-      'bottom' => NULL,
-    ),
-  );
-  $display->cache = array();
-  $display->title = '';
-  $display->content = array();
-  $display->panels = array();
+    'logic' => 'and',
+  ),
+);
+$display = new panels_display();
+$display->layout = 'twocol_stacked';
+$display->layout_settings = array();
+$display->panel_settings = array(
+  'style_settings' => array(
+    'default' => NULL,
+    'top' => NULL,
+    'left' => NULL,
+    'right' => NULL,
+    'bottom' => NULL,
+  ),
+);
+$display->cache = array();
+$display->title = '';
+$display->content = array();
+$display->panels = array();
   $pane = new stdClass();
   $pane->pid = 'new-1';
   $pane->panel = 'bottom';
@@ -89,8 +89,8 @@ function _ed_task_edit_page_handler(){
   $pane = new stdClass();
   $pane->pid = 'new-2';
   $pane->panel = 'left';
-  $pane->type = 'form';
-  $pane->subtype = 'form';
+  $pane->type = 'node_form_title';
+  $pane->subtype = 'node_form_title';
   $pane->shown = TRUE;
   $pane->access = array();
   $pane->configuration = array(
@@ -105,60 +105,14 @@ function _ed_task_edit_page_handler(){
   $pane->css = array();
   $pane->extras = array();
   $pane->position = 0;
-  $pane->locks = '';
+  $pane->locks = array();
   $display->content['new-2'] = $pane;
   $display->panels['left'][0] = 'new-2';
   $pane = new stdClass();
   $pane->pid = 'new-3';
-  $pane->panel = 'right';
+  $pane->panel = 'left';
   $pane->type = 'entity_form_field';
-  $pane->subtype = 'node:ed_task_due_date';
-  $pane->shown = TRUE;
-  $pane->access = array();
-  $pane->configuration = array(
-    'formatter' => '',
-    'context' => 'argument_node_edit_1',
-    'override_title' => 0,
-    'override_title_text' => '',
-  );
-  $pane->cache = array();
-  $pane->style = array(
-    'settings' => NULL,
-  );
-  $pane->css = array();
-  $pane->extras = array();
-  $pane->position = 0;
-  $pane->locks = '';
-  $display->content['new-3'] = $pane;
-  $display->panels['right'][0] = 'new-3';
-  $pane = new stdClass();
-  $pane->pid = 'new-4';
-  $pane->panel = 'right';
-  $pane->type = 'entity_form_field';
-  $pane->subtype = 'node:og_group_ref';
-  $pane->shown = TRUE;
-  $pane->access = array();
-  $pane->configuration = array(
-    'formatter' => '',
-    'context' => 'argument_node_edit_1',
-    'override_title' => 0,
-    'override_title_text' => '',
-  );
-  $pane->cache = array();
-  $pane->style = array(
-    'settings' => NULL,
-  );
-  $pane->css = array();
-  $pane->extras = array();
-  $pane->position = 1;
-  $pane->locks = '';
-  $display->content['new-4'] = $pane;
-  $display->panels['right'][1] = 'new-4';
-  $pane = new stdClass();
-  $pane->pid = 'new-5';
-  $pane->panel = 'right';
-  $pane->type = 'entity_form_field';
-  $pane->subtype = 'node:field_to_user';
+  $pane->subtype = 'node:ed_field_content';
   $pane->shown = TRUE;
   $pane->access = array();
   $pane->configuration = array(
@@ -174,13 +128,13 @@ function _ed_task_edit_page_handler(){
   );
   $pane->css = array();
   $pane->extras = array();
-  $pane->position = 2;
+  $pane->position = 1;
   $pane->locks = array();
-  $display->content['new-5'] = $pane;
-  $display->panels['right'][2] = 'new-5';
+  $display->content['new-3'] = $pane;
+  $display->panels['left'][1] = 'new-3';
   $pane = new stdClass();
-  $pane->pid = 'new-6';
-  $pane->panel = 'right';
+  $pane->pid = 'new-4';
+  $pane->panel = 'left';
   $pane->type = 'entity_form_field';
   $pane->subtype = 'node:ed_field_category';
   $pane->shown = TRUE;
@@ -200,13 +154,13 @@ function _ed_task_edit_page_handler(){
     'css_class' => '',
   );
   $pane->extras = array();
-  $pane->position = 3;
+  $pane->position = 2;
   $pane->locks = '';
-  $display->content['new-6'] = $pane;
-  $display->panels['right'][3] = 'new-6';
+  $display->content['new-4'] = $pane;
+  $display->panels['left'][2] = 'new-4';
   $pane = new stdClass();
-  $pane->pid = 'new-7';
-  $pane->panel = 'right';
+  $pane->pid = 'new-5';
+  $pane->panel = 'left';
   $pane->type = 'entity_form_field';
   $pane->subtype = 'node:ed_field_competence';
   $pane->shown = TRUE;
@@ -227,13 +181,129 @@ function _ed_task_edit_page_handler(){
     'css_class' => '',
   );
   $pane->extras = array();
+  $pane->position = 3;
+  $pane->locks = array();
+  $display->content['new-5'] = $pane;
+  $display->panels['left'][3] = 'new-5';
+  $pane = new stdClass();
+  $pane->pid = 'new-6';
+  $pane->panel = 'left';
+  $pane->type = 'entity_form_field';
+  $pane->subtype = 'node:group_content_access';
+  $pane->shown = TRUE;
+  $pane->access = array();
+  $pane->configuration = array(
+    'label' => '',
+    'formatter' => '',
+    'context' => 'argument_node_edit_1',
+    'override_title' => 0,
+    'override_title_text' => '',
+  );
+  $pane->cache = array();
+  $pane->style = array(
+    'settings' => NULL,
+  );
+  $pane->css = array();
+  $pane->extras = array();
   $pane->position = 4;
   $pane->locks = array();
+  $display->content['new-6'] = $pane;
+  $display->panels['left'][4] = 'new-6';
+  $pane = new stdClass();
+  $pane->pid = 'new-7';
+  $pane->panel = 'left';
+  $pane->type = 'node_form_buttons';
+  $pane->subtype = 'node_form_buttons';
+  $pane->shown = TRUE;
+  $pane->access = array();
+  $pane->configuration = array(
+    'context' => 'argument_node_edit_1',
+    'override_title' => 0,
+    'override_title_text' => '',
+  );
+  $pane->cache = array();
+  $pane->style = array(
+    'settings' => NULL,
+  );
+  $pane->css = array();
+  $pane->extras = array();
+  $pane->position = 5;
+  $pane->locks = array();
   $display->content['new-7'] = $pane;
-  $display->panels['right'][4] = 'new-7';
-  $display->hide_title = PANELS_TITLE_FIXED;
-  $display->title_pane = '0';
-  $handler->conf['display'] = $display;
+  $display->panels['left'][5] = 'new-7';
+  $pane = new stdClass();
+  $pane->pid = 'new-8';
+  $pane->panel = 'right';
+  $pane->type = 'entity_form_field';
+  $pane->subtype = 'node:ed_task_due_date';
+  $pane->shown = TRUE;
+  $pane->access = array();
+  $pane->configuration = array(
+    'formatter' => '',
+    'context' => 'argument_node_edit_1',
+    'override_title' => 0,
+    'override_title_text' => '',
+  );
+  $pane->cache = array();
+  $pane->style = array(
+    'settings' => NULL,
+  );
+  $pane->css = array();
+  $pane->extras = array();
+  $pane->position = 0;
+  $pane->locks = '';
+  $display->content['new-8'] = $pane;
+  $display->panels['right'][0] = 'new-8';
+  $pane = new stdClass();
+  $pane->pid = 'new-9';
+  $pane->panel = 'right';
+  $pane->type = 'entity_form_field';
+  $pane->subtype = 'node:og_group_ref';
+  $pane->shown = TRUE;
+  $pane->access = array();
+  $pane->configuration = array(
+    'formatter' => '',
+    'context' => 'argument_node_edit_1',
+    'override_title' => 0,
+    'override_title_text' => '',
+  );
+  $pane->cache = array();
+  $pane->style = array(
+    'settings' => NULL,
+  );
+  $pane->css = array();
+  $pane->extras = array();
+  $pane->position = 1;
+  $pane->locks = '';
+  $display->content['new-9'] = $pane;
+  $display->panels['right'][1] = 'new-9';
+  $pane = new stdClass();
+  $pane->pid = 'new-10';
+  $pane->panel = 'right';
+  $pane->type = 'entity_form_field';
+  $pane->subtype = 'node:field_to_user';
+  $pane->shown = TRUE;
+  $pane->access = array();
+  $pane->configuration = array(
+    'label' => '',
+    'formatter' => '',
+    'context' => 'argument_node_edit_1',
+    'override_title' => 0,
+    'override_title_text' => '',
+  );
+  $pane->cache = array();
+  $pane->style = array(
+    'settings' => NULL,
+  );
+  $pane->css = array();
+  $pane->extras = array();
+  $pane->position = 2;
+  $pane->locks = array();
+  $display->content['new-10'] = $pane;
+  $display->panels['right'][2] = 'new-10';
+$display->hide_title = PANELS_TITLE_FIXED;
+$display->title_pane = '0';
+$handler->conf['display'] = $display;
 
   return $handler;
 }

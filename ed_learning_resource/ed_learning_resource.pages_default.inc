@@ -399,9 +399,9 @@ $display->panels = array();
   $pane->locks = array();
   $display->content['new-14'] = $pane;
   $display->panels['right'][6] = 'new-14';
-  $display->hide_title = PANELS_TITLE_FIXED;
-  $display->title_pane = '0';
-  $handler->conf['display'] = $display;
+$display->hide_title = PANELS_TITLE_FIXED;
+$display->title_pane = '0';
+$handler->conf['display'] = $display;
 
     return $handler;
   }
