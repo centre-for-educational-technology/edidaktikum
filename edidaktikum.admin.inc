@@ -88,6 +88,56 @@ function edidaktikum_promoted_resources_page_admin_form(){
   return system_settings_form($form);
 }
 
+function edidaktikum_promoted_events_page_admin_form(){
+  $form = array();
+  $nids = ed_get_promoted_by_node_type('ed_event');
+  if(!$nids){
+    $form['form']['promoted_events'] = array(
+      '#type' => 'markup',
+      '#markup' => '<h2>'.t('No Promoted Events Found').'</h2>',
+    );
+    return ($form);
+  }
+  $events = node_load_multiple($nids);   //@todo Cancel everything if this is empty !!!!!!
+  $options = array();
+  foreach($events as $event){
+    $options[$event->nid] = $event->title." - ".$event->name." - ".format_date($event->created,'custom','d/m/Y');
+  }
+  $form['form']['event_to_front'] = array(
+    '#type' => 'radios',
+    '#title' => t('Choose Event to display on front page'),
+    '#options' => $options,
+    '#default_value' => variable_get('event_to_front'),
+  );
+
+  return system_settings_form($form);
+}
+
+function edidaktikum_promoted_news_page_admin_form(){
+  $form = array();
+  $nids = ed_get_promoted_by_node_type('ed_news');
+  if(!$nids){
+    $form['form']['promoted_news'] = array(
+      '#type' => 'markup',
+      '#markup' => '<h2>'.t('No Promoted News Found').'</h2>',
+    );
+    return ($form);
+  }
+  $news = node_load_multiple($nids);   //@todo Cancel everything if this is empty !!!!!!
+  $options = array();
+  foreach($news as $single){
+    $options[$single->nid] = $single->title." - ".$single->name." - ".format_date($single->created,'custom','d/m/Y');
+  }
+  $form['form']['news_to_front'] = array(
+    '#type' => 'radios',
+    '#title' => t('Choose News to display on front page'),
+    '#options' => $options,
+    '#default_value' => variable_get('news_to_front'),
+  );
+
+  return system_settings_form($form);
+}
+
 function edidaktikum_configuration_page_admin_form(){
 
   $form['form']['ed_paging'] = array(

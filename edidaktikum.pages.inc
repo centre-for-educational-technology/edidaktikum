@@ -44,8 +44,8 @@ function edidaktikum_home_page() {
   );
 
   if (module_exists('ed_news')) {
-    $latest_news = ed_news_get_latest_news();
-    if (!empty($latest_news)) {
+    $news = node_load(variable_get('news_to_front'));
+    if (!empty($news)) {
       $content['latest-content']['news'] = array(
         '#type' => 'container',
         '#attributes' => array(
@@ -56,13 +56,13 @@ function edidaktikum_home_page() {
         '#type' => 'markup',
         '#markup' => '<h1>' . t('News') .'</h1>',
       );
-      $content['latest-content']['news']['content'] = node_view($latest_news, 'front');
+      $content['latest-content']['news']['content'] = node_view($news, 'front');
     }
   }
 
   if (module_exists('ed_event')) {
-    $latest_event = ed_event_get_latest_event();
-    if (!empty($latest_event)) {
+    $event = node_load(variable_get('event_to_front'));
+    if (!empty($event)) {
       $content['latest-content']['event'] = array(
         '#type' => 'container',
         '#attributes' => array(
@@ -73,7 +73,7 @@ function edidaktikum_home_page() {
         '#type' => 'markup',
         '#markup' => '<h1>' . t('Event') .'</h1>',
       );
-      $content['latest-content']['event']['content'] = node_view($latest_event, 'front');
+      $content['latest-content']['event']['content'] = node_view($event, 'front');
     }
   }
   if (module_exists('ed_learning_resource')) {
