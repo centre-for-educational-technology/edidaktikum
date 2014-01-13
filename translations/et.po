@@ -62,7 +62,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: 2013-12-11 14:39+0200\n"
-"PO-Revision-Date: 2013-12-16 15:08+0200\n"
+"PO-Revision-Date: 2014-01-13 16:33+0200\n"
 "Last-Translator: Priit Tammets <tammets@gmail.com>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "MIME-Version: 1.0\n"
@@ -447,14 +447,12 @@ msgid "Journal"
 msgstr "Päevik"
 
 #: ed_bookmark/ed_bookmark.info:0
-#, fuzzy
 msgid "eDidaktikum Bookmark"
-msgstr "eDidaktikumi ajaveeb"
+msgstr "eDidaktikumi järjehoidja"
 
 #: ed_bookmark/ed_bookmark.info:0
-#, fuzzy
 msgid "eDidaktikum Bookmark content type."
-msgstr "eDidaktikumi ajaveebi sisutüüp"
+msgstr "eDidaktikumi järjehoidja sisutüüp."
 
 #: ed_cluster/ed_cluster.module:21
 msgid "Task Manager"
@@ -485,9 +483,8 @@ msgid "Add new task"
 msgstr "Lisa uus ülesanne"
 
 #: ed_cluster/ed_cluster.module:258
-#, fuzzy
 msgid "Name"
-msgstr "Ees- ja perenimi"
+msgstr "Nimi"
 
 #: ed_cluster/ed_cluster.module:377
 msgid "Add new group"
@@ -535,26 +532,22 @@ msgid "Recent updates"
 msgstr "Viimased muudatused"
 
 #: ed_dashboard/ed_dashboard.module:56 ed_task/ed_task.module:123;159
-#, fuzzy
 msgid "Answered"
-msgstr "Vasta"
+msgstr "Vastatud"
 
 #: ed_dashboard/ed_dashboard.module:56 ed_task/ed_task.module:123;159
-#, fuzzy
 msgid "Unanswered"
-msgstr "Vasta"
+msgstr "Vastamata"
 
 #: ed_dashboard/ed_dashboard.module:65
-#, fuzzy
 msgid "Answer to: "
-msgstr "Ülesande vastus"
+msgstr "Vastus ülesandele:"
 
 #: ed_dashboard/ed_dashboard.module:84
 msgid "Update"
 msgstr "Uuenda"
 
 #: ed_dashboard/ed_dashboard.module:84
-#, fuzzy
 msgid "Last Changed"
 msgstr "Muudetud"
 
@@ -724,14 +717,12 @@ msgid "Entity Reference"
 msgstr ""
 
 #: ed_forum/ed_forum.info:0
-#, fuzzy
 msgid "eDidaktikum Forum"
-msgstr "eDidaktikumi ajaveeb"
+msgstr "eDidaktikumi Foorum"
 
 #: ed_forum/ed_forum.info:0
-#, fuzzy
 msgid "eDidaktikum Forum content type."
-msgstr "eDidaktikumi ajaveebi sisutüüp"
+msgstr "eDidaktikumi foorumi sisutüüp"
 
 #: ed_learning_resource/ed_learning_resource_ajax.inc:20;119
 #: ed_learning_resource/ed_learning_resource.module:61;112;203;229
@@ -989,14 +980,12 @@ msgid "eDidaktikum news."
 msgstr "eDidaktikumi uudised."
 
 #: ed_page/ed_page.info:0
-#, fuzzy
 msgid "eDidaktikum Page"
-msgstr "eDidaktikum"
+msgstr "eDidaktikumi leht"
 
 #: ed_page/ed_page.info:0
-#, fuzzy
 msgid "eDidaktikum Page content type."
-msgstr "eDidaktikumi ajaveebi sisutüüp"
+msgstr "eDidaktikumi lehekülje sisutüüp"
 
 #: ed_portfolio/ed_portfolio.module:13 ed_portfolio/ed_portfolio.install:63
 msgid "Portfolio"
