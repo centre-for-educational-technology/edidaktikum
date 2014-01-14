@@ -117,12 +117,18 @@ function _get_type($node){
   }
 }
 
+/**
+ * Returns all ed_blog and ed_answer identifiers belonging for current user.
+ */
+// TODO Consider changing name to reflect that only objects that belong to
+// currently logged in user are returned.
 function _ed_get_blogs() {
   $help = array('ed_blog', 'ed_answer');
   $query = db_select('node', 'n')
     ->addTag('node_access')
     ->fields('n', array('nid'));
-  $query->condition('type', $help, 'IN');
+  $query->condition('type', $help, 'IN')
+    ->condition('n.uid', $GLOBALS['user']->uid);
   $query = $query->extend('TableSort')->extend('PagerDefault')->limit(ed_get_paging_nr());
   $result = $query->execute()->fetchCol();
 
