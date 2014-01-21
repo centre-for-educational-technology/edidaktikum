@@ -189,6 +189,79 @@ function ed_task_node_view($node, $view_mode, $langcode) {
   switch($node->type) {
     case 'ed_task':
       $acc = $GLOBALS['user'];
+
+      // Show owner answer info
+      if ($node->uid === $acc->uid) {
+        $node->content['ed_task_answers_listing']['answers-heading'] = array(
+          '#type' => 'markup',
+          '#markup' => t('Answers'),
+          '#prefix' => '<h3>',
+          '#suffix' => '</h3>',
+        );
+
+        $node->content['ed_task_answers_listing']['answers-by-groups'] = array(
+          '#type' => 'markup',
+          '#markup' => t('Answers by groups'),
+          '#prefix' => '<h4>',
+          '#suffix' => '</h4>',
+        );
+        $listing_items = array();
+        if (isset($node->og_group_ref['und']) && is_array($node->og_group_ref['und'])) {
+          $group_ids = $node->og_group_ref['und'];
+        }
+        if (!empty($group_ids)) {
+          $groups = node_load_multiple(array_map(function($element) { return $element['target_id']; }, $group_ids));
+        }
+        if (!empty($groups)) {
+          foreach ($groups as $group) {
+            $listing_items[] = l($group->title, 'node/' . $group->nid . '/task-manager');
+          }
+        }
+        $node->content['ed_task_answers_listing']['answers-by-groups-listing'] = array(
+          '#theme' => 'item_list',
+          '#items' => $listing_items,
+        );
+
+        $node->content['ed_task_answers_listing']['answers-by-users'] = array(
+          '#type' => 'markup',
+          '#markup' => t('Answers by users'),
+          '#prefix' => '<h4>',
+          '#suffix' => '</h4>',
+        );
+
+        if (isset($node->field_to_user['und']) && is_array($node->field_to_user['und'])) {
+          $user_ids = $node->field_to_user['und'];
+        }
+        if (!empty($user_ids)) {
+          $users = user_load_multiple(array_map(function($element) { return $element['target_id']; }, $user_ids));
+        }
+        $rows = array();
+
+        if (!empty($users)) {
+          $i_number = 1;
+          drupal_add_css(drupal_get_path('module', 'ed_cluster').'/task_manager.css');
+          foreach ($users as $user) {
+            $answer = _get_user_answer_from_task($node->nid, $user->uid);
+            $rows[] = array(
+              'data' => array(
+                'number' => $i_number,
+                'name' =>  isset($user->ed_field_full_name['und'][0]['safe_value']) ? $user->ed_field_full_name['und'][0]['safe_value'] : $user->name,
+                'answer' => array(
+                  'data' => ($answer) ? l('&nbsp;', 'node/' . $answer->nid, array('html' => TRUE)) : '',
+                  'class' => ($answer) ? 'answered' : 'unanswered',
+                ),
+                'submitted' => ($answer) ? format_date($answer->created, 'medium') : '',
+              ),
+            );
+            $i_number++;
+          }
+        }
+        $node->content['ed_task_answers_listing']['answers-by-users-table'] = array(
+          '#theme' => 'table',
+          '#rows'=> $rows,
+          '#header' => array('#', t('Name'), t('Answer'), t('Submitted')),
+        );
+      }
       
       if($node->uid == $acc->uid && !(recursive_array_search($node->uid, $node->field_to_user))){
         break;
@@ -224,6 +297,21 @@ function ed_task_node_view($node, $view_mode, $langcode) {
   }
 }
 
+function _get_user_answer_from_task($task, $uid){
+  $query = db_select('node', 'n');
+  $query->join('field_data_field_ref_to_task', 'b', 'n.nid = b.entity_id');
+  $query->fields('n', array('nid', 'created'))
+    ->condition('n.uid', $uid)
+    ->condition('n.type', 'ed_answer');
+  $query->condition('b.field_ref_to_task_target_id', $task);
+
+  $result = $query->execute()->fetchAll();
+  if ($result) {
+    return $result['0'];
+  }
+  return false;
+}
+
 function _get_answer_from_task($task){
   $acc = $GLOBALS['user'];
   $query = db_select('node', 'n');
@@ -244,7 +332,13 @@ function ed_task_field_extra_fields() {
       'description' => t('extra fields descrption'),
       'weight' => 10,
     ),
+    'ed_task_answers_listing' => array(
+      'label' => t('Task answers listing'),
+      'description' => t('Task answers listing'),
+      'weight' => 11,
+    ),
   );
+
   return $extra;
 }
 function ed_task_form_alter(&$form, $form_state, $form_id) {

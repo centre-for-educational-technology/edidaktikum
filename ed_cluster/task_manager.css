@@ -1,6 +1,13 @@
 .answered{
     background-color:#00FF00;
 }
+.answered a {
+	display: block;
+	text-decoration: none;
+}
+.answered a:hover {
+	text-decoration: none;
+}
 .unanswered{
     background-color: #DDDDDD;
 }
