@@ -91,7 +91,7 @@ function ed_answer_install() {
     ),
   ));
   field_create_instance(array(
-    'label' => 'ref_to_task',
+    'label' => 'Task',
     'widget' => array(
       'weight' => '-1',
       'type' => 'entityreference_autocomplete_tags',
@@ -121,7 +121,7 @@ function ed_answer_install() {
         'label' => 'above',
         'type' => 'entityreference_label',
         'settings' => array(
-          'link' => FALSE,
+          'link' => TRUE,
         ),
         'module' => 'entityreference',
         'weight' => 3,
