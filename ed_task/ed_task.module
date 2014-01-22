@@ -222,13 +222,6 @@ function ed_task_node_view($node, $view_mode, $langcode) {
           '#items' => $listing_items,
         );
 
-        $node->content['ed_task_answers_listing']['answers-by-users'] = array(
-          '#type' => 'markup',
-          '#markup' => t('Answers by users'),
-          '#prefix' => '<h4>',
-          '#suffix' => '</h4>',
-        );
-
         if (isset($node->field_to_user['und']) && is_array($node->field_to_user['und'])) {
           $user_ids = $node->field_to_user['und'];
         }
@@ -239,7 +232,6 @@ function ed_task_node_view($node, $view_mode, $langcode) {
 
         if (!empty($users)) {
           $i_number = 1;
-          drupal_add_css(drupal_get_path('module', 'ed_cluster').'/task_manager.css');
           foreach ($users as $user) {
             $answer = _get_user_answer_from_task($node->nid, $user->uid);
             $rows[] = array(
@@ -256,11 +248,21 @@ function ed_task_node_view($node, $view_mode, $langcode) {
             $i_number++;
           }
         }
-        $node->content['ed_task_answers_listing']['answers-by-users-table'] = array(
-          '#theme' => 'table',
-          '#rows'=> $rows,
-          '#header' => array('#', t('Name'), t('Answer'), t('Submitted')),
-        );
+
+        if (!empty($rows)) {
+          $node->content['ed_task_answers_listing']['answers-by-users'] = array(
+            '#type' => 'markup',
+            '#markup' => t('Answers by users'),
+            '#prefix' => '<h4>',
+            '#suffix' => '</h4>',
+          );
+          drupal_add_css(drupal_get_path('module', 'ed_cluster').'/task_manager.css');
+          $node->content['ed_task_answers_listing']['answers-by-users-table'] = array(
+            '#theme' => 'table',
+            '#rows'=> $rows,
+            '#header' => array('#', t('Name'), t('Answer'), t('Submitted')),
+          );
+        }
       }
       
       if($node->uid == $acc->uid && !(recursive_array_search($node->uid, $node->field_to_user))){
@@ -297,6 +299,17 @@ function ed_task_node_view($node, $view_mode, $langcode) {
   }
 }
 
+/**
+ * Returns an object with answer data using task and user identifier
+ * as conditions. In case no answer exists FALSE is returned.
+ * Currently returned data is: nid and created
+ * @param $task
+ *   Task nid
+ * @param $uid
+ *   User uid
+ * @returned mixed
+ *   Object with data or FALSE
+ */
 function _get_user_answer_from_task($task, $uid){
   $query = db_select('node', 'n');
   $query->join('field_data_field_ref_to_task', 'b', 'n.nid = b.entity_id');

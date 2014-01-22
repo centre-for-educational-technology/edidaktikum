@@ -300,7 +300,7 @@ function ed_task_manager($test, $node){
       foreach($nodes as $node_single){
         if(_ed_check_if_answered($member->uid, $node_single->nid)=='answered'){
           $tmp_answer_nid = _ed_get_answer_nid($member->uid, $node_single->nid);
-          $rows[$index]['data'][$node_single->nid] = array('data' => '<a href="../'.  $tmp_answer_nid[0].'" style="display:block; text-decoration: none;">&nbsp;</a>', 'class' => _ed_check_if_answered($member->uid, $node_single->nid));          
+          $rows[$index]['data'][$node_single->nid] = array('data' => l('&nbsp;', 'node/' . $tmp_answer_nid[0], array('html' => TRUE)), 'class' => _ed_check_if_answered($member->uid, $node_single->nid));
         }else{
           $rows[$index]['data'][$node_single->nid] = array('data' => '', 'class' => _ed_check_if_answered($member->uid, $node_single->nid));
         }
