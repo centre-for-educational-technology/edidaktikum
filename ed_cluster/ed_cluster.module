@@ -224,6 +224,11 @@ function _ed_get_group_content_by_type($gid, $type){
   return $result;
 }
 
+// XXX This method seems to be also called out while trying to view task view/edit page.
+// This method is being called on a lot of pages, it needs to be optimized. Loading all
+// user tasks and going those ony by one is not an option. One could create a count query
+// that would fetch all user tasks count that are given to some group. This could be a lot quicker.
+// In addition this method only checks the first group being references and a task can reference multiple groups.
 function ed_task_manager_access($test, $node){
   $account = $GLOBALS['user'];
   $task_nids = ed_get_user_tasks($test, $node);
@@ -232,7 +237,7 @@ function ed_task_manager_access($test, $node){
   if(!empty($task_nids) && (in_array('teacher', $account->roles)|| in_array('administrator', $account->roles))){
     $nodes = node_load_multiple($task_nids);
     foreach($nodes as $nodesingle){
-      if($nodesingle->og_group_ref[LANGUAGE_NONE][0]['target_id'] == $node->nid){         // CHECK FOR ALL og_group_ref's
+      if(!empty($nodesingle->og_group_ref[LANGUAGE_NONE]) && $nodesingle->og_group_ref[LANGUAGE_NONE][0]['target_id'] == $node->nid){         // CHECK FOR ALL og_group_ref's
         return true;
       }
     }
