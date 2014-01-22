@@ -47,6 +47,14 @@ function ed_blog_menu() {
     'menu_name' => 'ed-dashboard-menu',
     'type' => MENU_NORMAL_ITEM,
   );
+  $items['user/%user/blog'] = array(
+    'title' => 'Blog',
+    'page callback' => 'ed_blog_user_profile_blog_listing_page',
+    'page arguments' => array(1),
+    'access callback' => 'user_is_logged_in',
+    'weight' => 10,
+    'type' => MENU_LOCAL_TASK,
+  );
   return $items;
 }
 
@@ -64,7 +72,7 @@ function ed_blog_listing_page() {
 
   $table_type = 'pager_table';
 
-  $nids = _ed_get_blogs();
+  $nids = _ed_get_user_blogs($GLOBALS['user']->uid);
   $nodes = node_load_multiple($nids);
   $rows = array();
   foreach($nodes as $node) {
@@ -98,6 +106,44 @@ function ed_blog_listing_page() {
   return $content;
 
 }
+
+function ed_blog_user_profile_blog_listing_page($user) {
+
+  $content = array();
+  // TODO Set it to be user fullname or username if fullname not provided
+  drupal_set_title(edidaktikum_get_full_name_for_user_account($user));
+
+  $table_type = 'pager_table';
+
+  $nids = _ed_get_user_blogs($user->uid);
+  $nodes = node_load_multiple($nids);
+  $rows = array();
+  foreach($nodes as $node) {
+    if ('ed_answer' === $node->type) {
+      $post_name = _get_task_name($node->field_ref_to_task['und']['0']['target_id']);
+    } else {
+      $post_name = $node->title;
+    }
+    $rows[] = array(
+      'data' => array(
+        'post_type' => _get_type($node),
+        'post_name' => l($post_name, 'node/' . $node->nid),
+        'created' => format_date($node->created, 'custom', 'd/m/Y'),
+      ),
+    );
+  }
+
+  $content[$table_type] = array(
+    '#theme' => 'table',
+    '#rows' => $rows,
+    '#header' => array(t('Type'), t('Title'), t('Date')),
+  );
+  $content['pager'] = array('#theme' => 'pager');
+  return $content;
+
+}
+
+
 function _get_task_name($nid) {
   $query = db_select('node', 'n')
     ->addTag('node_access')
@@ -108,6 +154,7 @@ function _get_task_name($nid) {
 
   return $result[0];
 }
+
 function _get_type($node){
   if($node->type == 'ed_blog'){
     return 'Post';
@@ -118,17 +165,18 @@ function _get_type($node){
 }
 
 /**
- * Returns all ed_blog and ed_answer identifiers belonging for current user.
+ * Returns all ed_blog and ed_answer identifiers belonging to
+ * specified user id. Is pagination-aware.
+ * @param $uid
+ *   User uid
  */
-// TODO Consider changing name to reflect that only objects that belong to
-// currently logged in user are returned.
-function _ed_get_blogs() {
+function _ed_get_user_blogs($uid) {
   $help = array('ed_blog', 'ed_answer');
   $query = db_select('node', 'n')
     ->addTag('node_access')
     ->fields('n', array('nid'));
   $query->condition('type', $help, 'IN')
-    ->condition('n.uid', $GLOBALS['user']->uid);
+    ->condition('n.uid', $uid);
   $query = $query->extend('TableSort')->extend('PagerDefault')->limit(ed_get_paging_nr());
   $result = $query->execute()->fetchCol();
 

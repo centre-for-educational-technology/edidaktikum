@@ -123,6 +123,17 @@ function edidaktikum_user_label_callback($account) {
   return format_username($account);
 }
 
+/**
+ * Tries to return user full_name for an account if possible.
+ * In case there is not full_name set formatted username is returned.
+ */
+function edidaktikum_get_full_name_for_user_account(&$account) {
+  if (isset($account->ed_field_full_name['und'][0]['safe_value'])) {
+    return $account->ed_field_full_name['und'][0]['safe_value'];
+  }
+  return format_username($account);
+}
+
 function edidaktikum_entity_info_alter(&$entity_info) {
   $entity_info['node']['view modes']['featured'] = array(
     'label' => t('Featured'),
