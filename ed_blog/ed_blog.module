@@ -110,12 +110,11 @@ function ed_blog_listing_page() {
 function ed_blog_user_profile_blog_listing_page($user) {
 
   $content = array();
-  // TODO Set it to be user fullname or username if fullname not provided
   drupal_set_title(edidaktikum_get_full_name_for_user_account($user));
 
   $table_type = 'pager_table';
 
-  $nids = _ed_get_user_blogs($user->uid);
+  $nids = _ed_get_user_blogs($user->uid, true);
   $nodes = node_load_multiple($nids);
   $rows = array();
   foreach($nodes as $node) {
@@ -170,8 +169,13 @@ function _get_type($node){
  * @param $uid
  *   User uid
  */
-function _ed_get_user_blogs($uid) {
-  $help = array('ed_blog', 'ed_answer');
+function _ed_get_user_blogs($uid, $only_blogs = false) {
+  if ($only_blogs) {
+    $help = array('ed_blog');
+  } else {
+    $help = array('ed_blog', 'ed_answer');
+  }
+
   $query = db_select('node', 'n')
     ->addTag('node_access')
     ->fields('n', array('nid'));
