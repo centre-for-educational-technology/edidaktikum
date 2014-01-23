@@ -463,3 +463,12 @@ function ed_cluster_ctools_plugin_api() {
   }
 }
 
+/**
+ * Implements hooks_views_api().
+ */
+function ed_cluster_views_api() {
+  return array(
+    'api' => 3,
+    'path' => drupal_get_path('module', 'ed_cluster') . '/includes/views',
+  );
+}
