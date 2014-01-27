@@ -171,6 +171,10 @@ function edidaktikum_entity_info_alter(&$entity_info) {
     'label' => t('Front'),
     'custom settings' => TRUE,
   );
+  $entity_info['node']['view modes']['dashboard'] = array(
+    'label' => t('Dashboard'),
+    'custom settings' => TRUE,
+  );
   if (isset($entity_info['user'])) {
     $entity_info['user']['label callback'] = 'edidaktikum_user_label_callback';
   }
@@ -186,6 +190,11 @@ function edidaktikum_preprocess_node(&$vars) {
     $vars['front'] = TRUE;
     $vars['theme_hook_suggestions'][] = 'node__front';
     $vars['theme_hook_suggestions'][] = 'node__' . $vars['type'] . '__front';
+  }
+  if ($vars['view_mode'] == 'dashboard') {
+    $vars['dashboard'] = TRUE;
+    $vars['theme_hook_suggestions'][] = 'node__dashboard';
+    $vars['theme_hook_suggestions'][] = 'node__' . $vars['type'] . '__dashboard';
   }
   if ('teaser' === $vars['view_mode'] && $vars['type'] !== 'ed_portfolio') {
     if (TRUE === $vars['logged_in'] && $vars['uid'] === $vars['user']->uid) {

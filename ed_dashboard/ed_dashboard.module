@@ -36,54 +36,17 @@ function ed_dashboard_page() {
  
   $content = array();
 
-  $recent_updates = ed_dashboard_get_recent_updates();
+  $og_user_groups = og_get_groups_by_user();
+  if (!empty($og_user_groups['node'])) {
+    $groups = node_load_multiple($og_user_groups['node']);
+  }
 
-  if (!empty($recent_updates)) {
-
-    $content['recent-updates-heading'] = array(
-      '#type' => 'markup',
-      '#markup' => '<h2>' . t('Recent updates') . '</h2>',
+  if (!empty($groups)) {
+    $content['groups-listing'] = node_view_multiple($groups, 'dashboard');
+    $content['groups-listing']['pager'] = array(
+      '#theme' => 'pager',
+      '#weight' => 5,
     );
-
-    $rows = array();
-    foreach ($recent_updates as $update_id) {
-      $update = node_load($update_id);      
-      switch($update->type){
-        case 'ed_task':
-          $tere = _is_task_answered($update->nid);          
-          $rows[] = array(
-            'data' => array(
-              'title' => l($update->title, 'node/' . $update->nid).' - '.($tere ? t('Answered'):t('Unanswered')),
-              'changed' => format_date($update->changed, 'short'),
-            ),
-          );
-          break;
-        case'ed_answer':
-          $task = node_load($update->field_ref_to_task['und'][0]['target_id']);
-          $rows[] = array(
-            'data' => array(
-              'title' => l(t('Answer to: ').$task->title, 'node/' . $update->nid. '/edit'),
-              'changed' => format_date($update->changed, 'short'),
-            ),
-          );
-          break;
-        default:          
-          $rows[] = array(
-            'data' => array(
-              'title' => l($update->title, 'node/' . $update->nid),
-              'changed' => format_date($update->changed, 'short'),
-            ),
-          );
-          break;
-      }      
-    }
-
-    $content['recent-updates-table'] = array(
-      '#theme' => 'table',
-      '#rows' => $rows,
-      '#header' => array(t('Update'), t('Last Changed')),
-    );
-  
   }
  
   return $content; 
