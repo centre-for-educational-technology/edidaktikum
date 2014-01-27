@@ -264,7 +264,13 @@ function cmp($a, $b){
 }
 
 /**
- * XXX Add docstring
+ * Returns recently created/modified content of the group.
+ * @param $guid
+ *   Group node identifier
+ * @param $limit
+ *   Optional number of results to be returned
+ * @return
+ *   An array of node identifiers if any exist
  */
 function _ed_get_group_recent_content($gid, $limit = NULL){
   $query = db_select('node', 'n');
@@ -272,6 +278,7 @@ function _ed_get_group_recent_content($gid, $limit = NULL){
   $query->fields('n', array('nid'))
       ->condition('ogm.gid', $gid)
       ->condition('n.nid', $gid, '!=')
+      ->addTag('node_access')
       ->orderBy('n.changed', 'DESC')
       ->distinct();
   if ($limit) {
