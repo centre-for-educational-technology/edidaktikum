@@ -6,6 +6,34 @@
  */
 
 /**
+ * Implements hook_init().
+ */
+function edidaktikum_init() {
+  $uservoice_api_key = variable_get('ed_uservoice_api_key');
+  if (!empty($uservoice_api_key)) {
+    global $language;
+    drupal_add_js(array(
+      'edidaktikum' => array(
+        'ed_uservoice_api_key' => $uservoice_api_key,
+        'locale' => $language->language,
+      ),
+    ), 'setting');
+    if (user_is_logged_in()) {
+      $acc = $GLOBALS['user'];
+      drupal_add_js(array(
+        'edidaktikum' => array(
+          'authenticated' => true,
+          'email' => $acc->mail,
+          'name' => edidaktikum_get_full_name_for_user_account($acc),
+          'created_at' => $acc->created,
+          'id' => $acc->uid,
+        ),
+      ), 'setting');
+    }
+  }
+}
+
+/**
  * Implements hook_menu().
  */
 function edidaktikum_menu() {

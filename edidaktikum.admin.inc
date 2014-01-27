@@ -147,8 +147,13 @@ function edidaktikum_configuration_page_admin_form(){
     '#default_value' => variable_get('ed_paging'),
     '#required' => TRUE,
   );
-  $pagingnr = variable_get('ed_paging');
-  variable_set('ed_paging', $pagingnr);
+  $form['ed_uservoice_api_key'] = array(
+    '#type' => 'textfield',
+    '#title' => t('UserVoice API KEY'),
+    '#description' => t('The API KEY to be used with UserVoice service'),
+    '#default_value' => variable_get('ed_uservoice_api_key'),
+    '#required' => FALSE,
+  );
   return system_settings_form($form);
 }
 function edidaktikum_statistics_page_admin_form(){

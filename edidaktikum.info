@@ -8,3 +8,5 @@ dependencies[] = taxonomy
 dependencies[] = variable
 dependencies[] = i18n_variable
 
+scripts[] = js/uservoice.js
+
