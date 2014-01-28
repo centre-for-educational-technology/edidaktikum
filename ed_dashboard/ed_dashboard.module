@@ -62,7 +62,7 @@ function _ed_dashboard_get_current_user_groups() {
   $query = db_select('node', 'n')
     ->extend('PagerDefault')
     ->limit(ed_get_paging_nr());
-  $query->join('og_membership', 'ogm', "n.nid = ogm.gid AND ogm.entity_type = 'user' AND ogm.state = :active AND ogm.etid = :uid", array(':active' => OG_STATE_ACTIVE, ':uid' => $acc->uid));
+  $query->join('og_membership', 'ogm', "n.nid = ogm.gid AND ogm.entity_type = 'user' AND ogm.group_type = 'node' AND ogm.state = :active AND ogm.etid = :uid", array(':active' => OG_STATE_ACTIVE, ':uid' => $acc->uid));
   $query->fields('n', array('nid'))
     ->condition('n.type', 'ed_cluster')
     ->addTag('node_access');
