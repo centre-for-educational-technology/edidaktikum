@@ -36,20 +36,37 @@ function ed_dashboard_page() {
  
   $content = array();
 
-  $og_user_groups = og_get_groups_by_user();
-  if (!empty($og_user_groups['node'])) {
-    $groups = node_load_multiple($og_user_groups['node']);
+  $group_nids = _ed_dashboard_get_current_user_groups();
+  if (!empty($group_nids)) {
+    $groups = node_load_multiple($group_nids);
   }
 
   if (!empty($groups)) {
     $content['groups-listing'] = node_view_multiple($groups, 'dashboard');
-    // There currently is not pagination
-    /*$content['groups-listing']['pager'] = array(
+    $content['groups-listing']['pager'] = array(
       '#theme' => 'pager',
       '#weight' => 5,
-    );*/
+    );
   }
  
   return $content; 
+}
+
+/**
+ * Returns ed_cluster node identifiers that current user is an active
+ * member of.
+ * Uses pager extender.
+ */
+function _ed_dashboard_get_current_user_groups() {
+  $acc = $GLOBALS['user'];
+  $query = db_select('node', 'n')
+    ->extend('PagerDefault')
+    ->limit(ed_get_paging_nr());
+  $query->join('og_membership', 'ogm', "n.nid = ogm.gid AND ogm.entity_type = 'user' AND ogm.state = :active AND ogm.etid = :uid", array(':active' => OG_STATE_ACTIVE, ':uid' => $acc->uid));
+  $query->fields('n', array('nid'))
+    ->condition('n.type', 'ed_cluster')
+    ->addTag('node_access');
+
+  return $query->execute()->fetchCol();
 }
 
