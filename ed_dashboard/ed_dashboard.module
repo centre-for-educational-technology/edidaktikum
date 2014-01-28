@@ -43,10 +43,11 @@ function ed_dashboard_page() {
 
   if (!empty($groups)) {
     $content['groups-listing'] = node_view_multiple($groups, 'dashboard');
-    $content['groups-listing']['pager'] = array(
+    // There currently is not pagination
+    /*$content['groups-listing']['pager'] = array(
       '#theme' => 'pager',
       '#weight' => 5,
-    );
+    );*/
   }
  
   return $content; 
