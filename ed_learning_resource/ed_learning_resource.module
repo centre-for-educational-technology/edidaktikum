@@ -256,3 +256,15 @@ function ed_get_promoted_resources(){
   }
   return FALSE;
 }
+
+/**
+ * Implements hook_form_alter().
+ */
+function ed_learning_resource_form_alter(&$form, &$form_state, $form_id) {
+  if ('ed_learning_resource_node_form' == $form_id) {
+    if (empty($form['#node']->nid)) {
+      drupal_set_title(t('Create Learning Resource'));
+    }
+  }
+}
+

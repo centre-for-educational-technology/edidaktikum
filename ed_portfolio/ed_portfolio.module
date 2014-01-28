@@ -141,3 +141,14 @@ function ed_portfolio_views_api() {
   );
 }
 
+/**
+ * Implements hook_form_alter().
+ */
+function ed_portfolio_form_alter(&$form, &$form_state, $form_id) {
+  if ('ed_portfolio_node_form' == $form_id) {
+    if (empty($form['#node']->nid)) {
+      drupal_set_title(t('Create Portfolio'));
+    }
+  }
+}
+

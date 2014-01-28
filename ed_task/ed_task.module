@@ -354,8 +354,16 @@ function ed_task_field_extra_fields() {
 
   return $extra;
 }
-function ed_task_form_alter(&$form, $form_state, $form_id) {
+
+/**
+ * Implements hook_form_alter().
+ */
+function ed_task_form_alter(&$form, &$form_state, $form_id) {
   if( $form_id == 'ed_task_node_form'){
+    if (empty($form['#node']->nid)) {
+      drupal_set_title(t('Create Task'));
+    }
+
     $form['#attached']['js'] = array(drupal_get_path('module', 'ed_task') . '/ed_task_js.js',);
     $form['#attached']['css'] = array(drupal_get_path('module', 'ed_task') . '/ed_task_css.css',);
   }

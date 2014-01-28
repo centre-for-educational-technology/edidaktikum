@@ -26,3 +26,14 @@ function ed_forum_form($node, $form_state) {
   return node_content_form($node, $form_state);
 }
 
+/**
+ * Implements hook_form_alter().
+ */
+function ed_forum_form_alter(&$form, &$form_state, $form_id) {
+  if ('ed_forum_node_form' == $form_id) {
+    if (empty($form['#node']->nid)) {
+      drupal_set_title(t('Create Forum'));
+    }
+  }
+}
+
