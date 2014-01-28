@@ -395,13 +395,17 @@ function ed_task_manager($test, $node){
       'destination' => 'node/'.$node->nid,
     ),
   );
-  $content['add-new'] = array(
-      '#type' => 'item',
-      '#title' => t(''),
-      '#markup' => l(t('Add new task'), 'node/add/ed-task', $options),
-      '#href' => 'node/add/ed-task',      
+  $content['add-new-container'] = array(
+    '#type' => 'container',
+    '#attributes' => array(
+      'class' => array('ed-add-new-node', 'ed-add-new-task'),
+    ),
   );
-  
+  $content['add-new-container']['add-new'] = array(
+    '#type' => 'markup',
+    '#markup' => l(t('Add new'), 'node/add/ed-task', $options),
+  );
+
   $group_members_uids = _get_users_in_group($node->nid);
   
   if (in_array($account->uid, $group_members_uids)) {
