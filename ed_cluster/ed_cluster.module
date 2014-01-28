@@ -93,6 +93,16 @@ function ed_cluster_menu() {
   return $items;
 }
 
+/**
+ * Implements hook_menu_alter().
+ */
+function ed_cluster_menu_alter(&$items) {
+  if (isset($items['node/%/group'])) {
+    $items['node/%/group']['title callback'] = '_ed_cluster_group_menu_title';
+    $items['node/%/group']['title arguments'] = array('node', 1);
+  }
+}
+
 function ed_group_content_listing_access($filler, $gnode, $type){  
   $is_group = _ed_is_nid_group($gnode->nid);
   return $is_group;
@@ -608,5 +618,41 @@ function ed_cluster_form_alter(&$form, &$form_state, $form_id) {
       drupal_set_title(t('Create Group'));
     }
   }
+}
+/**
+ * Returns group menu title. Used within an override.
+ */
+function _ed_cluster_group_menu_title($type, $gid) {
+  $pending_users_count = _ed_cluster_get_group_pending_members_count($gid);
+  if ($pending_users_count > 0) {
+    return t('Group (@count)', array('@count' => $pending_users_count));
+  }
+  return t('Group');
+}
+
+/**
+ * Returns peding members count for a group.
+ * @param $gid
+ *   Group identifier
+ * @return
+ *   Pending members count
+ */
+function _ed_cluster_get_group_pending_members_count($gid) {
+  static $count;
+
+  if (isset($count)) {
+    return $count;
+  }
+
+  $query = db_select('og_membership', 'ogm')
+    ->fields('ogm', array('id'))
+    ->condition('ogm.entity_type', 'user')
+    ->condition('ogm.group_type', 'node')
+    ->condition('ogm.gid', $gid)
+    ->condition('ogm.state', OG_STATE_PENDING);
+
+  $count = $query->countQuery()->execute()->fetchField();
+
+  return $count;
 }
 
