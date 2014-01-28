@@ -101,6 +101,21 @@ function ed_group_content_listing_access($filler, $gnode, $type){
 function ed_listing_from_group($filler, $gnode, $type){
   
   $content = array();
+
+  if (node_access('create', $type) && og_is_member('node', $gnode->nid)) {
+    $type_dashed = str_replace('_', '-', $type);
+    $content['add-new-container'] = array(
+      '#type' => 'container',
+      '#attributes' => array(
+        'class' => array('ed-add-new-node', 'ed-add-new-'.$type_dashed),
+      ),
+    );
+    $content['add-new-container']['add-new-link'] = array(
+      '#type' => 'markup',
+      '#markup' => l(t('Add new'), 'node/add/'.$type_dashed, array('query' => array('og_group_ref' => $gnode->nid, 'destination' => 'node/'.$gnode->nid))),
+    );
+  }
+
   $content_nids = _ed_get_group_content_by_type($gnode->nid, $type);
   $nodes = node_load_multiple($content_nids);
   $build = node_view_multiple($nodes);
