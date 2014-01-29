@@ -41,22 +41,15 @@ function _ed_bookmark_installed_fields() {
 }
 
 function _ed_bookmark_installed_instances(){
-  $instances['ed_field_excerpt'] = array(
-    'field_name' => 'ed_field_excerpt',
-    'label' => t('Description'),
+  $instances['ed_bookmark_url'] = array(
+    'field_name' => 'ed_bookmark_url',
+    'label' => t('URL'),
     'description' => '',
-    'required' => TRUE,
-    'display' => array(
-      'teaser' => array(
-        'label' => 'hidden',
-        'type' => 'text_trimmed',
-        'weight' => 5,
-      ),
-      'front' => array(
-        'label' => 'hidden',
-        'type' => 'text_trimmed',
-      ),
+    'settings' => array(
+      'title_field' => FALSE,
+      'title_fetch' => FALSE,
     ),
+    'required' => TRUE,
   );
   $instances['ed_bookmark_tags'] = array(
     'field_name' => 'ed_bookmark_tags',
@@ -74,16 +67,6 @@ function _ed_bookmark_installed_instances(){
     		'weight' => 4,
   	  ),
 	  ),
-  );
-  $instances['ed_bookmark_url'] = array(
-    'field_name' => 'ed_bookmark_url',
-    'label' => t('URL'),
-    'description' => '',
-    'settings' => array(
-      'title_field' => TRUE,
-      'title_fetch' => TRUE,
-    ),
-    'required' => FALSE,
   );
   $instances['ed_bookmark_type'] = array(
     'field_name' => 'ed_bookmark_type',
@@ -105,7 +88,7 @@ function _ed_bookmark_installed_instances(){
 		    'weight' => 1,
 	    ),
 	  ),
-	  'required' => 1,
+	  'required' => FALSE,
 	  'settings' => array(
 	    'user_register_form' => FALSE,
 	  ),
@@ -133,3 +116,4 @@ function _ed_bookmark_type_list(){
   }
   return $options;
 }
+
