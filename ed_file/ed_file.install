@@ -19,6 +19,7 @@ function ed_file_install() {
   ed_file_add_field_ed_file_folder_ref('ed_file_folder');
   ed_file_add_og_audience();
   ed_file_add_field_to_user();
+  ed_file_node_add_field_competence();
   ed_file_set_permissions();
 }
 
@@ -198,7 +199,9 @@ function ed_file_add_field_to_user(){
       ),
     ),
   );
-  field_create_field($fields['ed_file_to_user']);
+  if (!field_info_field('ed_file_field_to_user')) {
+    field_create_field($fields['ed_file_to_user']);
+  }
   
   $instances['ed_file_to_user'] = array(
     'label' => 'to user',
@@ -252,7 +255,9 @@ function ed_file_add_field_to_user(){
     'deleted' => '0',
     'default_value' => NULL,
   );
-  field_create_instance($instances['ed_file_to_user']);
+  if (!field_info_instance('node', 'ed_file_field_to_user', 'ed_file')) {
+    field_create_instance($instances['ed_file_to_user']);
+  }
 }
 
 /**
@@ -349,7 +354,7 @@ function ed_file_node_add_field_file_upload() {
 function ed_file_node_add_field_category() {
   $field_name = 'ed_field_category';
   $field = field_info_field($field_name);
-  if (!empty($field_name) && !field_info_instance('node', $field_name, 'ed_file')) {
+  if (!empty($field) && !field_info_instance('node', $field_name, 'ed_file')) {
     $instance = array(
       'field_name' => $field_name,
       'entity_type' => 'node',
@@ -368,6 +373,38 @@ function ed_file_node_add_field_category() {
         ),
       ),
       'required' => FALSE,
+    );
+    field_create_instance($instance);
+  }
+}
+
+/**
+ * Competence field for ed_file node.
+ */
+function ed_file_node_add_field_competence() {
+  $field_name = 'ed_field_competence';
+  $field = field_info_field($field_name);
+  if (!empty($field) && !field_info_instance('node', $field_name, 'ed_file')) {
+    $instance = array(
+      'field_name' => $field_name,
+      'entity_type' => 'node',
+      'bundle' => 'ed_file',
+      'label' => t('Competence'),
+      'description' => '',
+      'widget' => array(
+        'type' => 'term_reference_tree',
+        'settings' => array(
+          'select_parents' => TRUE,
+        ),
+      ),
+      'required' => FALSE,
+      'display' => array(
+        'default' => array(
+          'label' => 'inline',
+          'type' => 'term_reference_tree',
+          'settings' => array(),
+        ),
+      ),
     );
     field_create_instance($instance);
   }
