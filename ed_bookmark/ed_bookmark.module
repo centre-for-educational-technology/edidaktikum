@@ -31,6 +31,22 @@ function ed_bookmark_form_alter(&$form, &$form_state, $form_id) {
     if (empty($form['#node']->nid)) {
       drupal_set_title(t('Create Bookmark'));
     }
+
+    $form['title']['#required'] = FALSE;
+    $form['ed_bookmark_url'][LANGUAGE_NONE][0]['#title'] = '';
+  }
+}
+
+/**
+ * Implements hook_node_presave().
+ */
+function ed_bookmark_node_presave($node) {
+  if ('ed_bookmark' == $node->type) {
+    // Use URL value if no title is provided
+    $title = trim($node->title);
+    if (empty($title)) {
+      $node->title = $node->ed_bookmark_url[LANGUAGE_NONE][0]['value'];
+    }
   }
 }
 

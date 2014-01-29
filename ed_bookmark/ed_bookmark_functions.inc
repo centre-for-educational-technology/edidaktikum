@@ -50,6 +50,9 @@ function _ed_bookmark_installed_instances(){
       'title_fetch' => FALSE,
     ),
     'required' => TRUE,
+    'widget' => array(
+      'weight' => -10,
+    ),
   );
   $instances['ed_bookmark_tags'] = array(
     'field_name' => 'ed_bookmark_tags',
