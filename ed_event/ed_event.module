@@ -278,3 +278,35 @@ function ed_event_node_view($node, $view_mode, $langcode) {
   }
 }
 
+/**
+ * Implements hook_node_access().
+ */
+function ed_event_node_access($node, $op, $account) {
+  $type = is_string($node) ? $node : $node->type;
+
+  // Student can not create events if is not active member
+  // of any groups
+  if ('ed_event' == $type && 'create' == $op) {
+    if ((bool) $account->uid && !(in_array('teacher', $account->roles) || in_array('administrator', $account->roles))) {
+      if (_ed_event_get_user_groups_count($account->uid) == 0) {
+        return NODE_ACCESS_DENY;
+      }
+    }
+  }
+
+  return NODE_ACCESS_IGNORE;
+}
+
+/**
+ * Returns ed_cluster node identifiers that current user is an active
+ * member of.
+ * Uses pager extender.
+ */
+function _ed_event_get_user_groups_count($uid) {
+  $query = db_select('node', 'n');
+  $query->join('og_membership', 'ogm', "n.nid = ogm.gid AND ogm.entity_type = 'user' AND ogm.group_type = 'node' AND ogm.state = :active AND ogm.etid = :uid", array(':active' => OG_STATE_ACTIVE, ':uid' => $uid));
+  $query->fields('n', array('nid'))
+    ->condition('n.type', 'ed_cluster');
+
+  return $query->countQuery()->execute()->fetchField();
+}
