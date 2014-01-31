@@ -275,3 +275,13 @@ function ed_get_promoted_by_node_type($node_type) {
   return FALSE;
 }
 
+/**
+ * Implements hook_user_login().
+ */
+function edidaktikum_user_login(&$edit, $account) {
+  // Redirect to dashboard in case of user login
+  if (isset($edit['values']['form_id']) && 'user_login' == $edit['values']['form_id']) {
+    $edit['redirect'] = 'dashboard';
+  }
+}
+
