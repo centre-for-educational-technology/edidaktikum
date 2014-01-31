@@ -42,6 +42,13 @@ function edidaktikum_variable_info($options) {
     'required' => FALSE,
     'group' => 'edidaktikum_settings',
   );
+  $variables['ed_faq_page_text'] = array(
+    'type' => 'string',
+    'title' => t('FAQ page text', array(), $options),
+    'description' => t('Text to display on FAQ page.', array(), $options),
+    'required' => FALSE,
+    'group' => 'edidaktikum_settings',
+  );
 
   return $variables;
 }

@@ -152,3 +152,34 @@ function edidaktikum_contact_page() {
   return $content;
 }
 
+/**
+ * eDidaktikum FAQ page.
+ */
+function edidaktikum_faq_page() {
+
+  drupal_set_title(t('FAQ'));
+
+  $content['faq'] = array(
+    '#type' => 'container',
+    '#attributes' => array(
+      'id' => 'faq',
+    ),
+  );
+  $content['faq']['faq-text'] = array(
+    '#type' => 'container',
+    '#attributes' => array(
+      'id' => 'faq-text',
+    ),
+  );
+  $faq_text = variable_get('ed_faq_page_text', '');
+  if (is_array($faq_text)) {
+    $faq_text = check_markup($faq_text['value'], $faq_text['format']);
+  }
+  $content['faq']['faq-text']['text'] = array(
+    '#type' => 'markup',
+    '#markup' => $faq_text,
+  );
+
+  return $content;
+}
+

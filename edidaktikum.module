@@ -67,6 +67,17 @@ function edidaktikum_menu() {
     'type' => MENU_NORMAL_ITEM,
     'weight' => 1,
   );
+  $items['admin/config/edidaktikum/faq-page'] = array(
+    'title' => 'eDidaktikum FAQ page',
+    'description' => 'Configure edidaktikum FAQ page.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('edidaktikum_faq_page_admin_form'),
+    'access arguments' => array('access administration pages'),
+    'file' => 'edidaktikum.admin.inc',
+    'type' => MENU_NORMAL_ITEM,
+    'weight' => 2,
+  );
+
   $items['admin/config/edidaktikum/promoted-news'] = array(
     'title' => 'eDidaktikum Promoted News',
     'description' => 'Choose front page News',
@@ -75,7 +86,7 @@ function edidaktikum_menu() {
     'access arguments' => array('access administration pages'),
     'file' => 'edidaktikum.admin.inc',
     'type' => MENU_NORMAL_ITEM,
-    'weight' => 2,
+    'weight' => 3,
   );
   $items['admin/config/edidaktikum/promoted-events'] = array(
     'title' => 'eDidaktikum Promoted Events',
@@ -85,7 +96,7 @@ function edidaktikum_menu() {
     'access arguments' => array('access administration pages'),
     'file' => 'edidaktikum.admin.inc',
     'type' => MENU_NORMAL_ITEM,
-    'weight' => 3,
+    'weight' => 4,
   );
   $items['admin/config/edidaktikum/promoted-resources'] = array(
     'title' => 'eDidaktikum Promoted Resources',
@@ -95,7 +106,7 @@ function edidaktikum_menu() {
     'access arguments' => array('access administration pages'),
     'file' => 'edidaktikum.admin.inc',
     'type' => MENU_NORMAL_ITEM,
-    'weight' => 4,
+    'weight' => 5,
   );
   $items['admin/config/edidaktikum/statistics'] = array(
     'title' => 'eDidaktikum Statistics',
@@ -105,7 +116,7 @@ function edidaktikum_menu() {
     'access arguments' => array('access administration pages'),
     'file' => 'edidaktikum.admin.inc',
     'type' => MENU_NORMAL_ITEM,
-    'weight' => 5,
+    'weight' => 6,
   );
   $items['admin/config/edidaktikum/configuration'] = array(
     'title' => t('eDidaktikum Configuration'),
@@ -115,7 +126,7 @@ function edidaktikum_menu() {
     'access arguments' => array('access administration pages'),
     'file' => 'edidaktikum.admin.inc',
     'type' => MENU_NORMAL_ITEM,
-    'weight' => 6,
+    'weight' => 7,
   );
   $items['home'] = array(
     'title' => 'Home',
@@ -135,6 +146,15 @@ function edidaktikum_menu() {
     'menu_name' => 'main-menu',
     'type' => MENU_NORMAL_ITEM,
   );
+  $items['faq'] = array(
+    'title' => 'FAQ',
+    'page callback' => 'edidaktikum_faq_page',
+    'access callback' => TRUE,
+    'file' => 'edidaktikum.pages.inc',
+    'weight' => -25,
+    'menu_name' => 'user-menu',
+  );
+
   return $items;
 }
 

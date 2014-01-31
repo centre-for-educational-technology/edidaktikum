@@ -58,6 +58,27 @@ function edidaktikum_contact_page_admin_form() {
   return system_settings_form($form);
 }
 
+/**
+ * eDidaktikum FAQ admin page.
+ */
+function edidaktikum_faq_page_admin_form() {
+  $form = array();
+  $faq_text = variable_get('ed_faq_page_text', '');
+  $form['ed_faq_page_text'] = array(
+    '#type' => 'text_format',
+    '#title' => t('FAQ page text'),
+    '#default_value' => (is_array($faq_text) && isset($faq_text['value'])) ? $faq_text['value'] : $faq_text,
+    '#description' => t('Text to display on FAQ page.'),
+    '#required' => FALSE,
+  );
+  if (is_array($faq_text) && isset($faq_text['format'])) {
+    $form['ed_faq_page_text']['#format'] = $faq_text['format'];
+  }
+
+  return system_settings_form($form);
+}
+
+
 function edidaktikum_promoted_resources_page_admin_form(){
   $form = array();
   $nids = ed_get_promoted_resources();
@@ -154,6 +175,7 @@ function edidaktikum_configuration_page_admin_form(){
     '#default_value' => variable_get('ed_uservoice_api_key'),
     '#required' => FALSE,
   );
+
   return system_settings_form($form);
 }
 function edidaktikum_statistics_page_admin_form(){
