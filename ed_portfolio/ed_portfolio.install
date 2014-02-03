@@ -71,7 +71,7 @@ function ed_portfolio_create_ed_portfolio_node_type() {
     );
     $type = node_type_set_defaults($type);
     node_type_save($type);
-    variable_set('comment_ed_portfolio', COMMENT_NODE_CLOSED);
+    variable_set('comment_ed_portfolio', COMMENT_NODE_OPEN);
   }
 }
 
