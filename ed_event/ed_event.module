@@ -22,13 +22,41 @@ function ed_event_menu() {
     'type' => MENU_CALLBACK,
     'access callback' => TRUE,
   );
+  $items['events/rss'] = array(
+    'title' => 'Events',
+    'page callback' => 'ed_event_latest_feed',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
   return $items;
+}
+
+/**
+ * Latest events RSS page.
+ */
+function ed_event_latest_feed() {
+  $nids = db_select('node', 'n')
+    ->fields('n', array('nid', 'created'))
+    ->condition('type', 'ed_event')
+    ->condition('status', 1)
+    ->orderBy('created', 'DESC')
+    ->range(0, variable_get('feed_default_items', 10))
+    ->addTag('node_access')
+    ->execute()
+    ->fetchCol();
+
+  $channel['title'] = t('!site_name events', array('!site_name' => variable_get('site_name', 'eDidaktikum')));
+  $channel['link'] = url('events/rss', array('absolute' => TRUE));
+
+  node_feed($nids, $channel);
 }
 
 /**
  * Events listing page.
  */
 function ed_event_listing_page() {
+  drupal_add_feed('events/rss', t('Latest events'));
 
   $content = array();
 

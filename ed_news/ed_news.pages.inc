@@ -9,6 +9,8 @@
  * Displays a listing page for ed_news nodes.
  */
 function ed_news_listing_page() {
+  drupal_add_feed('news/rss', t('Latest news'));
+
   $content = array();
 
   if(node_access('create', 'ed_news')){
