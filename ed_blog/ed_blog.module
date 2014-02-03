@@ -64,7 +64,13 @@ function ed_blog_listing_page() {
   $content = array();
   drupal_set_title(t('My Blog'));
 
-  $content['add-blog'] = array(
+  $content['add-new-container'] = array(
+    '#type' => 'container',
+    '#attributes' => array(
+      'class' => array('ed-add-new-node', 'ed-add-new-ed-blog'),
+    ),
+  );
+  $content['add-new-container']['add-blog'] = array(
     '#type' => 'link',
     '#title' => t('Add new blog post'),
     '#href' => 'node/add/ed-blog',

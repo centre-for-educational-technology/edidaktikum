@@ -57,12 +57,19 @@ function ed_task_listing_page() {
   $content = array();
   $table_suffix = 1;
 
-
-  $content['add-task'] = array(
-    '#type' => 'link',
-    '#title' => t('Add new task'),
-    '#href' => 'node/add/ed-task',
-  );
+  if (node_access('create', 'ed_task')) {
+    $content['add-new-container'] = array(
+      '#type' => 'container',
+      '#attributes' => array(
+        'class' => array('ed-add-new-node', 'ed-add-new-ed-task'),
+      ),
+    );
+    $content['add-new-container']['add-task'] = array(
+      '#type' => 'link',
+      '#title' => t('Add new task'),
+      '#href' => 'node/add/ed-task',
+    );
+  }
 
   $table_type = 'pager_table';
 

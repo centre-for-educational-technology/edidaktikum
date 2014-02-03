@@ -33,11 +33,19 @@ function ed_portfolio_listing_page(){
   menu_tree_set_path('main-menu', 'dashboard');
   //drupal_add_css('ul.links.inline {display: none;}', array('group' => CSS_THEME, 'type' => 'inline'));
   $content = array();
-  $content['add-new-portfolio'] = array(
+
+  $content['add-new-container'] = array(
+    '#type' => 'container',
+    '#attributes' => array(
+      'class' => array('ed-add-new-node', 'ed-add-new-ed-portfolio'),
+    ),
+  );
+  $content['add-new-container']['add-new-portfolio'] = array(
     '#type' => 'link',
     '#title' => t('Add new portfolio'),
     '#href' => 'node/add/ed-portfolio',
   );
+
   $table_type = 'pager-table';
   $user_portfolio_ids = ed_portfolio_get_user_portfolios();
   $nodes = node_load_multiple($user_portfolio_ids);

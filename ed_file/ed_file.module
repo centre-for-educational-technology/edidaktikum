@@ -140,9 +140,15 @@ function ed_file_listing_page() {
 
   $add_file_url = l(t('file'), 'node/add/ed-file', $url_parameters);
   $add_file_folder_url = l(t('folder'), 'node/add/ed-file-folder', $url_parameters);
-  $content['add-new'] = array(
+  $content['add-new-container'] = array(
+    '#type' => 'container',
+    '#attributes' => array(
+      'class' => array('ed-add-new-node', 'ed-add-new-ed-file', 'ed-add-new-ed-folder'),
+    ),
+  );
+  $content['add-new-container']['add-new'] = array(
     '#type' => 'markup',
-    '#markup' => '<div>' . t('Add new ') . $add_file_url . t(' or ') . $add_file_folder_url . '</div>',
+    '#markup' => t('Add new !file or !folder', array('!file' => $add_file_url, '!folder' => $add_file_folder_url)),
   );
 
   $content['bread-crumb'] = array(
