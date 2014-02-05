@@ -49,6 +49,23 @@ function ed_learning_resource_menu() {
     'menu_name' => 'main-menu',
     'type' => MENU_NORMAL_ITEM,
   );
+  $items['resources/type/%'] = array(
+    'title' => t('Resources'),
+    'page callback' => 'ed_learning_resource_type_listing',
+    'page arguments' => array(2),
+    'access callback' => TRUE,
+    'file' => 'ed_learning_resource.pages.inc',
+    'type' => MENU_CALLBACK,
+  );
+  $items['resources/language/%'] = array(
+    'title' => t('Resources'),
+    'page callback' => 'ed_learning_resource_language_listing',
+    'page arguments' => array(2),
+    'access callback' => TRUE,
+    'file' => 'ed_learning_resource.pages.inc',
+    'type' => MENU_CALLBACK,
+  );
+
   return $items;
 }
 
@@ -266,5 +283,62 @@ function ed_learning_resource_form_alter(&$form, &$form_state, $form_id) {
       drupal_set_title(t('Create Learning Resource'));
     }
   }
+}
+
+/**
+ * Implements gook_field_formatter_info().
+ */
+function ed_learning_resource_field_formatter_info() {
+  return array(
+    'list_resource_type' => array(
+      'label' => t('Learning Resource Type'),
+      'field types' => array('list_integer'),
+    ),
+    'list_resource_language' => array(
+      'label' => t('Learning Resource Language'),
+      'field types' => array('list_integer'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_formatter_view().
+ */
+function ed_learning_resource_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  $element = array();
+
+  switch ($display['type']) {
+    case 'list_resource_type':
+      $allowed_values = list_allowed_values($field, $instance, $entity_type, $entity);
+      foreach ($items as $delta => $item) {
+        if (isset($allowed_values[$item['value']])) {
+          $output = field_filter_xss($allowed_values[$item['value']]);
+          $output = l($output, 'resources/type/'. $item['value']);
+        }
+        else {
+          // If no match was found in allowed values, fall back to the key.
+          $output = field_filter_xss($item['value']);
+        }
+        $element[$delta] = array('#markup' => $output);
+      }
+      break;
+
+    case 'list_resource_language':
+      $allowed_values = list_allowed_values($field, $instance, $entity_type, $entity);
+      foreach ($items as $delta => $item) {
+        if (isset($allowed_values[$item['value']])) {
+          $output = field_filter_xss($allowed_values[$item['value']]);
+          $output = l($output, 'resources/language/'. $item['value']);
+        }
+        else {
+          // If no match was found in allowed values, fall back to the key.
+          $output = field_filter_xss($item['value']);
+        }
+        $element[$delta] = array('#markup' => $output);
+      }
+      break;
+  }
+
+  return $element;
 }
 
