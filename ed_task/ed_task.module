@@ -543,3 +543,71 @@ function recursive_array_search($needle,$haystack) {
     }
     return false;
 }
+
+/**
+ * Implements hook_node_insert().
+ */
+function ed_task_node_insert($node) {
+  if ('ed_task' == $node->type) {
+    $send_to = array();
+    // Handle selected groups case
+    if (isset($node->og_group_ref[LANGUAGE_NONE]) && !empty($node->og_group_ref[LANGUAGE_NONE])) {
+      $group_ids = array();
+      foreach ($node->og_group_ref[LANGUAGE_NONE] as $single) {
+        $group_ids []= $single['target_id'];
+      }
+      $uids = db_select('og_membership', 'ogm')
+        ->distinct()
+        ->fields('ogm', array('etid'))
+        ->condition('ogm.entity_type', 'user')
+        ->condition('ogm.group_type', 'node')
+        ->condition('ogm.gid', $group_ids, 'IN')
+        ->condition('ogm.state', OG_STATE_ACTIVE)
+        ->condition('ogm.etid', $node->uid, '<>')
+        ->execute()
+        ->fetchCol();
+
+      if (!empty($uids)) {
+        $send_to = $uids;
+      }
+    }
+    // Handle selected users case
+    if (isset($node->field_to_user[LANGUAGE_NONE]) && !empty($node->field_to_user[LANGUAGE_NONE])) {
+      foreach ($node->field_to_user[LANGUAGE_NONE] as $single) {
+        if (!in_array($single['target_id'], $send_to)) {
+          $send_to []= $single['target_id'];
+        }
+      }
+    }
+    $recipients = user_load_multiple($send_to);
+
+    if (!empty($recipients)) {
+      $creator = user_load($node->uid);
+      $creator_fullname = edidaktikum_get_full_name_for_user_account($creator);
+      foreach ($recipients as $recipient) {
+        $language = user_preferred_language($recipient);
+        $params = array(
+          'fullname' => $creator_fullname,
+          'taskname' => $node->title,
+          'duedate' => format_date($node->ed_task_due_date[LANGUAGE_NONE][0]['value'], 'short', '', NULL, $language->language),
+          'taskurl' => url('node/' . $node->nid, array('absolute' => TRUE)),
+        );
+        drupal_mail('ed_task', 'task_given', $recipient->mail, $language, $params, 'no-reply@edidaktikum.ee', TRUE);
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_mail().
+ */
+function ed_task_mail($key, &$message, $params) {
+  if ('task_given' == $key)  {
+    $options = array('langcode' => $message['language']->language);
+    $message['subject'] = t('New Task - eDidaktikum', array(), $options);
+    $message['body'][] = t('@fullname assigned you a task: @taskname.', array('@fullname' => $params['fullname'], '@taskname' => $params['taskname']), $options);
+    $message['body'][] = t('Due date: @duedate', array('@duedate' => $params['duedate']), $options);
+    $message['body'][] = t('View task: @taskurl', array('@taskurl' => $params['taskurl']), $options);
+  }
+}
+
