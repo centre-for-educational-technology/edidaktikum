@@ -172,7 +172,7 @@ function ed_task_listing_page() {
               'posted_by' => $node->name,
               //'due_date' => format_date($datehelp, 'custom','d/m/Y'),   // Check if displays right date
               'due_date' => format_date($due_date_field[0]['value'],'custom','d/m/Y'),
-              'status' => (_is_task_answered($node->nid) ? '<div class="ed-task-answered">'.t('Answered').'</div>' : '<div class="ed-task-unanswered">'.t('Unanswered').'</div>'),
+              'status' => ($user->name != $node->name) ? (_is_task_answered($node->nid) ? '<div class="ed-task-answered">'.t('Answered').'</div>' : '<div class="ed-task-unanswered">'.t('Unanswered').'</div>') : '',
             ),
           );
         }
