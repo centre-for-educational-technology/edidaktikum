@@ -22,5 +22,10 @@ function ed_cluster_views_default_views_alter(&$views) {
       $handler->display->display_options['fields']['edit_membership'] = $tmp_edit_membership;
     }
   }
+
+  if (array_key_exists('og_members', $views)) {
+    $handler =& $views['og_members']->display['default']->handler;
+    $handler->display->display_options['pager']['options']['items_per_page'] = '0';
+  }
 }
 
