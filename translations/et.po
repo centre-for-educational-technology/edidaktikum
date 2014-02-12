@@ -61,8 +61,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2014-02-05 15:15+0200\n"
-"PO-Revision-Date: 2014-02-05 15:18+0200\n"
+"POT-Creation-Date: 2014-02-12 10:41+0200\n"
+"PO-Revision-Date: 2014-02-12 10:43+0200\n"
 "Last-Translator: Pjotr Savitski <pjotr.savitski@gmail.com>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "MIME-Version: 1.0\n"
@@ -490,6 +490,14 @@ msgstr "Tüüp"
 #: ed_blog/ed_blog.module:109;144 ed_portfolio/ed_portfolio.module:72
 msgid "Date"
 msgstr "Kuupäev"
+
+#: ed_blog/ed_blog.install:107
+msgid "No %type nodes exist in database."
+msgstr ""
+
+#: ed_blog/ed_blog.install:131
+msgid "Updated @count nodes of type %type."
+msgstr ""
 
 #: ed_blog/ed_blog.info:0
 msgid "eDidaktikum Blog"
@@ -1292,6 +1300,24 @@ msgstr ""
 
 #: ed_task/ed_task.module:371
 msgid "Create Task"
+msgstr ""
+
+#: ed_task/ed_task.module:607
+#, fuzzy
+msgid "New Task - eDidaktikum"
+msgstr "eDidaktikum"
+
+#: ed_task/ed_task.module:608
+msgid "@fullname assigned you a task: @taskname."
+msgstr ""
+
+#: ed_task/ed_task.module:609
+#, fuzzy
+msgid "Due date: @duedate"
+msgstr "Tähtaeg:"
+
+#: ed_task/ed_task.module:610
+msgid "View task: @taskurl"
 msgstr ""
 
 #: ed_task/ed_task.info:0

@@ -75,7 +75,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2014-02-05 15:15+0200\n"
+"POT-Creation-Date: 2014-02-12 10:41+0200\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -434,6 +434,14 @@ msgstr ""
 
 #: ed_blog/ed_blog.module:109;144 ed_portfolio/ed_portfolio.module:72
 msgid "Date"
+msgstr ""
+
+#: ed_blog/ed_blog.install:107
+msgid "No %type nodes exist in database."
+msgstr ""
+
+#: ed_blog/ed_blog.install:131
+msgid "Updated @count nodes of type %type."
 msgstr ""
 
 #: ed_blog/ed_blog.info:0
@@ -1186,6 +1194,22 @@ msgstr ""
 
 #: ed_task/ed_task.module:371
 msgid "Create Task"
+msgstr ""
+
+#: ed_task/ed_task.module:607
+msgid "New Task - eDidaktikum"
+msgstr ""
+
+#: ed_task/ed_task.module:608
+msgid "@fullname assigned you a task: @taskname."
+msgstr ""
+
+#: ed_task/ed_task.module:609
+msgid "Due date: @duedate"
+msgstr ""
+
+#: ed_task/ed_task.module:610
+msgid "View task: @taskurl"
 msgstr ""
 
 #: ed_task/ed_task.info:0
