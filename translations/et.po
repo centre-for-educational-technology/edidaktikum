@@ -62,8 +62,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: 2014-02-12 10:41+0200\n"
-"PO-Revision-Date: 2014-02-12 10:43+0200\n"
-"Last-Translator: Pjotr Savitski <pjotr.savitski@gmail.com>\n"
+"PO-Revision-Date: 2014-02-12 11:23+0200\n"
+"Last-Translator: Priit Tammets <tammets@gmail.com>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
@@ -112,14 +112,12 @@ msgid "Logos text to display on contact page."
 msgstr "Logod, mida kuvatakse kontaktilehel"
 
 #: edidaktikum.admin.inc:69 edidaktikum.variable.inc:47
-#, fuzzy
 msgid "FAQ page text"
-msgstr "Esilehel paiknev sissejuhatav tekst"
+msgstr "KKK lehe sisu"
 
 #: edidaktikum.admin.inc:71 edidaktikum.variable.inc:48
-#, fuzzy
 msgid "Text to display on FAQ page."
-msgstr "Esilehel kuvatav sissejuhatav tekst."
+msgstr "Tekst, mida kuvatakse KKK lehel."
 
 #: edidaktikum.admin.inc:88
 msgid "No Promoted Learning Resources Found"
@@ -130,24 +128,20 @@ msgid "Choose Learning Resource to display on front page"
 msgstr "Vali õppematerjal, mida kuvatakse esilehel"
 
 #: edidaktikum.admin.inc:118
-#, fuzzy
 msgid "No Promoted Events Found"
-msgstr "Ühtegi esiletõstetud õppematerjali ei leitud"
+msgstr "Ühtegi esiletõstetud sündmust ei leitud"
 
 #: edidaktikum.admin.inc:129
-#, fuzzy
 msgid "Choose Event to display on front page"
-msgstr "Vali õppematerjal, mida kuvatakse esilehel"
+msgstr "Vali sündmus, mida kuvatakse esilehel"
 
 #: edidaktikum.admin.inc:143
-#, fuzzy
 msgid "No Promoted News Found"
-msgstr "Ühtegi esiletõstetud õppematerjali ei leitud"
+msgstr "Ühtegi esiletõstetud uudist ei leitud"
 
 #: edidaktikum.admin.inc:154
-#, fuzzy
 msgid "Choose News to display on front page"
-msgstr "Vali õppematerjal, mida kuvatakse esilehel"
+msgstr "Vali uudis, mida kuvatakse esilehel"
 
 #: edidaktikum.admin.inc:166
 msgid "Paging"
@@ -243,7 +237,7 @@ msgstr "Kontakt"
 
 #: edidaktikum.pages.inc:160 edidaktikum.module:150
 msgid "FAQ"
-msgstr ""
+msgstr "KKK"
 
 #: edidaktikum.variable.inc:58;59
 msgid "eDidaktikum settings"
@@ -304,34 +298,28 @@ msgid "Configure edidaktikum contact page."
 msgstr "Muuda eDidaktikumi kontaktilehekülge"
 
 #: edidaktikum.module:71
-#, fuzzy
 msgid "eDidaktikum FAQ page"
-msgstr "eDidaktikumi leht"
+msgstr "eDidaktikumi KKK leht"
 
 #: edidaktikum.module:72
-#, fuzzy
 msgid "Configure edidaktikum FAQ page."
-msgstr "Seadista eDidaktikumi esilehte"
+msgstr "Seadista eDidaktikumi KKK lehekülg."
 
 #: edidaktikum.module:82
-#, fuzzy
 msgid "eDidaktikum Promoted News"
-msgstr "eDidaktikumi esiletõstetud õppematerjalid"
+msgstr "eDidaktikumi esiletõstetud uudised"
 
 #: edidaktikum.module:83
-#, fuzzy
 msgid "Choose front page News"
-msgstr "Vali esilehel kuvatav õppematerjal"
+msgstr "Vali esilehel kuvatav uudis"
 
 #: edidaktikum.module:92
-#, fuzzy
 msgid "eDidaktikum Promoted Events"
-msgstr "eDidaktikumi esiletõstetud õppematerjalid"
+msgstr "eDidaktikumi esiletõstetud sündmused"
 
 #: edidaktikum.module:93
-#, fuzzy
 msgid "Choose front page Event"
-msgstr "Vali esilehel kuvatav õppematerjal"
+msgstr "Vali esilehel kuvatav sündmus"
 
 #: edidaktikum.module:102
 msgid "eDidaktikum Promoted Resources"
@@ -387,9 +375,8 @@ msgid " - Answer"
 msgstr " - Vastus"
 
 #: ed_answer/ed_answer.module:34
-#, fuzzy
 msgid "Create Answer"
-msgstr "eDidaktikumi vastus"
+msgstr "Lisa vastus"
 
 #: ed_answer/ed_answer.module:48
 msgid "Answer To Task"
@@ -526,9 +513,8 @@ msgid "Description"
 msgstr "Kirjeldus"
 
 #: ed_bookmark/ed_bookmark.module:32
-#, fuzzy
 msgid "Create Bookmark"
-msgstr "Järjehoidja"
+msgstr "Lisa järjehoidja"
 
 #: ed_bookmark/ed_bookmark.install:106;106
 msgid "Network"
@@ -559,14 +545,12 @@ msgid "Forum"
 msgstr "Foorum"
 
 #: ed_cluster/ed_cluster.module:75
-#, fuzzy
 msgid "Pages"
-msgstr "Lehekülg"
+msgstr "Leheküljed"
 
 #: ed_cluster/ed_cluster.module:84
-#, fuzzy
 msgid "Bookmarks"
-msgstr "Järjehoidja"
+msgstr "Järjehoidjad"
 
 #: ed_cluster/ed_cluster.module:125;412
 msgid "Add new"
@@ -582,7 +566,7 @@ msgstr ""
 
 #: ed_cluster/ed_cluster.module:245
 msgid "Answer with task removed"
-msgstr ""
+msgstr "Vastus koos ülesandega kustutatud"
 
 #: ed_cluster/ed_cluster.module:253
 msgid "!name added !node @time"
@@ -606,11 +590,11 @@ msgstr "Lisa uus grupp"
 
 #: ed_cluster/ed_cluster.module:604
 msgid "Create Group"
-msgstr ""
+msgstr "Loo grupp"
 
 #: ed_cluster/ed_cluster.module:614
 msgid "Group (@count)"
-msgstr ""
+msgstr "Grupp (@count)"
 
 #: ed_cluster/ed_cluster.install:27 ed_event/ed_event.install:234
 #: ed_news/ed_news.install:164 ed_portfolio/ed_portfolio.install:116
@@ -654,9 +638,8 @@ msgid "!site_name events"
 msgstr ""
 
 #: ed_event/ed_event.module:59
-#, fuzzy
 msgid "Latest events"
-msgstr "Vanemad eespool"
+msgstr "Värskeimad sündmused"
 
 #: ed_event/ed_event.module:66
 msgid "Add new event"
@@ -672,7 +655,7 @@ msgstr "Sündmuste kalender"
 
 #: ed_event/ed_event.module:276
 msgid "Create Event"
-msgstr ""
+msgstr "Lisa sündmus"
 
 #: ed_event/ed_event.install:165
 msgid "Location"
@@ -703,9 +686,8 @@ msgid "folder"
 msgstr "kaust"
 
 #: ed_file/ed_file.module:151
-#, fuzzy
 msgid "Add new !file or !folder"
-msgstr "Lisa uus portfoolio"
+msgstr "Lisa uus !file või !folder"
 
 #: ed_file/ed_file.module:172
 #: entityreference_dragdrop/entityreference_dragdrop.module:164
@@ -717,14 +699,12 @@ msgid "Edit"
 msgstr "Muuda"
 
 #: ed_file/ed_file.module:273
-#, fuzzy
 msgid "Create File"
-msgstr "Loodud"
+msgstr "Lisa fail"
 
 #: ed_file/ed_file.module:278
-#, fuzzy
 msgid "Create Folder"
-msgstr "Kaust"
+msgstr "Lisa kaust"
 
 #: ed_file/ed_file.install:44
 msgid "File"
@@ -831,9 +811,8 @@ msgid "Entity Reference"
 msgstr ""
 
 #: ed_forum/ed_forum.module:35
-#, fuzzy
 msgid "Create Forum"
-msgstr "eDidaktikumi Foorum"
+msgstr "Lisa uus foorumi teema"
 
 #: ed_forum/ed_forum.info:0
 msgid "eDidaktikum Forum"
@@ -844,14 +823,12 @@ msgid "eDidaktikum Forum content type."
 msgstr "eDidaktikumi foorumi sisutüüp"
 
 #: ed_learning_resource/ed_learning_resource.pages.inc:21
-#, fuzzy
 msgid "Learning resources by type: @type"
-msgstr "Õppematerjali tüübid"
+msgstr "Õppematerjalid tüübi järgi: @type"
 
 #: ed_learning_resource/ed_learning_resource.pages.inc:63
-#, fuzzy
 msgid "Learning resources by language: @language"
-msgstr "Õppematerjali keeled"
+msgstr "Õppematerjalid keele järgi: @language"
 
 #: ed_learning_resource/ed_learning_resource_ajax.inc:20;119
 #: ed_learning_resource/ed_learning_resource.module:78;129;222;248
@@ -933,19 +910,16 @@ msgid "Search"
 msgstr "Otsi"
 
 #: ed_learning_resource/ed_learning_resource.module:283
-#, fuzzy
 msgid "Create Learning Resource"
-msgstr "Õppematerjal"
+msgstr "Lisa uus õppematerjal"
 
 #: ed_learning_resource/ed_learning_resource.module:294
-#, fuzzy
 msgid "Learning Resource Type"
-msgstr "Õppematerjali tüübid"
+msgstr "Õppematerjali tüüp"
 
 #: ed_learning_resource/ed_learning_resource.module:298
-#, fuzzy
 msgid "Learning Resource Language"
-msgstr "Õppematerjali keeled"
+msgstr "Õppematerjali keel"
 
 #: ed_learning_resource/ed_learning_resource.info:0
 msgid "eDidaktikum Learning Resource content type."
@@ -1106,9 +1080,8 @@ msgid ""
 msgstr ""
 
 #: ed_news/ed_news.pages.inc:12
-#, fuzzy
 msgid "Latest news"
-msgstr "Vanemad eespool"
+msgstr "Värskeimad uudised"
 
 #: ed_news/ed_news.pages.inc:19
 msgid "Add new news"
@@ -1124,7 +1097,7 @@ msgstr ""
 
 #: ed_news/ed_news.module:101
 msgid "Create News"
-msgstr ""
+msgstr "Loo uudis"
 
 #: ed_news/ed_news.install:117;148;178;207
 msgid ""
@@ -1142,7 +1115,7 @@ msgstr "Lehekülg"
 
 #: ed_page/ed_page.module:35
 msgid "Create Page"
-msgstr ""
+msgstr "Loo lehekülg"
 
 #: ed_page/ed_page.info:0
 msgid "eDidaktikum Page"
@@ -1177,9 +1150,8 @@ msgid "Status"
 msgstr "Staatus"
 
 #: ed_portfolio/ed_portfolio.module:158
-#, fuzzy
 msgid "Create Portfolio"
-msgstr "Portfoolio"
+msgstr "Lisa portfoolio"
 
 #: ed_portfolio/ed_portfolio.install:141
 msgid "Portfolio items"
@@ -1229,7 +1201,7 @@ msgstr "Kirjeldus2"
 
 #: ed_task/ed_task.module:32
 msgid "Tasks (@count)"
-msgstr ""
+msgstr "Ülesandeid (@count)"
 
 #: ed_task/ed_task.module:34;42
 msgid "Tasks"
@@ -1268,23 +1240,20 @@ msgid "Assigned By"
 msgstr "Ülesande andja"
 
 #: ed_task/ed_task.module:204
-#, fuzzy
 msgid "Answers"
-msgstr "Vasta"
+msgstr "Vastused"
 
 #: ed_task/ed_task.module:211
-#, fuzzy
 msgid "Answers by groups"
-msgstr "Lisa uus grupp"
+msgstr "Vastused gruppide järgi"
 
 #: ed_task/ed_task.module:262
-#, fuzzy
 msgid "Answers by users"
-msgstr "Ülesande vastus"
+msgstr "Individuaalsed vastused"
 
 #: ed_task/ed_task.module:270
 msgid "Submitted"
-msgstr ""
+msgstr "Esitatud"
 
 #: ed_task/ed_task.module:351
 msgid "extra fields label"
@@ -1300,25 +1269,23 @@ msgstr ""
 
 #: ed_task/ed_task.module:371
 msgid "Create Task"
-msgstr ""
+msgstr "Loo ülesanne"
 
 #: ed_task/ed_task.module:607
-#, fuzzy
 msgid "New Task - eDidaktikum"
-msgstr "eDidaktikum"
+msgstr "Uus ülesanne - eDidaktikum"
 
 #: ed_task/ed_task.module:608
 msgid "@fullname assigned you a task: @taskname."
-msgstr ""
+msgstr "@fullname andis sulle ülesande: @taskname."
 
 #: ed_task/ed_task.module:609
-#, fuzzy
 msgid "Due date: @duedate"
-msgstr "Tähtaeg:"
+msgstr "Tähtaeg: @duedate"
 
 #: ed_task/ed_task.module:610
 msgid "View task: @taskurl"
-msgstr ""
+msgstr "Vaata ülesannet: @taskurl"
 
 #: ed_task/ed_task.info:0
 msgid "eDidaktikum Task content type."
