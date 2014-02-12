@@ -503,6 +503,7 @@ function _ed_get_user_unanswered_tasks_count($account) {
     $query->fields('n', array('nid'))
       ->addTag('node_access')
       ->condition('n.type', 'ed_task')
+      ->condition('n.uid', $account->uid, '<>')
       ->condition('og.gid', $groups, "IN");
 
     // Merge all task identifiers given to user groups
