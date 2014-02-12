@@ -62,7 +62,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: 2014-02-12 10:41+0200\n"
-"PO-Revision-Date: 2014-02-12 11:23+0200\n"
+"PO-Revision-Date: 2014-02-12 15:11+0200\n"
 "Last-Translator: Priit Tammets <tammets@gmail.com>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "MIME-Version: 1.0\n"
@@ -1233,7 +1233,7 @@ msgstr "Vastamata"
 
 #: ed_task/ed_task.module:146
 msgid "Tasks to me"
-msgstr "Minu antud ülesanded"
+msgstr "Mulle antud ülesanded"
 
 #: ed_task/ed_task.module:146;182
 msgid "Assigned By"
