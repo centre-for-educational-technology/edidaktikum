@@ -238,8 +238,7 @@ function ed_cluster_node_view($node, $view_mode, $langcode){
             // Deal with ed_task that has not title
             if ('ed_answer' == $single->type) {
               // Check if task reference exists
-              if (isset($single->field_ref_to_task['und'][0]['target_id'])) {
-                  $single_task = node_load($single->field_ref_to_task['und'][0]['target_id']);
+              if (isset($single->field_ref_to_task['und'][0]['target_id']) && $single_task = node_load($single->field_ref_to_task['und'][0]['target_id'])) {
                   $single_title = l($single_task->title.t(' - Answer'), 'node/' . $single->nid);
               } else {
                   $single_title = l(t('Answer with task removed'), 'node/' . $single->nid);
