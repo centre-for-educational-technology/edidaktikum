@@ -72,9 +72,7 @@ function ed_cluster_create_node() {
  */
 function ed_cluster_node_add_og_group_field() {
   if (function_exists('og_create_field') && defined('OG_GROUP_FIELD')) {
-    $og_field = og_fields_info(OG_GROUP_FIELD);
-    $og_field['instance']['required'] = FALSE;
-    og_create_field(OG_GROUP_FIELD, 'node', 'ed_cluster', $og_field);
+    og_create_field(OG_GROUP_FIELD, 'node', 'ed_cluster');
   }
 }
 
