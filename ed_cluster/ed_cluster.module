@@ -356,29 +356,22 @@ function _ed_get_group_content_by_type($gid, $type){
 }
 
 /**
- * Checks if current user is either group member AND a teacher OR
- * an administrator that has given any tasks to current group.
+ * Check if current user is either administrator, group
+ * creator or group admin.
  * @return boolean
  */
 function ed_task_manager_access($test, $node){
-  static $tasks_count;
   $account = $GLOBALS['user'];
+  if (in_array('administrator', $account->roles)) {
+    return true;
+  }
 
-  if ((og_is_member('node', $node->nid) && in_array('teacher', $account->roles)) || in_array('administrator', $account->roles)) {
-    // Only run query once per page load
-    if (!isset($tasks_count)) {
-      $query = db_select('node', 'n');
-      $query->join('og_membership', 'ogm', "n.nid = ogm.etid AND ogm.entity_type='node' AND ogm.group_type = 'node' AND ogm.gid = :gid AND ogm.state = :active", array(':gid' => $node->nid, ':active' => OG_STATE_ACTIVE));
-      $query->fields('n', array('nid'))
-        ->condition('n.status', 1)
-        ->condition('n.type', 'ed_task')
-        ->condition('n.uid', $account->uid);
-      $tasks_count = $query->countQuery()->execute()->fetchField();
-    }
+  if ($node->uid === $account->uid) {
+    return true;
+  }
 
-    if ($tasks_count > 0) {
-      return true;
-    }
+  if (in_array(OG_ADMINISTRATOR_ROLE, og_get_user_roles('node', $node->nid, $account->uid, FALSE))) {
+    return true;
   }
 
   return false;
@@ -413,14 +406,30 @@ function ed_task_manager($test, $node){
 
   $group_members_uids = _get_users_in_group($node->nid);
   
-  if (in_array($account->uid, $group_members_uids)) {
-    unset($group_members_uids[array_search($account->uid, $group_members_uids)]);    
+  // Remove creator
+  if (in_array($node->uid, $group_members_uids)) {
+    unset($group_members_uids[array_search($node->uid, $group_members_uids)]);
+  }
+
+  $admin_uids = _ed_cluster_get_group_admins($node->nid);
+  // Remove admins
+  if (!empty($admin_uids)) {
+    foreach ($admin_uids as $auid) {
+      unset($group_members_uids[array_search($auid, $group_members_uids)]);
+    }
   }
   
   $group_members = user_load_multiple($group_members_uids);
-   
+
+  // Get all group tasks
+  $query = db_select('node', 'n');
+  $query->join('og_membership', 'ogm', "n.nid = ogm.etid AND ogm.entity_type='node' AND ogm.group_type = 'node' AND ogm.gid = :gid AND ogm.state = :active", array(':gid' => $node->nid, ':active' => OG_STATE_ACTIVE));
+  $query->fields('n', array('nid'))
+    ->condition('n.type', 'ed_task');
+  $nids = $query->execute()->fetchCol();
+
   $header = array(t('Name'));
-  $nodes = node_load_multiple(_ed_get_user_group_tasks($account->uid, $node->nid));
+  $nodes = node_load_multiple($nids);
     
   foreach(array_values($nodes) as $key => $node_single){
     array_push($header, l($key+1, 'node/'.$node_single->nid, array('attributes' => array('title' => $node_single->title))));  
@@ -488,6 +497,8 @@ function _ed_check_for_answers($uid){
   return $query->execute()->fetchCol();
 }
 
+// TODO Deprecated: This function is no longer used.
+// Consider removal.
 /*
  * Get all tasks that the user has made for this group
  */
@@ -515,6 +526,28 @@ function _get_users_in_group($gid) {
   $result = $query->execute()->fetchCol();
   
   return $result;
+}
+
+/**
+ * Returns an array of user identifiers that are
+ * administrators of a group id provided.
+ *
+ * @param $gui
+ *   Group node unique identifier
+ * @return
+ *   User identifiers or empty
+ */
+function _ed_cluster_get_group_admins($gid) {
+  // Determine general role identifier (rid) for group admin
+  $group_roles = og_roles('node', 'ed_cluster', $gid);
+  $admin_rid = array_search(OG_ADMINISTRATOR_ROLE, $group_roles);
+
+  $query = db_select('users', 'u');
+  $query->join('og_users_roles', 'ogur', "u.uid = ogur.uid AND ogur.gid = :gid AND ogur.group_type = 'node' AND ogur.rid = :rid", array(':gid' => $gid, ':rid' => $admin_rid));
+  $query
+    ->fields('u', array('uid'));
+
+  return $query->execute()->fetchCol();
 }
 
 /**
