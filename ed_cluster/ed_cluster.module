@@ -235,14 +235,9 @@ function ed_cluster_node_view($node, $view_mode, $langcode){
 
             $single_name = l(edidaktikum_get_full_name_for_user_account($single_user_acc), 'user/' . $single->uid);
 
-            // Deal with ed_task that has not title
+            // Deal with special case of ed_answer
             if ('ed_answer' == $single->type) {
-              // Check if task reference exists
-              if (isset($single->field_ref_to_task['und'][0]['target_id']) && $single_task = node_load($single->field_ref_to_task['und'][0]['target_id'])) {
-                  $single_title = l($single_task->title.t(' - Answer'), 'node/' . $single->nid);
-              } else {
-                  $single_title = l(t('Answer with task removed'), 'node/' . $single->nid);
-              }
+              $single_title = l(ed_answer_get_answer_title($single), 'node/' . $single->nid);
             } else {
               $single_title = l($single->title, 'node/' . $single->nid);
             }
@@ -361,6 +356,10 @@ function _ed_get_group_content_by_type($gid, $type){
  * @return boolean
  */
 function ed_task_manager_access($test, $node){
+  if ('ed_cluster' != $node->type) {
+    return false;
+  }
+
   $account = $GLOBALS['user'];
   if (in_array('administrator', $account->roles)) {
     return true;
