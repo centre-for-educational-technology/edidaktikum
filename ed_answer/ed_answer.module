@@ -18,9 +18,44 @@ function ed_answer_form($node, $form_state) {
   return node_content_form($node, $form_state);
 }
 
+/**
+ * Returns answer node title.
+ * Handles three cases: references task exists and task not removed,
+ * task removed but own title is not empty, task removed and own
+ * title is empty (returns default fallback text).
+ *
+ * @param $node
+ *   Node for ed_task object
+ *
+ * @return
+ *   Task title string
+ */
+function ed_answer_get_answer_title(&$node) {
+  $task_title = NULL;
+
+  if (isset($node->field_ref_to_task[LANGUAGE_NONE][0]['entity'])) {
+    $task_title = $node->field_ref_to_task[LANGUAGE_NONE][0]['entity']->title;
+  } else if (isset($node->field_ref_to_task[LANGUAGE_NONE][0]['target_id']) && $single_task = node_load($node->field_ref_to_task[LANGUAGE_NONE][0]['target_id'])) {
+    $task_title = $single_task->title;
+  } else if (!empty($node->title)) {
+    $task_title = $node->title;
+  }
+
+  if (isset($task_title)) {
+    return t('@task-title - Answer', array(
+      '@task-title' => $task_title,
+    ));
+  }
+
+  return t('Answer with task removed');
+}
+
+/**
+ * Implements hook_node_view().
+ */
 function ed_answer_node_view($node, $view_mode, $langcode){
   if($node->type == 'ed_answer' && $view_mode =='full'){
-      drupal_set_title($node->field_ref_to_task['und'][0]['entity']->title.t(' - Answer'));
+      drupal_set_title(ed_answer_get_answer_title($node));
   }
 }
 

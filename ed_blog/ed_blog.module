@@ -87,17 +87,21 @@ function ed_blog_listing_page() {
         'data' => array(
           'type' => _get_type($node),
           'post_name' => l($node->title, 'node/' . $node->nid),
-          'created' => format_date($node->created, 'custom', 'd/m/Y'),
+          'created' => format_date($node->created, 'short'),
         ),
       );
     }else{
+      $dueDateText = "";
       $dueDateTS = _ed_get_due_date($node->field_ref_to_task['und']['0']['target_id']);
-      $dueDate = strtotime($dueDateTS[0]);
+      if (!empty($dueDateTS)) {
+        $dueDate = strtotime($dueDateTS[0]);
+        $dueDateText = " (" . t('Due Date:') . format_date($dueDateTS[0], 'short') . ") ";
+      }
       $rows[] = array(
         'data' => array(
           'type' => _get_type($node),
-          'post_name' => l(_get_task_name($node->field_ref_to_task['und']['0']['target_id']), 'node/' . $node->nid) ." (".t('Due Date: '). format_date($dueDateTS[0], 'custom','d/m/Y'). ") ",
-          'created' => format_date($node->created, 'custom', 'd/m/Y'),
+          'post_name' => l(ed_answer_get_answer_title($node), 'node/' . $node->nid) . $dueDateText,
+          'created' => format_date($node->created, 'short'),
         ),
       );
     }
@@ -125,7 +129,7 @@ function ed_blog_user_profile_blog_listing_page($user) {
   $rows = array();
   foreach($nodes as $node) {
     if ('ed_answer' === $node->type) {
-      $post_name = _get_task_name($node->field_ref_to_task['und']['0']['target_id']);
+      $post_name = ed_answer_get_answer_title($node);
     } else {
       $post_name = $node->title;
     }
@@ -133,7 +137,7 @@ function ed_blog_user_profile_blog_listing_page($user) {
       'data' => array(
         'post_type' => _get_type($node),
         'post_name' => l($post_name, 'node/' . $node->nid),
-        'created' => format_date($node->created, 'custom', 'd/m/Y'),
+        'created' => format_date($node->created, 'short'),
       ),
     );
   }
@@ -146,18 +150,6 @@ function ed_blog_user_profile_blog_listing_page($user) {
   $content['pager'] = array('#theme' => 'pager');
   return $content;
 
-}
-
-
-function _get_task_name($nid) {
-  $query = db_select('node', 'n')
-    ->addTag('node_access')
-    ->fields('n', array('title'))
-    ->condition('nid', $nid);
-
-  $result = $query->execute()->fetchCol();
-
-  return $result[0];
 }
 
 function _get_type($node){
