@@ -280,3 +280,27 @@ function ed_file_form_alter(&$form, &$form_state, $form_id) {
   }
 }
 
+/**
+ * Implements hook_node_access().
+ */
+function ed_file_node_access($node, $op, $account) {
+  $type = is_string($node) ? $node : $node->type;
+
+  if ('ed_file' == $type && 'view' == $op) {
+    // Ignore in case group is set
+    if (isset($node->og_group_ref[LANGUAGE_NONE]) && !empty($node->og_group_ref[LANGUAGE_NONE])) {
+      return NODE_ACCESS_IGNORE;
+    }
+    if (isset($node->ed_file_field_to_user[LANGUAGE_NONE]) && !empty($node->ed_file_field_to_user[LANGUAGE_NONE])) {
+      // Allow creator and to_user field targets, deny any other
+      if (array_search(array('target_id' => $account->uid), $node->ed_file_field_to_user[LANGUAGE_NONE]) !== FALSE || $node->uid == $account->uid) {
+        return NODE_ACCESS_ALLOW;
+      } else {
+        return NODE_ACCESS_DENY;
+      }
+    }
+  }
+
+  return NODE_ACCESS_IGNORE;
+}
+
