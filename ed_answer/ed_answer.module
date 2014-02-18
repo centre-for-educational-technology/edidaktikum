@@ -55,7 +55,24 @@ function ed_answer_get_answer_title(&$node) {
  */
 function ed_answer_node_view($node, $view_mode, $langcode){
   if($node->type == 'ed_answer' && $view_mode =='full'){
-      drupal_set_title(ed_answer_get_answer_title($node));
+    drupal_set_title(ed_answer_get_answer_title($node));
+    if (node_access('delete', $node)) {
+      $node->content['actions-container'] = array(
+        '#type' => 'container',
+        '#attributes' => array(
+          'class' => array('ed-node-actions-container'),
+        ),
+        '#weight' => 10,
+      );
+      $node->content['actions-container']['delete'] = array(
+        '#type' => 'markup',
+        '#markup' => l(t('Delete'), 'node/' . $node->nid . '/delete', array(
+          'attributes' => array(
+            'class' => 'ed-node-delete-button',
+          ),
+        )),
+      );
+    }
   }
 }
 
@@ -240,4 +257,19 @@ function ed_answer_check_tid_parent($tid){
   }
 }
 
+/**
+ * Implements hook_node_access().
+ */
+function ed_answer_node_access($node, $op, $account) {
+  $type = is_string($node) ? $node : $node->type;
+
+  if ('ed_answer' == $type && 'update' == $op) {
+    // Prevent answer edit if task removed
+    if (empty($node->field_ref_to_task[LANGUAGE_NONE])) {
+      return NODE_ACCESS_DENY;
+    }
+  }
+
+  return NODE_ACCESS_IGNORE;
+}
 
