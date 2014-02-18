@@ -361,6 +361,10 @@ function _ed_get_group_content_by_type($gid, $type){
  * @return boolean
  */
 function ed_task_manager_access($test, $node){
+  if ('ed_cluster' != $node->type) {
+    return false;
+  }
+
   $account = $GLOBALS['user'];
   if (in_array('administrator', $account->roles)) {
     return true;
