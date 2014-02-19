@@ -56,7 +56,8 @@ function ed_answer_get_answer_title(&$node) {
 function ed_answer_node_view($node, $view_mode, $langcode){
   if($node->type == 'ed_answer' && $view_mode =='full'){
     drupal_set_title(ed_answer_get_answer_title($node));
-    if (node_access('delete', $node)) {
+    // Add delete link if task has been removed and user can delete
+    if (node_access('delete', $node) && empty($node->field_ref_to_task[LANGUAGE_NONE])) {
       $node->content['actions-container'] = array(
         '#type' => 'container',
         '#attributes' => array(
