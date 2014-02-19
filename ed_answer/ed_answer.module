@@ -37,8 +37,6 @@ function ed_answer_get_answer_title(&$node) {
     $task_title = $node->field_ref_to_task[LANGUAGE_NONE][0]['entity']->title;
   } else if (isset($node->field_ref_to_task[LANGUAGE_NONE][0]['target_id']) && $single_task = node_load($node->field_ref_to_task[LANGUAGE_NONE][0]['target_id'])) {
     $task_title = $single_task->title;
-  } else if (!empty($node->title)) {
-    $task_title = $node->title;
   }
 
   if (isset($task_title)) {
