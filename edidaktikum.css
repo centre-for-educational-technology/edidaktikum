@@ -23,3 +23,8 @@ div[class^="form-item form-type-checkbox-tree form-item-ed-field-competence"] la
 .filter-wrapper{
     display: none;
 }
+
+.ed-node-actions-container .ed-node-delete-button {
+	color: red;
+}
+
