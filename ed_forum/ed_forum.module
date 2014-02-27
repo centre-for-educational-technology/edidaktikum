@@ -8,7 +8,7 @@ require_once('ed_forum_functions.inc');
 
 function ed_forum_node_info() {
   $items['ed_forum'] = array(
-    'name' => t('Forum'),
+    'name' => t('Discussion Board'),
     'type' => 'ed_forum',
     'base' => 'node_content',
     'description' => t('description'),
@@ -32,7 +32,7 @@ function ed_forum_form($node, $form_state) {
 function ed_forum_form_alter(&$form, &$form_state, $form_id) {
   if ('ed_forum_node_form' == $form_id) {
     if (empty($form['#node']->nid)) {
-      drupal_set_title(t('Create Forum'));
+      drupal_set_title(t('Create Discussion Board'));
     }
   }
 }
