@@ -63,7 +63,7 @@ function ed_cluster_menu() {
     'weight' => 50,
   );
   $items['node/%node/forum'] = array(
-    'title' => t('Forum'),
+    'title' => t('Discussion Board'),
     'page callback' => 'ed_listing_from_group',    
     'access callback' => 'ed_group_content_listing_access',    
     'page arguments' => array('node', 1, 'ed_forum'),
