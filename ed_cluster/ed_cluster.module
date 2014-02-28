@@ -650,6 +650,7 @@ function _ed_is_nid_group($nid){
 
 /**
  * Returns paged ed_cluster node identifiers
+ * NB! Ignores node_access
  */
 function ed_cluster_get_clusters() {
   $query = db_select('node', 'n')
@@ -657,7 +658,6 @@ function ed_cluster_get_clusters() {
     ->fields('n', array('nid'))
     ->condition('n.status', 1)
     ->condition('n.type', 'ed_cluster')
-    ->addTag('node_access')
     ->orderBy('created', 'DESC')
     ->limit(ed_get_paging_nr());
   $nids = $query->execute()->fetchCol();

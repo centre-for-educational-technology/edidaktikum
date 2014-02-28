@@ -72,7 +72,11 @@ function ed_cluster_create_node() {
  */
 function ed_cluster_node_add_og_group_field() {
   if (function_exists('og_create_field') && defined('OG_GROUP_FIELD')) {
-    og_create_field(OG_GROUP_FIELD, 'node', 'ed_cluster');
+    $og_field = og_fields_info(OG_GROUP_FIELD);
+    $og_field['instance']['display']['teaser']['label'] = 'hidden';
+    $og_field['instance']['display']['teaser']['type'] = 'og_group_subscribe';
+    $og_field['instance']['display']['teaser']['weight'] = 0;
+    og_create_field(OG_GROUP_FIELD, 'node', 'ed_cluster', $og_field);
   }
 }
 
@@ -157,5 +161,16 @@ function ed_cluster_delete_ed_cluster_nodes() {
   if (!empty($nids)) {
     node_delete_multiple($nids);
   }
+}
+
+/**
+ * Update ed_cluter group field display for teaser.
+ */
+function ed_cluster_update_7100(&$sandbox) {
+  $og_field = field_info_instance('node', OG_GROUP_FIELD, 'ed_cluster');
+  $og_field['display']['teaser']['label'] = 'hidden';
+  $og_field['display']['teaser']['type'] = 'og_group_subscribe';
+  $og_field['display']['teaser']['weight'] = 0;
+  field_update_instance($og_field);
 }
 
