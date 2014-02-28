@@ -156,10 +156,16 @@ function ed_cluster_field_extra_fields(){
  * Implements hook_preprocess_node().
  */
 function ed_cluster_preprocess_node(&$vars) {
-  if (isset($vars['dashboard']) && TRUE == $vars['dashboard'] && 'ed_cluster' == $vars['node']->type) {
-    $vars['user_picture'] = '';
-    $vars['display_submitted'] = FALSE;
-    $vars['classes_array'] []= 'node-dashboard';
+  if ('ed_cluster' == $vars['node']->type) {
+    if (isset($vars['dashboard']) && TRUE == $vars['dashboard']) {
+      $vars['user_picture'] = '';
+      $vars['display_submitted'] = FALSE;
+      $vars['classes_array'] []= 'node-dashboard';
+    }
+
+    if ('teaser' === $vars['view_mode'] && isset($vars['group_access'][LANGUAGE_NONE][0]['value']) && 1 == $vars['group_access'][LANGUAGE_NONE][0]['value']) {
+      $vars['classes_array'][] = 'ed-group-private';
+    }
   }
 }
 
