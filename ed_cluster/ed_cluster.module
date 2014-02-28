@@ -557,7 +557,14 @@ function _ed_cluster_get_group_admins(&$node, $add_creator = false) {
 }
 
 /**
- * TODO Write docstring
+ * Determines if user is creator or admin in any of provided groups.
+ *
+ * @param $uid
+ *   User unique identifier
+ * @param $groups
+ *   Group node identifiers
+ * @return
+ *   Boolean value
  */
 function _ed_cluster_is_groups_admin_or_creator($uid, $groups) {
   // Return FALSE if no groups provided
