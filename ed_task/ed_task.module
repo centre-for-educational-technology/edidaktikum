@@ -157,9 +157,11 @@ function ed_task_listing_page() {
   if(isset($user->uid)){
     $groups = og_get_groups_by_user();
     foreach($groups['node'] as $group) {
+      $group = node_load($group);
+      // Admins also includes group creator in this case
+      $group_admins = _ed_cluster_get_group_admins($group, true);
       $table_suffix++;
-      $group_title = _ed_get_group_name_from_id($group);
-      $nids = _ed_get_tasks_specific_group($group);
+      $nids = _ed_get_tasks_specific_group($group->nid);
       $nodes = node_load_multiple($nids);
       $rows2 = array();
       if(!empty($nodes)){
@@ -172,14 +174,14 @@ function ed_task_listing_page() {
               'posted_by' => $node->name,
               //'due_date' => format_date($datehelp, 'custom','d/m/Y'),   // Check if displays right date
               'due_date' => format_date($due_date_field[0]['value'],'custom','d/m/Y'),
-              'status' => ($user->name != $node->name) ? (_is_task_answered($node->nid) ? '<div class="ed-task-answered">'.t('Answered').'</div>' : '<div class="ed-task-unanswered">'.t('Unanswered').'</div>') : '',
+              'status' => (!in_array($user->uid, $group_admins)) ? (_is_task_answered($node->nid) ? '<div class="ed-task-answered">'.t('Answered').'</div>' : '<div class="ed-task-unanswered">'.t('Unanswered').'</div>') : '',
             ),
           );
         }
         $content[$table_type.'-'.$table_suffix] = array(
           '#theme' => 'table',
           '#rows' => $rows2,
-          '#header' => array($group_title, t('Assigned By'), t('Due Date'), t('Status')),
+          '#header' => array($group->title, t('Assigned By'), t('Due Date'), t('Status')),
         );
         $content['pager-'.$table_suffix] = array(
           '#theme' => 'pager',
@@ -272,7 +274,12 @@ function ed_task_node_view($node, $view_mode, $langcode) {
         }
       }
       
-      if($node->uid == $acc->uid && !(recursive_array_search($node->uid, $node->field_to_user))){
+      $group_ids = array();
+      if (isset($node->og_group_ref[LANGUAGE_NONE]) && is_array($node->og_group_ref[LANGUAGE_NONE])) {
+        $group_ids = array_map(function($element) { return $element['target_id']; }, $node->og_group_ref[LANGUAGE_NONE]);
+      }
+
+      if(($node->uid == $acc->uid || _ed_cluster_is_groups_admin_or_creator($acc->uid, $group_ids)) && !(recursive_array_search($node->uid, $node->field_to_user))){
         break;
       }
       $options = array(
@@ -557,6 +564,7 @@ function ed_task_node_insert($node) {
       foreach ($node->og_group_ref[LANGUAGE_NONE] as $single) {
         $group_ids []= $single['target_id'];
       }
+      // XXX NEED TO EXCLUDE ANY GROUP CREATORS AND ADMINISTRATORS
       $uids = db_select('og_membership', 'ogm')
         ->distinct()
         ->fields('ogm', array('etid'))

@@ -410,7 +410,7 @@ function ed_task_manager($test, $node){
     unset($group_members_uids[array_search($node->uid, $group_members_uids)]);
   }
 
-  $admin_uids = _ed_cluster_get_group_admins($node->nid);
+  $admin_uids = _ed_cluster_get_group_admins($node);
   // Remove admins
   if (!empty($admin_uids)) {
     foreach ($admin_uids as $auid) {
@@ -531,22 +531,67 @@ function _get_users_in_group($gid) {
  * Returns an array of user identifiers that are
  * administrators of a group id provided.
  *
- * @param $gui
- *   Group node unique identifier
+ * @param $node
+ *   Group node
+ * @param $add_creator
+ *   A flag to add creator uid to admins
  * @return
  *   User identifiers or empty
  */
-function _ed_cluster_get_group_admins($gid) {
+function _ed_cluster_get_group_admins(&$node, $add_creator = false) {
   // Determine general role identifier (rid) for group admin
-  $group_roles = og_roles('node', 'ed_cluster', $gid);
+  $group_roles = og_roles('node', 'ed_cluster', $node->nid);
   $admin_rid = array_search(OG_ADMINISTRATOR_ROLE, $group_roles);
-
+  
   $query = db_select('users', 'u');
-  $query->join('og_users_roles', 'ogur', "u.uid = ogur.uid AND ogur.gid = :gid AND ogur.group_type = 'node' AND ogur.rid = :rid", array(':gid' => $gid, ':rid' => $admin_rid));
+  $query->join('og_users_roles', 'ogur', "u.uid = ogur.uid AND ogur.gid = :gid AND ogur.group_type = 'node' AND ogur.rid = :rid", array(':gid' => $node->nid, ':rid' => $admin_rid));
   $query
     ->fields('u', array('uid'));
+  $admins = $query->execute()->fetchCol();
 
-  return $query->execute()->fetchCol();
+  if ($add_creator && !in_array($node->uid, $admins)) {
+    $admins []= $node->uid;
+  }
+
+  return $admins;
+}
+
+/**
+ * TODO Write docstring
+ */
+function _ed_cluster_is_groups_admin_or_creator($uid, $groups) {
+  // Return FALSE if no groups provided
+  if (empty($groups) || !is_array($groups)) {
+    return FALSE;
+  }
+
+  // Group creator case
+  $query = db_select('node', 'n')
+    ->fields('n', array('nid'))
+    ->condition('n.uid', $uid)
+    ->condition('n.nid', $groups, 'IN')
+    ->countQuery();
+
+  if ((int) $query->execute()->fetchField() > 0) {
+    return TRUE;
+  }
+
+  // Group administrator case
+  $group_roles = og_roles('node', 'ed_cluster');
+  $admin_rid = array_search(OG_ADMINISTRATOR_ROLE, $group_roles);
+  
+  $query = db_select('users', 'u');
+  $query->join('og_users_roles', 'ogur', "u.uid = ogur.uid AND ogur.uid = :uid AND ogur.group_type = 'node' AND ogur.rid = :rid", array(':uid' => $uid, ':rid' => $admin_rid));
+  $query
+    ->fields('u', array('uid'))
+    ->condition('ogur.gid', $groups, 'IN')
+    ->countQuery();
+
+  if ((int) $query->execute()->fetchField() > 0) {
+    return TRUE;
+  }
+
+  return FALSE;
 }
 
 /**
