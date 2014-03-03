@@ -305,3 +305,15 @@ function edidaktikum_user_login(&$edit, $account) {
   }
 }
 
+/**
+ * Implements hook_user_view_alter().
+ */
+function edidaktikum_user_view_alter(&$build) {
+  if (isset($build['summary'])) {
+    $build['summary']['#title'] = '';
+  }
+  if (isset($build['hybridauth_identities'])) {
+    unset($build['hybridauth_identities']);
+  }
+}
+
