@@ -351,6 +351,7 @@ function _ed_get_group_content_by_type($gid, $type){
       ->condition('ogm.gid', $gid)
       ->condition('n.nid', $gid, '!=')
       ->condition('n.type', $type)
+      ->orderBy('n.created', 'DESC')
       ->distinct();
   $result = $query->execute()->fetchCol();
   return $result;

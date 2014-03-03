@@ -178,7 +178,8 @@ function _ed_get_user_blogs($uid, $only_blogs = false) {
     ->addTag('node_access')
     ->fields('n', array('nid'));
   $query->condition('type', $help, 'IN')
-    ->condition('n.uid', $uid);
+    ->condition('n.uid', $uid)
+    ->orderBy('n.created', 'DESC');
   $query = $query->extend('TableSort')->extend('PagerDefault')->limit(ed_get_paging_nr());
   $result = $query->execute()->fetchCol();
 
