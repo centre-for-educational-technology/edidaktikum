@@ -62,8 +62,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: 2014-02-27 13:36+0200\n"
-"PO-Revision-Date: 2014-02-27 13:36+0200\n"
-"Last-Translator: Pjotr Savitski <pjotr.savitski@gmail.com>\n"
+"PO-Revision-Date: 2014-03-04 09:43+0200\n"
+"Last-Translator: Priit Tammets <tammets@gmail.com>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
@@ -371,9 +371,8 @@ msgid "body_label"
 msgstr "body_label"
 
 #: ed_answer/ed_answer.module:43
-#, fuzzy
 msgid "@task-title - Answer"
-msgstr " - Vastus"
+msgstr "@task-title - Vastus"
 
 #: ed_answer/ed_answer.module:48
 msgid "Answer with task removed"
@@ -381,7 +380,7 @@ msgstr "Vastus koos ülesandega kustutatud"
 
 #: ed_answer/ed_answer.module:68
 msgid "Delete"
-msgstr ""
+msgstr "Kustuta"
 
 #: ed_answer/ed_answer.module:85
 msgid "Create Answer"
@@ -473,7 +472,6 @@ msgid "Add new blog post"
 msgstr "Lisa uus postitus"
 
 #: ed_blog/ed_blog.module:98
-#, fuzzy
 msgid "Due Date:"
 msgstr "Tähtaeg:"
 
@@ -552,7 +550,7 @@ msgstr "Ülesannete haldur"
 
 #: ed_cluster/ed_cluster.module:66 ed_forum/ed_forum.module:11
 msgid "Discussion Board"
-msgstr ""
+msgstr "Arutelu"
 
 #: ed_cluster/ed_cluster.module:75
 msgid "Pages"
@@ -572,7 +570,7 @@ msgstr ""
 
 #: ed_cluster/ed_cluster.module:148
 msgid "desc"
-msgstr ""
+msgstr "kirjeldus"
 
 #: ed_cluster/ed_cluster.module:247
 msgid "!name added !node @time"
@@ -584,7 +582,7 @@ msgstr ""
 
 #: ed_cluster/ed_cluster.module:272
 msgid "No recent activity"
-msgstr ""
+msgstr "Värskeid uuendusi ei ole"
 
 #: ed_cluster/ed_cluster.module:430 ed_task/ed_task.module:270
 msgid "Name"
@@ -749,7 +747,7 @@ msgstr "veel"
 #: ed_file/includes/views/ed_file.views_default.inc:92
 #: ed_portfolio/includes/views/ed_portfolio.views_default.inc:94
 msgid "Apply"
-msgstr ""
+msgstr "Rakenda"
 
 #: ed_file/includes/views/ed_file.views_default.inc:93
 #: ed_portfolio/includes/views/ed_portfolio.views_default.inc:95
@@ -818,7 +816,7 @@ msgstr ""
 
 #: ed_forum/ed_forum.module:35
 msgid "Create Discussion Board"
-msgstr ""
+msgstr "Loo uus arutelu teema"
 
 #: ed_forum/ed_forum.info:0
 msgid "eDidaktikum Forum"
@@ -929,7 +927,7 @@ msgstr "Õppematerjali keel"
 
 #: ed_learning_resource/ed_learning_resource.info:0
 msgid "eDidaktikum Learning Resource content type."
-msgstr ""
+msgstr "eDidaktikumi õppematerjali sisutüüp"
 
 #: ed_learning_resource_voc/ed_learning_resource_voc.install:27
 msgid "Learning Resource Types"
@@ -937,7 +935,7 @@ msgstr "Õppematerjali tüübid"
 
 #: ed_learning_resource_voc/ed_learning_resource_voc.install:27
 msgid "A list of different learning resource types"
-msgstr ""
+msgstr "Õppematerjalide tüüpide nimekiri"
 
 #: ed_learning_resource_voc/ed_learning_resource_voc.install:28
 msgid "Learning Resource Languages"
@@ -953,7 +951,7 @@ msgstr "Õppematerjali märksõna"
 
 #: ed_learning_resource_voc/ed_learning_resource_voc.install:29
 msgid "A list of tags for learning resources"
-msgstr ""
+msgstr "Õppematerjalide märksõnade nimekiri"
 
 #: ed_learning_resource_voc/ed_learning_resource_voc.install:30
 msgid "Learning Resource Authors"
@@ -1271,7 +1269,7 @@ msgstr ""
 
 #: ed_task/ed_task.module:356;357
 msgid "Task answers listing"
-msgstr ""
+msgstr "Ülesande vastuste nimekiri"
 
 #: ed_task/ed_task.module:371
 msgid "Create Task"
