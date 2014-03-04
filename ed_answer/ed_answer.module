@@ -40,8 +40,8 @@ function ed_answer_get_answer_title(&$node) {
   }
 
   if (isset($task_title)) {
-    return t('@task-title - Answer', array(
-      '@task-title' => $task_title,
+    return t('!task-title - Answer', array(
+      '!task-title' => $task_title,
     ));
   }
 
@@ -281,3 +281,4 @@ function ed_answer_ctools_plugin_api() {
     return array("version" => 1);
   }
 }
+
