@@ -75,7 +75,7 @@ function ed_learning_resource_listing($form, &$form_state) {
   $catimgpath = drupal_get_path('module', 'edidaktikum').'/images/menu_icon_small.png';
   $form['content_sort_select'] = array(
     '#type' => 'select',
-    '#options' => drupal_map_assoc(array(t('Latest First'), t('Earliest First'), t('Title'), t('Likes(not facebook)'))),
+    '#options' => drupal_map_assoc(array(t('Latest First'), t('Earliest First'), t('Title'))),
   );
   $term_reference_tree_path = drupal_get_path('module', 'term_reference_tree');
   $path = drupal_get_path('module', 'ed_learning_resource');
@@ -144,8 +144,8 @@ function ed_learning_resource_listing($form, &$form_state) {
     }
   }
   else{
-    if(!empty($form_state['values']['content_sort_select'])){
-      $order = ($form_state['values']['content_sort_select']);
+    if(!empty($form_state['input']['content_sort_select'])){
+      $order = ($form_state['input']['content_sort_select']);
     }
     $resources = _ed_get_all_resources($order);
     $nids = node_load_multiple($resources);

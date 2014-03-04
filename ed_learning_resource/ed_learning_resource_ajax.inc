@@ -17,7 +17,7 @@ function ed_learning_resource_dynamic_sections($form, &$form_state, $no_js_use =
 
   $form['content_sort_select'] = array(
     '#type' => 'select',
-    '#options' => drupal_map_assoc(array(t('Latest First'), t('Earliest First'), t('Title'), t('Likes'))),
+    '#options' => drupal_map_assoc(array(t('Latest First'), t('Earliest First'), t('Title'))),
     /*'#ajax' => array(
       'wrapper' => 'selection-fieldset-wrapper',
       'callback' => 'ed_learning_resource_dynamic_sections_select_callback',
@@ -154,12 +154,6 @@ function ed_learning_resource_dynamic_sections($form, &$form_state, $no_js_use =
           $build['pager'] = array('#theme' => 'pager');
           $form['selection_fieldset']['resources'] = $build;
         }
-        break;
-      case t('Likes'):
-        $form['selection_fieldset']['resources'] = array(
-          '#type' => 'markup',
-          '#markup' => '<h3>' . t('Functionality doesn\'t exist yet') . '</h2>',
-        );
         break;
     }
   }
