@@ -309,11 +309,23 @@ function edidaktikum_user_login(&$edit, $account) {
  * Implements hook_user_view_alter().
  */
 function edidaktikum_user_view_alter(&$build) {
-  if (isset($build['summary'])) {
-    $build['summary']['#title'] = '';
-  }
-  if (isset($build['hybridauth_identities'])) {
-    unset($build['hybridauth_identities']);
+  if ('full' == $build['#view_mode']) {
+    if (isset($build['og_user_node']) && is_array($build['og_user_node']) && !empty($build['og_user_node']) && !empty($build['og_user_node']['#items'])) {
+      // Checks if last element of the array is just a #markup
+      // and removes if that is true
+      $last = end($build['og_user_node']);
+      reset($build['og_user_node']);
+      if (isset($last['#markup'])) {
+        array_pop($build['og_user_node']);
+      }
+      unset($last);
+    }
+    if (isset($build['summary'])) {
+      $build['summary']['#title'] = '';
+    }
+    if (isset($build['hybridauth_identities'])) {
+      unset($build['hybridauth_identities']);
+    }
   }
 }
 
