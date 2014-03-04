@@ -61,9 +61,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2014-02-27 13:36+0200\n"
-"PO-Revision-Date: 2014-03-04 09:43+0200\n"
-"Last-Translator: Priit Tammets <tammets@gmail.com>\n"
+"POT-Creation-Date: 2014-03-04 15:41+0200\n"
+"PO-Revision-Date: 2014-03-04 15:44+0200\n"
+"Last-Translator: Pjotr Savitski <pjotr.savitski@gmail.com>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
@@ -353,7 +353,7 @@ msgstr "Kontakt"
 msgid "Content"
 msgstr "Sisu"
 
-#: ed_answer/ed_answer.module:7 ed_task/ed_task.module:270;300
+#: ed_answer/ed_answer.module:7 ed_task/ed_task.module:272;307
 msgid "Answer"
 msgstr "Vasta"
 
@@ -371,8 +371,8 @@ msgid "body_label"
 msgstr "body_label"
 
 #: ed_answer/ed_answer.module:43
-msgid "@task-title - Answer"
-msgstr "@task-title - Vastus"
+msgid "!task-title - Answer"
+msgstr "!task-title - Vastus"
 
 #: ed_answer/ed_answer.module:48
 msgid "Answer with task removed"
@@ -407,7 +407,7 @@ msgid "Competence"
 msgstr "Pädevus"
 
 #: ed_answer/ed_answer.install:163 ed_blog/ed_blog.install:43
-#: ed_bookmark/ed_bookmark.install:25;105;105 ed_cluster/ed_cluster.module:647
+#: ed_bookmark/ed_bookmark.install:25;105;105 ed_cluster/ed_cluster.module:706
 #: ed_cluster/ed_cluster.install:56 ed_event/ed_event.install:278
 #: ed_file/ed_file.install:118 ed_forum/ed_forum.install:31
 #: ed_learning_resource/ed_learning_resource.install:33
@@ -560,7 +560,7 @@ msgstr "Leheküljed"
 msgid "Bookmarks"
 msgstr "Järjehoidjad"
 
-#: ed_cluster/ed_cluster.module:125;403
+#: ed_cluster/ed_cluster.module:125;410
 msgid "Add new"
 msgstr "Lisa uus "
 
@@ -572,31 +572,31 @@ msgstr ""
 msgid "desc"
 msgstr "kirjeldus"
 
-#: ed_cluster/ed_cluster.module:247
+#: ed_cluster/ed_cluster.module:253
 msgid "!name added !node @time"
 msgstr ""
 
-#: ed_cluster/ed_cluster.module:251
+#: ed_cluster/ed_cluster.module:257
 msgid "!name changed !node @time"
 msgstr ""
 
-#: ed_cluster/ed_cluster.module:272
+#: ed_cluster/ed_cluster.module:278
 msgid "No recent activity"
 msgstr "Värskeid uuendusi ei ole"
 
-#: ed_cluster/ed_cluster.module:430 ed_task/ed_task.module:270
+#: ed_cluster/ed_cluster.module:437 ed_task/ed_task.module:272
 msgid "Name"
 msgstr "Nimi"
 
-#: ed_cluster/ed_cluster.module:562
+#: ed_cluster/ed_cluster.module:621
 msgid "Add new group"
 msgstr "Lisa uus grupp"
 
-#: ed_cluster/ed_cluster.module:635
+#: ed_cluster/ed_cluster.module:694
 msgid "Create Group"
 msgstr "Loo grupp"
 
-#: ed_cluster/ed_cluster.module:645
+#: ed_cluster/ed_cluster.module:704
 msgid "Group (@count)"
 msgstr "Grupp (@count)"
 
@@ -606,13 +606,13 @@ msgstr "Grupp (@count)"
 msgid "Featured image"
 msgstr "Kaanepilt"
 
-#: ed_cluster/ed_cluster.install:90 ed_event/ed_event.install:68
+#: ed_cluster/ed_cluster.install:94 ed_event/ed_event.install:68
 #: ed_learning_resource/ed_learning_resource_functions.inc:144
 #: ed_news/ed_news.install:96 ed_subgroup/ed_subgroup_functions.inc:7
 msgid "Excerpt"
 msgstr "Kokkuvõte"
 
-#: ed_cluster/ed_cluster.install:115 ed_event/ed_event.install:256
+#: ed_cluster/ed_cluster.install:119 ed_event/ed_event.install:256
 #: ed_file/ed_file.install:362
 msgid "Categories"
 msgstr "Kategooriad"
@@ -698,7 +698,7 @@ msgstr "Lisa uus !file või !folder"
 msgid "Changed"
 msgstr "Muudetud"
 
-#: ed_file/ed_file.module:198 ed_task/ed_task.module:289
+#: ed_file/ed_file.module:198 ed_task/ed_task.module:296
 msgid "Edit"
 msgstr "Muuda"
 
@@ -844,26 +844,18 @@ msgstr "Vanemad eespool"
 msgid "Earliest First"
 msgstr "Värskemad eespool"
 
-#: ed_learning_resource/ed_learning_resource_ajax.inc:20;158
-msgid "Likes"
-msgstr "Meeldimised"
-
-#: ed_learning_resource/ed_learning_resource_ajax.inc:29;187
+#: ed_learning_resource/ed_learning_resource_ajax.inc:29;181
 #: ed_learning_resource/ed_learning_resource.module:109
 msgid "Sort"
 msgstr "Sorteeri"
 
-#: ed_learning_resource/ed_learning_resource_ajax.inc:66;189
+#: ed_learning_resource/ed_learning_resource_ajax.inc:66;183
 msgid "Sort by Category"
 msgstr "Sorteeri kategooria järgi"
 
 #: ed_learning_resource/ed_learning_resource_ajax.inc:106
 msgid "Learning resources not found"
 msgstr "Õppematerjale ei leitud"
-
-#: ed_learning_resource/ed_learning_resource_ajax.inc:161
-msgid "Functionality doesn't exist yet"
-msgstr "Funktsionaalsus puudub"
 
 #: ed_learning_resource/ed_learning_resource_functions.inc:12;186
 msgid "Methodological Guide"
@@ -900,10 +892,6 @@ msgstr "Kaanepilt"
 #: ed_learning_resource/ed_learning_resource.module:44;53;61
 msgid "Resources"
 msgstr "Õppematerjalid"
-
-#: ed_learning_resource/ed_learning_resource.module:78
-msgid "Likes(not facebook)"
-msgstr "Meeldimised"
 
 #: ed_learning_resource/ed_learning_resource.module:122
 msgid "Add new learning resource"
@@ -1149,7 +1137,7 @@ msgstr "Privaatne"
 msgid "error"
 msgstr "viga"
 
-#: ed_portfolio/ed_portfolio.module:72 ed_task/ed_task.module:146;182
+#: ed_portfolio/ed_portfolio.module:72 ed_task/ed_task.module:146;184
 msgid "Status"
 msgstr "Staatus"
 
@@ -1187,7 +1175,7 @@ msgid ""
 "select Subgroup from Entity Selection->Target Bundles"
 msgstr ""
 
-#: ed_task/ed_task_functions.inc:5 ed_task/ed_task.module:117;146;182
+#: ed_task/ed_task_functions.inc:5 ed_task/ed_task.module:117;146;184
 msgid "Due Date"
 msgstr "Tähtaeg"
 
@@ -1227,11 +1215,11 @@ msgstr "Jagatud:"
 msgid "You haven't made any tasks"
 msgstr "Sa ei ole loonud veel ühtegi ülesannet"
 
-#: ed_task/ed_task.module:139;175
+#: ed_task/ed_task.module:139;177
 msgid "Answered"
 msgstr "Vastatud"
 
-#: ed_task/ed_task.module:139;175
+#: ed_task/ed_task.module:139;177
 msgid "Unanswered"
 msgstr "Vastamata"
 
@@ -1239,55 +1227,55 @@ msgstr "Vastamata"
 msgid "Tasks to me"
 msgstr "Mulle antud ülesanded"
 
-#: ed_task/ed_task.module:146;182
+#: ed_task/ed_task.module:146;184
 msgid "Assigned By"
 msgstr "Ülesande andja"
 
-#: ed_task/ed_task.module:204
+#: ed_task/ed_task.module:206
 msgid "Answers"
 msgstr "Vastused"
 
-#: ed_task/ed_task.module:211
+#: ed_task/ed_task.module:213
 msgid "Answers by groups"
 msgstr "Vastused gruppide järgi"
 
-#: ed_task/ed_task.module:262
+#: ed_task/ed_task.module:264
 msgid "Answers by users"
 msgstr "Individuaalsed vastused"
 
-#: ed_task/ed_task.module:270
+#: ed_task/ed_task.module:272
 msgid "Submitted"
 msgstr "Esitatud"
 
-#: ed_task/ed_task.module:351
+#: ed_task/ed_task.module:358
 msgid "extra fields label"
 msgstr ""
 
-#: ed_task/ed_task.module:352
+#: ed_task/ed_task.module:359
 msgid "extra fields descrption"
 msgstr ""
 
-#: ed_task/ed_task.module:356;357
+#: ed_task/ed_task.module:363;364
 msgid "Task answers listing"
 msgstr "Ülesande vastuste nimekiri"
 
-#: ed_task/ed_task.module:371
+#: ed_task/ed_task.module:378
 msgid "Create Task"
 msgstr "Loo ülesanne"
 
-#: ed_task/ed_task.module:608
+#: ed_task/ed_task.module:625
 msgid "New Task - eDidaktikum"
 msgstr "Uus ülesanne - eDidaktikum"
 
-#: ed_task/ed_task.module:609
+#: ed_task/ed_task.module:626
 msgid "@fullname assigned you a task: @taskname."
 msgstr "@fullname andis sulle ülesande: @taskname."
 
-#: ed_task/ed_task.module:610
+#: ed_task/ed_task.module:627
 msgid "Due date: @duedate"
 msgstr "Tähtaeg: @duedate"
 
-#: ed_task/ed_task.module:611
+#: ed_task/ed_task.module:628
 msgid "View task: @taskurl"
 msgstr "Vaata ülesannet: @taskurl"
 
@@ -1334,6 +1322,15 @@ msgstr ""
 #: entityreference_dragdrop/entityreference_dragdrop.info:0
 msgid "Fields"
 msgstr "Väljad"
+
+#~ msgid "Likes"
+#~ msgstr "Meeldimised"
+
+#~ msgid "Functionality doesn't exist yet"
+#~ msgstr "Funktsionaalsus puudub"
+
+#~ msgid "Likes(not facebook)"
+#~ msgstr "Meeldimised"
 
 #~ msgid "Forum"
 #~ msgstr "Foorum"
