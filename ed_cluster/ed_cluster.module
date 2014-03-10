@@ -89,6 +89,11 @@ function ed_cluster_menu() {
     'type' => MENU_LOCAL_TASK,
     'weight' => 50,
   );
+  $items['clusters/get/groups_members'] = array(
+    'page callback' => 'ed_cluster_get_groups_members_ajax',
+    'access arguments' => 'user_is_logged_in',
+    'type' => MENU_CALLBACK,
+  );
 
   return $items;
 }
@@ -730,5 +735,57 @@ function _ed_cluster_get_group_pending_members_count($gid) {
   $count = $query->countQuery()->execute()->fetchField();
 
   return $count;
+}
+
+/**
+ * Implements hook_field_widget_alter().
+ */
+function ed_cluster_field_widget_form_alter(&$element, &$form_state, $context) {
+  if (!empty($element['#field_name']) && 'field_to_group_member' == $element['#field_name']) {
+    $element['#attached']['js'][] = drupal_get_path('module', 'ed_cluster') . '/js/field_to_group_member.js';
+  }
+}
+
+/**
+ * TODO Write docstring
+ */
+function ed_cluster_get_groups_members_ajax() {
+  $group_data = array();
+  $groups = $_POST['groups'];
+
+  // Remove _none from values
+  if (is_array($groups)) {
+    if (($key = array_search('_none', $groups)) !== FALSE) {
+      unset($groups[$key]);
+    }
+  } else {
+    if ('_none' == $groups) {
+      $groups = "";
+    }
+  }
+
+  if (!empty($groups)) {
+    $query = db_select('users', 'u');
+    $query->join('og_membership', 'ogm', "u.uid = ogm.etid AND ogm.entity_type = 'user'");
+    $query->leftJoin('field_data_ed_field_full_name', 'ufn', "u.uid = ufn.entity_id AND ufn.entity_type = 'user' AND ufn.bundle = 'user'");
+    $query
+      ->distinct()
+      ->condition('u.uid', 0, '<>')
+      ->condition('u.status', 1, '=')
+      ->condition('ogm.gid', $groups)
+      ->fields('u', array('uid', 'name'))
+      ->fields('ufn', array('ed_field_full_name_value'));
+    $result = $query->execute()->fetchAll();
+
+    if ($result) {
+      foreach ($result as $single) {
+        $group_data []= array(
+          'value' => $single->uid,
+          'name' => (!empty($single->ed_field_full_name_value)) ? $single->ed_field_full_name_value : $single->name,
+        );
+      }
+    }
+  }
+  drupal_json_output($group_data);
 }
 
