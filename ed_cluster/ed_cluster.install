@@ -15,6 +15,7 @@ function ed_cluster_install() {
   ed_cluster_node_add_field_category();
   ed_cluster_node_add_og_group_access_field();
   ed_cluster_node_add_field_featured_image();
+  ed_cluster_add_field_private_comment();
 }
 function ed_cluster_node_add_field_featured_image() {
   $field_name = 'ed_field_featured_image';
@@ -140,6 +141,24 @@ function ed_cluster_node_add_og_group_access_field() {
 }
 
 /**
+ * Creates field ed_field_private_comment.
+ */
+function ed_cluster_add_field_private_comment() {
+  $field_name = 'ed_field_private_comment';
+  if (!field_info_field($field_name)) {
+    $field = array(
+      'field_name' => $field_name,
+      'type' => 'list_boolean',
+      'settings' => array(
+        'allowed_values' => array(0, 1),
+      ),
+      'entity_types' => array('comment'),
+    );
+    field_create_field($field);
+  }
+}
+
+/**
  * Deletes node type ed_cluster.
  */
 function ed_cluster_delete_node() {
@@ -172,5 +191,12 @@ function ed_cluster_update_7100(&$sandbox) {
   $og_field['display']['teaser']['type'] = 'og_group_subscribe';
   $og_field['display']['teaser']['weight'] = 0;
   field_update_instance($og_field);
+}
+
+/**
+ * Add private comment field
+ */
+function ed_cluster_update_7101(&$sandbox) {
+  ed_cluster_add_field_private_comment();
 }
 

@@ -154,6 +154,12 @@ function ed_answer_install() {
     field_create_instance($instance);
   }
 
+  foreach (_ed_answer_installed_comment_instances() as $instance) {
+    $instance['entity_type'] = 'comment';
+    $instance['bundle'] = 'comment_node_ed_answer';
+    field_create_instance($instance);
+  }
+
   ed_answer_add_og_audience();
 }
 
@@ -190,12 +196,29 @@ function ed_answer_uninstall() {
   field_delete_field('field_ref_to_task');
 
 
-
   $instances = field_info_instances('node', 'ed_answer');
   foreach($instances as $instance_name => $instance) {
     field_delete_instance($instance);
   }
+
+  $comment_instances = field_info_instances('comment', 'comment_node_ed_answer');
+  foreach($comment_instances as $instance_name => $instance) {
+    field_delete_instance($instance);
+  }
+
   node_type_delete('ed_answer');
   field_purge_batch(1000);
 
 }
+
+/**
+ * Adds private comment field instance to ed_answer comment.
+ */
+function ed_answer_update_7100(&$sandbox) {
+  $instances = _ed_answer_installed_comment_instances();
+  $instance = $instances['ed_field_private_comment'];
+  $instance['entity_type'] = 'comment';
+  $instance['bundle'] = 'comment_node_ed_answer';
+  field_create_instance($instance);
+}
+

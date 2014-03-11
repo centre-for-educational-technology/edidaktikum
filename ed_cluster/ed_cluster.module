@@ -5,6 +5,8 @@
  * Cluster module.
  */
 
+define('ED_FIELD_PRIVATE_COMMENT', 'ed_field_private_comment');
+
 /**
  * Implements hook_menu().
  */
@@ -787,5 +789,17 @@ function ed_cluster_get_groups_members_ajax() {
     }
   }
   drupal_json_output($group_data);
+}
+
+/**
+ * Implements hook_comment_view_alter().
+ */
+function ed_cluster_comment_view_alter(&$build) {
+  if (isset($build['#comment']->{ED_FIELD_PRIVATE_COMMENT}[LANGUAGE_NONE][0]['value']) && 1 == $build['#comment']->{ED_FIELD_PRIVATE_COMMENT}[LANGUAGE_NONE][0]['value']) {
+    global $user;
+    if (!(user_is_logged_in() && ($build['#comment']->uid == $user->uid || $build['#node']->uid == $user->uid))) {
+      $build['#access'] = FALSE;
+    }
+  }
 }
 

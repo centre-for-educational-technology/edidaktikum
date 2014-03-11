@@ -19,3 +19,30 @@ function _ed_answer_installed_instances() {
 
   return $instances;
 }
+
+/**
+ * Returns comment instances to be installed.
+ */
+function _ed_answer_installed_comment_instances() {
+  $instances['ed_field_private_comment'] = array(
+    'field_name' => 'ed_field_private_comment',
+    'label' => 'Private comment',
+    'widget' => array(
+      'weight' => 2,
+      'type' => 'options_onoff',
+      'module' => 'options',
+      'settings' => array(
+        'display_label' => 1,
+      ),
+    ),
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'type' => 'hidden',
+      ),
+    ),
+  );
+
+  return $instances;
+}
+
