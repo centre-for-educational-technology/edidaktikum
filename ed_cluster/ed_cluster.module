@@ -93,7 +93,7 @@ function ed_cluster_menu() {
   );
   $items['clusters/get/groups_members'] = array(
     'page callback' => 'ed_cluster_get_groups_members_ajax',
-    'access arguments' => 'user_is_logged_in',
+    'access callback' => 'user_is_logged_in',
     'type' => MENU_CALLBACK,
   );
 
@@ -753,7 +753,7 @@ function ed_cluster_field_widget_form_alter(&$element, &$form_state, $context) {
  */
 function ed_cluster_get_groups_members_ajax() {
   $group_data = array();
-  $groups = $_POST['groups'];
+  $groups = isset($_POST['groups']) ? $_POST['groups'] : array();
 
   // Remove _none from values
   if (is_array($groups)) {
@@ -802,4 +802,27 @@ function ed_cluster_comment_view_alter(&$build) {
     }
   }
 }
+
+/**
+ * Implements hook_node_grants().
+ */
+/*function ed_cluster_node_grants($account, $op) {
+  if ('view' != $op) {
+    return;
+  }
+
+  // TODO Need to get all the nodes that user if referred to by group member field
+  return array();
+}*/
+
+/**
+ * Implements hook_node_access_records().
+ */
+/*function ed_cluster_node_access_records($node) {
+  if (empty($node->status)) {
+    return array();
+  }
+
+  return array();
+}*/
 
