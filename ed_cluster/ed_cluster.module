@@ -7,6 +7,10 @@
 
 define('ED_FIELD_PRIVATE_COMMENT', 'ed_field_private_comment');
 
+define('ED_FIELD_TO_GROUP_MEMBER', 'ed_field_to_group_member');
+
+define('ED_ACCESS_REALM', 'ed_access');
+
 /**
  * Implements hook_menu().
  */
@@ -346,6 +350,7 @@ function _ed_get_group_content($gid){
   $query->fields('n', array('nid'))
       ->condition('ogm.gid', $gid)
       ->condition('n.nid', $gid, '!=')
+      ->addTag('node_access')
       ->distinct();
   $result = $query->execute()->fetchCol();
   return $result;
@@ -358,6 +363,7 @@ function _ed_get_group_content_by_type($gid, $type){
       ->condition('ogm.gid', $gid)
       ->condition('n.nid', $gid, '!=')
       ->condition('n.type', $type)
+      ->addTag('node_access')
       ->orderBy('n.created', 'DESC')
       ->distinct();
   $result = $query->execute()->fetchCol();
@@ -743,8 +749,16 @@ function _ed_cluster_get_group_pending_members_count($gid) {
  * Implements hook_field_widget_alter().
  */
 function ed_cluster_field_widget_form_alter(&$element, &$form_state, $context) {
-  if (!empty($element['#field_name']) && 'field_to_group_member' == $element['#field_name']) {
+  if (!empty($element['#field_name']) && ED_FIELD_TO_GROUP_MEMBER == $element['#field_name']) {
     $element['#attached']['js'][] = drupal_get_path('module', 'ed_cluster') . '/js/field_to_group_member.js';
+    $element['#multiple'] = TRUE;
+  }
+
+  // This removes admin override from Organic Groups Audience field
+  if (!empty($element['#field_name']) && OG_AUDIENCE_FIELD == $element['#field_name']) {
+    if (!empty($element['admin'])) {
+      $element['admin']['#access'] = FALSE;
+    }
   }
 }
 
@@ -752,7 +766,12 @@ function ed_cluster_field_widget_form_alter(&$element, &$form_state, $context) {
  * TODO Write docstring
  */
 function ed_cluster_get_groups_members_ajax() {
-  $group_data = array();
+  $group_data = array(
+    array(
+      'value' => '_none',
+      'name' => '- None -',// TODO translatable
+    ),
+  );
   $groups = isset($_POST['groups']) ? $_POST['groups'] : array();
 
   // Remove _none from values
@@ -806,23 +825,67 @@ function ed_cluster_comment_view_alter(&$build) {
 /**
  * Implements hook_node_grants().
  */
-/*function ed_cluster_node_grants($account, $op) {
+function ed_cluster_node_grants($account, $op) {
   if ('view' != $op) {
     return;
   }
 
-  // TODO Need to get all the nodes that user if referred to by group member field
-  return array();
-}*/
+  if (!field_info_field(ED_FIELD_TO_GROUP_MEMBER)) {
+    return array();
+  }
+
+  $query = db_select('field_data_ed_field_to_group_member', 'tgm')
+    ->fields('tgm', array('entity_type', 'entity_id'))
+    ->condition('tgm.ed_field_to_group_member_target_id', $account->uid);
+  $result = $query->execute()->fetchAll();
+
+  if ($result) {
+    foreach ($result as $single) {
+      $realm = ED_ACCESS_REALM . ':' . $single->entity_type;
+      $grants[$realm][] = $single->entity_id;
+    }
+  }
+  $grants[ED_ACCESS_REALM . ':creator'][] = $account->uid;
+
+  return !empty($grants) ? $grants: array();
+}
 
 /**
  * Implements hook_node_access_records().
  */
-/*function ed_cluster_node_access_records($node) {
+function ed_cluster_node_access_records($node) {
   if (empty($node->status)) {
     return array();
   }
 
-  return array();
-}*/
+  if (!empty($node->{ED_FIELD_TO_GROUP_MEMBER}[LANGUAGE_NONE])) {
+    $grants[] = array(
+      'realm' => ED_ACCESS_REALM .':node',
+      'gid' => $node->nid,
+      'grant_view' => 1,
+      'grant_update' => 0,
+      'grant_delete' => 0,
+      'priority' => 1,
+    );
+    $grants[] = array(
+      'realm' => ED_ACCESS_REALM . ':creator',
+      'gid' => $node->uid,
+      'grant_view' => 1,
+      'grant_update' => 0,
+      'grant_delete' => 0,
+      'priority' => 1,
+    );
+  }
+
+  return !empty($grants) ? $grants : array();
+}
+
+/**
+ * Implements hook_ctools_plugin_directory().
+ */
+function ed_cluster_ctools_plugin_directory($module, $plugin) {
+  if($module == 'entityreference') {
+    return 'plugins/' . $plugin;
+  }
+}
 

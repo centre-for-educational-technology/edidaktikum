@@ -134,3 +134,14 @@ function ed_blog_update_7100(&$sandbox) {
   }
 }
 
+/**
+ * Add to_group_member field to blog instance
+ */
+function ed_blog_update_7101(&$sandbox) {
+  $instances = _ed_blog_installed_instances();
+  $instance = $instances[ED_FIELD_TO_GROUP_MEMBER];
+  $instance['entity_type'] = 'node';
+  $instance['bundle'] = 'ed_blog';
+  field_create_instance($instance);
+}
+

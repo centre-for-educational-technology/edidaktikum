@@ -16,7 +16,9 @@ function ed_cluster_install() {
   ed_cluster_node_add_og_group_access_field();
   ed_cluster_node_add_field_featured_image();
   ed_cluster_add_field_private_comment();
+  ed_cluster_create_field_to_group_member();
 }
+
 function ed_cluster_node_add_field_featured_image() {
   $field_name = 'ed_field_featured_image';
   $field = field_info_field($field_name);
@@ -159,6 +161,27 @@ function ed_cluster_add_field_private_comment() {
 }
 
 /**
+ * Creates field ed_field_to_group_member.
+ */
+function ed_cluster_create_field_to_group_member() {
+  $field_name = ED_FIELD_TO_GROUP_MEMBER;
+  if (!field_info_field($field_name)) {
+    $field = array(
+      'field_name' => $field_name,
+      'type' => 'entityreference',
+      'module' => 'entityreference',
+      'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+      'entity_types' => array('node'),
+      'settings' => array(
+        'target_type' => 'user',
+        'handler' => 'groupsusers',
+      ),
+    );
+    field_create_field($field);
+  }
+}
+
+/**
  * Deletes node type ed_cluster.
  */
 function ed_cluster_delete_node() {
@@ -198,5 +221,12 @@ function ed_cluster_update_7100(&$sandbox) {
  */
 function ed_cluster_update_7101(&$sandbox) {
   ed_cluster_add_field_private_comment();
+}
+
+/**
+ * Add to_group_member field
+ */
+function ed_cluster_update_7102(&$sandbox) {
+  ed_cluster_create_field_to_group_member();
 }
 
