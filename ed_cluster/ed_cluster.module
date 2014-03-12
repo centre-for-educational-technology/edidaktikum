@@ -763,13 +763,14 @@ function ed_cluster_field_widget_form_alter(&$element, &$form_state, $context) {
 }
 
 /**
- * TODO Write docstring
+ * This serves data to be used by ED_FIELD_TO_GROUP_MEMBER field.
+ * Field is repopulated with data once selection is made.
  */
 function ed_cluster_get_groups_members_ajax() {
   $group_data = array(
     array(
       'value' => '_none',
-      'name' => '- None -',// TODO translatable
+      'name' => t('- None -'),
     ),
   );
   $groups = isset($_POST['groups']) ? $_POST['groups'] : array();

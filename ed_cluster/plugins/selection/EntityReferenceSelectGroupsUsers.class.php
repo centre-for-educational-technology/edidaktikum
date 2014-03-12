@@ -22,27 +22,6 @@ class EntityReferenceSelectGroupsUsers extends EntityReference_SelectionHandler_
     }
   }
   
-  /*public function getReferencableEntities($match = NULL, $match_operator = 'CONTAINS', $limit = 0) {
-    $options = array();
-    $entity_type = $this->field['settings']['target_type'];
-    $query = $this->buildEntityFieldQuery($match, $match_operator);
-    if ($limit > 0) {
-      $query->range(0, $limit);
-    }
-
-    $results = $query->execute();
-
-    if (!empty($results[$entity_type])) {
-      $entities = entity_load($entity_type, array_keys($results[$entity_type]));
-      foreach ($entities as $entity_id => $entity) {
-        list(,, $bundle) = entity_extract_ids($entity_type, $entity);
-        $options[$bundle][$entity_id] = check_plain($this->getLabel($entity));
-      }
-    }
-
-    return $options;
-  }*/
-
   /**
    * Override that would serve user fullname or fall back to default.
    */
@@ -53,13 +32,6 @@ class EntityReferenceSelectGroupsUsers extends EntityReference_SelectionHandler_
 
     return parent::getLabel($entity);
   }
-
-  /*protected function __construct($field, $instance = NULL, $entity_type = NULL, $entity = NULL) {
-    $this->field = $field;
-    $this->instance = $instance;
-    $this->entity_type = $entity_type;
-    $this->entity = $entity;
-  }*/
 }
 
 class EntityReferenceSelectGroupsUsers_user extends EntityReferenceSelectGroupsUsers {
@@ -75,13 +47,6 @@ class EntityReferenceSelectGroupsUsers_user extends EntityReferenceSelectGroupsU
       //CHANGE THIS:
       $query->fieldCondition('ed_field_full_name', 'value', $match, $match_operator);
     }
-
-    // Adding the 'user_access' tag is sadly insufficient for users: core
-    // requires us to also know about the concept of 'blocked' and
-    // 'active'.
-    //if (!user_access('administer users')) {
-    //  $query->propertyCondition('status', 1);
-    //}
 
     // Only active users are allowed
     $query->propertyCondition('status', 1);
@@ -117,8 +82,5 @@ class EntityReferenceSelectGroupsUsers_user extends EntityReferenceSelectGroupsU
 
     return $query;
   }
-
-  /*public function entityFieldQueryAlter(SelectQueryInterface $query) {
-  }*/
 }
 
