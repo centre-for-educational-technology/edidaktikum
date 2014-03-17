@@ -26,7 +26,7 @@ function ed_task_install() {
   ed_task_add_og_audience();
 
   //Disable comments
-  variable_set('comment_ed_task', COMMENT_NODE_CLOSED);
+  variable_set('comment_ed_task', COMMENT_NODE_OPEN);
 }
 
 function ed_task_add_og_audience() {
@@ -81,3 +81,57 @@ function ed_task_uninstall() {
   //delete set variables
   variable_del('comment_ed_task');
 }
+
+/**
+ * Enable comments for ed_task.
+ * Also update any existing ones to comply.
+ */
+function ed_task_update_7100(&$sandbox) {
+  $node_type = 'ed_task';
+  // Allowing comments on any new ed_task nodes by default
+  variable_set('comment_ed_task', COMMENT_NODE_OPEN);
+
+  // Initialize batch
+  if (!isset($sandbox['total'])) {
+    $total = db_select('node', 'n')
+      ->fields('n', array('nid'))
+      ->condition('type', $node_type)
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+
+    $sandbox['total'] = $total;
+    $sandbox['progress'] = 0;
+
+    if (empty($sandbox['total'])) {
+      $sandbox['#finished'] = 1;
+      return t('No %type nodes exist in database.', array('%type' => $node_type));
+    }
+  }
+
+  $nids = db_select('node')
+    ->fields('node', array('nid'))
+    ->condition('type', $node_type)
+    ->range(0, 10)
+    ->execute()
+    ->fetchCol();
+
+  if (!empty($nids)) {
+    $nodes = node_load_multiple($nids, NULL, TRUE);
+
+    foreach ($nodes as $node) {
+      $node->comment = COMMENT_NODE_OPEN;
+      node_save($node);
+    }
+  }
+
+  // Increment and check progress
+  $sandbox['progress'] += count($nids);
+  if (empty($nids) || $sandbox['progress'] >= $sandbox['total']) {
+    $sandbox['#finished'] = 1;
+    return t('Updated @count nodes of type %type.', array('@count' => $sandbox['progress'], '%type' => $node_type));
+  } else {
+    $sandbox['#finished'] = $sandbox['progress'] / $sandbox['total'];
+  }
+}
+
