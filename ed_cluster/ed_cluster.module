@@ -41,7 +41,7 @@ function ed_cluster_menu() {
     'type' => MENU_LOCAL_TASK,
     'weight' => 50,
   );
-  $items['node/%node/events'] = array(
+  $items['node/%node/event'] = array(
     'title' => t('Events'),
     'page callback' => 'ed_listing_from_group',    
     'access callback' => 'ed_group_content_listing_access',    
@@ -124,6 +124,8 @@ function ed_listing_from_group($filler, $gnode, $type){
   $content = array();
 
   if (node_access('create', $type) && og_is_member('node', $gnode->nid)) {
+    $destination = _ed_cluster_destination_for_group_node_type($gnode, $type);
+
     $type_dashed = str_replace('_', '-', $type);
     $content['add-new-container'] = array(
       '#type' => 'container',
@@ -133,7 +135,7 @@ function ed_listing_from_group($filler, $gnode, $type){
     );
     $content['add-new-container']['add-new-link'] = array(
       '#type' => 'markup',
-      '#markup' => l(t('Add new'), 'node/add/'.$type_dashed, array('query' => array('og_group_ref' => $gnode->nid, 'destination' => 'node/'.$gnode->nid))),
+      '#markup' => l(t('Add new'), 'node/add/'.$type_dashed, array('query' => array('og_group_ref' => $gnode->nid, 'destination' => $destination))),
     );
   }
 
@@ -409,7 +411,7 @@ function ed_task_manager($test, $node){
     'attributes' => array(),
     'query' => array(
       'og_group_ref' => $node->nid,
-      'destination' => 'node/'.$node->nid,
+      'destination' => _ed_cluster_destination_for_group_node_type($node, 'ed_task'),
     ),
   );
   $content['add-new-container'] = array(
@@ -890,3 +892,36 @@ function ed_cluster_ctools_plugin_directory($module, $plugin) {
   }
 }
 
+/**
+ * Returns destination for group node type.
+ * Corresponds with group page for that type.
+ *
+ * @param $gnode
+ *   Object of ed_cluster node
+ * @param $type
+ *   Current node page type
+ *
+ * @return
+ *   Destination string
+ */
+function _ed_cluster_destination_for_group_node_type(&$gnode, $type) {
+  $destination = 'node/' . $gnode->nid;
+  switch($type) {
+    case 'ed_blog':
+    case 'ed_bookmark':
+    case 'ed_forum':
+    case 'ed_news':
+    case 'ed_page':
+    case 'ed_learning_resource':
+    case 'ed_event':
+      $type_dashed = str_replace('_', '-', $type);
+      $type_dashed = substr($type_dashed, 3);
+      $destination .= '/' . $type_dashed;
+      break;
+    case 'ed_task':
+      $destination .= '/task-manager';
+      break;
+  }
+
+  return $destination;
+}

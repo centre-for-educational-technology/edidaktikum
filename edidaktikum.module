@@ -368,7 +368,7 @@ function _edidaktikum_node_delete_redirect($form, &$form_state) {
         break;
       case 'ed_event':
         if (!empty($group_url)) {
-          $redirect_url = $group_url . '/events';
+          $redirect_url = $group_url . '/event';
         } else {
           $redirect_url = 'events';
         }
