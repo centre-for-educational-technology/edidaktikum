@@ -243,6 +243,12 @@ function edidaktikum_form_alter(&$form, $form_state, $form_id) {
 
   $form['#attached']['js'] = array(drupal_get_path('module', 'edidaktikum') . '/edidaktikum.js',);
   $form['#attached']['css'] = array(drupal_get_path('module', 'edidaktikum') . '/edidaktikum.css',);
+
+  // Alter node delete form and add own redirect handler logic
+  if ('node_delete_confirm' == $form_id) {
+    $form['actions']['submit']['#submit'][] = 'node_delete_confirm_submit';
+    $form['actions']['submit']['#submit'][] = '_edidaktikum_node_delete_redirect';
+  }
 }
 
 /*
@@ -326,6 +332,90 @@ function edidaktikum_user_view_alter(&$build) {
     if (isset($build['hybridauth_identities'])) {
       unset($build['hybridauth_identities']);
     }
+  }
+}
+
+/**
+ * Set redirect location on delete of own node types.
+ */
+function _edidaktikum_node_delete_redirect($form, &$form_state) {
+  // Check if group set and grab first group URL
+  if (!empty($form['#node']->og_group_ref[LANGUAGE_NONE])) {
+    $group_url = url('node/' . $form['#node']->og_group_ref[LANGUAGE_NONE][0]['target_id'], array('absolute' => TRUE));
+  }
+
+  // Set $redirect_url if possible
+  switch($form['#node']->type) {
+      case 'ed_answer':
+        $redirect_url = 'dashboard/tasks';
+        break;
+      case 'ed_blog':
+        if (!empty($group_url)) {
+          $redirect_url = $group_url . '/blog';
+        } else {
+          $redirect_url = 'dashboard/blogs';
+        }
+        break;
+      case 'ed_bookmark':
+        if (!empty($group_url)) {
+          $redirect_url = $group_url . '/bookmark';
+        }
+        break;
+      case 'ed_forum':
+        if (!empty($group_url)) {
+          $redirect_url = $group_url . '/forum';
+        }
+        break;
+      case 'ed_event':
+        if (!empty($group_url)) {
+          $redirect_url = $group_url . '/events';
+        } else {
+          $redirect_url = 'events';
+        }
+        break;
+      case 'ed_file_folder':
+        $redirect_url = 'dashboard/files';
+        break;
+      case 'ed_file':
+        $redirect_url = 'dashboard/files';
+        break;
+      case 'ed_cluster':
+        $redirect_url = 'clusters';
+        break;
+      case 'ed_learning_resource':
+        if (!empty($group_url)) {
+          $redirect_url = $group_url . '/learning-resource';
+        } else {
+          $redirect_url = 'resources';
+        }
+        break;
+      case 'ed_news':
+        if (!empty($group_url)) {
+          $redirect_url = $group_url . '/news';
+        } else {
+          $redirect_url = 'news';
+        }
+        break;
+      case 'ed_page':
+        if (!empty($group_url)) {
+          $redirect_url = $group_url . '/page';
+        }
+        break;
+      case 'ed_portfolio':
+        $redirect_url = 'dashboard/portfolio';
+        break;
+      case 'ed_task':
+        if (!empty($group_url)) {
+          $redirect_url = $group_url . '/task-manager';
+        } else {
+          $redirect_url = 'dashboard/tasks';
+        }
+        break;
+  }
+  
+  // Force redirect if $redirect_url not empty
+  if (!empty($redirect_url)) {
+    $form_state['redirect'] = $redirect_url;
   }
 }
 
