@@ -186,6 +186,10 @@ function ed_cluster_preprocess_node(&$vars) {
  * Implements hook_node_view().
  */
 function ed_cluster_node_view($node, $view_mode, $langcode){
+  // Handle group breadcrumb
+  if ('full' == $view_mode) {
+    $node->content[] = _ed_cluster_node_group_greadcrumbs($node);
+  }
   
   switch ($node->type){
     case 'ed_cluster':
@@ -887,7 +891,7 @@ function ed_cluster_node_access_records($node) {
  * Implements hook_ctools_plugin_directory().
  */
 function ed_cluster_ctools_plugin_directory($module, $plugin) {
-  if($module == 'entityreference') {
+  if('entityreference' == $module || ('content_types' == $plugin && 'ctools' == $module)) {
     return 'plugins/' . $plugin;
   }
 }
@@ -925,3 +929,57 @@ function _ed_cluster_destination_for_group_node_type(&$gnode, $type) {
 
   return $destination;
 }
+
+/**
+ * Retruns themed group breadcrumb for node.
+ *
+ * @param $node
+ *   Node object
+ * @param $group
+ *   Group node object (ed_cluster)
+ *
+ * @return string
+ *   Themed breadcrumb
+ */
+function _ed_cluster_node_group_breadcrumb(&$node, &$group) {
+  $destination = _ed_cluster_destination_for_group_node_type($group, $node->type);
+  $breadcrumb[] = l($group->title, 'node/'. $group->nid);
+  if (('node/' . $group->nid) != $destination) {
+    $breadcrumb[] = l(t('Type page'), $destination);
+  }
+  $breadcrumb[] = $node->title;
+
+  return theme_breadcrumb(array('breadcrumb' => $breadcrumb));
+}
+
+/**
+ * Returns markup for node group breadcrumbs.
+ *
+ * @param $node
+ *   A node object.
+ *
+ * @return array
+ *   Array with markup
+ */
+function _ed_cluster_node_group_greadcrumbs(&$node) {
+  $output = array();
+  if (!empty($node->{OG_AUDIENCE_FIELD}[LANGUAGE_NONE])) {
+    $groups = node_load_multiple(array_map(function($element) { return $element['target_id']; }, $node->{OG_AUDIENCE_FIELD}[LANGUAGE_NONE]));
+    if (!empty($groups)) {
+      $output['group-breadcrumbs'] = array(
+        '#type' => 'container',
+        '#attributes' => array(
+        ),
+      );
+      foreach ($groups as $group) {
+        $output['group-breadcrumbs']['bread-crumb-' . $group->nid] = array(
+          '#type' => 'markup',
+          '#markup' => _ed_cluster_node_group_breadcrumb($node, $group),
+        );
+      }
+    }
+  }
+
+  return $output;
+}
+
