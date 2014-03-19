@@ -145,3 +145,14 @@ function ed_blog_update_7101(&$sandbox) {
   field_create_instance($instance);
 }
 
+/**
+ * Add Tags field from drupal to blog
+ */
+
+function ed_blog_update_7102(&$sandbox){
+  $instances = _ed_blog_installed_instances();
+  $instance = $instances['ed_blog_tags'];
+  $instance['entity_type'] = 'node';
+  $instance['bundle'] = 'ed_blog';
+  field_create_instance($instance);
+}

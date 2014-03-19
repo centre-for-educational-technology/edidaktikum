@@ -20,7 +20,7 @@
   }
     // NODE ADD/EDIT BEGINS
   function _ed_blog_edit_page_handler(){
-    $handler = new stdClass();
+$handler = new stdClass();
 $handler->disabled = FALSE; /* Edit this to true to make a default handler disabled initially */
 $handler->api_version = 1;
 $handler->name = 'node_edit_panel_context';
@@ -124,7 +124,7 @@ $display->panels = array();
   $pane->panel = 'left';
   $pane->type = 'entity_form_field';
   $pane->subtype = 'node:ed_blog_tags';
-  $pane->shown = TRUE;
+  $pane->shown = FALSE;
   $pane->access = array();
   $pane->configuration = array(
     'label' => '',
@@ -216,6 +216,35 @@ $display->panels = array();
   $display->content['new-59746148-3eb0-4e7a-afe5-429f788a44ca'] = $pane;
   $display->panels['left'][5] = 'new-59746148-3eb0-4e7a-afe5-429f788a44ca';
   $pane = new stdClass();
+  $pane->pid = 'new-13ce3ddc-76a6-4610-a203-840ea36e7389';
+  $pane->panel = 'left';
+  $pane->type = 'entity_field';
+  $pane->subtype = 'node:field_tags';
+  $pane->shown = TRUE;
+  $pane->access = array();
+  $pane->configuration = array(
+    'label' => 'title',
+    'formatter' => 'taxonomy_term_reference_link',
+    'delta_limit' => '0',
+    'delta_offset' => '0',
+    'delta_reversed' => 0,
+    'formatter_settings' => array(),
+    'context' => 'argument_node_edit_1',
+    'override_title' => 0,
+    'override_title_text' => '',
+  );
+  $pane->cache = array();
+  $pane->style = array(
+    'settings' => NULL,
+  );
+  $pane->css = array();
+  $pane->extras = array();
+  $pane->position = 6;
+  $pane->locks = array();
+  $pane->uuid = '13ce3ddc-76a6-4610-a203-840ea36e7389';
+  $display->content['new-13ce3ddc-76a6-4610-a203-840ea36e7389'] = $pane;
+  $display->panels['left'][6] = 'new-13ce3ddc-76a6-4610-a203-840ea36e7389';
+  $pane = new stdClass();
   $pane->pid = 'new-a5fff736-f936-4002-a598-3dbff3de1b8d';
   $pane->panel = 'right';
   $pane->type = 'entity_form_field';
@@ -268,6 +297,7 @@ $display->panels = array();
 $display->hide_title = PANELS_TITLE_FIXED;
 $display->title_pane = 'new-a7d77b1c-3cfb-4c1b-a6bb-0df3b960e928';
 $handler->conf['display'] = $display;
+
 
     return $handler;
   }
