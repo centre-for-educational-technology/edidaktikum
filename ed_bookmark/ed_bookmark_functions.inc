@@ -17,7 +17,7 @@ function _ed_bookmark_installed_fields() {
 	    'allowed_values_function' => '_ed_bookmark_type_list',
 	  ),
   );
-  $fields['ed_bookmark_tags'] = array(
+  /*$fields['ed_bookmark_tags'] = array(
     'field_name' => 'ed_bookmark_tags',
 	  'label' => t('Tags'),
 	  'type' => 'taxonomy_term_reference',
@@ -29,7 +29,7 @@ function _ed_bookmark_installed_fields() {
 		    ),
 	    ),
 	  ),
-  );
+  );*/
   $fields['ed_bookmark_url'] = array(
     'field_name' => 'ed_bookmark_url',
     'label' => t('Url'),
@@ -54,8 +54,9 @@ function _ed_bookmark_installed_instances(){
       'weight' => -10,
     ),
   );
+
   $instances['ed_bookmark_tags'] = array(
-    'field_name' => 'ed_bookmark_tags',
+    'field_name' => 'field_tags',
 	  'label' => t('Tags'),
 	  'description' => t(''),
 	  'type' => 'taxonomy_term_reference',
