@@ -21,6 +21,7 @@ function ed_event_install() {
   ed_event_node_add_field_category();
   ed_event_node_add_field_og_audience();
   ed_event_node_add_field_to_group_member();
+  ed_event_node_add_field_tags();
 }
 
 /**
@@ -337,6 +338,28 @@ function ed_event_node_add_field_to_group_member() {
     field_create_instance($instance);
   }
 }
+function ed_event_node_add_field_tags(){
+  $instance = array(
+    'field_name' => 'field_tags',
+    'entity_type' => 'node',
+    'bundle' => 'ed_event',
+	  'label' => t('Tags'),
+	  'description' => t(''),
+	  'type' => 'taxonomy_term_reference',
+	  'widget' => array(
+	    'type' => 'taxonomy_autocomplete',
+	    'weight' => 4,
+	  ),
+	  'display' => array(
+	    'default' => array(
+  	    'label' => 'above',
+    		'settings' => array(),
+    		'weight' => 4,
+  	  ),
+	  ),
+  );
+  field_create_instance($instance);
+}
 
 /**
  * Deletes all ed_events.
@@ -359,3 +382,10 @@ function ed_event_update_7100(&$sandbox) {
   ed_event_node_add_field_to_group_member();
 }
 
+/**
+ * Add Tags field to event
+ */
+
+function ed_event_update_7101(&$sandbox) {
+  ed_event_node_add_field_tags();
+}
