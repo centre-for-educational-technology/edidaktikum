@@ -186,11 +186,7 @@ function ed_cluster_preprocess_node(&$vars) {
  * Implements hook_node_view().
  */
 function ed_cluster_node_view($node, $view_mode, $langcode){
-  // Handle group breadcrumb
-  if ('full' == $view_mode) {
-    $node->content[] = _ed_cluster_node_group_greadcrumbs($node);
-  }
-  
+
   switch ($node->type){
     case 'ed_cluster':
       if($view_mode=='full'){
