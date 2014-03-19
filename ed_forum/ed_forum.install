@@ -67,3 +67,15 @@ function ed_forum_uninstall() {
   field_purge_batch(1000);
   
 }
+
+/**
+ * Add to_group_member field instance to forum
+ */
+function ed_forum_update_7100(&$sandbox) {
+  $instances = _ed_forum_installed_instances();
+  $instance = $instances[ED_FIELD_TO_GROUP_MEMBER];
+  $instance['entity_type'] = 'node';
+  $instance['bundle'] = 'ed_forum';
+  field_create_instance($instance);
+}
+
