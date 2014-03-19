@@ -283,6 +283,7 @@ function ed_file_form_alter(&$form, &$form_state, $form_id) {
 /**
  * Implements hook_node_access().
  */
+// TODO This should no longer be relevant
 function ed_file_node_access($node, $op, $account) {
   $type = is_string($node) ? $node : $node->type;
 
