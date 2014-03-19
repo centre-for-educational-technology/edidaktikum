@@ -1,5 +1,7 @@
 <?php
 function _ed_blog_installed_fields(){
+  $fields = array();
+  /*
   $fields['ed_blog_tags'] = array(
     'field_name' => 'ed_blog_tags',
 	  'label' => t('Tags'),
@@ -12,7 +14,7 @@ function _ed_blog_installed_fields(){
 		    ),
 	    ),
 	  ),
-  );
+  );*/
   return $fields;
 }
 function _ed_blog_installed_instances() {
@@ -31,7 +33,7 @@ function _ed_blog_installed_instances() {
     'required' => TRUE,
   );
   $instances['ed_blog_tags'] = array(
-    'field_name' => 'ed_blog_tags',
+    'field_name' => 'field_tags',
 	  'label' => t('Tags'),
 	  'description' => t('Separate with commas. E.g. Mathematics, Force training, Jedi Mind Tricks'),
 	  'type' => 'taxonomy_term_reference',
