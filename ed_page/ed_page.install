@@ -81,3 +81,15 @@ function ed_page_uninstall() {
 
   variable_del('comment_ed_page');
 }
+
+/**
+ * Add to_group_member field instance to ed_page
+ */
+function ed_page_update_7100(&$sandbox) {
+  $instances = _ed_page_installed_instances();
+  $instance = $instances[ED_FIELD_TO_GROUP_MEMBER];
+  $instance['entity_type'] = 'node';
+  $instance['bundle'] = 'ed_page';
+  field_create_instance($instance);
+}
+
