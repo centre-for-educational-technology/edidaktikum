@@ -20,6 +20,7 @@ function ed_event_install() {
   ed_event_node_add_field_featured_image();
   ed_event_node_add_field_category();
   ed_event_node_add_field_og_audience();
+  ed_event_node_add_field_to_group_member();
 }
 
 /**
@@ -288,6 +289,56 @@ function ed_event_node_add_field_og_audience() {
 }
 
 /**
+ * Add to_group_member field instance to ed_event.
+ */
+function ed_event_node_add_field_to_group_member() {
+  $field_name = ED_FIELD_TO_GROUP_MEMBER;
+  $field = field_info_field($field_name);
+  if (!empty($field) && !field_info_instance('node', $field_name, 'ed_event')) {
+    $instance = array(
+      'entity_type' => 'node',
+      'bundle' => 'ed_event',
+      'field_name' => $field_name,
+      'label' => 'Specify user',
+      'description' => '',
+      'widget' => array(
+        'type' => 'options_select',
+        'module' => 'options',
+      ),
+      'display' => array(
+        'default' => array(
+          'label' => 'above',
+          'type' => 'entityreference_label',
+          'settings' => array(
+            'link' => TRUE,
+          ),
+          'module' => 'entityreference',
+        ),
+        'teaser' => array(
+          'type' => 'hidden',
+          'label' => 'hidden',
+        ),
+        'featured' => array(
+          'type' => 'hidden',
+          'label' => 'hidden',
+        ),
+        'front' => array(
+          'type' => 'hidden',
+          'label' => 'hidden',
+        ),
+        'dashboard' => array(
+          'type' => 'hidden',
+          'label' => 'hidden',
+        ),
+      ),
+      'required' => 0,
+      'default_value' => NULL,
+    );
+    field_create_instance($instance);
+  }
+}
+
+/**
  * Deletes all ed_events.
  */
 function ed_event_delete_ed_event_nodes() {
@@ -299,5 +350,12 @@ function ed_event_delete_ed_event_nodes() {
   if (!empty($nids)) {
     node_delete_multiple($nids);
   }
+}
+
+/**
+ * Add to_group_member field instance to forum
+ */
+function ed_event_update_7100(&$sandbox) {
+  ed_event_node_add_field_to_group_member();
 }
 
