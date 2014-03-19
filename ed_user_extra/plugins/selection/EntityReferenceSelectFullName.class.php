@@ -43,9 +43,12 @@ class EntityReferenceSelectFullName extends EntityReference_SelectionHandler_Gen
     return $options;
   }
 
-public function getFullName($entity) {
-	return $entity->ed_field_full_name['und'][0]['value'];
-}
+  public function getFullName($entity) {
+    if (isset($entity->ed_field_full_name[LANGUAGE_NONE][0]['value'])) {
+      return $entity->ed_field_full_name['und'][0]['value'];
+    }
+    return $entity->name;
+  }
 
   protected function __construct($field, $instance = NULL, $entity_type = NULL, $entity = NULL) {
     $this->field = $field;
