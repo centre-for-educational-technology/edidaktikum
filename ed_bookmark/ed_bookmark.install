@@ -126,3 +126,14 @@ function _ed_bookmark_create_term($vocab, $term, $desc='', $weight = 0){
   }
 }
 
+/**
+ * Add to_group_member field instance to bookmark
+ */
+function ed_bookmark_update_7100(&$sandbox) {
+  $instances = _ed_bookmark_installed_instances();
+  $instance = $instances[ED_FIELD_TO_GROUP_MEMBER];
+  $instance['entity_type'] = 'node';
+  $instance['bundle'] = 'ed_bookmark';
+  field_create_instance($instance);
+}
+
