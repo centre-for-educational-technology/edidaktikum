@@ -10,78 +10,6 @@ function _ed_task_installed_fields() {
       'granularity' => array('year', 'month', 'day'),
     ),
   );
-  $fields['to_user'] = array(
-    'translatable' => '0',
-    'entity_types' => array(),
-    'settings' => array(
-      'target_type' => 'user',
-      'handler' => 'fullname',
-      'handler_settings' => array(
-        'target_bundles' => array(),
-        'sort' => array(
-          'type' => 'none',
-        ),
-        'behaviors' => array(
-          'views-select-list' => array(
-            'status' => 0,
-          ),
-        ),
-      ),
-    ),
-    'storage' => array(
-      'type' => 'field_sql_storage',
-      'settings' => array(),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => array(
-        'sql' => array(
-          'FIELD_LOAD_CURRENT' => array(
-            'field_data_field_to_user' => array(
-              'target_id' => 'field_to_user_target_id',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => array(
-            'field_revision_field_to_user' => array(
-              'target_id' => 'field_to_user_target_id',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'foreign keys' => array(
-      'node' => array(
-        'table' => 'node',
-        'columns' => array(
-          'target_id' => 'nid',
-        ),
-      ),
-    ),
-    'indexes' => array(
-      'target_id' => array(
-        'target_id',
-      ),
-    ),
-    'field_name' => 'field_to_user',
-    'type' => 'entityreference',
-    'module' => 'entityreference',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => FIELD_CARDINALITY_UNLIMITED,
-    'deleted' => '0',
-    'columns' => array(
-      'target_id' => array(
-        'description' => 'The id of the target entity.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-      ),
-    ),
-    'bundles' => array(
-      'node' => array(
-        'ed_task',
-      ),
-    ),
-  );
   $fields['ed_field_competence'] = array(
     'field_name' => 'ed_field_competence',
     'type' => 'taxonomy_term_reference',
@@ -185,57 +113,43 @@ function _ed_task_installed_instances() {
     ),
   );
 
-  $instances['to_user'] = array(
-    'label' => 'to user',
+  $instances[ED_FIELD_TO_GROUP_MEMBER] = array(
+    'field_name' => ED_FIELD_TO_GROUP_MEMBER,
+    'label' => 'Specify user',
+    'description' => '',
     'widget' => array(
-      'type' => 'entityreference_autocomplete_tags',
-      'weight' => '8',
-      'settings' => array(
-        'match_operator' => 'CONTAINS',
-        'size' => 60,
-        'path' => '',
-      ),
-      'module' => 'entityreference',
-    ),
-    'settings' => array(
-      'user_register_form' => FALSE,
+      'type' => 'options_select',
+      'module' => 'options',
     ),
     'display' => array(
       'default' => array(
         'label' => 'above',
         'type' => 'entityreference_label',
         'settings' => array(
-          'link' => FALSE,
+          'link' => TRUE,
         ),
         'module' => 'entityreference',
-        'weight' => 9,
       ),
       'teaser' => array(
         'type' => 'hidden',
-        'label' => 'above',
-        'settings' => array(),
-        'weight' => 0,
+        'label' => 'hidden',
       ),
       'featured' => array(
         'type' => 'hidden',
-        'label' => 'above',
-        'settings' => array(),
-        'weight' => 0,
+        'label' => 'hidden',
       ),
       'front' => array(
         'type' => 'hidden',
-        'label' => 'above',
-        'settings' => array(),
-        'weight' => 0,
+        'label' => 'hidden',
+      ),
+      'dashboard' => array(
+        'type' => 'hidden',
+        'label' => 'hidden',
       ),
     ),
-    'required' => FALSE,
-    'description' => '',
-    'field_name' => 'field_to_user',
-    'entity_type' => 'node',
-    'bundle' => 'ed_task',
-    'deleted' => '0',
+    'required' => 0,
     'default_value' => NULL,
   );
+
   return $instances;
 }

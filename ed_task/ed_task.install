@@ -135,3 +135,23 @@ function ed_task_update_7100(&$sandbox) {
   }
 }
 
+/**
+ * Add to_group_member field instance to ed_task.
+ * Also removes to_user instance and field.
+ */
+function ed_task_update_7101(&$sandbox) {
+  $instances = _ed_task_installed_instances();
+  $instance = $instances[ED_FIELD_TO_GROUP_MEMBER];
+  $instance['entity_type'] = 'node';
+  $instance['bundle'] = 'ed_task';
+  field_create_instance($instance);
+
+  $field_name = 'field_to_user';
+  if ($instance = field_info_instance('node', $field_name, 'ed_task')) {
+    field_delete_instance($instance);
+  }
+  if ($field = field_info_field($field_name)) {
+    field_delete_field($field_name);
+  }
+}
+
