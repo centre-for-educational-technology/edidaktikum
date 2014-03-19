@@ -18,6 +18,7 @@
                     }
                 });
             });
+          $('select[name="og_group_ref[und][0][default][]').trigger('change');
         }
     }
 })(jQuery);

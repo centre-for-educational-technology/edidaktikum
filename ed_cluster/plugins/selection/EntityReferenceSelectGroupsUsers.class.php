@@ -51,16 +51,11 @@ class EntityReferenceSelectGroupsUsers_user extends EntityReferenceSelectGroupsU
     // Only active users are allowed
     $query->propertyCondition('status', 1);
 
-    // Get selected group identifiers
-    if (!empty($this->entity->og_group_ref[LANGUAGE_NONE])) {
-      $groups = array_map(function ($element) { return $element['target_id']; }, $this->entity->og_group_ref[LANGUAGE_NONE]);
-    } else if (isset($this->entity)) {
-      $field = field_info_field('og_group_ref');
-      $instance = field_info_instance('node', 'og_group_ref', $this->entity->type);
-
-      if ($field && $instance && module_exists('entityreference_prepopulate') || empty($instance['settings']['behaviors']['prepopulate'])) {
-          $groups = entityreference_prepopulate_get_values($field, $instance, FALSE);
-      }
+    // Limit options to all active group members
+    // for current user
+    $cu_groups = og_get_entity_groups();
+    if (!empty($cu_groups['node'])) {
+      $groups = $cu_groups['node'];
     }
 
     // Add condition to only select group members
@@ -76,7 +71,9 @@ class EntityReferenceSelectGroupsUsers_user extends EntityReferenceSelectGroupsU
         ->fetchCol();
       $query->propertyCondition('uid', $uids, 'IN');
     } else {
-        // This will keep the field empty if no groups are selected
+      // This will keep the field empty if no groups are selected
+      // If this ever happens, validator will prevent any value
+      // from being inserted
       $query->propertyCondition('uid', -1);
     }
 
