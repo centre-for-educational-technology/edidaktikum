@@ -79,6 +79,7 @@ function ed_news_add_fields() {
   ed_news_node_add_field_featured_image();
   ed_news_node_add_field_category();
   ed_news_node_add_field_og_audience();
+  ed_news_node_add_field_to_group_member();
 }
 
 /**
@@ -226,5 +227,62 @@ function ed_news_node_add_field_og_audience() {
     // Function checks if field instance already exists
     og_create_field(OG_AUDIENCE_FIELD, 'node', 'ed_news', $og_field);
   }
+}
+
+/**
+ * Add to_group_member field instance to ed_news.
+ */
+function ed_news_node_add_field_to_group_member() {
+  $field_name = ED_FIELD_TO_GROUP_MEMBER;
+  $field = field_info_field($field_name);
+  if (!empty($field) && !field_info_instance('node', $field_name, 'ed_news')) {
+    $instance = array(
+      'entity_type' => 'node',
+      'bundle' => 'ed_news',
+      'field_name' => $field_name,
+      'label' => 'Specify user',
+      'description' => '',
+      'widget' => array(
+        'type' => 'options_select',
+        'module' => 'options',
+      ),
+      'display' => array(
+        'default' => array(
+          'label' => 'above',
+          'type' => 'entityreference_label',
+          'settings' => array(
+            'link' => TRUE,
+          ),
+          'module' => 'entityreference',
+        ),
+        'teaser' => array(
+          'type' => 'hidden',
+          'label' => 'hidden',
+        ),
+        'featured' => array(
+          'type' => 'hidden',
+          'label' => 'hidden',
+        ),
+        'front' => array(
+          'type' => 'hidden',
+          'label' => 'hidden',
+        ),
+        'dashboard' => array(
+          'type' => 'hidden',
+          'label' => 'hidden',
+        ),
+      ),
+      'required' => 0,
+      'default_value' => NULL,
+    );
+    field_create_instance($instance);
+  }
+}
+
+/**
+ * Add to_group_member field instance to ed_news
+ */
+function ed_news_update_7100(&$sandbox) {
+  ed_news_node_add_field_to_group_member();
 }
 

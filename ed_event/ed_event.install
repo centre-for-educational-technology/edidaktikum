@@ -353,7 +353,7 @@ function ed_event_delete_ed_event_nodes() {
 }
 
 /**
- * Add to_group_member field instance to forum
+ * Add to_group_member field instance to ed_event
  */
 function ed_event_update_7100(&$sandbox) {
   ed_event_node_add_field_to_group_member();
