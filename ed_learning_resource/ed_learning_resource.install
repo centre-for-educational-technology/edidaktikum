@@ -77,3 +77,15 @@ function ed_learning_resource_uninstall() {
   //purge all field information
   field_purge_batch(1000);
 }
+
+/**
+ * Add to_group_member field instance to ed_learning_resource
+ */
+function ed_learning_resource_update_7100(&$sandbox) {
+  $instances = _ed_learning_resource_installed_instances();
+  $instance = $instances[ED_FIELD_TO_GROUP_MEMBER];
+  $instance['entity_type'] = 'node';
+  $instance['bundle'] = 'ed_learning_resource';
+  field_create_instance($instance);
+}
+
