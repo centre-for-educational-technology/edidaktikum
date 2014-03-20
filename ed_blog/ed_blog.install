@@ -155,4 +155,13 @@ function ed_blog_update_7102(&$sandbox){
   $instance['entity_type'] = 'node';
   $instance['bundle'] = 'ed_blog';
   field_create_instance($instance);
+  
+  field_delete_field('ed_blog_tags');
+  field_purge_batch();
+  $vid = db_select('taxonomy_vocabulary', 'v')
+    ->fields('v', array('vid'))
+    ->condition("v.machine_name", 'ed_blog_tags_voc')
+    ->execute()
+	  ->fetchField();
+  taxonomy_vocabulary_delete($vid);
 }

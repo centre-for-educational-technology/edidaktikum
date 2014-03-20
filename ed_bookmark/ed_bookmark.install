@@ -145,5 +145,14 @@ function ed_bookmark_update_7101(&$sandbox){
   $instance['entity_type'] = 'node';
   $instance['bundle'] = 'ed_bookmark';
   field_create_instance($instance);
+  
+  field_delete_field('ed_bookmark_tags');
+  field_purge_batch();
+  $vid = db_select('taxonomy_vocabulary', 'v')
+    ->fields('v', array('vid'))
+    ->condition("v.machine_name", 'ed_bookmark_tags_voc')
+    ->execute()
+	  ->fetchField();
+  taxonomy_vocabulary_delete($vid);
 }
 

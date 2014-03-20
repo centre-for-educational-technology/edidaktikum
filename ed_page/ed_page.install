@@ -104,5 +104,12 @@ function ed_page_update_7101(&$sandbox) {
   field_create_instance($instance);
   
   field_delete_field('ed_page_tags');
+  
+  $vid = db_select('taxonomy_vocabulary', 'v')
+    ->fields('v', array('vid'))
+    ->condition("v.machine_name", 'ed_page_tags_voc')
+    ->execute()
+	  ->fetchField();
+  taxonomy_vocabulary_delete($vid);
   field_purge_batch();
 }

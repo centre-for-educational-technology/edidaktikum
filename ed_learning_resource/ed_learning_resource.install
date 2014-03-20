@@ -97,6 +97,7 @@ function ed_learning_resource_update_7101(&$sandbox) {
   field_create_instance($instance);
   
   field_delete_field('ed_learning_resource_tags');
+  field_purge_batch();
   $vid = db_select('taxonomy_vocabulary', 'v')
     ->fields('v', array('vid'))
     ->condition("v.machine_name", 'ed_learning_resource_tags_voc')
