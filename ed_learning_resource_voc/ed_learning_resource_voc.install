@@ -16,7 +16,7 @@ function ed_learning_resource_voc_install() {
 function ed_learning_resource_voc_uninstall() {
   _remove_vocabulary('ed_learning_resource_type_voc');
   _remove_vocabulary('ed_learning_resource_language_voc');
-  _remove_vocabulary('ed_learning_resource_tags_voc');
+  //_remove_vocabulary('ed_learning_resource_tags_voc');
   _remove_vocabulary('ed_learning_resource_authors_voc');
 }
 
@@ -26,7 +26,7 @@ function ed_learning_resource_voc_uninstall() {
 function _create_vocabularies() {
   _add_vocabulary(t('Learning Resource Types'), 'ed_learning_resource_type_voc', t('A list of different learning resource types'), 1);
   _add_vocabulary(t('Learning Resource Languages'), 'ed_learning_resource_language_voc', t('A list of different learning resource languages'), 1);
-  _add_vocabulary(t('Learning Resource Tags'), 'ed_learning_resource_tags_voc', t('A list of tags for learning resources'), 1);
+  //_add_vocabulary(t('Learning Resource Tags'), 'ed_learning_resource_tags_voc', t('A list of tags for learning resources'), 1);
   _add_vocabulary(t('Learning Resource Authors'), 'ed_learning_resource_authors_voc', t('A list of authors for learning resources'), 1);
 }
 
@@ -108,12 +108,12 @@ function _add_terms() {
   _create_term('ed_learning_resource_language_voc', t('Russian'), t('Russian'));
 
   //Learning Resource tags: @todo put true values here
-  _create_term('ed_learning_resource_tags_voc', t('Mathematics'), t('Mathematics'));
+  /*_create_term('ed_learning_resource_tags_voc', t('Mathematics'), t('Mathematics'));
   _create_term('ed_learning_resource_tags_voc', t('Biology'), t('Biology'));
   _create_term('ed_learning_resource_tags_voc', t('Chemistry'), t('Chemistry'));
   _create_term('ed_learning_resource_tags_voc', t('Physics'), t('Physics'));
   _create_term('ed_learning_resource_tags_voc', t('English'), t('English'));
-  _create_term('ed_learning_resource_tags_voc', t('History'), t('History'));
+  _create_term('ed_learning_resource_tags_voc', t('History'), t('History'));*/
 
   //Learning Resource authors: @todo put true values here
   _create_term('ed_learning_resource_authors_voc', t('Obi-Wan Kenobi'), t('Obi-Wan Kenobi'));

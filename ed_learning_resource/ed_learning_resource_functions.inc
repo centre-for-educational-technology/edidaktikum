@@ -77,7 +77,7 @@ function _ed_learning_resource_installed_fields() {
   );
 
   // Learning Resource "Tags" field
-  $fields['ed_learning_resource_tags'] = array(
+  /*$fields['ed_learning_resource_tags'] = array(
     'field_name' => 'ed_learning_resource_tags',
 	  'label' => t('Tags'),
 	  'type' => 'taxonomy_term_reference',
@@ -90,7 +90,7 @@ function _ed_learning_resource_installed_fields() {
 		    ),
 	    ),
 	  ),
-  );
+  );*/
 
   // Learning Resource "Author" field
   $fields['ed_learning_resource_authors'] = array(
@@ -311,7 +311,7 @@ function _ed_learning_resource_installed_instances() {
 
   //Learning Resource "Tags" instance
   $instances['ed_learning_resource_tags'] = array(
-    'field_name' => 'ed_learning_resource_tags',
+    'field_name' => 'field_tags',
 	  'label' => t('Tags'),
 	  'description' => t('Separate with commas. E.g. Mathematics, Force training, Jedi Mind Tricks'),
 	  'type' => 'taxonomy_term_reference',

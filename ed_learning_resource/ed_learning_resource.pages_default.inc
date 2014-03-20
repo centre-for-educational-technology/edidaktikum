@@ -20,7 +20,7 @@
   }
   // NODE ADD/EDIT BEGINS
   function _ed_learning_resource_edit_page_handler(){
-    $handler = new stdClass();
+$handler = new stdClass();
 $handler->disabled = FALSE; /* Edit this to true to make a default handler disabled initially */
 $handler->api_version = 1;
 $handler->name = 'node_edit_panel_ed_learning_resource';
@@ -415,10 +415,10 @@ $display->panels = array();
   $display->content['new-b9a61b66-327c-4069-bd57-544d5abff6eb'] = $pane;
   $display->panels['right'][6] = 'new-b9a61b66-327c-4069-bd57-544d5abff6eb';
   $pane = new stdClass();
-  $pane->pid = 'new-91751083-b64b-4a90-8931-74d6a6775404';
+  $pane->pid = 'new-94fb3c10-99ec-4048-84cf-5319ec188e35';
   $pane->panel = 'right';
   $pane->type = 'entity_form_field';
-  $pane->subtype = 'node:ed_learning_resource_tags';
+  $pane->subtype = 'node:field_tags';
   $pane->shown = TRUE;
   $pane->access = array();
   $pane->configuration = array(
@@ -436,12 +436,13 @@ $display->panels = array();
   $pane->extras = array();
   $pane->position = 7;
   $pane->locks = array();
-  $pane->uuid = '91751083-b64b-4a90-8931-74d6a6775404';
-  $display->content['new-91751083-b64b-4a90-8931-74d6a6775404'] = $pane;
-  $display->panels['right'][7] = 'new-91751083-b64b-4a90-8931-74d6a6775404';
+  $pane->uuid = '94fb3c10-99ec-4048-84cf-5319ec188e35';
+  $display->content['new-94fb3c10-99ec-4048-84cf-5319ec188e35'] = $pane;
+  $display->panels['right'][7] = 'new-94fb3c10-99ec-4048-84cf-5319ec188e35';
 $display->hide_title = PANELS_TITLE_FIXED;
 $display->title_pane = '0';
 $handler->conf['display'] = $display;
+
 
     return $handler;
   }
@@ -449,7 +450,7 @@ $handler->conf['display'] = $display;
 
 
   function _ed_learning_resource_view_page_handler() {
-    $handler = new stdClass();
+   $handler = new stdClass();
 $handler->disabled = FALSE; /* Edit this to true to make a default handler disabled initially */
 $handler->api_version = 1;
 $handler->name = 'node_view_panel_ed_learning_resource';
@@ -710,14 +711,14 @@ $display->panels = array();
   $display->content['new-b1bfb519-8007-4780-953a-74c8063845f0'] = $pane;
   $display->panels['right'][2] = 'new-b1bfb519-8007-4780-953a-74c8063845f0';
   $pane = new stdClass();
-  $pane->pid = 'new-9e477d80-e2ac-4535-ad29-3c232e74ddff';
+  $pane->pid = 'new-14fbc2ed-c468-45dc-a6ad-b15bb93046a0';
   $pane->panel = 'right';
   $pane->type = 'entity_field';
-  $pane->subtype = 'node:ed_learning_resource_tags';
+  $pane->subtype = 'node:field_tags';
   $pane->shown = TRUE;
   $pane->access = array();
   $pane->configuration = array(
-    'label' => 'inline',
+    'label' => 'title',
     'formatter' => 'taxonomy_term_reference_link',
     'delta_limit' => '0',
     'delta_offset' => '0',
@@ -735,9 +736,9 @@ $display->panels = array();
   $pane->extras = array();
   $pane->position = 3;
   $pane->locks = array();
-  $pane->uuid = '9e477d80-e2ac-4535-ad29-3c232e74ddff';
-  $display->content['new-9e477d80-e2ac-4535-ad29-3c232e74ddff'] = $pane;
-  $display->panels['right'][3] = 'new-9e477d80-e2ac-4535-ad29-3c232e74ddff';
+  $pane->uuid = '14fbc2ed-c468-45dc-a6ad-b15bb93046a0';
+  $display->content['new-14fbc2ed-c468-45dc-a6ad-b15bb93046a0'] = $pane;
+  $display->panels['right'][3] = 'new-14fbc2ed-c468-45dc-a6ad-b15bb93046a0';
   $pane = new stdClass();
   $pane->pid = 'new-f50fe194-7771-42e4-90ec-2c293f4402ca';
   $pane->panel = 'right';
@@ -921,6 +922,7 @@ $display->panels = array();
 $display->hide_title = PANELS_TITLE_FIXED;
 $display->title_pane = '0';
 $handler->conf['display'] = $display;
+
 
     return $handler;
 

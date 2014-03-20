@@ -89,3 +89,20 @@ function ed_learning_resource_update_7100(&$sandbox) {
   field_create_instance($instance);
 }
 
+function ed_learning_resource_update_7101(&$sandbox) {
+  $instances = _ed_learning_resource_installed_instances();
+  $instance = $instances['ed_learning_resource_tags'];
+  $instance['entity_type'] = 'node';
+  $instance['bundle'] = 'ed_learning_resource';
+  field_create_instance($instance);
+  
+  field_delete_field('ed_learning_resource_tags');
+  $vid = db_select('taxonomy_vocabulary', 'v')
+    ->fields('v', array('vid'))
+    ->condition("v.machine_name", 'ed_learning_resource_tags_voc')
+    ->execute()
+	  ->fetchField();
+  taxonomy_vocabulary_delete($vid);
+  
+}
+
