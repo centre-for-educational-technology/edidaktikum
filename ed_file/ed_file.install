@@ -19,6 +19,7 @@ function ed_file_install() {
   ed_file_add_field_ed_file_folder_ref('ed_file_folder');
   ed_file_add_og_audience();
   ed_file_node_add_field_to_group_member();
+  ed_file_node_add_field_tags();
   ed_file_node_add_field_competence();
   ed_file_set_permissions();
 }
@@ -362,6 +363,28 @@ function ed_file_node_add_field_to_group_member() {
     field_create_instance($instance);
   }
 }
+function ed_file_node_add_field_tags() {
+  $instance = array(
+    'field_name' => 'field_tags',
+    'entity_type' => 'node',
+    'bundle' => 'ed_file',
+	  'label' => t('Tags'),
+	  'description' => t(''),
+	  'type' => 'taxonomy_term_reference',
+	  'widget' => array(
+	    'type' => 'taxonomy_autocomplete',
+	    'weight' => 4,
+	  ),
+	  'display' => array(
+	    'default' => array(
+  	    'label' => 'above',
+    		'settings' => array(),
+    		'weight' => 4,
+  	  ),
+	  ),
+  );
+  field_create_instance($instance);
+}
 
 /**
  * Add to_group_member field instance to ed_file.
@@ -378,3 +401,9 @@ function ed_file_update_7100(&$sandbox) {
   }
 }
 
+/**
+ * Add tags field with one provided by drupal
+ */
+function ed_file_update_7101(&$sandbox) {
+  ed_file_node_add_field_tags();
+}
