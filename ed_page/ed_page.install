@@ -11,9 +11,9 @@ function ed_page_install() {
   node_types_rebuild();
   $types = node_type_get_types();
 
-  foreach(_ed_page_installed_fields() as $field) {
+  /*foreach(_ed_page_installed_fields() as $field) {
     field_create_field($field);
-  }
+  }*/
 
   foreach (_ed_page_installed_instances() as $instance) {
     $instance['entity_type'] = 'node';
@@ -93,3 +93,16 @@ function ed_page_update_7100(&$sandbox) {
   field_create_instance($instance);
 }
 
+/**
+ * Add tags field from drupal to ed_page
+ */
+function ed_page_update_7101(&$sandbox) {
+  $instances = _ed_page_installed_instances();
+  $instance = $instances['ed_page_tags'];
+  $instance['entity_type'] = 'node';
+  $instance['bundle'] = 'ed_page';
+  field_create_instance($instance);
+  
+  field_delete_field('ed_page_tags');
+  field_purge_batch();
+}

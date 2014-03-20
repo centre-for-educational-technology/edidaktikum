@@ -1,5 +1,5 @@
 <?php
-function _ed_page_installed_fields(){
+/*function _ed_page_installed_fields(){
   $fields['ed_page_tags'] = array(
     'field_name' => 'ed_page_tags',
 	  'label' => t('Tags'),
@@ -14,7 +14,7 @@ function _ed_page_installed_fields(){
 	  ),
   );
   return $fields;
-}
+}*/
 function _ed_page_installed_instances() {
   $instances['ed_page_content'] = array(
     'field_name' => 'ed_field_content',
@@ -31,9 +31,9 @@ function _ed_page_installed_instances() {
     'required' => TRUE,
   );
   $instances['ed_page_tags'] = array(
-    'field_name' => 'ed_page_tags',
+    'field_name' => 'field_tags',
 	  'label' => t('Tags'),
-	  'description' => t('Separate with commas. E.g. Mathematics, Force training, Jedi Mind Tricks'),
+	  'description' => t(''),
 	  'type' => 'taxonomy_term_reference',
 	  'widget' => array(
 	    'type' => 'taxonomy_autocomplete',
