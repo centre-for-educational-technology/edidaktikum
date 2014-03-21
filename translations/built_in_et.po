@@ -2982,7 +2982,7 @@ msgstr ""
 
 #: /et/admin/modules/list/confirm
 msgid "Created date"
-msgstr ""
+msgstr "Loodud"
 
 #: /et/admin/modules/list/confirm
 msgid "Date in the form of CCYYMMDD."
@@ -5793,7 +5793,7 @@ msgstr ""
 
 #: /et/admin/config/content/wysiwyg/profile/filtered_html/edit
 msgid "Font size"
-msgstr ""
+msgstr "Fondi suurus"
 
 #: /et/admin/config/content/wysiwyg/profile/filtered_html/edit
 msgid "Forecolor"
@@ -11515,7 +11515,7 @@ msgstr ""
 
 #: /et/node/244
 msgid "Last updated date"
-msgstr ""
+msgstr "Viimati uuendatud"
 
 #: /et/admin/config
 msgid ""
