@@ -11,3 +11,7 @@
 .unanswered{
     background-color: #f9f9f9;
 }
+.can-not-be-answered {
+	background-color: #666;
+}
+

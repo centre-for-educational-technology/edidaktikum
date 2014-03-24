@@ -464,12 +464,22 @@ function ed_task_manager($test, $node){
         ),
       );
       foreach($nodes as $node_single){
-        if(_ed_check_if_answered($member->uid, $node_single->nid)=='answered'){
+        $tmp_data = array('data' => '', 'class' => '');
+
+        if (_ed_check_if_answered($member->uid, $node_single->nid)) {
           $tmp_answer_nid = _ed_get_answer_nid($member->uid, $node_single->nid);
-          $rows[$index]['data'][$node_single->nid] = array('data' => l('&nbsp;', 'node/' . $tmp_answer_nid[0], array('html' => TRUE)), 'class' => _ed_check_if_answered($member->uid, $node_single->nid));
-        }else{
-          $rows[$index]['data'][$node_single->nid] = array('data' => '', 'class' => _ed_check_if_answered($member->uid, $node_single->nid));
+          $tmp_data['data'] = l('&nbsp;', 'node/' . $tmp_answer_nid[0], array('html' => TRUE));
+          $tmp_data['class'] = 'answered';
+        } else {
+          $tmp_data['class'] = 'unanswered';
+          if (!empty($node_single->{ED_FIELD_TO_GROUP_MEMBER}[LANGUAGE_NONE])) {
+            if (!in_array($member->uid, array_map(function($element) { return $element['target_id']; }, $node_single->{ED_FIELD_TO_GROUP_MEMBER}[LANGUAGE_NONE]))) {
+              $tmp_data['class'] = 'can-not-be-answered';
+            }
+          }
         }
+
+        $rows[$index]['data'][$node_single->nid] = $tmp_data;
       }
   }
 
@@ -497,10 +507,9 @@ function _ed_check_if_answered($uid, $tnid){
   $query->condition('ref.field_ref_to_task_target_id', $tnid);
   $result = $query->execute()->fetchCol();
   if(!empty($result)){
-    
-    return "answered";
-  }else{
-    return "unanswered";
+    return TRUE;
+  } else {
+    return FALSE;
   }
   
   
