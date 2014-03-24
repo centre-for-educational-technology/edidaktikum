@@ -56,14 +56,14 @@ function ed_answer_node_view($node, $view_mode, $langcode){
     drupal_set_title(ed_answer_get_answer_title($node));
     // Add delete link if task has been removed and user can delete
     if (node_access('delete', $node) && empty($node->field_ref_to_task[LANGUAGE_NONE])) {
-      $node->content['actions-container'] = array(
+      $node->content['ed-answer-actions-container'] = array(
         '#type' => 'container',
         '#attributes' => array(
           'class' => array('ed-node-actions-container'),
         ),
         '#weight' => 10,
       );
-      $node->content['actions-container']['delete'] = array(
+      $node->content['ed-answer-actions-container']['delete'] = array(
         '#type' => 'markup',
         '#markup' => l(t('Delete'), 'node/' . $node->nid . '/delete', array(
           'attributes' => array(
@@ -266,6 +266,13 @@ function ed_answer_node_access($node, $op, $account) {
     // Prevent answer edit if task removed
     if (empty($node->field_ref_to_task[LANGUAGE_NONE])) {
       return NODE_ACCESS_DENY;
+    } else if (!empty($node->field_ref_to_task[LANGUAGE_NONE][0]['target_id'])) {
+      // This check is needed because panels states that reference exists
+      // Need to make sure that references task is still there
+      $task = node_load($node->field_ref_to_task[LANGUAGE_NONE][0]['target_id']);
+      if (!$task) {
+        return NODE_ACCESS_DENY;
+      }
     }
   }
 
@@ -280,5 +287,20 @@ function ed_answer_ctools_plugin_api() {
   if ($module == "page_manager" && $api == "pages_default") {
     return array("version" => 1);
   }
+}
+
+/**
+ * Implements hook_field_extra_fields().
+ */
+function ed_answer_field_extra_fields() {
+  $extra['node']['ed_answer']['display'] = array(
+    'ed-answer-actions-container' => array(
+      'label' => t('Shows delete when answer task removed.'),
+      'description' => t('Shows delete when answer task removed.'),
+      'weight' => 10,
+    ),
+  );
+
+  return $extra;
 }
 
