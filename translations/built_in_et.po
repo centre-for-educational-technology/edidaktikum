@@ -6329,7 +6329,7 @@ msgstr ""
 
 #: /et/node/add/ed-learning-resource
 msgid "Request message"
-msgstr ""
+msgstr "Liitumissõnum"
 
 #: /et/node/add/ed-learning-resource
 msgid "Group membership"
@@ -10473,7 +10473,7 @@ msgstr ""
 
 #: /et
 msgid "Sign in"
-msgstr ""
+msgstr "Logi sisse"
 
 #: /et
 msgid "Private group"
@@ -10996,7 +10996,7 @@ msgstr ""
 
 #: /et/group/node/32/admin/people
 msgid "Member since"
-msgstr ""
+msgstr "Liitunud"
 
 #: /et/group/node/32/admin/people
 msgid "Viimane külastus"
@@ -11024,35 +11024,35 @@ msgstr ""
 
 #: /et/group/node/32/admin/people
 msgid "Enter a comma separated list of user names."
-msgstr ""
+msgstr "Sisesta kasutajanimed, eralda komaga."
 
 #: /et/group/node/32/admin/people
 msgid "%time ago"
-msgstr ""
+msgstr "%time tagasi"
 
 #: /et/group/node/32/admin/people
 msgid "Group manager: !manager"
-msgstr ""
+msgstr "Grupi haldaja: !manager"
 
 #: /et/group/node/32/admin/people
 msgid "Total members: @count"
-msgstr ""
+msgstr "Liikmeid kokku: @count"
 
 #: /et/group/node/32/admin/people
 msgid "Total content: @count"
-msgstr ""
+msgstr "Loodud sisu: @count"
 
 #: /et/group/node/32/admin/people
 msgid "Group overview"
-msgstr ""
+msgstr "Grupi ülevaade"
 
 #: /et/group/node/32/admin/people
 msgid "- Choose an operation -"
-msgstr ""
+msgstr "- Vali toiming -"
 
 #: /et/group/node/32/admin/people
 msgid "Execute"
-msgstr ""
+msgstr "Rakenda"
 
 #: /et/admin/people
 msgid "Administer Honeypot"
@@ -11348,15 +11348,15 @@ msgstr ""
 
 #: /et/group/node/28/admin/people/edit-membership/236?destination=group/node/28/admin/people
 msgid "Edit a group membership in %group"
-msgstr ""
+msgstr "Muuda liikmestaatust grupis %group"
 
 #: /et/group/node/28/admin/people/edit-membership/236?destination=group/node/28/admin/people
 msgid "Update membership"
-msgstr ""
+msgstr "Uuenda liikme staatust"
 
 #: /et/group/node/28/admin/people/edit-membership/236?destination=group/node/28/admin/people
 msgid "The membership has been updated."
-msgstr ""
+msgstr "Liikme staatus on uuendatud."
 
 #: /et/events/rss
 msgid "!site_name events"
