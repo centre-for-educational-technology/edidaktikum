@@ -11964,7 +11964,7 @@ msgstr "Kommentaar"
 
 #: ed_answer/ed_answer.module:7 ed_task/ed_task.module:270;300
 msgid "Answer"
-msgstr "Vasta"
+msgstr "Vastus"
 
 #: ed_answer/ed_answer.module:10 ed_blog/ed_blog.module:14,
 #: ed_forum/ed_forum.module:14 ed_page/ed_page.module:14

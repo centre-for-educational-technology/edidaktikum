@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: 2014-03-04 13:53+0200\n"
-"PO-Revision-Date: 2014-03-06 09:44+0200\n"
+"PO-Revision-Date: 2014-03-24 15:48+0200\n"
 "Last-Translator: Priit Tammets <tammets@gmail.com>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "MIME-Version: 1.0\n"
@@ -387,7 +387,7 @@ msgstr "Grupp"
 #: field:ed_learning_resource_mg:#field:label
 msgctxt "ed_learning_resource_mg:#field:label"
 msgid "Methodological Guide"
-msgstr "Metodoloogiline juhend"
+msgstr "Metoodiline juhend"
 
 #: field:ed_learning_resource_mg:ed_learning_resource:label
 msgctxt "ed_learning_resource_mg:ed_learning_resource:label"
@@ -458,7 +458,7 @@ msgstr "Eralda komaga. Näiteks matemaatika, inglise keel, keemia"
 #: field:ed_learning_resource_add_req:#field:label
 msgctxt "ed_learning_resource_add_req:#field:label"
 msgid "Additional Requirements"
-msgstr "Lisa nõuded"
+msgstr "Lisanõuded"
 
 #: field:ed_learning_resource_add_req:ed_learning_resource:label
 msgctxt "ed_learning_resource_add_req:ed_learning_resource:label"

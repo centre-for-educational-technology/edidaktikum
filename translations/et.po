@@ -62,8 +62,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: 2014-03-04 15:41+0200\n"
-"PO-Revision-Date: 2014-03-04 15:44+0200\n"
-"Last-Translator: Pjotr Savitski <pjotr.savitski@gmail.com>\n"
+"PO-Revision-Date: 2014-03-24 15:50+0200\n"
+"Last-Translator: Priit Tammets <tammets@gmail.com>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
@@ -355,7 +355,7 @@ msgstr "Sisu"
 
 #: ed_answer/ed_answer.module:7 ed_task/ed_task.module:272;307
 msgid "Answer"
-msgstr "Vasta"
+msgstr "Vastus"
 
 #: ed_answer/ed_answer.module:10 ed_blog/ed_blog.module:14
 #: ed_forum/ed_forum.module:14 ed_page/ed_page.module:14
