@@ -550,6 +550,50 @@ function _get_users_in_group($gid) {
 }
 
 /**
+ * TODO need to add a docstring
+ */
+function _ed_cluster_get_all_administered_groups(&$account) {
+  static $administered_groups;
+
+  if (isset($administered_groups)) {
+    return $administered_groups;
+  }
+
+  $administered_groups = array();
+  $query = db_select('node', 'n')
+    ->fields('n', array('nid'))
+    ->condition('n.uid', $account->uid)
+    ->condition('n.type', 'ed_cluster');
+
+  $result = $query->execute()->fetchCol();
+
+  if ($result) {
+    foreach ($result as $nid) {
+      $administered_groups[] = $nid;
+    }
+  }
+
+  // Determine general role identifier (rid) for group admin
+  $group_roles = og_roles('node', 'ed_cluster');
+  $admin_rid = array_search(OG_ADMINISTRATOR_ROLE, $group_roles);
+
+  $query = db_select('node', 'n')
+    ->fields('n', array('nid'))
+    ->condition('n.type', 'ed_cluster');
+  $query->join('og_users_roles', 'ogur', "n.nid = ogur.gid AND ogur.group_type = 'node' AND ogur.rid = :rid", array(':rid' => $admin_rid));
+
+  $result = $query->execute()->fetchCol();
+
+  if ($result) {
+    foreach ($result as $nid) {
+      $administered_groups[] = $nid;
+    }
+  }
+
+  return $administered_groups;
+}
+
+/**
  * Returns an array of user identifiers that are
  * administrators of a group id provided.
  *
@@ -850,6 +894,13 @@ function ed_cluster_node_grants($account, $op) {
   }
   $grants[ED_ACCESS_REALM . ':creator'][] = $account->uid;
 
+  if ($administered_groups = _ed_cluster_get_all_administered_groups($account)) {
+    foreach ($administered_groups as $gid) {
+      $realm = ED_ACCESS_REALM . ':admin:' . 'node';
+      $grants[$realm][] = $gid;
+    }
+  }
+
   return !empty($grants) ? $grants: array();
 }
 
@@ -878,6 +929,22 @@ function ed_cluster_node_access_records($node) {
       'grant_delete' => 0,
       'priority' => 1,
     );
+
+    $gids = og_get_entity_groups('node', $node);
+    if ($gids) {
+      foreach ($gids as $group_type => $values) {
+        foreach ($values as $gid) {
+          $grants[] = array(
+            'realm' => ED_ACCESS_REALM . ':admin:' . $group_type,
+            'gid' => $gid,
+            'grant_view' => 1,
+            'grant_update' => 0,
+            'grant_delete' => 0,
+            'priority' => 1,
+          );
+        }
+      }
+    }
   }
 
   return !empty($grants) ? $grants : array();
