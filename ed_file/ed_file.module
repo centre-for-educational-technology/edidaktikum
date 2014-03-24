@@ -281,44 +281,6 @@ function ed_file_form_alter(&$form, &$form_state, $form_id) {
 }
 
 /**
- * Implements hook_node_access().
- */
-// TODO This should no longer be relevant
-function ed_file_node_access($node, $op, $account) {
-  $type = is_string($node) ? $node : $node->type;
-
-  if ('ed_file' == $type && 'view' == $op) {
-    // Allow creator or admin
-    if ($node->uid == $account->uid || in_array('administrator', $account->roles)) {
-      return NODE_ACCESS_ALLOW;
-    }
-
-    $group_ref_set = (isset($node->og_group_ref[LANGUAGE_NONE]) && !empty($node->og_group_ref[LANGUAGE_NONE]));
-    $to_user_set = (isset($node->ed_file_field_to_user[LANGUAGE_NONE]) && !empty($node->ed_file_field_to_user[LANGUAGE_NONE]));
-
-    if ($group_ref_set || $to_user_set) {
-      if ($group_ref_set) {
-        foreach ($node->og_group_ref[LANGUAGE_NONE] as $single) {
-          if (og_is_member('node', $single['target_id'], 'user', $account)) {
-            return NODE_ACCESS_ALLOW;
-          }
-        }
-      }
-
-      if ($to_user_set) {
-        if (array_search(array('target_id' => $account->uid), $node->ed_file_field_to_user[LANGUAGE_NONE]) !== FALSE) {
-          return NODE_ACCESS_ALLOW;
-        }
-      }
-
-      return NODE_ACCESS_DENY;
-    }
-  }
-
-  return NODE_ACCESS_IGNORE;
-}
-
-/**
  * Implements hook_ctools_plugin_api().
  */
 function ed_file_ctools_plugin_api() {
@@ -327,3 +289,4 @@ function ed_file_ctools_plugin_api() {
     return array("version" => 1);
   }
 }
+
