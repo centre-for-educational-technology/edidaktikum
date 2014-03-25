@@ -25,7 +25,7 @@
 
   }*/
 function _ed_answer_view_page_handler() {
-  $handler = new stdClass();
+$handler = new stdClass();
 $handler->disabled = FALSE; /* Edit this to true to make a default handler disabled initially */
 $handler->api_version = 1;
 $handler->name = 'node_view_panel_context_7';
@@ -244,6 +244,37 @@ $display->panels = array();
   $display->content['new-2865f515-bb1b-41b7-9f72-267c223d5827'] = $pane;
   $display->panels['right'][1] = 'new-2865f515-bb1b-41b7-9f72-267c223d5827';
   $pane = new stdClass();
+  $pane->pid = 'new-134b85f5-8450-4b2c-8238-cd18cf4f83c6';
+  $pane->panel = 'right';
+  $pane->type = 'entity_field';
+  $pane->subtype = 'node:ed_field_to_group_member';
+  $pane->shown = TRUE;
+  $pane->access = array();
+  $pane->configuration = array(
+    'label' => 'title',
+    'formatter' => 'entityreference_label',
+    'delta_limit' => '0',
+    'delta_offset' => '0',
+    'delta_reversed' => 0,
+    'formatter_settings' => array(
+      'link' => 1,
+    ),
+    'context' => 'argument_entity_id:node_1',
+    'override_title' => 0,
+    'override_title_text' => '',
+  );
+  $pane->cache = array();
+  $pane->style = array(
+    'settings' => NULL,
+  );
+  $pane->css = array();
+  $pane->extras = array();
+  $pane->position = 2;
+  $pane->locks = array();
+  $pane->uuid = '134b85f5-8450-4b2c-8238-cd18cf4f83c6';
+  $display->content['new-134b85f5-8450-4b2c-8238-cd18cf4f83c6'] = $pane;
+  $display->panels['right'][2] = 'new-134b85f5-8450-4b2c-8238-cd18cf4f83c6';
+  $pane = new stdClass();
   $pane->pid = 'new-1a691a16-c105-4ecd-b673-9ae8463ef72f';
   $pane->panel = 'right';
   $pane->type = 'node_created';
@@ -262,11 +293,11 @@ $display->panels = array();
   );
   $pane->css = array();
   $pane->extras = array();
-  $pane->position = 2;
+  $pane->position = 3;
   $pane->locks = array();
   $pane->uuid = '1a691a16-c105-4ecd-b673-9ae8463ef72f';
   $display->content['new-1a691a16-c105-4ecd-b673-9ae8463ef72f'] = $pane;
-  $display->panels['right'][2] = 'new-1a691a16-c105-4ecd-b673-9ae8463ef72f';
+  $display->panels['right'][3] = 'new-1a691a16-c105-4ecd-b673-9ae8463ef72f';
 $display->hide_title = PANELS_TITLE_FIXED;
 $display->title_pane = 'new-48ee673e-dc41-4af8-a2dd-051420fb7ae8';
 $handler->conf['display'] = $display;

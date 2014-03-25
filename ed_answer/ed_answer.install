@@ -222,3 +222,16 @@ function ed_answer_update_7100(&$sandbox) {
   field_create_instance($instance);
 }
 
+/**
+ * Add to_group_member field instance to ed_answer.
+ */
+function ed_answer_update_7101(&$sandbox) {
+  $instances = _ed_answer_installed_instances();
+  $instance = $instances[ED_FIELD_TO_GROUP_MEMBER];
+  $instance['entity_type'] = 'node';
+  $instance['bundle'] = 'ed_answer';
+  if (!field_info_instance($instance['entity_type'], ED_FIELD_TO_GROUP_MEMBER, $instance['bundle'])) {
+    field_create_instance($instance);
+  }
+}
+
