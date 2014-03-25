@@ -433,8 +433,6 @@ function _ed_get_cur_user_tasks(){
   return $nodes;
 }
 function _ed_get_tasks_to_user(){
-  // XXX This method has to change the name
-  // as it now depends on a totally different field
   $acc = $GLOBALS['user'];
   $query = db_select('node', 'n');
   $query->join('field_data_ed_field_to_group_member', 'tu', 'n.nid = tu.entity_id');
@@ -496,27 +494,34 @@ function _ed_get_user_unanswered_tasks_count($account) {
   $task_nids = array();
 
   // XXX The logic has changed. Need to rewrite the method.
-  /*
+  // Get task identifiers
+  // Fetch answers count
+  // Determine how many are unanswered
   $query = db_select('node', 'n');
-  $query->join('field_data_field_to_user', 'tu', 'n.nid = tu.entity_id');
+  $query->join('field_data_ed_field_to_group_member', 'tgm', 'n.nid = tgm.entity_id');
   $query->fields('n', array('nid'))
     ->addTag('node_access')
     ->condition('n.type', 'ed_task')
-    ->condition('tu.field_to_user_target_id', $account->uid);
+    ->condition('tgm.ed_field_to_group_member_target_id', $account->uid);
 
   // Get all task identifiers given directly to a user
   $task_nids = $query->execute()->fetchCol();
-   */
 
+  // XXX
+  // Get task identifiers
+  // Fetch answers count
+  // Determine how many are unanswered
   $groups = og_get_groups_by_user($account, 'node');
   if ($groups && is_array($groups) && sizeof($groups) > 0) {
     $query = db_select('node', 'n');
     $query->join('og_membership', 'og', 'n.nid = og.etid');
+    $query->leftJoin('field_data_ed_field_to_group_member', 'tgm', 'n.nid = tgm.entity_id');
     $query->fields('n', array('nid'))
       ->addTag('node_access')
       ->condition('n.type', 'ed_task')
       ->condition('n.uid', $account->uid, '<>')
-      ->condition('og.gid', $groups, "IN");
+      ->condition('og.gid', $groups, "IN")
+      ->isNull('tgm.ed_field_to_group_member_target_id');
 
     // Merge all task identifiers given to user groups
     // Make sure that identifiers are unique
@@ -525,11 +530,13 @@ function _ed_get_user_unanswered_tasks_count($account) {
 
   $count = sizeof($task_nids);
 
-  $query = db_select('node', 'n')
-    ->fields('n', array('nid'))
+  $query = db_select('node', 'n');
+  $query->join('field_data_field_ref_to_task', 'ref', 'n.nid = ref.entity_id');
+  $query->fields('n', array('nid'))
     ->addTag('node_access')
     ->condition('n.type', 'ed_answer')
-    ->condition('n.uid', $account->uid);
+    ->condition('n.uid', $account->uid)
+    ->condition('ref.field_ref_to_task_target_id', $task_nids, 'IN');
 
   // Substract the number of answers created by user
   $count -= $query->countQuery()->execute()->fetchField();
@@ -563,46 +570,46 @@ function recursive_array_search($needle,$haystack) {
 function ed_task_node_insert($node) {
   if ('ed_task' == $node->type) {
     $send_to = array();
-    // Exclude task creator
-    $exclude_uids = array($node->uid);
-    // Handle selected groups case
-    if (isset($node->og_group_ref[LANGUAGE_NONE]) && !empty($node->og_group_ref[LANGUAGE_NONE])) {
-      $group_ids = array();
-      foreach ($node->og_group_ref[LANGUAGE_NONE] as $single) {
-        $group_ids []= $single['target_id'];
-        $group = node_load($single['target_id']);
-        // Exclude group creator and admins
-        $exclude_uids = array_merge($exclude_uids, _ed_cluster_get_group_admins($group, true));
-      }
 
-      // Remove duplicates
-      $exclude_uids = array_unique($exclude_uids);
+    if (!empty($node->og_group_ref[LANGUAGE_NONE])) {
+      if (!empty($node->{ED_FIELD_TO_GROUP_MEMBER}[LANGUAGE_NONE])) {
+        // Only send mail to selected members
+        foreach($node->{ED_FIELD_TO_GROUP_MEMBER}[LANGUAGE_NONE] as $single) {
+          $send_to[] = $single['target_id'];
+        }
+      } else {
+        // Exclude task creator
+        $exclude_uids = array($node->uid);
+        // Handle selected groups case
+        $group_ids = array();
+        foreach ($node->og_group_ref[LANGUAGE_NONE] as $single) {
+          $group_ids []= $single['target_id'];
+          $group = node_load($single['target_id']);
+          // Exclude group creator and admins
+          $exclude_uids = array_merge($exclude_uids, _ed_cluster_get_group_admins($group, true));
 
-      // Excluded: task creator, any group creator or admin
-      $uids = db_select('og_membership', 'ogm')
-        ->distinct()
-        ->fields('ogm', array('etid'))
-        ->condition('ogm.entity_type', 'user')
-        ->condition('ogm.group_type', 'node')
-        ->condition('ogm.gid', $group_ids, 'IN')
-        ->condition('ogm.state', OG_STATE_ACTIVE)
-        ->condition('ogm.etid', $exclude_uids, 'NOT IN')
-        ->execute()
-        ->fetchCol();
+          // Remove duplicates
+          $exclude_uids = array_unique($exclude_uids);
 
-      if (!empty($uids)) {
-        $send_to = $uids;
-      }
-    }
-    // XXX The logic has changed a lot, needs a rewrite
-    // Handle selected users case
-    if (isset($node->field_to_user[LANGUAGE_NONE]) && !empty($node->field_to_user[LANGUAGE_NONE])) {
-      foreach ($node->field_to_user[LANGUAGE_NONE] as $single) {
-        if (!in_array($single['target_id'], $send_to)) {
-          $send_to []= $single['target_id'];
+          // Excluded: task creator, any group creator or admin
+          $uids = db_select('og_membership', 'ogm')
+            ->distinct()
+            ->fields('ogm', array('etid'))
+            ->condition('ogm.entity_type', 'user')
+            ->condition('ogm.group_type', 'node')
+            ->condition('ogm.gid', $group_ids, 'IN')
+            ->condition('ogm.state', OG_STATE_ACTIVE)
+            ->condition('ogm.etid', $exclude_uids, 'NOT IN')
+            ->execute()
+            ->fetchCol();
+
+          if (!empty($uids)) {
+            $send_to = $uids;
+          }
         }
       }
     }
+
     $recipients = user_load_multiple($send_to);
 
     if (!empty($recipients)) {
