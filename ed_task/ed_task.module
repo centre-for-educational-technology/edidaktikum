@@ -197,6 +197,10 @@ function ed_task_listing_page() {
 function ed_task_node_view($node, $view_mode, $langcode) {
   switch($node->type) {
     case 'ed_task':
+
+      // Only apply in case of full view
+      if ('full' != $view_mode) break;
+
       $acc = $GLOBALS['user'];
 
       // Show owner answer info

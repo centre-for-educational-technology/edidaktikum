@@ -100,6 +100,15 @@ function ed_cluster_menu() {
     'access callback' => 'user_is_logged_in',
     'type' => MENU_CALLBACK,
   );
+  $items['dashboard/shared'] = array(
+    'title' => t('Shared with me'),
+    'page callback' => 'ed_cluster_to_group_member_page',
+    'access callback' => 'user_is_logged_in',
+    'file' => 'ed_cluster.pages.inc',
+    'weight' => 25,
+    'menu_name' => 'ed-dashboard-menu',
+    'type' => MENU_NORMAL_ITEM,
+  );
 
   return $items;
 }
@@ -559,7 +568,13 @@ function _get_users_in_group($gid) {
 }
 
 /**
- * TODO need to add a docstring
+ * Returns identifiers for all groups user has created
+ * or is an administrator of.
+ *
+ * @param $account
+ *   User account object.
+ * @return array
+ *   An array with group identifiers or empty array
  */
 function _ed_cluster_get_all_administered_groups(&$account) {
   static $administered_groups;
