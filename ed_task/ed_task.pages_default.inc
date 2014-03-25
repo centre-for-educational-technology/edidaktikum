@@ -16,7 +16,7 @@ function ed_task_default_page_manager_handlers() {
 }
 
 function _ed_task_edit_page_handler(){
-  $handler = new stdClass();
+$handler = new stdClass();
 $handler->disabled = FALSE; /* Edit this to true to make a default handler disabled initially */
 $handler->api_version = 1;
 $handler->name = 'node_edit_panel_ed_task';
@@ -217,6 +217,29 @@ $display->panels = array();
   $display->content['new-2c635194-0bd5-4ecc-b0ee-89c85fcd00d8'] = $pane;
   $display->panels['left'][4] = 'new-2c635194-0bd5-4ecc-b0ee-89c85fcd00d8';
   $pane = new stdClass();
+  $pane->pid = 'new-40984bb6-3f74-42f8-9b1b-1301cb73b048';
+  $pane->panel = 'left';
+  $pane->type = 'node_form_publishing';
+  $pane->subtype = 'node_form_publishing';
+  $pane->shown = TRUE;
+  $pane->access = array();
+  $pane->configuration = array(
+    'context' => 'argument_node_edit_1',
+    'override_title' => 1,
+    'override_title_text' => '',
+  );
+  $pane->cache = array();
+  $pane->style = array(
+    'settings' => NULL,
+  );
+  $pane->css = array();
+  $pane->extras = array();
+  $pane->position = 5;
+  $pane->locks = array();
+  $pane->uuid = '40984bb6-3f74-42f8-9b1b-1301cb73b048';
+  $display->content['new-40984bb6-3f74-42f8-9b1b-1301cb73b048'] = $pane;
+  $display->panels['left'][5] = 'new-40984bb6-3f74-42f8-9b1b-1301cb73b048';
+  $pane = new stdClass();
   $pane->pid = 'new-306a1777-b6fa-42a1-9630-616fffd188ac';
   $pane->panel = 'left';
   $pane->type = 'node_form_buttons';
@@ -234,11 +257,11 @@ $display->panels = array();
   );
   $pane->css = array();
   $pane->extras = array();
-  $pane->position = 5;
+  $pane->position = 6;
   $pane->locks = array();
   $pane->uuid = '306a1777-b6fa-42a1-9630-616fffd188ac';
   $display->content['new-306a1777-b6fa-42a1-9630-616fffd188ac'] = $pane;
-  $display->panels['left'][5] = 'new-306a1777-b6fa-42a1-9630-616fffd188ac';
+  $display->panels['left'][6] = 'new-306a1777-b6fa-42a1-9630-616fffd188ac';
   $pane = new stdClass();
   $pane->pid = 'new-3da6e304-e42f-4f10-afdf-2353f735b874';
   $pane->panel = 'right';
