@@ -493,10 +493,6 @@ function _ed_get_user_unanswered_tasks_count($account) {
   }
   $task_nids = array();
 
-  // XXX The logic has changed. Need to rewrite the method.
-  // Get task identifiers
-  // Fetch answers count
-  // Determine how many are unanswered
   $query = db_select('node', 'n');
   $query->join('field_data_ed_field_to_group_member', 'tgm', 'n.nid = tgm.entity_id');
   $query->fields('n', array('nid'))
@@ -507,11 +503,11 @@ function _ed_get_user_unanswered_tasks_count($account) {
   // Get all task identifiers given directly to a user
   $task_nids = $query->execute()->fetchCol();
 
-  // XXX
-  // Get task identifiers
-  // Fetch answers count
-  // Determine how many are unanswered
-  $groups = og_get_groups_by_user($account, 'node');
+  // Get all groups the user is not an administrator of
+  $user_groups = og_get_groups_by_user($account, 'node');
+  $administered_groups = _ed_cluster_get_all_administered_groups($account);
+  $groups = array_diff($user_groups, $administered_groups);
+
   if ($groups && is_array($groups) && sizeof($groups) > 0) {
     $query = db_select('node', 'n');
     $query->join('og_membership', 'og', 'n.nid = og.etid');
@@ -530,6 +526,11 @@ function _ed_get_user_unanswered_tasks_count($account) {
 
   $count = sizeof($task_nids);
 
+  // Return zero if no task are present
+  if (!($count > 0)) {
+    return $count;
+  }
+
   $query = db_select('node', 'n');
   $query->join('field_data_field_ref_to_task', 'ref', 'n.nid = ref.entity_id');
   $query->fields('n', array('nid'))
@@ -539,6 +540,8 @@ function _ed_get_user_unanswered_tasks_count($account) {
     ->condition('ref.field_ref_to_task_target_id', $task_nids, 'IN');
 
   // Substract the number of answers created by user
+  // Make sure to only consider answers for currently active tasks
+  // This will deal with answers with tasks removed
   $count -= $query->countQuery()->execute()->fetchField();
 
   return $count;
