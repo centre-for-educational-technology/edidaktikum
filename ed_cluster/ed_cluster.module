@@ -460,7 +460,7 @@ function ed_task_manager($test, $node){
   foreach(array_values($group_members) as $index => $member){
       $rows[] = array(
         'data' => array(
-          $member->uid => l($member->ed_field_full_name[LANGUAGE_NONE][0]['safe_value'], 'user/'.$member->uid),
+          $member->uid => l(edidaktikum_get_full_name_for_user_account($member), 'user/'.$member->uid),
         ),
       );
       foreach($nodes as $node_single){
