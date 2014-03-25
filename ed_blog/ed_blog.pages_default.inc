@@ -203,7 +203,7 @@ $display->panels = array();
   $pane->access = array();
   $pane->configuration = array(
     'context' => 'argument_node_edit_1',
-    'override_title' => 0,
+    'override_title' => 1,
     'override_title_text' => '',
   );
   $pane->cache = array();
