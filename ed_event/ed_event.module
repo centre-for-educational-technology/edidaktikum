@@ -226,6 +226,14 @@ function ed_event_block_info() {
     'visibility' => BLOCK_VISIBILITY_LISTED,
     'pages' => 'events',
   );
+  $blocks['group_events_calendar'] = array(
+    'info' => t('Group events calendar'),
+    'status' => TRUE,
+    'title' => '<none>',
+    'region' => 'sidebar_second',
+    'visibility' => BLOCK_VISIBILITY_LISTED,
+    'pages' => 'node/*/event',
+  );
   return $blocks;
 }
 
@@ -260,6 +268,39 @@ function ed_event_block_view($block_name='') {
 
     $block = array(
       'subject' => 'Events calendar',
+      'content' => $content,
+    );
+    return $block;
+
+  }
+
+  if ($block_name == 'group_events_calendar') {
+
+    drupal_add_library('system', 'ui.datepicker');
+
+    $content = array();
+    $content['events-calendar'] = array(
+      '#type' => 'markup',
+      '#markup' => '<div id="group_events_calendar"></div>',
+      '#attached' => array(
+        'css' => array(
+          drupal_get_path('module', 'ed_event') . '/css/eventCalendar.css',
+          drupal_get_path('module', 'ed_event') . '/css/eventCalendar_theme_responsive.css',
+        ),
+        'js' => array(
+          drupal_get_path('module', 'ed_event') . '/js/jquery.eventCalendar.js',
+          drupal_get_path('module', 'ed_event') . '/js/ed_group_event.js',
+        ),
+      ),
+    );
+
+    global $language;
+    if (file_exists(drupal_get_path('module', 'ed_event') . "/js/jquery.eventCalendar-{$language->language}.js")) {
+      $content['events-calendar']['#attached']['js'][] = drupal_get_path('module', 'ed_event') . "/js/jquery.eventCalendar-{$language->language}.js";
+    }
+
+    $block = array(
+      'subject' => 'Group events calendar',
       'content' => $content,
     );
     return $block;

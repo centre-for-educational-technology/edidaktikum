@@ -50,6 +50,14 @@ function ed_cluster_menu() {
     'type' => MENU_LOCAL_TASK,
     'weight' => 50,
   );
+  $items['node/%node/ajax/get/events'] = array(
+    'page callback' => 'ed_cluster_get_group_events_ajax',
+    'access callback' => 'ed_group_content_listing_access',
+    'page arguments' => array(1),
+    'access arguments' => array('node', 1, 'ed_event'),
+    'type' => MENU_CALLBACK,
+    'file' => 'ed_cluster.pages.inc',
+  );
   $items['node/%node/blog'] = array(
     'title' => t('Blog'),
     'page callback' => 'ed_listing_from_group',
@@ -129,6 +137,15 @@ function ed_group_content_listing_access($filler, $gnode, $type){
 }
 
 function ed_listing_from_group($filler, $gnode, $type){
+
+  // Add settings used for group events calendar
+  if ('ed_event' == $type) {
+    drupal_add_js(array(
+      'edidaktikum' => array(
+        'ed_cluster_group_events_ajax_url' => "node/{$gnode->nid}/ajax/get/events",
+      ),
+    ), 'setting');
+  }
   
   $content = array();
 
