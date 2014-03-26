@@ -61,9 +61,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2014-03-04 15:41+0200\n"
-"PO-Revision-Date: 2014-03-24 15:50+0200\n"
-"Last-Translator: Priit Tammets <tammets@gmail.com>\n"
+"POT-Creation-Date: 2014-03-26 16:11+0200\n"
+"PO-Revision-Date: 2014-03-26 16:12+0200\n"
+"Last-Translator: Pjotr Savitski <pjotr.savitski@gmail.com>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
@@ -191,7 +191,7 @@ msgstr "Sisutüübid"
 msgid "Content Type"
 msgstr "Sisutüüp"
 
-#: edidaktikum.admin.inc:204 ed_cluster/ed_cluster.module:13
+#: edidaktikum.admin.inc:204 ed_cluster/ed_cluster.module:19
 msgid "Groups"
 msgstr "Grupid"
 
@@ -199,19 +199,19 @@ msgstr "Grupid"
 msgid "Subgroups"
 msgstr "Alamgrupid"
 
-#: edidaktikum.admin.inc:206 ed_cluster/ed_cluster.module:57
+#: edidaktikum.admin.inc:206 ed_cluster/ed_cluster.module:71
 #: ed_learning_resource/ed_learning_resource_ajax.inc:13
 #: ed_learning_resource/ed_learning_resource.module:73
 msgid "Learning Resources"
 msgstr "Õppematerjalid"
 
 #: edidaktikum.admin.inc:207 edidaktikum.pages.inc:57
-#: ed_cluster/ed_cluster.module:30 ed_news/ed_news.module:13;22
+#: ed_cluster/ed_cluster.module:36 ed_news/ed_news.module:13;22
 #: ed_news/ed_news.info:0
 msgid "News"
 msgstr "Uudised"
 
-#: edidaktikum.admin.inc:208 ed_cluster/ed_cluster.module:39
+#: edidaktikum.admin.inc:208 ed_cluster/ed_cluster.module:45
 #: ed_event/ed_event.module:13;26
 msgid "Events"
 msgstr "Sündmused"
@@ -220,7 +220,7 @@ msgstr "Sündmused"
 msgid "Given Tasks"
 msgstr "Antud ülesanded"
 
-#: edidaktikum.pages.inc:74 ed_event/ed_event.install:45
+#: edidaktikum.pages.inc:74 ed_event/ed_event.install:47
 #: ed_event/ed_event.info:0
 msgid "Event"
 msgstr "Sündmus"
@@ -345,15 +345,16 @@ msgstr "Algus"
 msgid "Contact"
 msgstr "Kontakt"
 
-#: ed_answer/ed_answer_functions.inc:7 ed_blog/ed_blog_functions.inc:21
-#: ed_event/ed_event.install:98 ed_forum/ed_forum_functions.inc:6
+#: ed_answer/ed_answer_functions.inc:7 ed_blog/ed_blog_functions.inc:23
+#: ed_cluster/ed_cluster.install:123 ed_event/ed_event.install:100
+#: ed_forum/ed_forum_functions.inc:6
 #: ed_learning_resource/ed_learning_resource_functions.inc:163
-#: ed_news/ed_news.install:133 ed_page/ed_page_functions.inc:21
+#: ed_news/ed_news.install:135 ed_page/ed_page_functions.inc:21
 #: ed_subgroup/ed_subgroup_functions.inc:20
 msgid "Content"
 msgstr "Sisu"
 
-#: ed_answer/ed_answer.module:7 ed_task/ed_task.module:272;307
+#: ed_answer/ed_answer.module:7 ed_task/ed_task.module:276;311
 msgid "Answer"
 msgstr "Vastus"
 
@@ -378,40 +379,44 @@ msgstr "!task-title - Vastus"
 msgid "Answer with task removed"
 msgstr "Vastus koos ülesandega kustutatud"
 
-#: ed_answer/ed_answer.module:68
+#: ed_answer/ed_answer.module:72
 msgid "Delete"
 msgstr "Kustuta"
 
-#: ed_answer/ed_answer.module:85
+#: ed_answer/ed_answer.module:90
 msgid "Create Answer"
 msgstr "Lisa vastus"
 
-#: ed_answer/ed_answer.module:99
+#: ed_answer/ed_answer.module:104
 msgid "Answer To Task"
 msgstr "Ülesande vastus"
 
-#: ed_answer/ed_answer.module:107 ed_task/ed_task.info:0
+#: ed_answer/ed_answer.module:112 ed_task/ed_task.info:0
 msgid "Task"
 msgstr "Ülesanne"
 
-#: ed_answer/ed_answer.module:133
+#: ed_answer/ed_answer.module:138
 #: ed_learning_resource/ed_learning_resource_ajax.inc:41
 #: ed_learning_resource/ed_learning_resource_functions.inc:400
-#: ed_news/ed_news.install:194
+#: ed_news/ed_news.install:196
 msgid "Category"
 msgstr "Kategooria"
 
-#: ed_answer/ed_answer.module:176 ed_file/ed_file.install:392
-#: ed_task/ed_task_functions.inc:170
+#: ed_answer/ed_answer.module:181 ed_file/ed_file.install:260
+#: ed_task/ed_task_functions.inc:98
 msgid "Competence"
 msgstr "Pädevus"
 
-#: ed_answer/ed_answer.install:163 ed_blog/ed_blog.install:43
-#: ed_bookmark/ed_bookmark.install:25;105;105 ed_cluster/ed_cluster.module:706
-#: ed_cluster/ed_cluster.install:56 ed_event/ed_event.install:278
-#: ed_file/ed_file.install:118 ed_forum/ed_forum.install:31
+#: ed_answer/ed_answer.module:303;304
+msgid "Shows delete when answer task removed."
+msgstr ""
+
+#: ed_answer/ed_answer.install:169 ed_blog/ed_blog.install:43
+#: ed_bookmark/ed_bookmark.install:25;105;105 ed_cluster/ed_cluster.module:813
+#: ed_cluster/ed_cluster.install:60 ed_event/ed_event.install:280
+#: ed_file/ed_file.install:119 ed_forum/ed_forum.install:31
 #: ed_learning_resource/ed_learning_resource.install:33
-#: ed_news/ed_news.install:218 ed_page/ed_page.install:44
+#: ed_news/ed_news.install:220 ed_page/ed_page.install:44
 #: ed_task/ed_task.install:35
 msgid "Group"
 msgstr "Grupp"
@@ -424,27 +429,26 @@ msgstr "eDidaktikumi vastus"
 msgid "eDidaktikum Answer content type to Tasks."
 msgstr ""
 
-#: ed_blog/ed_blog_functions.inc:5;35
-#: ed_bookmark/ed_bookmark_functions.inc:22;59
-#: ed_learning_resource/ed_learning_resource_functions.inc:82;315
-#: ed_page/ed_page_functions.inc:5;35
+#: ed_blog/ed_blog_functions.inc:37 ed_bookmark/ed_bookmark_functions.inc:60
+#: ed_event/ed_event.install:346 ed_file/ed_file.install:371
+#: ed_learning_resource/ed_learning_resource_functions.inc:315
+#: ed_news/ed_news.install:287 ed_page/ed_page_functions.inc:35
 msgid "Tags"
 msgstr "Märksõnad"
 
-#: ed_blog/ed_blog_functions.inc:36
+#: ed_blog/ed_blog_functions.inc:38
 #: ed_learning_resource/ed_learning_resource_functions.inc:316
-#: ed_page/ed_page_functions.inc:36
 msgid ""
 "Separate with commas. E.g. Mathematics, Force training, Jedi Mind Tricks"
 msgstr "Eralda palun komaga, näitek: matemaatika, eesti keel, tööõpetus"
 
-#: ed_blog/ed_blog.module:11;43;51 ed_cluster/ed_cluster.module:48
+#: ed_blog/ed_blog.module:11;43;51 ed_cluster/ed_cluster.module:62
 msgid "Blog"
 msgstr "Ajaveeb"
 
 #: ed_blog/ed_blog.module:16;113;148 ed_bookmark/ed_bookmark.module:14
-#: ed_cluster/ed_cluster.install:62 ed_event/ed_event.install:51
-#: ed_file/ed_file.module:164 ed_file/ed_file.install:50;72
+#: ed_cluster/ed_cluster.install:66 ed_event/ed_event.install:53
+#: ed_file/ed_file.module:164 ed_file/ed_file.install:51;73
 #: ed_forum/ed_forum.module:16
 #: ed_learning_resource/ed_learning_resource_ajax.inc:20;145
 #: ed_learning_resource/ed_learning_resource.module:15;78;228;254
@@ -475,7 +479,7 @@ msgstr "Lisa uus postitus"
 msgid "Due Date:"
 msgstr "Tähtaeg:"
 
-#: ed_blog/ed_blog.module:113;148 ed_bookmark/ed_bookmark_functions.inc:6;76
+#: ed_blog/ed_blog.module:113;148 ed_bookmark/ed_bookmark_functions.inc:6;77
 #: ed_file/ed_file.module:169
 #: ed_learning_resource/ed_learning_resource_functions.inc:34;218
 #: entityreference_dragdrop/entityreference_dragdrop.module:158
@@ -486,11 +490,11 @@ msgstr "Tüüp"
 msgid "Date"
 msgstr "Kuupäev"
 
-#: ed_blog/ed_blog.install:107
+#: ed_blog/ed_blog.install:107 ed_task/ed_task.install:108
 msgid "No %type nodes exist in database."
 msgstr ""
 
-#: ed_blog/ed_blog.install:131
+#: ed_blog/ed_blog.install:131 ed_task/ed_task.install:132
 msgid "Updated @count nodes of type %type."
 msgstr ""
 
@@ -506,7 +510,7 @@ msgstr "eDidaktikumi ajaveebi sisutüüp"
 msgid "Url"
 msgstr "Veebiaadress"
 
-#: ed_bookmark/ed_bookmark_functions.inc:46 ed_event/ed_event.install:145
+#: ed_bookmark/ed_bookmark_functions.inc:46 ed_event/ed_event.install:147
 msgid "URL"
 msgstr "Veebiaadress"
 
@@ -516,7 +520,7 @@ msgstr "Järjehoidja"
 
 #: ed_bookmark/ed_bookmark.module:12
 #: ed_learning_resource/ed_learning_resource.module:13
-#: ed_portfolio/ed_portfolio.install:86 ed_task/ed_task_functions.inc:106
+#: ed_portfolio/ed_portfolio.install:86 ed_task/ed_task_functions.inc:34
 msgid "Description"
 msgstr "Kirjeldus"
 
@@ -544,76 +548,151 @@ msgstr "eDidaktikumi järjehoidja"
 msgid "eDidaktikum Bookmark content type."
 msgstr "eDidaktikumi järjehoidja sisutüüp."
 
-#: ed_cluster/ed_cluster.module:21
+#: ed_cluster/ed_cluster.pages.inc:41
+#, fuzzy
+msgid "content"
+msgstr "Sisu"
+
+#: ed_cluster/ed_cluster.pages.inc:44
+#, fuzzy
+msgid "blog post"
+msgstr "Lisa uus postitus"
+
+#: ed_cluster/ed_cluster.pages.inc:47
+#, fuzzy
+msgid "bookmark"
+msgstr "Järjehoidja"
+
+#: ed_cluster/ed_cluster.pages.inc:50
+#, fuzzy
+msgid "event"
+msgstr "Sündmus"
+
+#: ed_cluster/ed_cluster.pages.inc:53
+msgid "news"
+msgstr ""
+
+#: ed_cluster/ed_cluster.pages.inc:56
+#, fuzzy
+msgid "learning resource"
+msgstr "Õppematerjal"
+
+#: ed_cluster/ed_cluster.pages.inc:59
+#, fuzzy
+msgid "page"
+msgstr "Veebileht"
+
+#: ed_cluster/ed_cluster.pages.inc:62
+#, fuzzy
+msgid "discussion"
+msgstr "Arutelu"
+
+#: ed_cluster/ed_cluster.pages.inc:65 ed_file/ed_file.module:141
+msgid "file"
+msgstr "file"
+
+#: ed_cluster/ed_cluster.pages.inc:68
+#, fuzzy
+msgid "portfolio"
+msgstr "Portfoolio"
+
+#: ed_cluster/ed_cluster.pages.inc:71
+msgid "task"
+msgstr ""
+
+#: ed_cluster/ed_cluster.pages.inc:74
+#, fuzzy
+msgid "answer"
+msgstr "Vastus"
+
+#: ed_cluster/ed_cluster.pages.inc:79
+msgid "!user shared @node_type_name !node @time"
+msgstr ""
+
+#: ed_cluster/ed_cluster.module:27
 msgid "Task Manager"
 msgstr "Ülesannete haldur"
 
-#: ed_cluster/ed_cluster.module:66 ed_forum/ed_forum.module:11
+#: ed_cluster/ed_cluster.module:80 ed_forum/ed_forum.module:11
 msgid "Discussion Board"
 msgstr "Arutelu"
 
-#: ed_cluster/ed_cluster.module:75
+#: ed_cluster/ed_cluster.module:89
 msgid "Pages"
 msgstr "Leheküljed"
 
-#: ed_cluster/ed_cluster.module:84
+#: ed_cluster/ed_cluster.module:98
 msgid "Bookmarks"
 msgstr "Järjehoidjad"
 
-#: ed_cluster/ed_cluster.module:125;410
+#: ed_cluster/ed_cluster.module:112
+#, fuzzy
+msgid "Shared with me"
+msgstr "Jagatud:"
+
+#: ed_cluster/ed_cluster.module:164;458
 msgid "Add new"
 msgstr "Lisa uus "
 
-#: ed_cluster/ed_cluster.module:147
+#: ed_cluster/ed_cluster.module:193
 msgid "Group content paged"
 msgstr ""
 
-#: ed_cluster/ed_cluster.module:148
+#: ed_cluster/ed_cluster.module:194
 msgid "desc"
 msgstr "kirjeldus"
 
-#: ed_cluster/ed_cluster.module:253
+#: ed_cluster/ed_cluster.module:299
 msgid "!name added !node @time"
 msgstr ""
 
-#: ed_cluster/ed_cluster.module:257
+#: ed_cluster/ed_cluster.module:303
 msgid "!name changed !node @time"
 msgstr ""
 
-#: ed_cluster/ed_cluster.module:278
+#: ed_cluster/ed_cluster.module:324
 msgid "No recent activity"
 msgstr "Värskeid uuendusi ei ole"
 
-#: ed_cluster/ed_cluster.module:437 ed_task/ed_task.module:272
+#: ed_cluster/ed_cluster.module:485 ed_task/ed_task.module:276
 msgid "Name"
 msgstr "Nimi"
 
-#: ed_cluster/ed_cluster.module:621
+#: ed_cluster/ed_cluster.module:728
 msgid "Add new group"
 msgstr "Lisa uus grupp"
 
-#: ed_cluster/ed_cluster.module:694
+#: ed_cluster/ed_cluster.module:801
 msgid "Create Group"
 msgstr "Loo grupp"
 
-#: ed_cluster/ed_cluster.module:704
+#: ed_cluster/ed_cluster.module:811
 msgid "Group (@count)"
 msgstr "Grupp (@count)"
 
-#: ed_cluster/ed_cluster.install:27 ed_event/ed_event.install:234
-#: ed_news/ed_news.install:164 ed_portfolio/ed_portfolio.install:116
+#: ed_cluster/ed_cluster.module:867
+msgid "- None -"
+msgstr ""
+
+#: ed_cluster/ed_cluster.module:1059
+#, fuzzy
+msgid "Type page"
+msgstr "Veebileht"
+
+#: ed_cluster/ed_cluster.install:31 ed_event/ed_event.install:236
+#: ed_news/ed_news.install:166 ed_portfolio/ed_portfolio.install:116
 #: ed_subgroup/ed_subgroup.install:30
 msgid "Featured image"
 msgstr "Kaanepilt"
 
-#: ed_cluster/ed_cluster.install:94 ed_event/ed_event.install:68
+#: ed_cluster/ed_cluster.install:98 ed_event/ed_event.install:70
 #: ed_learning_resource/ed_learning_resource_functions.inc:144
-#: ed_news/ed_news.install:96 ed_subgroup/ed_subgroup_functions.inc:7
+#: ed_news/ed_news.install:98 ed_subgroup/ed_subgroup_functions.inc:7
 msgid "Excerpt"
 msgstr "Kokkuvõte"
 
-#: ed_cluster/ed_cluster.install:119 ed_event/ed_event.install:256
-#: ed_file/ed_file.install:362
+#: ed_cluster/ed_cluster.install:160 ed_event/ed_event.install:258
+#: ed_file/ed_file.install:230
 msgid "Categories"
 msgstr "Kategooriad"
 
@@ -624,6 +703,34 @@ msgstr "Grupp"
 #: ed_cluster/ed_cluster.info:0
 msgid "eDidaktikum groups."
 msgstr "eDidaktikumi grupid."
+
+#: ed_cluster/plugins/content_types/node_context/node_group_breadcrumbs.inc:10
+msgid "Node group breadcrumbs"
+msgstr ""
+
+#: ed_cluster/plugins/content_types/node_context/node_group_breadcrumbs.inc:12
+msgid "Breadcrumbs of the node groups."
+msgstr ""
+
+#: ed_cluster/plugins/content_types/node_context/node_group_breadcrumbs.inc:13;14
+msgid "Node"
+msgstr ""
+
+#: ed_cluster/plugins/content_types/node_context/node_group_breadcrumbs.inc:29
+msgid "Group breadcrumbs"
+msgstr ""
+
+#: ed_cluster/plugins/content_types/node_context/node_group_breadcrumbs.inc:31
+msgid "Node group breadcrumbs go here."
+msgstr ""
+
+#: ed_cluster/plugins/content_types/node_context/node_group_breadcrumbs.inc:59
+msgid "\"@s\" group breadcrumbs"
+msgstr ""
+
+#: ed_cluster/plugins/selection/groupsusers.inc:4
+msgid "Selected Groups Users"
+msgstr ""
 
 #: ed_competence_voc/ed_competence_voc.info:0
 msgid "Competence vocabulary"
@@ -657,19 +764,24 @@ msgstr "Lähimad sündmused"
 msgid "Events calendar"
 msgstr "Sündmuste kalender"
 
-#: ed_event/ed_event.module:276
+#: ed_event/ed_event.module:230
+#, fuzzy
+msgid "Group events calendar"
+msgstr "Sündmuste kalender"
+
+#: ed_event/ed_event.module:317
 msgid "Create Event"
 msgstr "Lisa sündmus"
 
-#: ed_event/ed_event.install:165
+#: ed_event/ed_event.install:167
 msgid "Location"
 msgstr "Asukoht"
 
-#: ed_event/ed_event.install:181
+#: ed_event/ed_event.install:183
 msgid "Start"
 msgstr "Algus"
 
-#: ed_event/ed_event.install:207
+#: ed_event/ed_event.install:209
 msgid "End"
 msgstr "Lõpp"
 
@@ -680,10 +792,6 @@ msgstr "eDidaktikumi sündmused"
 #: ed_file/ed_file.module:13
 msgid "Files"
 msgstr "Failid"
-
-#: ed_file/ed_file.module:141
-msgid "file"
-msgstr "file"
 
 #: ed_file/ed_file.module:142
 msgid "folder"
@@ -698,7 +806,7 @@ msgstr "Lisa uus !file või !folder"
 msgid "Changed"
 msgstr "Muudetud"
 
-#: ed_file/ed_file.module:198 ed_task/ed_task.module:296
+#: ed_file/ed_file.module:198 ed_task/ed_task.module:300
 msgid "Edit"
 msgstr "Muuda"
 
@@ -710,19 +818,19 @@ msgstr "Lisa fail"
 msgid "Create Folder"
 msgstr "Lisa kaust"
 
-#: ed_file/ed_file.install:44
+#: ed_file/ed_file.install:45
 msgid "File"
 msgstr "File"
 
-#: ed_file/ed_file.install:66
+#: ed_file/ed_file.install:67
 msgid "File folder"
 msgstr "Faili kaust"
 
-#: ed_file/ed_file.install:304
+#: ed_file/ed_file.install:172
 msgid "Folder"
 msgstr "Kaust"
 
-#: ed_file/ed_file.install:339
+#: ed_file/ed_file.install:207
 msgid "Upload file"
 msgstr "Lae fail üles"
 
@@ -933,14 +1041,6 @@ msgstr "Õppematerjali keeled"
 msgid "A list of different learning resource languages"
 msgstr ""
 
-#: ed_learning_resource_voc/ed_learning_resource_voc.install:29
-msgid "Learning Resource Tags"
-msgstr "Õppematerjali märksõna"
-
-#: ed_learning_resource_voc/ed_learning_resource_voc.install:29
-msgid "A list of tags for learning resources"
-msgstr "Õppematerjalide märksõnade nimekiri"
-
 #: ed_learning_resource_voc/ed_learning_resource_voc.install:30
 msgid "Learning Resource Authors"
 msgstr "Õppematerjali autorid"
@@ -1017,7 +1117,7 @@ msgstr "Töövahend"
 msgid "Video"
 msgstr "Video"
 
-#: ed_learning_resource_voc/ed_learning_resource_voc.install:106;106;115;115
+#: ed_learning_resource_voc/ed_learning_resource_voc.install:106;106
 msgid "English"
 msgstr "Inglise keel"
 
@@ -1028,26 +1128,6 @@ msgstr "Eesti keel"
 #: ed_learning_resource_voc/ed_learning_resource_voc.install:108;108
 msgid "Russian"
 msgstr "Vene keel"
-
-#: ed_learning_resource_voc/ed_learning_resource_voc.install:111;111
-msgid "Mathematics"
-msgstr "Matemaatika"
-
-#: ed_learning_resource_voc/ed_learning_resource_voc.install:112;112
-msgid "Biology"
-msgstr "Bioloogia"
-
-#: ed_learning_resource_voc/ed_learning_resource_voc.install:113;113
-msgid "Chemistry"
-msgstr "Keemia"
-
-#: ed_learning_resource_voc/ed_learning_resource_voc.install:114;114
-msgid "Physics"
-msgstr "Füüsika"
-
-#: ed_learning_resource_voc/ed_learning_resource_voc.install:116;116
-msgid "History"
-msgstr "Ajalugu"
 
 #: ed_learning_resource_voc/ed_learning_resource_voc.install:119;119
 msgid "Obi-Wan Kenobi"
@@ -1091,7 +1171,7 @@ msgstr ""
 msgid "Create News"
 msgstr "Loo uudis"
 
-#: ed_news/ed_news.install:117;148;178;207
+#: ed_news/ed_news.install:119;150;180;209
 msgid ""
 "Field @fieldname does not exist. Field instance for node type @type could "
 "not be created."
@@ -1179,7 +1259,7 @@ msgstr ""
 msgid "Due Date"
 msgstr "Tähtaeg"
 
-#: ed_task/ed_task_functions.inc:151
+#: ed_task/ed_task_functions.inc:79
 msgid "category"
 msgstr "kategooria"
 
@@ -1231,51 +1311,51 @@ msgstr "Mulle antud ülesanded"
 msgid "Assigned By"
 msgstr "Ülesande andja"
 
-#: ed_task/ed_task.module:206
+#: ed_task/ed_task.module:210
 msgid "Answers"
 msgstr "Vastused"
 
-#: ed_task/ed_task.module:213
+#: ed_task/ed_task.module:217
 msgid "Answers by groups"
 msgstr "Vastused gruppide järgi"
 
-#: ed_task/ed_task.module:264
+#: ed_task/ed_task.module:268
 msgid "Answers by users"
 msgstr "Individuaalsed vastused"
 
-#: ed_task/ed_task.module:272
+#: ed_task/ed_task.module:276
 msgid "Submitted"
 msgstr "Esitatud"
 
-#: ed_task/ed_task.module:358
+#: ed_task/ed_task.module:362
 msgid "extra fields label"
 msgstr ""
 
-#: ed_task/ed_task.module:359
+#: ed_task/ed_task.module:363
 msgid "extra fields descrption"
 msgstr ""
 
-#: ed_task/ed_task.module:363;364
+#: ed_task/ed_task.module:367;368
 msgid "Task answers listing"
 msgstr "Ülesande vastuste nimekiri"
 
-#: ed_task/ed_task.module:378
+#: ed_task/ed_task.module:382
 msgid "Create Task"
 msgstr "Loo ülesanne"
 
-#: ed_task/ed_task.module:625
+#: ed_task/ed_task.module:645
 msgid "New Task - eDidaktikum"
 msgstr "Uus ülesanne - eDidaktikum"
 
-#: ed_task/ed_task.module:626
+#: ed_task/ed_task.module:646
 msgid "@fullname assigned you a task: @taskname."
 msgstr "@fullname andis sulle ülesande: @taskname."
 
-#: ed_task/ed_task.module:627
+#: ed_task/ed_task.module:647
 msgid "Due date: @duedate"
 msgstr "Tähtaeg: @duedate"
 
-#: ed_task/ed_task.module:628
+#: ed_task/ed_task.module:648
 msgid "View task: @taskurl"
 msgstr "Vaata ülesannet: @taskurl"
 
@@ -1322,6 +1402,27 @@ msgstr ""
 #: entityreference_dragdrop/entityreference_dragdrop.info:0
 msgid "Fields"
 msgstr "Väljad"
+
+#~ msgid "Learning Resource Tags"
+#~ msgstr "Õppematerjali märksõna"
+
+#~ msgid "A list of tags for learning resources"
+#~ msgstr "Õppematerjalide märksõnade nimekiri"
+
+#~ msgid "Mathematics"
+#~ msgstr "Matemaatika"
+
+#~ msgid "Biology"
+#~ msgstr "Bioloogia"
+
+#~ msgid "Chemistry"
+#~ msgstr "Keemia"
+
+#~ msgid "Physics"
+#~ msgstr "Füüsika"
+
+#~ msgid "History"
+#~ msgstr "Ajalugu"
 
 #~ msgid "Likes"
 #~ msgstr "Meeldimised"

@@ -34,6 +34,7 @@
 #  ed_user_extra/ed_user_extra.info: n/a
 #  ed_answer/ed_answer_functions.inc: n/a
 #  ed_blog/ed_blog_functions.inc: n/a
+#  ed_cluster/ed_cluster.install: n/a
 #  ed_forum/ed_forum_functions.inc: n/a
 #  ed_learning_resource/ed_learning_resource_functions.inc: n/a
 #  ed_news/ed_news.install: n/a
@@ -50,7 +51,6 @@
 #  ed_answer/ed_answer.install: n/a
 #  ed_blog/ed_blog.install: n/a
 #  ed_bookmark/ed_bookmark.install: n/a
-#  ed_cluster/ed_cluster.install: n/a
 #  ed_forum/ed_forum.install: n/a
 #  ed_learning_resource/ed_learning_resource.install: n/a
 #  ed_page/ed_page.install: n/a
@@ -61,7 +61,10 @@
 #  ed_portfolio/ed_portfolio.module: n/a
 #  ed_portfolio/ed_portfolio.install: n/a
 #  entityreference_dragdrop/entityreference_dragdrop.module: n/a
+#  ed_cluster/ed_cluster.pages.inc: n/a
 #  ed_subgroup/ed_subgroup.install: n/a
+#  ed_cluster/plugins/content_types/node_context/node_group_breadcrumbs.inc: n/a
+#  ed_cluster/plugins/selection/groupsusers.inc: n/a
 #  ed_file/includes/views/ed_file.views_default.inc: n/a
 #  ed_portfolio/includes/views/ed_portfolio.views_default.inc: n/a
 #  ed_learning_resource/ed_learning_resource.pages.inc: n/a
@@ -75,7 +78,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2014-03-04 15:41+0200\n"
+"POT-Creation-Date: 2014-03-26 16:11+0200\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -204,7 +207,7 @@ msgstr ""
 msgid "Content Type"
 msgstr ""
 
-#: edidaktikum.admin.inc:204 ed_cluster/ed_cluster.module:13
+#: edidaktikum.admin.inc:204 ed_cluster/ed_cluster.module:19
 msgid "Groups"
 msgstr ""
 
@@ -212,15 +215,15 @@ msgstr ""
 msgid "Subgroups"
 msgstr ""
 
-#: edidaktikum.admin.inc:206 ed_cluster/ed_cluster.module:57 ed_learning_resource/ed_learning_resource_ajax.inc:13 ed_learning_resource/ed_learning_resource.module:73
+#: edidaktikum.admin.inc:206 ed_cluster/ed_cluster.module:71 ed_learning_resource/ed_learning_resource_ajax.inc:13 ed_learning_resource/ed_learning_resource.module:73
 msgid "Learning Resources"
 msgstr ""
 
-#: edidaktikum.admin.inc:207 edidaktikum.pages.inc:57 ed_cluster/ed_cluster.module:30 ed_news/ed_news.module:13;22 ed_news/ed_news.info:0
+#: edidaktikum.admin.inc:207 edidaktikum.pages.inc:57 ed_cluster/ed_cluster.module:36 ed_news/ed_news.module:13;22 ed_news/ed_news.info:0
 msgid "News"
 msgstr ""
 
-#: edidaktikum.admin.inc:208 ed_cluster/ed_cluster.module:39 ed_event/ed_event.module:13;26
+#: edidaktikum.admin.inc:208 ed_cluster/ed_cluster.module:45 ed_event/ed_event.module:13;26
 msgid "Events"
 msgstr ""
 
@@ -228,7 +231,7 @@ msgstr ""
 msgid "Given Tasks"
 msgstr ""
 
-#: edidaktikum.pages.inc:74 ed_event/ed_event.install:45 ed_event/ed_event.info:0
+#: edidaktikum.pages.inc:74 ed_event/ed_event.install:47 ed_event/ed_event.info:0
 msgid "Event"
 msgstr ""
 
@@ -340,11 +343,11 @@ msgstr ""
 msgid "Contact"
 msgstr ""
 
-#: ed_answer/ed_answer_functions.inc:7 ed_blog/ed_blog_functions.inc:21 ed_event/ed_event.install:98 ed_forum/ed_forum_functions.inc:6 ed_learning_resource/ed_learning_resource_functions.inc:163 ed_news/ed_news.install:133 ed_page/ed_page_functions.inc:21 ed_subgroup/ed_subgroup_functions.inc:20
+#: ed_answer/ed_answer_functions.inc:7 ed_blog/ed_blog_functions.inc:23 ed_cluster/ed_cluster.install:123 ed_event/ed_event.install:100 ed_forum/ed_forum_functions.inc:6 ed_learning_resource/ed_learning_resource_functions.inc:163 ed_news/ed_news.install:135 ed_page/ed_page_functions.inc:21 ed_subgroup/ed_subgroup_functions.inc:20
 msgid "Content"
 msgstr ""
 
-#: ed_answer/ed_answer.module:7 ed_task/ed_task.module:272;307
+#: ed_answer/ed_answer.module:7 ed_task/ed_task.module:276;311
 msgid "Answer"
 msgstr ""
 
@@ -364,31 +367,35 @@ msgstr ""
 msgid "Answer with task removed"
 msgstr ""
 
-#: ed_answer/ed_answer.module:68
+#: ed_answer/ed_answer.module:72
 msgid "Delete"
 msgstr ""
 
-#: ed_answer/ed_answer.module:85
+#: ed_answer/ed_answer.module:90
 msgid "Create Answer"
 msgstr ""
 
-#: ed_answer/ed_answer.module:99
+#: ed_answer/ed_answer.module:104
 msgid "Answer To Task"
 msgstr ""
 
-#: ed_answer/ed_answer.module:107 ed_task/ed_task.info:0
+#: ed_answer/ed_answer.module:112 ed_task/ed_task.info:0
 msgid "Task"
 msgstr ""
 
-#: ed_answer/ed_answer.module:133 ed_learning_resource/ed_learning_resource_ajax.inc:41 ed_learning_resource/ed_learning_resource_functions.inc:400 ed_news/ed_news.install:194
+#: ed_answer/ed_answer.module:138 ed_learning_resource/ed_learning_resource_ajax.inc:41 ed_learning_resource/ed_learning_resource_functions.inc:400 ed_news/ed_news.install:196
 msgid "Category"
 msgstr ""
 
-#: ed_answer/ed_answer.module:176 ed_file/ed_file.install:392 ed_task/ed_task_functions.inc:170
+#: ed_answer/ed_answer.module:181 ed_file/ed_file.install:260 ed_task/ed_task_functions.inc:98
 msgid "Competence"
 msgstr ""
 
-#: ed_answer/ed_answer.install:163 ed_blog/ed_blog.install:43 ed_bookmark/ed_bookmark.install:25;105;105 ed_cluster/ed_cluster.module:706 ed_cluster/ed_cluster.install:56 ed_event/ed_event.install:278 ed_file/ed_file.install:118 ed_forum/ed_forum.install:31 ed_learning_resource/ed_learning_resource.install:33 ed_news/ed_news.install:218 ed_page/ed_page.install:44 ed_task/ed_task.install:35
+#: ed_answer/ed_answer.module:303;304
+msgid "Shows delete when answer task removed."
+msgstr ""
+
+#: ed_answer/ed_answer.install:169 ed_blog/ed_blog.install:43 ed_bookmark/ed_bookmark.install:25;105;105 ed_cluster/ed_cluster.module:813 ed_cluster/ed_cluster.install:60 ed_event/ed_event.install:280 ed_file/ed_file.install:119 ed_forum/ed_forum.install:31 ed_learning_resource/ed_learning_resource.install:33 ed_news/ed_news.install:220 ed_page/ed_page.install:44 ed_task/ed_task.install:35
 msgid "Group"
 msgstr ""
 
@@ -400,19 +407,19 @@ msgstr ""
 msgid "eDidaktikum Answer content type to Tasks."
 msgstr ""
 
-#: ed_blog/ed_blog_functions.inc:5;35 ed_bookmark/ed_bookmark_functions.inc:22;59 ed_learning_resource/ed_learning_resource_functions.inc:82;315 ed_page/ed_page_functions.inc:5;35
+#: ed_blog/ed_blog_functions.inc:37 ed_bookmark/ed_bookmark_functions.inc:60 ed_event/ed_event.install:346 ed_file/ed_file.install:371 ed_learning_resource/ed_learning_resource_functions.inc:315 ed_news/ed_news.install:287 ed_page/ed_page_functions.inc:35
 msgid "Tags"
 msgstr ""
 
-#: ed_blog/ed_blog_functions.inc:36 ed_learning_resource/ed_learning_resource_functions.inc:316 ed_page/ed_page_functions.inc:36
+#: ed_blog/ed_blog_functions.inc:38 ed_learning_resource/ed_learning_resource_functions.inc:316
 msgid "Separate with commas. E.g. Mathematics, Force training, Jedi Mind Tricks"
 msgstr ""
 
-#: ed_blog/ed_blog.module:11;43;51 ed_cluster/ed_cluster.module:48
+#: ed_blog/ed_blog.module:11;43;51 ed_cluster/ed_cluster.module:62
 msgid "Blog"
 msgstr ""
 
-#: ed_blog/ed_blog.module:16;113;148 ed_bookmark/ed_bookmark.module:14 ed_cluster/ed_cluster.install:62 ed_event/ed_event.install:51 ed_file/ed_file.module:164 ed_file/ed_file.install:50;72 ed_forum/ed_forum.module:16 ed_learning_resource/ed_learning_resource_ajax.inc:20;145 ed_learning_resource/ed_learning_resource.module:15;78;228;254 ed_page/ed_page.module:16 ed_portfolio/ed_portfolio.module:72 ed_portfolio/ed_portfolio.install:69 ed_subgroup/ed_subgroup.module:15 ed_task/ed_task.module:15 entityreference_dragdrop/entityreference_dragdrop.module:161
+#: ed_blog/ed_blog.module:16;113;148 ed_bookmark/ed_bookmark.module:14 ed_cluster/ed_cluster.install:66 ed_event/ed_event.install:53 ed_file/ed_file.module:164 ed_file/ed_file.install:51;73 ed_forum/ed_forum.module:16 ed_learning_resource/ed_learning_resource_ajax.inc:20;145 ed_learning_resource/ed_learning_resource.module:15;78;228;254 ed_page/ed_page.module:16 ed_portfolio/ed_portfolio.module:72 ed_portfolio/ed_portfolio.install:69 ed_subgroup/ed_subgroup.module:15 ed_task/ed_task.module:15 entityreference_dragdrop/entityreference_dragdrop.module:161
 msgid "Title"
 msgstr ""
 
@@ -436,7 +443,7 @@ msgstr ""
 msgid "Due Date:"
 msgstr ""
 
-#: ed_blog/ed_blog.module:113;148 ed_bookmark/ed_bookmark_functions.inc:6;76 ed_file/ed_file.module:169 ed_learning_resource/ed_learning_resource_functions.inc:34;218 entityreference_dragdrop/entityreference_dragdrop.module:158
+#: ed_blog/ed_blog.module:113;148 ed_bookmark/ed_bookmark_functions.inc:6;77 ed_file/ed_file.module:169 ed_learning_resource/ed_learning_resource_functions.inc:34;218 entityreference_dragdrop/entityreference_dragdrop.module:158
 msgid "Type"
 msgstr ""
 
@@ -444,11 +451,11 @@ msgstr ""
 msgid "Date"
 msgstr ""
 
-#: ed_blog/ed_blog.install:107
+#: ed_blog/ed_blog.install:107 ed_task/ed_task.install:108
 msgid "No %type nodes exist in database."
 msgstr ""
 
-#: ed_blog/ed_blog.install:131
+#: ed_blog/ed_blog.install:131 ed_task/ed_task.install:132
 msgid "Updated @count nodes of type %type."
 msgstr ""
 
@@ -464,7 +471,7 @@ msgstr ""
 msgid "Url"
 msgstr ""
 
-#: ed_bookmark/ed_bookmark_functions.inc:46 ed_event/ed_event.install:145
+#: ed_bookmark/ed_bookmark_functions.inc:46 ed_event/ed_event.install:147
 msgid "URL"
 msgstr ""
 
@@ -472,7 +479,7 @@ msgstr ""
 msgid "Bookmark"
 msgstr ""
 
-#: ed_bookmark/ed_bookmark.module:12 ed_learning_resource/ed_learning_resource.module:13 ed_portfolio/ed_portfolio.install:86 ed_task/ed_task_functions.inc:106
+#: ed_bookmark/ed_bookmark.module:12 ed_learning_resource/ed_learning_resource.module:13 ed_portfolio/ed_portfolio.install:86 ed_task/ed_task_functions.inc:34
 msgid "Description"
 msgstr ""
 
@@ -500,71 +507,135 @@ msgstr ""
 msgid "eDidaktikum Bookmark content type."
 msgstr ""
 
-#: ed_cluster/ed_cluster.module:21
+#: ed_cluster/ed_cluster.pages.inc:41
+msgid "content"
+msgstr ""
+
+#: ed_cluster/ed_cluster.pages.inc:44
+msgid "blog post"
+msgstr ""
+
+#: ed_cluster/ed_cluster.pages.inc:47
+msgid "bookmark"
+msgstr ""
+
+#: ed_cluster/ed_cluster.pages.inc:50
+msgid "event"
+msgstr ""
+
+#: ed_cluster/ed_cluster.pages.inc:53
+msgid "news"
+msgstr ""
+
+#: ed_cluster/ed_cluster.pages.inc:56
+msgid "learning resource"
+msgstr ""
+
+#: ed_cluster/ed_cluster.pages.inc:59
+msgid "page"
+msgstr ""
+
+#: ed_cluster/ed_cluster.pages.inc:62
+msgid "discussion"
+msgstr ""
+
+#: ed_cluster/ed_cluster.pages.inc:65 ed_file/ed_file.module:141
+msgid "file"
+msgstr ""
+
+#: ed_cluster/ed_cluster.pages.inc:68
+msgid "portfolio"
+msgstr ""
+
+#: ed_cluster/ed_cluster.pages.inc:71
+msgid "task"
+msgstr ""
+
+#: ed_cluster/ed_cluster.pages.inc:74
+msgid "answer"
+msgstr ""
+
+#: ed_cluster/ed_cluster.pages.inc:79
+msgid "!user shared @node_type_name !node @time"
+msgstr ""
+
+#: ed_cluster/ed_cluster.module:27
 msgid "Task Manager"
 msgstr ""
 
-#: ed_cluster/ed_cluster.module:66 ed_forum/ed_forum.module:11
+#: ed_cluster/ed_cluster.module:80 ed_forum/ed_forum.module:11
 msgid "Discussion Board"
 msgstr ""
 
-#: ed_cluster/ed_cluster.module:75
+#: ed_cluster/ed_cluster.module:89
 msgid "Pages"
 msgstr ""
 
-#: ed_cluster/ed_cluster.module:84
+#: ed_cluster/ed_cluster.module:98
 msgid "Bookmarks"
 msgstr ""
 
-#: ed_cluster/ed_cluster.module:125;410
+#: ed_cluster/ed_cluster.module:112
+msgid "Shared with me"
+msgstr ""
+
+#: ed_cluster/ed_cluster.module:164;458
 msgid "Add new"
 msgstr ""
 
-#: ed_cluster/ed_cluster.module:147
+#: ed_cluster/ed_cluster.module:193
 msgid "Group content paged"
 msgstr ""
 
-#: ed_cluster/ed_cluster.module:148
+#: ed_cluster/ed_cluster.module:194
 msgid "desc"
 msgstr ""
 
-#: ed_cluster/ed_cluster.module:253
+#: ed_cluster/ed_cluster.module:299
 msgid "!name added !node @time"
 msgstr ""
 
-#: ed_cluster/ed_cluster.module:257
+#: ed_cluster/ed_cluster.module:303
 msgid "!name changed !node @time"
 msgstr ""
 
-#: ed_cluster/ed_cluster.module:278
+#: ed_cluster/ed_cluster.module:324
 msgid "No recent activity"
 msgstr ""
 
-#: ed_cluster/ed_cluster.module:437 ed_task/ed_task.module:272
+#: ed_cluster/ed_cluster.module:485 ed_task/ed_task.module:276
 msgid "Name"
 msgstr ""
 
-#: ed_cluster/ed_cluster.module:621
+#: ed_cluster/ed_cluster.module:728
 msgid "Add new group"
 msgstr ""
 
-#: ed_cluster/ed_cluster.module:694
+#: ed_cluster/ed_cluster.module:801
 msgid "Create Group"
 msgstr ""
 
-#: ed_cluster/ed_cluster.module:704
+#: ed_cluster/ed_cluster.module:811
 msgid "Group (@count)"
 msgstr ""
 
-#: ed_cluster/ed_cluster.install:27 ed_event/ed_event.install:234 ed_news/ed_news.install:164 ed_portfolio/ed_portfolio.install:116 ed_subgroup/ed_subgroup.install:30
+#: ed_cluster/ed_cluster.module:867
+msgid "- None -"
+msgstr ""
+
+#: ed_cluster/ed_cluster.module:1059
+msgid "Type page"
+msgstr ""
+
+#: ed_cluster/ed_cluster.install:31 ed_event/ed_event.install:236 ed_news/ed_news.install:166 ed_portfolio/ed_portfolio.install:116 ed_subgroup/ed_subgroup.install:30
 msgid "Featured image"
 msgstr ""
 
-#: ed_cluster/ed_cluster.install:94 ed_event/ed_event.install:68 ed_learning_resource/ed_learning_resource_functions.inc:144 ed_news/ed_news.install:96 ed_subgroup/ed_subgroup_functions.inc:7
+#: ed_cluster/ed_cluster.install:98 ed_event/ed_event.install:70 ed_learning_resource/ed_learning_resource_functions.inc:144 ed_news/ed_news.install:98 ed_subgroup/ed_subgroup_functions.inc:7
 msgid "Excerpt"
 msgstr ""
 
-#: ed_cluster/ed_cluster.install:119 ed_event/ed_event.install:256 ed_file/ed_file.install:362
+#: ed_cluster/ed_cluster.install:160 ed_event/ed_event.install:258 ed_file/ed_file.install:230
 msgid "Categories"
 msgstr ""
 
@@ -574,6 +645,34 @@ msgstr ""
 
 #: ed_cluster/ed_cluster.info:0
 msgid "eDidaktikum groups."
+msgstr ""
+
+#: ed_cluster/plugins/content_types/node_context/node_group_breadcrumbs.inc:10
+msgid "Node group breadcrumbs"
+msgstr ""
+
+#: ed_cluster/plugins/content_types/node_context/node_group_breadcrumbs.inc:12
+msgid "Breadcrumbs of the node groups."
+msgstr ""
+
+#: ed_cluster/plugins/content_types/node_context/node_group_breadcrumbs.inc:13;14
+msgid "Node"
+msgstr ""
+
+#: ed_cluster/plugins/content_types/node_context/node_group_breadcrumbs.inc:29
+msgid "Group breadcrumbs"
+msgstr ""
+
+#: ed_cluster/plugins/content_types/node_context/node_group_breadcrumbs.inc:31
+msgid "Node group breadcrumbs go here."
+msgstr ""
+
+#: ed_cluster/plugins/content_types/node_context/node_group_breadcrumbs.inc:59
+msgid "\"@s\" group breadcrumbs"
+msgstr ""
+
+#: ed_cluster/plugins/selection/groupsusers.inc:4
+msgid "Selected Groups Users"
 msgstr ""
 
 #: ed_competence_voc/ed_competence_voc.info:0
@@ -608,19 +707,23 @@ msgstr ""
 msgid "Events calendar"
 msgstr ""
 
-#: ed_event/ed_event.module:276
+#: ed_event/ed_event.module:230
+msgid "Group events calendar"
+msgstr ""
+
+#: ed_event/ed_event.module:317
 msgid "Create Event"
 msgstr ""
 
-#: ed_event/ed_event.install:165
+#: ed_event/ed_event.install:167
 msgid "Location"
 msgstr ""
 
-#: ed_event/ed_event.install:181
+#: ed_event/ed_event.install:183
 msgid "Start"
 msgstr ""
 
-#: ed_event/ed_event.install:207
+#: ed_event/ed_event.install:209
 msgid "End"
 msgstr ""
 
@@ -630,10 +733,6 @@ msgstr ""
 
 #: ed_file/ed_file.module:13
 msgid "Files"
-msgstr ""
-
-#: ed_file/ed_file.module:141
-msgid "file"
 msgstr ""
 
 #: ed_file/ed_file.module:142
@@ -648,7 +747,7 @@ msgstr ""
 msgid "Changed"
 msgstr ""
 
-#: ed_file/ed_file.module:198 ed_task/ed_task.module:296
+#: ed_file/ed_file.module:198 ed_task/ed_task.module:300
 msgid "Edit"
 msgstr ""
 
@@ -660,19 +759,19 @@ msgstr ""
 msgid "Create Folder"
 msgstr ""
 
-#: ed_file/ed_file.install:44
+#: ed_file/ed_file.install:45
 msgid "File"
 msgstr ""
 
-#: ed_file/ed_file.install:66
+#: ed_file/ed_file.install:67
 msgid "File folder"
 msgstr ""
 
-#: ed_file/ed_file.install:304
+#: ed_file/ed_file.install:172
 msgid "Folder"
 msgstr ""
 
-#: ed_file/ed_file.install:339
+#: ed_file/ed_file.install:207
 msgid "Upload file"
 msgstr ""
 
@@ -864,14 +963,6 @@ msgstr ""
 msgid "A list of different learning resource languages"
 msgstr ""
 
-#: ed_learning_resource_voc/ed_learning_resource_voc.install:29
-msgid "Learning Resource Tags"
-msgstr ""
-
-#: ed_learning_resource_voc/ed_learning_resource_voc.install:29
-msgid "A list of tags for learning resources"
-msgstr ""
-
 #: ed_learning_resource_voc/ed_learning_resource_voc.install:30
 msgid "Learning Resource Authors"
 msgstr ""
@@ -948,7 +1039,7 @@ msgstr ""
 msgid "Video"
 msgstr ""
 
-#: ed_learning_resource_voc/ed_learning_resource_voc.install:106;106;115;115
+#: ed_learning_resource_voc/ed_learning_resource_voc.install:106;106
 msgid "English"
 msgstr ""
 
@@ -958,26 +1049,6 @@ msgstr ""
 
 #: ed_learning_resource_voc/ed_learning_resource_voc.install:108;108
 msgid "Russian"
-msgstr ""
-
-#: ed_learning_resource_voc/ed_learning_resource_voc.install:111;111
-msgid "Mathematics"
-msgstr ""
-
-#: ed_learning_resource_voc/ed_learning_resource_voc.install:112;112
-msgid "Biology"
-msgstr ""
-
-#: ed_learning_resource_voc/ed_learning_resource_voc.install:113;113
-msgid "Chemistry"
-msgstr ""
-
-#: ed_learning_resource_voc/ed_learning_resource_voc.install:114;114
-msgid "Physics"
-msgstr ""
-
-#: ed_learning_resource_voc/ed_learning_resource_voc.install:116;116
-msgid "History"
 msgstr ""
 
 #: ed_learning_resource_voc/ed_learning_resource_voc.install:119;119
@@ -1020,7 +1091,7 @@ msgstr ""
 msgid "Create News"
 msgstr ""
 
-#: ed_news/ed_news.install:117;148;178;207
+#: ed_news/ed_news.install:119;150;180;209
 msgid "Field @fieldname does not exist. Field instance for node type @type could not be created."
 msgstr ""
 
@@ -1104,7 +1175,7 @@ msgstr ""
 msgid "Due Date"
 msgstr ""
 
-#: ed_task/ed_task_functions.inc:151
+#: ed_task/ed_task_functions.inc:79
 msgid "category"
 msgstr ""
 
@@ -1156,51 +1227,51 @@ msgstr ""
 msgid "Assigned By"
 msgstr ""
 
-#: ed_task/ed_task.module:206
+#: ed_task/ed_task.module:210
 msgid "Answers"
 msgstr ""
 
-#: ed_task/ed_task.module:213
+#: ed_task/ed_task.module:217
 msgid "Answers by groups"
 msgstr ""
 
-#: ed_task/ed_task.module:264
+#: ed_task/ed_task.module:268
 msgid "Answers by users"
 msgstr ""
 
-#: ed_task/ed_task.module:272
+#: ed_task/ed_task.module:276
 msgid "Submitted"
 msgstr ""
 
-#: ed_task/ed_task.module:358
+#: ed_task/ed_task.module:362
 msgid "extra fields label"
 msgstr ""
 
-#: ed_task/ed_task.module:359
+#: ed_task/ed_task.module:363
 msgid "extra fields descrption"
 msgstr ""
 
-#: ed_task/ed_task.module:363;364
+#: ed_task/ed_task.module:367;368
 msgid "Task answers listing"
 msgstr ""
 
-#: ed_task/ed_task.module:378
+#: ed_task/ed_task.module:382
 msgid "Create Task"
 msgstr ""
 
-#: ed_task/ed_task.module:625
+#: ed_task/ed_task.module:645
 msgid "New Task - eDidaktikum"
 msgstr ""
 
-#: ed_task/ed_task.module:626
+#: ed_task/ed_task.module:646
 msgid "@fullname assigned you a task: @taskname."
 msgstr ""
 
-#: ed_task/ed_task.module:627
+#: ed_task/ed_task.module:647
 msgid "Due date: @duedate"
 msgstr ""
 
-#: ed_task/ed_task.module:628
+#: ed_task/ed_task.module:648
 msgid "View task: @taskurl"
 msgstr ""
 
