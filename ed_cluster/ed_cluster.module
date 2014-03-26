@@ -148,6 +148,13 @@ function ed_listing_from_group($filler, $gnode, $type){
     );
   }
 
+  // This override will display both ed_blog and ed_answer
+  // when blog listing is displayed
+  if ('ed_blog' == $type) {
+    $type = array($type);
+    $type[] = 'ed_answer';
+  }
+
   $content_nids = _ed_get_group_content_by_type($gnode->nid, $type);
   $nodes = node_load_multiple($content_nids);
   $build = node_view_multiple($nodes);
