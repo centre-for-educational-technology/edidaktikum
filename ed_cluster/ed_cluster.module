@@ -179,7 +179,13 @@ function ed_listing_from_group($filler, $gnode, $type){
     '#theme' => 'pager',
     '#weight' => 5,
   );
-  $content['listing'] = $build;
+  $content['listing'] = array(
+    '#type' => 'container',
+    '#attributes' => array(
+      'class' => array('ed-group-content-listing'),
+    ),
+  );
+  $content['listing']['content'] = $build;
   
   return $content;
 }
