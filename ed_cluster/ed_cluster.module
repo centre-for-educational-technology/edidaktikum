@@ -1101,3 +1101,14 @@ function _ed_cluster_node_group_greadcrumbs(&$node) {
   return $output;
 }
 
+/**
+ * Implements hook_node_presave().
+ */
+function ed_cluster_node_presave( $node ) {
+  $account = $GLOBALS['user'];
+  // Any new node created by teacher is sticky
+  if (in_array('teacher', $account->roles) && $node->is_new) {
+    $node->sticky = 1;
+  }
+}
+
