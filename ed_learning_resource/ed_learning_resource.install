@@ -107,3 +107,21 @@ function ed_learning_resource_update_7101(&$sandbox) {
   
 }
 
+/**
+ * Set learning resource teaser fields display as hidden.
+ * Only leaving the excerpt as is.
+ */
+function ed_learning_resource_update_7102(&$sandbox) {
+  $entity_type = 'node';
+  $bundle_name = 'ed_learning_resource';
+  $field_names = array('ed_learning_resource_type', 'ed_learning_resource_language', 'ed_learning_resource_authors', 'ed_learning_resource_date');
+
+  foreach ($field_names as $field_name) {
+    if ($instance = field_info_instance($entity_type, $field_name, $bundle_name)) {
+      $instance['display']['teaser']['label'] = 'hidden';
+      $instance['display']['teaser']['type'] = 'hidden';
+      field_update_instance($instance);
+    }
+  }
+}
+
