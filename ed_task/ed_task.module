@@ -278,14 +278,10 @@ function ed_task_node_view($node, $view_mode, $langcode) {
         }
       }
       
-      $group_ids = array();
-      if (isset($node->og_group_ref[LANGUAGE_NONE]) && is_array($node->og_group_ref[LANGUAGE_NONE])) {
-        $group_ids = array_map(function($element) { return $element['target_id']; }, $node->og_group_ref[LANGUAGE_NONE]);
-      }
-
-      if(($node->uid == $acc->uid || _ed_cluster_is_groups_admin_or_creator($acc->uid, $group_ids)) && !(recursive_array_search($node->uid, $node->{ED_FIELD_TO_GROUP_MEMBER}))){
+      if (!ed_task_can_user_answer_task($node, $acc)) {
         break;
       }
+
       $options = array(
         'attributes' => array(),
         'query' => array(
@@ -647,5 +643,46 @@ function ed_task_mail($key, &$message, $params) {
     $message['body'][] = t('Due date: @duedate', array('@duedate' => $params['duedate']), $options);
     $message['body'][] = t('View task: @taskurl', array('@taskurl' => $params['taskurl']), $options);
   }
+}
+
+/**
+ * Checks if current user can answer a task.
+ * @param $node Task node
+ * @param $account Current user account
+ *
+ * @return bool
+ */
+function ed_task_can_user_answer_task(&$node, &$account) {
+  if (!user_is_logged_in()) {
+    return FALSE;
+  }
+
+  // To group member case
+  if (!empty($node->{ED_FIELD_TO_GROUP_MEMBER}[LANGUAGE_NONE])) {
+    $to_group_member_ids = array_map(function($element) { return $element['target_id']; }, $node->{ED_FIELD_TO_GROUP_MEMBER}[LANGUAGE_NONE]);
+    if (in_array($account->uid, $to_group_member_ids)) {
+      return TRUE;
+    }
+    return FALSE;
+  }
+
+  // To group case
+  if (!empty($node->og_group_ref[LANGUAGE_NONE])) {
+    $group_ids = array_map(function($element) { return $element['target_id']; }, $node->og_group_ref[LANGUAGE_NONE]);
+    // Task creator, group creator or admin is not allowed to answer
+    if (($node->uid == $account->uid) || _ed_cluster_is_groups_admin_or_creator($account->uid, $group_ids)) {
+      return FALSE;
+    }
+
+    foreach ($group_ids as $gid) {
+      if (og_is_member('node', $gid, 'user', $account)) {
+        return TRUE;
+      }
+    }
+
+    return FALSE;
+  }
+
+  return FALSE;
 }
 

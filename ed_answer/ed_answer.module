@@ -309,3 +309,17 @@ function ed_answer_field_extra_fields() {
   return $extra;
 }
 
+/**
+ * Implements hook_node_validate().
+ */
+function ed_answer_node_validate($node, $form, &$form_state) {
+  if ('ed_answer' == $node->type && 'save' == strtolower($node->op)) {
+    $account = $GLOBALS['user'];
+    // Prevent validation success if user is not allowed
+    // to answer referenced task
+    if (!ed_task_can_user_answer_task($node, $account)) {
+      form_set_error('ref_to_task', t('You are not allowed to answer this task.'));
+    }
+  }
+}
+
