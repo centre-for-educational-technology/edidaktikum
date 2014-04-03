@@ -608,12 +608,6 @@ function _get_users_in_group($gid) {
  *   An array with group identifiers or empty array
  */
 function _ed_cluster_get_all_administered_groups(&$account) {
-  static $administered_groups;
-
-  if (isset($administered_groups)) {
-    return $administered_groups;
-  }
-
   $administered_groups = array();
   $query = db_select('node', 'n')
     ->fields('n', array('nid'))
@@ -635,7 +629,7 @@ function _ed_cluster_get_all_administered_groups(&$account) {
   $query = db_select('node', 'n')
     ->fields('n', array('nid'))
     ->condition('n.type', 'ed_cluster');
-  $query->join('og_users_roles', 'ogur', "n.nid = ogur.gid AND ogur.group_type = 'node' AND ogur.rid = :rid", array(':rid' => $admin_rid));
+  $query->join('og_users_roles', 'ogur', "n.nid = ogur.gid AND ogur.group_type = 'node' AND ogur.rid = :rid AND ogur.uid = :uid", array(':rid' => $admin_rid, ':uid' => $account->uid));
 
   $result = $query->execute()->fetchCol();
 

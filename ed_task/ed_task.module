@@ -506,7 +506,11 @@ function _ed_get_user_unanswered_tasks_count($account) {
   // Get all groups the user is not an administrator of
   $user_groups = og_get_groups_by_user($account, 'node');
   $administered_groups = _ed_cluster_get_all_administered_groups($account);
-  $groups = array_diff($user_groups, $administered_groups);
+
+  $groups = array();
+  if (!empty($user_groups)) {
+    $groups = array_diff($user_groups, $administered_groups);
+  }
 
   if ($groups && is_array($groups) && sizeof($groups) > 0) {
     $query = db_select('node', 'n');
