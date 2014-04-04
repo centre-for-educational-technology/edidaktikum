@@ -313,7 +313,7 @@ function ed_answer_field_extra_fields() {
  * Implements hook_node_validate().
  */
 function ed_answer_node_validate($node, $form, &$form_state) {
-  if ('ed_answer' == $node->type && 'save' == strtolower($node->op)) {
+  if ('ed_answer' == $node->type && empty($node->nid)) {
     $account = $GLOBALS['user'];
     // Prevent validation success if user is not allowed
     // to answer referenced task
@@ -322,6 +322,7 @@ function ed_answer_node_validate($node, $form, &$form_state) {
       form_set_error('ref_to_task', t('You are not allowed to answer this task.'));
     }
 
+    // Creating multiple answers is not allowed
     if (_is_task_answered($task->nid)) {
       form_set_error('ref_to_task', t('You have already answered this task.'));
     }
