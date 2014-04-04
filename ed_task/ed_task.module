@@ -294,7 +294,7 @@ function ed_task_node_view($node, $view_mode, $langcode) {
           '#type' => 'item',
           '#title' => t(''),
           '#markup' => l(t('Edit'), 'node/'.  _get_answer_from_task($node->nid).'/edit'),
-          '#prefix' => '<div class="edit-answer">',
+          '#prefix' => '<div class="answer edit-answer">',
           '#suffix' => '</div>',
         );        
         break;
