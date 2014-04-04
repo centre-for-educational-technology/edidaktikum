@@ -321,6 +321,10 @@ function ed_answer_node_validate($node, $form, &$form_state) {
     if (!ed_task_can_user_answer_task($task, $account)) {
       form_set_error('ref_to_task', t('You are not allowed to answer this task.'));
     }
+
+    if (_is_task_answered($task->nid)) {
+      form_set_error('ref_to_task', t('You have already answered this task.'));
+    }
   }
 }
 

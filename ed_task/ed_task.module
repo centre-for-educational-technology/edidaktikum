@@ -415,9 +415,8 @@ function _is_task_answered($task_nid){
     //return t('Answered');
     return true;
   }
-  
-  return $task_nid;
 }
+
 function _ed_get_cur_user_tasks(){
   $acc = $GLOBALS['user'];
   $query = db_select('node', 'n')
