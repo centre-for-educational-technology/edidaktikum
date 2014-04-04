@@ -103,6 +103,15 @@ function ed_cluster_menu() {
     'type' => MENU_LOCAL_TASK,
     'weight' => 50,
   );
+  $items['node/%node/file'] = array(
+    'title' => t('Files'),
+    'page callback' => 'ed_listing_from_group',
+    'access callback' => 'ed_group_content_listing_access',
+    'page arguments' => array('node', 1, 'ed_file'),
+    'access arguments' => array('node', 1, 'ed_file'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 50,
+  );
   $items['clusters/get/groups_members'] = array(
     'page callback' => 'ed_cluster_get_groups_members_ajax',
     'access callback' => 'user_is_logged_in',
@@ -1030,6 +1039,7 @@ function _ed_cluster_destination_for_group_node_type(&$gnode, $type) {
     case 'ed_page':
     case 'ed_learning_resource':
     case 'ed_event':
+    case 'ed_file':
       $type_dashed = str_replace('_', '-', $type);
       $type_dashed = substr($type_dashed, 3);
       $destination .= '/' . $type_dashed;
