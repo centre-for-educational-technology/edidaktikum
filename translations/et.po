@@ -62,8 +62,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: 2014-03-26 16:11+0200\n"
-"PO-Revision-Date: 2014-03-26 16:12+0200\n"
-"Last-Translator: Pjotr Savitski <pjotr.savitski@gmail.com>\n"
+"PO-Revision-Date: 2014-04-04 14:37+0200\n"
+"Last-Translator: Priit Tammets <tammets@gmail.com>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
@@ -549,61 +549,52 @@ msgid "eDidaktikum Bookmark content type."
 msgstr "eDidaktikumi järjehoidja sisutüüp."
 
 #: ed_cluster/ed_cluster.pages.inc:41
-#, fuzzy
 msgid "content"
-msgstr "Sisu"
+msgstr "sisu"
 
 #: ed_cluster/ed_cluster.pages.inc:44
-#, fuzzy
 msgid "blog post"
-msgstr "Lisa uus postitus"
+msgstr "ajaveebi postitus"
 
 #: ed_cluster/ed_cluster.pages.inc:47
-#, fuzzy
 msgid "bookmark"
-msgstr "Järjehoidja"
+msgstr "järjehoidja"
 
 #: ed_cluster/ed_cluster.pages.inc:50
-#, fuzzy
 msgid "event"
-msgstr "Sündmus"
+msgstr "sündmus"
 
 #: ed_cluster/ed_cluster.pages.inc:53
 msgid "news"
 msgstr ""
 
 #: ed_cluster/ed_cluster.pages.inc:56
-#, fuzzy
 msgid "learning resource"
-msgstr "Õppematerjal"
+msgstr "õppematerjal"
 
 #: ed_cluster/ed_cluster.pages.inc:59
-#, fuzzy
 msgid "page"
-msgstr "Veebileht"
+msgstr "lehekülg"
 
 #: ed_cluster/ed_cluster.pages.inc:62
-#, fuzzy
 msgid "discussion"
-msgstr "Arutelu"
+msgstr "arutelu"
 
 #: ed_cluster/ed_cluster.pages.inc:65 ed_file/ed_file.module:141
 msgid "file"
 msgstr "file"
 
 #: ed_cluster/ed_cluster.pages.inc:68
-#, fuzzy
 msgid "portfolio"
-msgstr "Portfoolio"
+msgstr "portfoolio"
 
 #: ed_cluster/ed_cluster.pages.inc:71
 msgid "task"
 msgstr ""
 
 #: ed_cluster/ed_cluster.pages.inc:74
-#, fuzzy
 msgid "answer"
-msgstr "Vastus"
+msgstr "vastus"
 
 #: ed_cluster/ed_cluster.pages.inc:79
 msgid "!user shared @node_type_name !node @time"
@@ -626,9 +617,8 @@ msgid "Bookmarks"
 msgstr "Järjehoidjad"
 
 #: ed_cluster/ed_cluster.module:112
-#, fuzzy
 msgid "Shared with me"
-msgstr "Jagatud:"
+msgstr "Minuga jagatud"
 
 #: ed_cluster/ed_cluster.module:164;458
 msgid "Add new"
@@ -644,11 +634,11 @@ msgstr "kirjeldus"
 
 #: ed_cluster/ed_cluster.module:299
 msgid "!name added !node @time"
-msgstr ""
+msgstr "!name lisas !node @time"
 
 #: ed_cluster/ed_cluster.module:303
 msgid "!name changed !node @time"
-msgstr ""
+msgstr "!name muutis !node @time"
 
 #: ed_cluster/ed_cluster.module:324
 msgid "No recent activity"
@@ -672,12 +662,11 @@ msgstr "Grupp (@count)"
 
 #: ed_cluster/ed_cluster.module:867
 msgid "- None -"
-msgstr ""
+msgstr "- Määramata -"
 
 #: ed_cluster/ed_cluster.module:1059
-#, fuzzy
 msgid "Type page"
-msgstr "Veebileht"
+msgstr ""
 
 #: ed_cluster/ed_cluster.install:31 ed_event/ed_event.install:236
 #: ed_news/ed_news.install:166 ed_portfolio/ed_portfolio.install:116
@@ -730,7 +719,7 @@ msgstr ""
 
 #: ed_cluster/plugins/selection/groupsusers.inc:4
 msgid "Selected Groups Users"
-msgstr ""
+msgstr "Valitud grupi kasutajad"
 
 #: ed_competence_voc/ed_competence_voc.info:0
 msgid "Competence vocabulary"
@@ -765,9 +754,8 @@ msgid "Events calendar"
 msgstr "Sündmuste kalender"
 
 #: ed_event/ed_event.module:230
-#, fuzzy
 msgid "Group events calendar"
-msgstr "Sündmuste kalender"
+msgstr "Grupi sündmuste kalender"
 
 #: ed_event/ed_event.module:317
 msgid "Create Event"
