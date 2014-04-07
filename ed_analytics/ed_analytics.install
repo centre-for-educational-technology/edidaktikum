@@ -1,0 +1,29 @@
+<?php
+
+/**
+ * Implements hook_install().
+ */
+function ed_analytics_install() {
+  if (!db_table_exists('xapi_actions')) {
+    $xapi_actions_schema = array(
+      'description' => 'description',
+      'fields' => array(
+        'sent'    => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
+        'verb'    => array('type' => 'varchar', 'length' => 256, 'not null' => TRUE, 'default' => ''),
+        'uid'     => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
+        'nid'     => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
+        'created' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => '0'),
+      ),
+    );
+    db_create_table('xapi_actions', $xapi_actions_schema);
+  }
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function ed_analytics_uninstall() {
+  if(db_table_exists('xapi_actions')){
+    db_drop_table('xapi_actions');
+  }
+}

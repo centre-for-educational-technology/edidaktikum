@@ -1,0 +1,116 @@
+<?php
+
+
+/*
+ * Implements hook_menu().
+ */
+
+function ed_analytics_menu(){
+  $items['admin/config/edidaktikum/analytics'] = array(
+    'title' => 'eDidaktikum Analytics',
+    'description' => 'Configure eDidaktikum and Learning Locker integration.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('ed_analytics_settings_admin_form'),
+    'access arguments' => array('access administration pages'),
+    'file' => 'ed_analytics.admin.inc',
+    'type' => MENU_NORMAL_ITEM,
+    'weight' => 0,
+  );
+  return $items;
+}
+
+/*
+ * Implements hook_node_insert().
+ */
+function ed_analytics_node_insert($node){
+  switch($node->type){
+    case 'ed_task':
+      
+      _ed_analytics_sendToLocker($node, 'created');
+      /*
+      $action = db_insert('xapi_actions')
+        ->fields(array(
+          'sent' => 0,
+          'verb' => 'created',
+          'uid' => $node->uid,
+          'nid' => $node->nid,
+          'created' => REQUEST_TIME,
+        ))->execute();
+      */
+      
+      
+      
+      
+    break;
+    case 'ed_answer':
+      _ed_analytics_sendToLocker($node, 'answered');
+      /*
+      $action = db_insert('xapi_actions')
+        ->fields(array(
+          'sent' => 0,
+          'verb' => 'answered',
+          'uid' => $node->uid,
+          'nid' => $node->nid,
+          'created' => REQUEST_TIME,
+        ))->execute();
+    break;
+      */
+       
+  }
+}
+
+function _ed_analytics_sendToLocker($node, $verb){
+  $llaccount = variable_get('ed_analytics_ll_username');
+  $llpassword = variable_get('ed_analytics_ll_password');
+  $llendpoint = variable_get('ed_analytics_ll_endpoint');
+  $user = user_load($node->uid);
+  switch($verb){
+    case 'created':
+      $verbid = 'http://activitystrea.ms/schema/1.0/create';
+      $title = $node->title;
+    break;
+    case 'answered':
+      $verbid = 'http://adlnet.gov/expapi/verbs/answered';
+      
+      $tasknid = $node->field_ref_to_task[LANGUAGE_NONE][0]['target_id'];
+      $task = node_load($tasknid);
+      $title = $task->title.' - Answer';
+      error_log(print_r($node, true));
+    break;
+  }
+  $authcode = base64_encode($llaccount.':'.$llpassword);
+  $path=drupal_get_path_alias('node/'.$node->nid);
+  $actor = $user->name;
+  $actoremail = $user->mail;
+  $stmt = '{
+              "actor":{
+                "objectType": "Agent",
+                "name": "'.$actor.'",
+                "mbox": "mailto:'.$actoremail.'"  
+              },
+              "verb":{
+                "id": "'.$verbid.'",
+                "display":{
+                  "en-US":"'.$verb.'"
+                }
+              },
+              "object":{
+                "id":"'.$path.'",
+                "definition":{
+                  "name":{
+                    "en-US":"'.$title.'"
+                  }
+                }  
+              }
+          }';
+  
+  $options = array(
+    'method' => 'POST',
+    'data' => $stmt,
+    'headers' => array('X-Experience-API-Version' => '1.0.1', 'Authorization' => 'Basic '.$authcode),
+  );
+  $response = drupal_http_request($llendpoint, $options);
+  //error_log($llendpoint);
+  //error_log(print_r($response, true));
+  
+}
