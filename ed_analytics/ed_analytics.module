@@ -79,7 +79,8 @@ function _ed_analytics_sendToLocker($node, $verb){
     break;
   }
   $authcode = base64_encode($llaccount.':'.$llpassword);
-  $path=drupal_get_path_alias('node/'.$node->nid);
+//  $path=drupal_get_path_alias('node/'.$node->nid);
+  $path=url('node/'.$node->nid, array('absolute' => TRUE));
   $actor = $user->name;
   $actoremail = $user->mail;
   $stmt = '{
