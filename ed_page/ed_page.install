@@ -24,7 +24,7 @@ function ed_page_install() {
   ed_page_add_og_audience();
   
 
-  variable_set('comment_ed_page', COMMENT_NODE_CLOSED);
+  variable_set('comment_ed_page', COMMENT_NODE_OPEN);
 }
 function ed_page_create_vocabulary(){
   $ed_page_vocabulary = taxonomy_vocabulary_machine_name_load('ed_page_tags_voc');
@@ -113,3 +113,57 @@ function ed_page_update_7101(&$sandbox) {
   taxonomy_vocabulary_delete($vid);
   field_purge_batch();
 }
+
+/**
+ * Enable comments for ed_page.
+ * Also update any existing ones to comply.
+ */
+function ed_page_update_7102(&$sandbox) {
+  $node_type = 'ed_page';
+  // Allowing comments on any new ed_page nodes by default
+  variable_set('comment_ed_page', COMMENT_NODE_OPEN);
+
+  // Initialize batch
+  if (!isset($sandbox['total'])) {
+    $total = db_select('node', 'n')
+      ->fields('n', array('nid'))
+      ->condition('type', $node_type)
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+
+    $sandbox['total'] = $total;
+    $sandbox['progress'] = 0;
+
+    if (empty($sandbox['total'])) {
+      $sandbox['#finished'] = 1;
+      return t('No %type nodes exist in database.', array('%type' => $node_type));
+    }
+  }
+
+  $nids = db_select('node')
+    ->fields('node', array('nid'))
+    ->condition('type', $node_type)
+    ->range(0, 10)
+    ->execute()
+    ->fetchCol();
+
+  if (!empty($nids)) {
+    $nodes = node_load_multiple($nids, NULL, TRUE);
+
+    foreach ($nodes as $node) {
+      $node->comment = COMMENT_NODE_OPEN;
+      node_save($node);
+    }
+  }
+
+  // Increment and check progress
+  $sandbox['progress'] += count($nids);
+  if (empty($nids) || $sandbox['progress'] >= $sandbox['total']) {
+    $sandbox['#finished'] = 1;
+    return t('Updated @count nodes of type %type.', array('@count' => $sandbox['progress'], '%type' => $node_type));
+  } else {
+    $sandbox['#finished'] = $sandbox['progress'] / $sandbox['total'];
+  }
+}
+
