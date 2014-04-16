@@ -87,7 +87,6 @@ function ed_news_ctools_plugin_api() {
  */
 function ed_news_preprocess_node(&$vars) {
   if (isset($vars['front']) && $vars['front'] == TRUE && $vars['node']->type == 'ed_news') {
-    $vars['user_picture'] = '';
     $vars['submitted'] = format_date($vars['node']->created, 'short');
   }
 }

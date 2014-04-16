@@ -210,6 +210,7 @@ function edidaktikum_preprocess_node(&$vars) {
     $vars['front'] = TRUE;
     $vars['theme_hook_suggestions'][] = 'node__front';
     $vars['theme_hook_suggestions'][] = 'node__' . $vars['type'] . '__front';
+    $vars['user_picture'] = '';
   }
   if ($vars['view_mode'] == 'dashboard') {
     $vars['dashboard'] = TRUE;
