@@ -1,5 +1,5 @@
 .answered{
-    background-color:#00FF00;
+    background-color: #60b560;
 }
 .answered a {
 	display: block;
@@ -14,4 +14,3 @@
 .can-not-be-answered {
 	background-color: #666;
 }
-

@@ -9757,7 +9757,7 @@ msgstr ""
 
 #: /et/node/9
 msgid "Request group membership"
-msgstr ""
+msgstr "Taotle grupile ligipääsu"
 
 #: sites/all/modules/google_analytics/googleanalytics.admin.js
 msgid "All pages with exceptions"
@@ -10146,7 +10146,7 @@ msgstr ""
 
 #: /et/contact
 msgid "comment"
-msgstr ""
+msgstr "kommentaar"
 
 #: /et/clusters
 msgid "contextual"
@@ -10417,7 +10417,7 @@ msgstr ""
 
 #: /et/admin/people
 msgid "Flush caches"
-msgstr ""
+msgstr "Tühjenda vahemälu"
 
 #: /et/admin/people
 msgid "Access links to flush caches in the administration menu."
@@ -10453,7 +10453,7 @@ msgstr ""
 
 #: /et/group/node/2/admin/people/add-user
 msgid "Add members"
-msgstr ""
+msgstr "Lisa liikmeid"
 
 #: /et/group/node/2/admin/people/add-user
 msgid "Add a group member to %group"
@@ -10461,15 +10461,15 @@ msgstr ""
 
 #: /et/group/node/2/admin/people/add-user
 msgid "User name"
-msgstr ""
+msgstr "Kasutajanimi"
 
 #: /et/group/node/2/admin/people/add-user
 msgid "Add users"
-msgstr ""
+msgstr "Lisa kasuatajaid"
 
 #: /et/group/node/2/admin/people/add-user
 msgid "Find and manage group members."
-msgstr ""
+msgstr "Leia ja halda grupi liikmeid"
 
 #: /et
 msgid "Sign in"
@@ -10477,7 +10477,7 @@ msgstr "Logi sisse"
 
 #: /et
 msgid "Private group"
-msgstr ""
+msgstr "Privaatne grupp"
 
 #: /et/admin/config/regional/language/configure
 msgid ""
@@ -10539,7 +10539,7 @@ msgstr ""
 
 #: /et/admin/config/regional/language/icons
 msgid "Image size"
-msgstr ""
+msgstr "Pildi suurus"
 
 #: /et/admin/config/regional/language/icons
 msgid "Image size for language icons, in the form \"width x height\"."
@@ -10572,31 +10572,31 @@ msgstr ""
 
 #: /et/node/9
 msgid " News"
-msgstr ""
+msgstr " Uudis"
 
 #: /et/node/9
 msgid " Learning Resource"
-msgstr ""
+msgstr " Õppematerjal"
 
 #: /et/node/9
 msgid " Event"
-msgstr ""
+msgstr " Sündmus"
 
 #: /et/node/9
 msgid " File"
-msgstr ""
+msgstr " Fail"
 
 #: /et/node/2
 msgid " Blog"
-msgstr ""
+msgstr " Ajaveeb"
 
 #: /et/node/2
 msgid " File Folder"
-msgstr ""
+msgstr " Kaust"
 
 #: /et/node/2
 msgid " Forum"
-msgstr ""
+msgstr " Arutelu"
 
 #: /et/node/24
 msgid "Groups audience"
@@ -10740,7 +10740,7 @@ msgstr ""
 
 #: /et/user
 msgid "Vimeo"
-msgstr ""
+msgstr "Vimeo"
 
 #: /et/user
 msgid "VKontakte"
@@ -10794,75 +10794,75 @@ msgstr ""
 
 #: /et/node/59
 msgid "Profile URL"
-msgstr ""
+msgstr "Profiili aadress (URL)"
 
 #: /et/node/59
 msgid "Website URL"
-msgstr ""
+msgstr "Veebileht"
 
 #: /et/node/59
 msgid "Photo URL"
-msgstr ""
+msgstr "Foto aadress (URL)"
 
 #: /et/node/59
 msgid "Nickname"
-msgstr ""
+msgstr "Hüüdnimi"
 
 #: /et/node/59
 msgid "Short bio or about me"
-msgstr ""
+msgstr "Lühike kirjeldus minust"
 
 #: /et/node/59
 msgid "First name"
-msgstr ""
+msgstr "Eesnimi"
 
 #: /et/node/59
 msgid "Last name"
-msgstr ""
+msgstr "Perenimi"
 
 #: /et/node/59
 msgid "Gender"
-msgstr ""
+msgstr "Sugu"
 
 #: /et/node/59
 msgid "Age"
-msgstr ""
+msgstr "Vanus"
 
 #: /et/node/59
 msgid "Birth day"
-msgstr ""
+msgstr "Sünnipäev"
 
 #: /et/node/59
 msgid "Birth month"
-msgstr ""
+msgstr "Sünnikuu"
 
 #: /et/node/59
 msgid "Birth year"
-msgstr ""
+msgstr "Sünniaasta"
 
 #: /et/node/59
 msgid "Verified email address"
-msgstr ""
+msgstr "Kinnitatud e-posti aadress"
 
 #: /et/node/59
 msgid "Phone number"
-msgstr ""
+msgstr "Telefoni number"
 
 #: /et/node/59
 msgid "Address"
-msgstr ""
+msgstr "Aadress"
 
 #: /et/node/59
 msgid "State or region"
-msgstr ""
+msgstr "Maakond"
 
 #: /et/node/59
 msgid "City"
-msgstr ""
+msgstr "Linn"
 
 #: /et/node/59
 msgid "Postal code or zipcode"
-msgstr ""
+msgstr "Posti indeks"
 
 #: /et/node/59
 msgid "provided by HybridAuth library."
@@ -10870,7 +10870,7 @@ msgstr ""
 
 #: /et/group/node/59/subscribe/og_user_node
 msgid "Join group"
-msgstr ""
+msgstr "Liitu grupiga"
 
 #: /et/group/node/59/subscribe/og_user_node
 msgid "Are you sure you want to join the group %title?"
@@ -10878,7 +10878,7 @@ msgstr ""
 
 #: /et/group/node/59/subscribe/og_user_node
 msgid "Join"
-msgstr ""
+msgstr "Liitu"
 
 #: /et/group/node/59/subscribe/og_user_node
 msgid "User login - HybridAuth widget only"
@@ -10900,7 +10900,7 @@ msgstr ""
 
 #: /et/node/70/edit
 msgid "HybridAuth identities"
-msgstr ""
+msgstr "HybridAuth identiteedid"
 
 #: /et/node/70/edit
 msgid "View HybridAuth identities counts grouped by authentication provider."
@@ -10908,7 +10908,7 @@ msgstr ""
 
 #: /et/node/24
 msgid "HybridAuth identities."
-msgstr ""
+msgstr "HybridAuth identiteedid."
 
 #: /et/node/add/ed-answer?field_ref_to_task=24
 msgid "Arendus-, loome- ja teadustegevus"
@@ -10933,19 +10933,19 @@ msgstr ""
 
 #: /et/user
 msgid "Identity"
-msgstr ""
+msgstr "Identiteet"
 
 #: /et/user
 msgid "There are no connected identities."
-msgstr ""
+msgstr "Sa ei ole sidunud ühtegi identiteeti."
 
 #: /et/user/5/hybridauth
 msgid "You don't have any identities yet."
-msgstr ""
+msgstr "Sul puuduvad seotud identiteedid."
 
 #: /et/user/5/hybridauth
 msgid "Add more identities"
-msgstr ""
+msgstr "Lisa identiteet"
 
 #: /et/user/5/hybridauth
 msgid "Token"
@@ -10953,7 +10953,7 @@ msgstr ""
 
 #: /et/node/125
 msgid " Bookmark"
-msgstr ""
+msgstr " Järjehoidja"
 
 #: /et/dashboard
 msgid "!name changed !node @time"
@@ -10988,11 +10988,11 @@ msgstr ""
 
 #: /et/resources
 msgid "Task answers listing"
-msgstr ""
+msgstr "Ülesande vastuste nimekiri"
 
 #: /et/group/node/32/admin/people
 msgid "State"
-msgstr ""
+msgstr "Staatus"
 
 #: /et/group/node/32/admin/people
 msgid "Member since"
@@ -11008,7 +11008,7 @@ msgstr ""
 
 #: /et/group/node/32/admin/people
 msgid "No people found matching the search criteria."
-msgstr ""
+msgstr "Ühtegi kasutajat ei leitud."
 
 #: /et/group/node/32/admin/people
 msgid "Group content state"
@@ -11016,7 +11016,7 @@ msgstr ""
 
 #: /et/group/node/32/admin/people
 msgid "- Any -"
-msgstr ""
+msgstr "- Kõik -"
 
 #: /et/group/node/32/admin/people
 msgid "Usernames"
@@ -11176,7 +11176,7 @@ msgstr ""
 
 #: /et/dashboard/home
 msgid "No recent activity"
-msgstr ""
+msgstr "Hiljutisi muudatusi ei ole"
 
 #: /et/file/ajax/ed_file_field_file_upload/und/0/form-g4WcQUL4pGsPTRGRwElyXcyDxcx4pCnNM_TeOFaZN4M
 msgid "There are no entities matching \"%value\""
@@ -11249,7 +11249,7 @@ msgstr ""
 
 #: /et/group/node/66/unsubscribe
 msgid "Leave group"
-msgstr ""
+msgstr "Lahku grupist"
 
 #: /et/group/node/66/unsubscribe
 msgid "Are you sure you want to unsubscribe from the group %title?"
