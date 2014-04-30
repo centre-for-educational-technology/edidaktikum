@@ -25,7 +25,7 @@
 
 }*/
 function _ed_page_view_page_handler() {
-  $handler = new stdClass();
+ $handler = new stdClass();
 $handler->disabled = FALSE; /* Edit this to true to make a default handler disabled initially */
 $handler->api_version = 1;
 $handler->name = 'node_view_panel_context_3';
@@ -57,6 +57,25 @@ $handler->conf = array(
       ),
     ),
     'logic' => 'and',
+  ),
+  'metatag_panels' => array(
+    'enabled' => 1,
+    'metatags' => array(
+      'robots' => array(
+        'value' => array(
+          'noindex' => 'noindex',
+          'nofollow' => 'nofollow',
+          'noarchive' => 'noarchive',
+          'nosnippet' => 'nosnippet',
+          'noodp' => 'noodp',
+          'noydir' => 'noydir',
+          'noimageindex' => 'noimageindex',
+          'notranslate' => 'notranslate',
+          'index' => 0,
+          'follow' => 0,
+        ),
+      ),
+    ),
   ),
 );
 $display = new panels_display();
@@ -296,6 +315,7 @@ $display->panels = array();
 $display->hide_title = PANELS_TITLE_FIXED;
 $display->title_pane = 'new-33e24a4a-4fcf-4b74-8d52-58daae620d88';
 $handler->conf['display'] = $display;
+
 
 
   return $handler;
