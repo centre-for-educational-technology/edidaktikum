@@ -333,6 +333,25 @@ $handler->conf = array(
     ),
     'logic' => 'and',
   ),
+  'metatag_panels' => array(
+    'enabled' => 1,
+    'metatags' => array(
+      'robots' => array(
+        'value' => array(
+          'noindex' => 'noindex',
+          'nofollow' => 'nofollow',
+          'noarchive' => 'noarchive',
+          'nosnippet' => 'nosnippet',
+          'noodp' => 'noodp',
+          'noydir' => 'noydir',
+          'noimageindex' => 'noimageindex',
+          'notranslate' => 'notranslate',
+          'index' => 0,
+          'follow' => 0,
+        ),
+      ),
+    ),
+  ),
 );
 $display = new panels_display();
 $display->layout = 'twocol_stacked';
@@ -600,6 +619,7 @@ $display->panels = array();
 $display->hide_title = PANELS_TITLE_FIXED;
 $display->title_pane = '0';
 $handler->conf['display'] = $display;
+
 
     return $handler;
   }
