@@ -205,6 +205,7 @@ function edidaktikum_preprocess_node(&$vars) {
     $vars['featured'] = TRUE;
     $vars['theme_hook_suggestions'][] = 'node__featured';
     $vars['theme_hook_suggestions'][] = 'node__' . $vars['type'] . '__featured';
+    $vars['user_picture'] = '';
   }
   if ($vars['view_mode'] == 'front') {
     $vars['front'] = TRUE;
