@@ -119,6 +119,23 @@ function ed_file_node_view($node, $view_mode, $langcode) {
   }
 }
 
+
+/**
+ * Implements hook_field_extra_fields().
+ */
+function ed_file_field_extra_fields(){
+  $extra['node']['ed_file']['display'] = array(
+    'bread-crumb' => array(
+      'label' => t('Breadcrumb'),
+      'description' => t('File content type breadcrumbs'),
+      'weight' => 10,
+    ),
+  );
+  
+  return $extra;
+}
+
+
 /**
  * Files listing page.
  */
