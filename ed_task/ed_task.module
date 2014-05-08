@@ -117,11 +117,6 @@ function ed_task_listing_page() {
       '#header' => array(t('Tasks by me'), t('Shared To'), t('Due Date')),
     );
     $content['pager'] = array('#theme' => 'pager');
-  }else {
-    $content['no-task-made'] = array(
-      '#type' => 'markup',
-      '#markup' => '<h2>' . t('You haven\'t made any tasks') . '</h2>',
-    );
   }
 
   // Tasks that are directed to the user, not the group.
