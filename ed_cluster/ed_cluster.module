@@ -779,6 +779,7 @@ function ed_cluster_get_clusters() {
     ->fields('n', array('nid'))
     ->condition('n.status', 1)
     ->condition('n.type', 'ed_cluster')
+    ->orderBy('sticky', 'DESC')
     ->orderBy('created', 'DESC')
     ->limit(ed_get_paging_nr());
   $nids = $query->execute()->fetchCol();
