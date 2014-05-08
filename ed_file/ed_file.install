@@ -262,6 +262,7 @@ function ed_file_node_add_field_competence() {
       'widget' => array(
         'type' => 'term_reference_tree',
         'settings' => array(
+          'start_minimized' => TRUE,
           'select_parents' => TRUE,
         ),
       ),
@@ -407,3 +408,15 @@ function ed_file_update_7100(&$sandbox) {
 function ed_file_update_7101(&$sandbox) {
   ed_file_node_add_field_tags();
 }
+
+/**
+ * Make competence instace start collapsed.
+ */
+function ed_file_update_7102(&$sandbox) {
+  $field_name = 'ed_field_competence';
+  if ($instance = field_info_instance('node', $field_name, 'ed_file')) {
+    $instance['widget']['settings']['start_minimized'] = TRUE;
+    field_update_instance($instance);
+  }
+}
+

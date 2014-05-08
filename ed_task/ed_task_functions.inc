@@ -100,6 +100,7 @@ function _ed_task_installed_instances() {
     'widget' => array(
       'type' => 'term_reference_tree',
       'settings' => array(
+        'start_minimized' => TRUE,
         'select_parents' => TRUE,
       ),
     ),
