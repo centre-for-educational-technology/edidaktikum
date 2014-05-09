@@ -243,6 +243,16 @@ function edidaktikum_form_alter(&$form, $form_state, $form_id) {
     }
   }
 
+  // Allow any to set node published or not
+  if (!empty($form['#node_edit_form'])) {
+    $account = $GLOBALS['user'];
+    if (!in_array('administrator', $account->roles)) {
+      $form['options']['#access'] = TRUE;
+      $form['options']['promote']['#access'] = FALSE;
+      $form['options']['sticky']['#access'] = FALSE;
+    }
+  }
+
   $form['#attached']['js'] = array(drupal_get_path('module', 'edidaktikum') . '/edidaktikum.js',);
   $form['#attached']['css'] = array(drupal_get_path('module', 'edidaktikum') . '/edidaktikum.css',);
 
