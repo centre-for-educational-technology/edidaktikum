@@ -47,6 +47,13 @@ function ed_dashboard_page() {
       '#theme' => 'pager',
       '#weight' => 5,
     );
+  } else {
+    $content['groups-not-found'] = array(
+      '#type' => 'markup',
+      '#prefix' => '<div class="ed-message ed-message-notice">',
+      '#markup' => t('Hi! Nothing to show here at the moment. Join some group to see latest updates from it.'),
+      '#suffix' => '</div>',
+    );
   }
  
   return $content; 
