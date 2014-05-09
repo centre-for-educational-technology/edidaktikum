@@ -33,6 +33,16 @@ function ed_dashboard_menu() {
     'menu_name' => 'ed-dashboard-menu',
     'type' => MENU_NORMAL_ITEM,
   );
+  $items['dashboard/discover'] = array(
+    'title' => t('Discover'),
+    'page callback' => 'drupal_get_form',
+    'access callback' => 'user_is_logged_in',
+    'page arguments' => array('ed_dashboard_discover_page', 2),
+    'weight' => 35,
+    'menu_name' => 'ed-dashboard-menu',
+    'type' => MENU_NORMAL_ITEM,
+  );
+
   return $items;
 }
 
@@ -88,10 +98,6 @@ function ed_dashboard_drafts_page() {
   $nids = $query->execute()->fetchCol();
 
   if (!empty($nids)) {
-    $content['drafts-heading'] = array(
-      '#type' => 'markup',
-      '#markup' => '<h2>' . t('Drafts') . '</h2>',
-    );
     $nodes = node_load_multiple($nids);
     $build = node_view_multiple($nodes);
     $build['pager'] = array(
@@ -102,6 +108,56 @@ function ed_dashboard_drafts_page() {
   }
 
   return $content;
+}
+
+/**
+ * Dashboard discover page.
+ */
+function ed_dashboard_discover_page($form, &$form_state, $tag = '') {
+  menu_tree_set_path('main-menu', 'dashboard');
+
+  $form['search_tag'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Search tag'),
+    '#default_value' => $tag,
+    '#size' => 60,
+    '#maxlength' => 128,
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Search'),
+  );
+
+  if (!empty($tag)) {
+    $form['save_search'] = array(
+      '#type' => 'markup',
+      '#prefix' => '<div>',
+      '#markup' => '<a href="#">' . t('Save search') . '</a>',
+      '#suffix' => '</div>',
+    );
+
+    // TODO Make tag search query and display the results
+    // TODO Add a sidebar element that would display all the saved searches
+  }
+
+  return $form;
+}
+
+/**
+ * TODO Docstring missing
+ */
+function ed_dashboard_discover_page_submit($form, &$form_state) {
+  switch($form_state['triggering_element']['#value']) {
+    case t('Search'):
+      $form_state['redirect'] = 'dashboard/discover';
+      if (!empty($form_state['input']['search_tag'])) {
+        $form_state['redirect'] .= '/' . $form_state['input']['search_tag'];
+      }
+      break;
+    default:
+      $form_state['rebuild'] = TRUE;
+  }
 }
 
 /**
