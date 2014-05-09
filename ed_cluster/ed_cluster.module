@@ -261,9 +261,14 @@ function ed_cluster_node_view($node, $view_mode, $langcode){
 
         foreach($types_unique as $type){
           if($type!='ed_task' && $type!='ed_answer'){
+            $type_nodes_count = _ed_get_group_content_by_type_count($node->nid, $type);
             $node->content['ed_cluster_content'][$type]['heading'] = array(
               '#type' => 'markup',
-              '#markup' => '<h2 class="'.$type.'">'.t(ucwords(str_replace('ed', '', str_replace('_',' ',$type)))).'</h2>',
+              '#prefix' => '<h2 class="' . $type. '">',
+              '#markup' => l(_ed_cluster_plural_title_for_group_node_type($type) . ' (' . $type_nodes_count . ')',
+                             _ed_cluster_destination_for_group_node_type($node, $type)
+                           ),
+              '#suffix' => '</h2>',
             );
             // Add new link is only shown to group members
             //if ($is_group_member) {
@@ -422,6 +427,26 @@ function _ed_get_group_content_by_type($gid, $type){
   $result = $query->execute()->fetchCol();
   return $result;
 }
+
+/**
+ * Returns count for nodes of centain type within a group.
+ * @param int     $gid  Group identifier
+ * @param string  $type Node type
+ *
+ * @return int
+ */
+function _ed_get_group_content_by_type_count($gid, $type){
+  $query = db_select('node', 'n');
+  $query->join('og_membership', 'ogm', "n.nid = ogm.etid AND ogm.entity_type = 'node'");
+  $query->fields('n', array('nid'))
+      ->condition('ogm.gid', $gid)
+      ->condition('n.nid', $gid, '!=')
+      ->condition('n.type', $type)
+      ->addTag('node_access')
+      ->distinct();
+  return $query->countQuery()->execute()->fetchField();
+}
+
 
 /**
  * Check if current user is either administrator, group
@@ -1055,6 +1080,49 @@ function _ed_cluster_destination_for_group_node_type(&$gnode, $type) {
   }
 
   return $destination;
+}
+
+/**
+ * Returns plural translated title string for node types.
+ *
+ * @param $type
+ *   Current node page type
+ *
+ * @return
+ *   Translated title string
+ */
+function _ed_cluster_plural_title_for_group_node_type($type) {
+  switch($type) {
+    case 'ed_blog':
+      $title = t('Blog');
+      break;
+    case 'ed_forum':
+      $title = t('Discussion Board');
+      break;
+    case 'ed_bookmark':
+      $title = t('Bookmarks');
+      break;
+    case 'ed_news':
+      $title = t('News');
+      break;
+    case 'ed_page':
+      $title = t('Pages');
+      break;
+    case 'ed_learning_resource':
+      $title = t('Learning Resources');
+      break;
+    case 'ed_event':
+      $title = t('Events');
+      break;
+    case 'ed_file':
+      $title = t('Files');
+      break;
+    default:
+      $title = t(ucwords(str_replace('ed', '', str_replace('_',' ',$type))));
+      break;
+  }
+
+  return $title;
 }
 
 /**
