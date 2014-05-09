@@ -25,6 +25,14 @@ function ed_dashboard_menu() {
     'menu_name' => 'ed-dashboard-menu',
     'type' => MENU_NORMAL_ITEM,
   );
+  $items['dashboard/drafts'] = array(
+    'title' => t('Drafts'),
+    'page callback' => 'ed_dashboard_drafts_page',
+    'access callback' => 'user_is_logged_in',
+    'weight' => 30,
+    'menu_name' => 'ed-dashboard-menu',
+    'type' => MENU_NORMAL_ITEM,
+  );
   return $items;
 }
 
@@ -57,6 +65,43 @@ function ed_dashboard_page() {
   }
  
   return $content; 
+}
+
+/**
+ * Dashboard drafts page.
+ */
+function ed_dashboard_drafts_page() {
+  menu_tree_set_path('main-menu', 'dashboard');
+
+  $account = $GLOBALS['user'];
+  $content = array();
+
+  // Get all user drafts
+  $query = db_select('node', 'n')
+    ->extend('PagerDefault')
+    ->fields('n', array('nid'))
+    ->condition('n.status', 0)
+    ->condition('n.uid', $account->uid)
+    ->limit(ed_get_paging_nr())
+    ->orderBy('n.created', 'DESC');
+
+  $nids = $query->execute()->fetchCol();
+
+  if (!empty($nids)) {
+    $content['drafts-heading'] = array(
+      '#type' => 'markup',
+      '#markup' => '<h2>' . t('Drafts') . '</h2>',
+    );
+    $nodes = node_load_multiple($nids);
+    $build = node_view_multiple($nodes);
+    $build['pager'] = array(
+      '#theme' => 'pager',
+      '#weight' => 5,
+    );
+    $content['drafts-listing'] = $build;
+  }
+
+  return $content;
 }
 
 /**
