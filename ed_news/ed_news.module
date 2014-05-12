@@ -5,6 +5,23 @@
  * News module.
  */
 
+
+/*
+ * Implements hook_info().
+ */
+
+function ed_news_node_info() {
+  $items['ed_news'] = array(
+    'name' => t('News'),
+    'type' => 'ed_news',
+    'base' => 'node_content',
+    'description' => t('description'),
+    'has_title' => '1',
+    'title_label' => t('Title'),
+    'body_label' => t('body_label'),
+  );
+  return $items;
+}
 /**
  * Implements hook_menu().
  */
