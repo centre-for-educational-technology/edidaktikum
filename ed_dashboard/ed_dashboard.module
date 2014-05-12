@@ -144,6 +144,9 @@ function ed_dashboard_discover_page($form, &$form_state, $tag = '') {
         '#type' => 'submit',
         '#value' => t('Save Search'),
         '#name' => 'op-save-search',
+        '#attributes' => array(
+          'class' => array('btn-link'),
+        ),
       );
 
       $term = array_shift($term);
@@ -262,7 +265,6 @@ function ed_dashboard_block_view($block_name='') {
       drupal_add_js(drupal_get_path('module', 'ed_dashboard') . '/js/ed_dashboard_discover.js', 'file');
       foreach ($result as $key => $single) {
         $listing_items []= l('x', '', array('attributes' => array('class' => array('ed-remove-search'), 'data-id' => $single->sid)))
-          . ' '
           . l($single->tag, 'dashboard/discover/' . $single->tag);
       }
       $content['searches-list'] = array(
@@ -270,6 +272,11 @@ function ed_dashboard_block_view($block_name='') {
         '#items' => $listing_items,
         '#attributes' => array(
           'class' => array('ed-saved-searches'),
+        ),
+        '#attached' => array(
+          'css' => array(
+            drupal_get_path('module', 'ed_dashboard') . '/css/ed_dashboard_discover.css'
+          ),
         ),
       );
     }

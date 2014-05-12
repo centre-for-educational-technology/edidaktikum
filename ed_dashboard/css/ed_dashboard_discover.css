@@ -1,0 +1,22 @@
+.form-item-search-tag {
+	display: inline-block;
+}
+
+.form-item-search-tag label {
+	display: inline-block;
+}
+
+.form-item-search-tag input {
+	margin-bottom: 0px !important;
+}
+
+ul.ed-saved-searches {
+	list-style-type: none !important;
+}
+
+ul.ed-saved-searches .ed-remove-search {
+	color: red;
+	text-decoration: none;
+	margin-right: 10px;
+}
+
