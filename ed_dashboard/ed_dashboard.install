@@ -53,3 +53,59 @@ function _ed_dashboard_delete_menu() {
   }
 }
 
+/**
+ * Implements hook_schema().
+ */
+function ed_dashboard_schema() {
+  $schema['ed_user_tag_search'] = array(
+    'description' => 'Stores user tag searches.',
+    'fields' => array(
+      'sid' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique search ID.',
+      ),
+      'uid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'User {users}.uid that saved search.',
+      ),
+      'tag' => array(
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Tag to search with.',
+      ),
+      'timestamp' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Creation timestamp.',
+      ),
+    ),
+    'indexes' => array(
+      'creation_timestamp' => array('timestamp'),
+      'uid' => array('uid'),
+    ),
+    'primary key' => array('sid'),
+    'foreign keys' => array(
+      'creator' => array(
+        'table' => 'users',
+        'columns' => array('uid' => 'uid'),
+      ),
+    ),
+  );
+
+  return $schema;
+}
+
+/**
+ * Install schema.
+ */
+function ed_dashboard_update_7100(&$sandbox) {
+  drupal_install_schema('ed_dashboard');
+}
+
