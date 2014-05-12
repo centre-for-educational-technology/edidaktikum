@@ -5,6 +5,25 @@
  * Event module.
  */
 
+/*
+ * Implements hook_node_info().
+ */
+
+function ed_event_node_info() {
+  $items['ed_event'] = array(
+    'name' => t('Event'),
+    'type' => 'ed_event',
+    'base' => 'node_content',
+    'description' => t('description'),
+    'has_title' => '1',
+    'title_label' => t('Title'),
+    'body_label' => t('body_label'),
+  );
+  return $items;
+}
+
+
+
 /**
  * Implements hook_menu().
  */
