@@ -569,7 +569,8 @@ function recursive_array_search($needle,$haystack) {
  * Implements hook_node_insert().
  */
 function ed_task_node_insert($node) {
-  if ('ed_task' == $node->type) {
+  // Make sure that only public tasks will trigger notifications
+  if ('ed_task' == $node->type && 1 == $node->status) {
     $send_to = array();
 
     if (!empty($node->og_group_ref[LANGUAGE_NONE])) {
