@@ -236,3 +236,58 @@ function edidaktikum_set_translatable_variables() {
   variable_set('variable_realm_list_language', $variable_realm_list_language);
 }
 
+/**
+ * Implements hook_schema().
+ */
+function edidaktikum_schema() {
+  $schema['ed_node_like'] = array(
+    'description' => 'Stores node likes.',
+    'fields' => array(
+      'nid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'Node {nodes}.nid liked.',
+      ),
+      'uid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'User {users}.uid that liked node.',
+      ),
+      'timestamp' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Creation timestamp.',
+      ),
+    ),
+    'indexes' => array(
+      'creation_timestamp' => array('timestamp'),
+      'uid' => array('uid'),
+      'nid' => array('nid'),
+    ),
+    'primary key' => array('nid', 'uid'),
+    'foreign keys' => array(
+      'node' => array(
+        'table' => 'node',
+        'columns' => array('nid' => 'nid'),
+      ),
+      'creator' => array(
+        'table' => 'users',
+        'columns' => array('uid' => 'uid'),
+      ),
+    ),
+  );
+
+  return $schema;
+}
+
+/**
+ * Install schema.
+ * */
+function edidaktikum_update_7100(&$sandbox) {
+  drupal_install_schema('edidaktikum');
+}
+
