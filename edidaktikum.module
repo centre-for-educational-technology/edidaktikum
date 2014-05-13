@@ -446,3 +446,73 @@ function edidaktikum_username_alter(&$name, $account) {
   }
 }
 
+/**
+ * Returns translated node type name by node type.
+ * If type is not known a general name content will be used instead.
+ *
+ * @param string  $node_type  Node type (machine name)
+ * @param boolean $capitalize Capitalize words or not
+ *
+ * @return string
+ */
+function edidaktikum_get_node_type_name($node_type, $capitalize = FALSE) {
+  $node_type_name = t('content');
+  switch ($node_type) {
+  case "ed_blog":
+    $node_type_name = t('blog post');
+    break;
+  case "ed_bookmark":
+    $node_type_name = t('bookmark');
+    break;
+  case "ed_event":
+    $node_type_name = t('event');
+    break;
+  case "ed_news":
+    $node_type_name = t('news');
+    break;
+  case "ed_learning_resource":
+    $node_type_name = t('learning resource');
+    break;
+  case "ed_page":
+    $node_type_name = t('page');
+    break;
+  case "ed_forum":
+    $node_type_name = t('discussion');
+    break;
+  case "ed_file":
+    $node_type_name = t('file');
+    break;
+  case "ed_portfolio":
+    $node_type_name = t('portfolio');
+    break;
+  case "ed_task":
+    $node_type_name = t('task');
+    break;
+  case "ed_answer":
+    $node_type_name = t('answer');
+    break;
+  }
+
+  if ($capitalize) {
+    $node_type_name = ucwords($node_type_name);
+  }
+
+  return $node_type_name;
+}
+
+/**
+ * Returns node title. Handles special case of ed_answer node type
+ * that does not have a title of its own.
+ *
+ * @param object $node A node object passed by reference.
+ *
+ * @return string
+ */
+function edidaktikum_get_node_title(&$node) {
+  if ('ed_aswer' == $node->type) {
+    return ed_answer_get_answer_title($node);
+  }
+
+  return $node->title;
+}
+

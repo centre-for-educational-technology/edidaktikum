@@ -14,9 +14,13 @@ ul.ed-saved-searches {
 	list-style-type: none !important;
 }
 
-ul.ed-saved-searches .ed-remove-search {
+ul.ed-saved-searches a.ed-remove-search {
 	color: red;
 	text-decoration: none;
 	margin-right: 10px;
+}
+
+ul.ed-saved-searches a.ed-remove-search:hover {
+	color: grey;
 }
 

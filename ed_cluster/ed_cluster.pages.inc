@@ -33,47 +33,8 @@ function ed_cluster_to_group_member_page() {
     foreach ($nodes as $node) {
       $user = user_load($node->uid);
       
-      $node_title = $node->title;
-      if ('ed_aswer' == $node->type) {
-        $title = ed_answer_get_answer_title($node);
-      }
-
-      $shared_node_type_name = t('content');
-      switch ($node->type) {
-        case "ed_blog":
-          $shared_node_type_name = t('blog post');
-          break;
-        case "ed_bookmark":
-          $shared_node_type_name = t('bookmark');
-          break;
-        case "ed_event":
-          $shared_node_type_name = t('event');
-          break;
-        case "ed_news":
-          $shared_node_type_name = t('news');
-          break;
-        case "ed_learning_resource":
-          $shared_node_type_name = t('learning resource');
-          break;
-        case "ed_page":
-          $shared_node_type_name = t('page');
-          break;
-        case "ed_forum":
-          $shared_node_type_name = t('discussion');
-          break;
-        case "ed_file":
-          $shared_node_type_name = t('file');
-          break;
-        case "ed_portfolio":
-          $shared_node_type_name = t('portfolio');
-          break;
-        case "ed_task":
-          $shared_node_type_name = t('task');
-          break;
-        case "ed_answer":
-          $shared_node_type_name = t('answer');
-          break;
-      }
+      $node_title = edidaktikum_get_node_title($node);
+      $shared_node_type_name = edidaktikum_get_node_type_name($node->type);
 
       $rows[] = array(
         'data' => t('!user shared @node_type_name !node @time', array(

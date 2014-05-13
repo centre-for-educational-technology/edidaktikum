@@ -153,7 +153,6 @@ function ed_dashboard_discover_page($form, &$form_state, $tag = '') {
 
       $query = new EntityFieldQuery();
       $query->entityCondition('entity_type', 'node')
-        ->addTag('node_access')
         ->propertyCondition('status', 1)
         ->fieldCondition('field_tags', 'tid', $term->tid, '=')
         ->pager(ed_get_paging_nr());
@@ -164,12 +163,29 @@ function ed_dashboard_discover_page($form, &$form_state, $tag = '') {
         $nodes = node_load_multiple($nids);
 
         if($nodes) {
-          $build = node_view_multiple($nodes);
-          $build['pager'] = array(
+          foreach ($nodes as $node) {
+            $user = user_load($node->uid);
+
+            $rows []= array(
+              'data' => t('@node_type_name !node by !user', array(
+                '@node_type_name' => edidaktikum_get_node_type_name($node->type, TRUE),
+                '!node' => l(edidaktikum_get_node_title($node), 'node/' . $node->nid),
+                '!user' => l(edidaktikum_get_full_name_for_user_account($user), 'user/' . $user->uid)
+              )),
+            );
+          }
+          $form['result-listing']['list'] = array(
+            '#theme' => 'item_list',
+            '#type' => 'ul',
+            '#attributes' => array(
+              'class' => array('ed-discover-nodes-listing'),
+            ),
+            '#items' => $rows,
+          );
+          $form['result-listing']['pager'] = array(
             '#theme' => 'pager',
             '#weight' => 5,
           );
-          $form['result-listing'] = $build;
         }
       }
     }
@@ -179,7 +195,9 @@ function ed_dashboard_discover_page($form, &$form_state, $tag = '') {
 }
 
 /**
- * TODO Docstring missing
+ * Deals with dashboard discover page submit.
+ * Redirects on op-search and saves a new search on
+ * op-save-search button press.
  */
 function ed_dashboard_discover_page_submit($form, &$form_state) {
   switch($form_state['triggering_element']['#name']) {
@@ -264,7 +282,7 @@ function ed_dashboard_block_view($block_name='') {
       // Not using #attached as it does not load translations
       drupal_add_js(drupal_get_path('module', 'ed_dashboard') . '/js/ed_dashboard_discover.js', 'file');
       foreach ($result as $key => $single) {
-        $listing_items []= l('x', '', array('attributes' => array('class' => array('ed-remove-search'), 'data-id' => $single->sid)))
+        $listing_items []= l('<i class="fa fa-times"></i>', '', array('attributes' => array('class' => array('ed-remove-search'), 'data-id' => $single->sid), 'html' => TRUE))
           . l($single->tag, 'dashboard/discover/' . $single->tag);
       }
       $content['searches-list'] = array(
@@ -292,7 +310,7 @@ function ed_dashboard_block_view($block_name='') {
 }
 
 /**
- * TODO Docstring missing
+ * Deals with ajax callback to delete a search.
  */
 function ed_dashboard_delete_search($sid) {
   $response = array(
@@ -314,5 +332,15 @@ function ed_dashboard_delete_search($sid) {
   }
 
   drupal_json_output($response);
+}
+
+/**
+ * Implements hook_user_delete().
+ */
+function ed_dashboard_user_delete($account) {
+  // Delete any discovery searches of the user
+  db_delete('ed_user_tag_search')
+    ->condition('uid', $account->uid)
+    ->execute();
 }
 

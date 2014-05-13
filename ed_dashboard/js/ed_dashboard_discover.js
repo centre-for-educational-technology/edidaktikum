@@ -11,8 +11,9 @@
                                 dataType: 'json',
                                 type: 'POST',
                                 success: function(response) {
-                                    console.log(response);
-                                    $(e.target).parent().remove();
+                                    if (true == response.success) {
+                                        $(e.currentTarget).parent().remove();
+                                    }
                                 }
                             });
                         }
