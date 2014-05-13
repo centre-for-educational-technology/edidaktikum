@@ -61,8 +61,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2014-05-12 13:45+0300\n"
-"PO-Revision-Date: 2014-05-12 13:46+0200\n"
+"POT-Creation-Date: 2014-05-13 17:15+0300\n"
+"PO-Revision-Date: 2014-05-13 17:16+0200\n"
 "Last-Translator: Pjotr Savitski <pjotr.savitski@gmail.com>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "MIME-Version: 1.0\n"
@@ -251,18 +251,66 @@ msgstr "eDidaktikumi seaded"
 msgid "Configuration settings for eDidatkikum"
 msgstr "eDidaktikumi kohta käivad seaded"
 
-#: edidaktikum.module:187
+#: edidaktikum.module:193
 msgid "Featured"
 msgstr "Esile tõstetud"
 
-#: edidaktikum.module:191
+#: edidaktikum.module:197
 msgid "Front"
 msgstr ""
 
-#: edidaktikum.module:195 ed_dashboard/ed_dashboard.module:13;21
+#: edidaktikum.module:201 ed_dashboard/ed_dashboard.module:13;21
 #: ed_dashboard/ed_dashboard.info:0
 msgid "Dashboard"
 msgstr "Töölaud"
+
+#: edidaktikum.module:465
+msgid "content"
+msgstr "sisu"
+
+#: edidaktikum.module:468
+msgid "blog post"
+msgstr "ajaveebi postitus"
+
+#: edidaktikum.module:471
+msgid "bookmark"
+msgstr "järjehoidja"
+
+#: edidaktikum.module:474
+msgid "event"
+msgstr "sündmus"
+
+#: edidaktikum.module:477
+msgid "news"
+msgstr ""
+
+#: edidaktikum.module:480
+msgid "learning resource"
+msgstr "õppematerjal"
+
+#: edidaktikum.module:483
+msgid "page"
+msgstr "lehekülg"
+
+#: edidaktikum.module:486
+msgid "discussion"
+msgstr "arutelu"
+
+#: edidaktikum.module:489 ed_file/ed_file.module:158
+msgid "file"
+msgstr "file"
+
+#: edidaktikum.module:492
+msgid "portfolio"
+msgstr "portfoolio"
+
+#: edidaktikum.module:495
+msgid "task"
+msgstr ""
+
+#: edidaktikum.module:498
+msgid "answer"
+msgstr "vastus"
 
 #: edidaktikum.module:41 edidaktikum.info:0;0 ed_analytics/ed_analytics.info:0
 #: ed_answer/ed_answer.info:0 ed_blog/ed_blog.info:0
@@ -609,55 +657,7 @@ msgstr "eDidaktikumi järjehoidja"
 msgid "eDidaktikum Bookmark content type."
 msgstr "eDidaktikumi järjehoidja sisutüüp."
 
-#: ed_cluster/ed_cluster.pages.inc:41
-msgid "content"
-msgstr "sisu"
-
-#: ed_cluster/ed_cluster.pages.inc:44
-msgid "blog post"
-msgstr "ajaveebi postitus"
-
-#: ed_cluster/ed_cluster.pages.inc:47
-msgid "bookmark"
-msgstr "järjehoidja"
-
-#: ed_cluster/ed_cluster.pages.inc:50
-msgid "event"
-msgstr "sündmus"
-
-#: ed_cluster/ed_cluster.pages.inc:53
-msgid "news"
-msgstr ""
-
-#: ed_cluster/ed_cluster.pages.inc:56
-msgid "learning resource"
-msgstr "õppematerjal"
-
-#: ed_cluster/ed_cluster.pages.inc:59
-msgid "page"
-msgstr "lehekülg"
-
-#: ed_cluster/ed_cluster.pages.inc:62
-msgid "discussion"
-msgstr "arutelu"
-
-#: ed_cluster/ed_cluster.pages.inc:65 ed_file/ed_file.module:158
-msgid "file"
-msgstr "file"
-
-#: ed_cluster/ed_cluster.pages.inc:68
-msgid "portfolio"
-msgstr "portfoolio"
-
-#: ed_cluster/ed_cluster.pages.inc:71
-msgid "task"
-msgstr ""
-
-#: ed_cluster/ed_cluster.pages.inc:74
-msgid "answer"
-msgstr "vastus"
-
-#: ed_cluster/ed_cluster.pages.inc:79
+#: ed_cluster/ed_cluster.pages.inc:40
 msgid "!user shared @node_type_name !node @time"
 msgstr ""
 
@@ -767,6 +767,7 @@ msgid "Breadcrumbs of the node groups."
 msgstr ""
 
 #: ed_cluster/plugins/content_types/node_context/node_group_breadcrumbs.inc:13;14
+#: plugins/content_types/node_statistics_and_likes/node_statistics_and_likes.inc:10;11
 msgid "Node"
 msgstr ""
 
@@ -802,30 +803,43 @@ msgstr ""
 msgid "Discover"
 msgstr ""
 
-#: ed_dashboard/ed_dashboard.module:72
+#: ed_dashboard/ed_dashboard.module:78
 msgid ""
 "Hi! Nothing to show here at the moment. Join some group to see latest "
 "updates from it."
 msgstr ""
 
-#: ed_dashboard/ed_dashboard.module:121
+#: ed_dashboard/ed_dashboard.module:127
 #, fuzzy
 msgid "Search tag"
 msgstr "Otsi"
 
-#: ed_dashboard/ed_dashboard.module:129;153
+#: ed_dashboard/ed_dashboard.module:135
 #: ed_learning_resource/ed_learning_resource.module:164
 msgid "Search"
 msgstr "Otsi"
 
-#: ed_dashboard/ed_dashboard.module:136
+#: ed_dashboard/ed_dashboard.module:145
 #, fuzzy
-msgid "Save search"
+msgid "Save Search"
+msgstr "Otsi"
+
+#: ed_dashboard/ed_dashboard.module:170
+msgid "@node_type_name !node by !user"
+msgstr ""
+
+#: ed_dashboard/ed_dashboard.module:250;271
+#, fuzzy
+msgid "Saved searches"
 msgstr "Otsi"
 
 #: ed_dashboard/ed_dashboard.info:0
 msgid "eDidaktikum dashboard."
 msgstr "eDidaktikumi töölaud"
+
+#: ed_dashboard/js/ed_dashboard_discover.js:0
+msgid "Are you sure?"
+msgstr ""
 
 #: ed_event/ed_event.module:68
 msgid "!site_name events"
@@ -1421,19 +1435,19 @@ msgstr "Ülesande vastuste nimekiri"
 msgid "Create Task"
 msgstr "Loo ülesanne"
 
-#: ed_task/ed_task.module:639
+#: ed_task/ed_task.module:640
 msgid "New Task - eDidaktikum"
 msgstr "Uus ülesanne - eDidaktikum"
 
-#: ed_task/ed_task.module:640
+#: ed_task/ed_task.module:641
 msgid "@fullname assigned you a task: @taskname."
 msgstr "@fullname andis sulle ülesande: @taskname."
 
-#: ed_task/ed_task.module:641
+#: ed_task/ed_task.module:642
 msgid "Due date: @duedate"
 msgstr "Tähtaeg: @duedate"
 
-#: ed_task/ed_task.module:642
+#: ed_task/ed_task.module:643
 msgid "View task: @taskurl"
 msgstr "Vaata ülesannet: @taskurl"
 
@@ -1480,6 +1494,28 @@ msgstr ""
 #: entityreference_dragdrop/entityreference_dragdrop.info:0
 msgid "Fields"
 msgstr "Väljad"
+
+#: js/ed_likes.js:0
+#: plugins/content_types/node_statistics_and_likes/node_statistics_and_likes.inc:57
+msgid "@count likes"
+msgstr ""
+
+#: plugins/content_types/node_statistics_and_likes/node_statistics_and_likes.inc:8
+#, fuzzy
+msgid "eDidaktikum node statistics and likes"
+msgstr "eDidaktikumi statistika"
+
+#: plugins/content_types/node_statistics_and_likes/node_statistics_and_likes.inc:9
+msgid "Shows statistics and likes count."
+msgstr ""
+
+#: plugins/content_types/node_statistics_and_likes/node_statistics_and_likes.inc:45
+msgid "@totalcount views (@daycount today)"
+msgstr ""
+
+#: plugins/content_types/node_statistics_and_likes/node_statistics_and_likes.inc:71
+msgid "Node statistics"
+msgstr ""
 
 #~ msgid "A list of tags for learning resources"
 #~ msgstr "Õppematerjalide märksõnade nimekiri"

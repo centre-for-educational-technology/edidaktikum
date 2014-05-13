@@ -18,6 +18,7 @@
 #  edidaktikum.module: n/a
 #  ed_dashboard/ed_dashboard.module: n/a
 #  ed_dashboard/ed_dashboard.info: n/a
+#  ed_file/ed_file.module: n/a
 #  edidaktikum.info: n/a
 #  ed_analytics/ed_analytics.info: n/a
 #  ed_answer/ed_answer.info: n/a
@@ -60,14 +61,15 @@
 #  ed_task/ed_task.install: n/a
 #  ed_bookmark/ed_bookmark_functions.inc: n/a
 #  ed_bookmark/ed_bookmark.module: n/a
-#  ed_file/ed_file.module: n/a
 #  ed_portfolio/ed_portfolio.module: n/a
 #  ed_portfolio/ed_portfolio.install: n/a
 #  entityreference_dragdrop/entityreference_dragdrop.module: n/a
 #  ed_cluster/ed_cluster.pages.inc: n/a
 #  ed_subgroup/ed_subgroup.install: n/a
 #  ed_cluster/plugins/content_types/node_context/node_group_breadcrumbs.inc: n/a
+#  plugins/content_types/node_statistics_and_likes/node_statistics_and_likes.inc: n/a
 #  ed_cluster/plugins/selection/groupsusers.inc: n/a
+#  ed_dashboard/js/ed_dashboard_discover.js: n/a
 #  ed_file/includes/views/ed_file.views_default.inc: n/a
 #  ed_portfolio/includes/views/ed_portfolio.views_default.inc: n/a
 #  ed_learning_resource/ed_learning_resource.pages.inc: n/a
@@ -76,12 +78,13 @@
 #  ed_user_extra/ed_user_extra.install: n/a
 #  ed_user_extra/plugins/selection/fullname.inc: n/a
 #  entityreference_dragdrop/entityreference_dragdrop.info: n/a
+#  js/ed_likes.js: n/a
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2014-05-12 13:45+0300\n"
+"POT-Creation-Date: 2014-05-13 17:15+0300\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -262,16 +265,64 @@ msgstr ""
 msgid "Configuration settings for eDidatkikum"
 msgstr ""
 
-#: edidaktikum.module:187
+#: edidaktikum.module:193
 msgid "Featured"
 msgstr ""
 
-#: edidaktikum.module:191
+#: edidaktikum.module:197
 msgid "Front"
 msgstr ""
 
-#: edidaktikum.module:195 ed_dashboard/ed_dashboard.module:13;21 ed_dashboard/ed_dashboard.info:0
+#: edidaktikum.module:201 ed_dashboard/ed_dashboard.module:13;21 ed_dashboard/ed_dashboard.info:0
 msgid "Dashboard"
+msgstr ""
+
+#: edidaktikum.module:465
+msgid "content"
+msgstr ""
+
+#: edidaktikum.module:468
+msgid "blog post"
+msgstr ""
+
+#: edidaktikum.module:471
+msgid "bookmark"
+msgstr ""
+
+#: edidaktikum.module:474
+msgid "event"
+msgstr ""
+
+#: edidaktikum.module:477
+msgid "news"
+msgstr ""
+
+#: edidaktikum.module:480
+msgid "learning resource"
+msgstr ""
+
+#: edidaktikum.module:483
+msgid "page"
+msgstr ""
+
+#: edidaktikum.module:486
+msgid "discussion"
+msgstr ""
+
+#: edidaktikum.module:489 ed_file/ed_file.module:158
+msgid "file"
+msgstr ""
+
+#: edidaktikum.module:492
+msgid "portfolio"
+msgstr ""
+
+#: edidaktikum.module:495
+msgid "task"
+msgstr ""
+
+#: edidaktikum.module:498
+msgid "answer"
 msgstr ""
 
 #: edidaktikum.module:41 edidaktikum.info:0;0 ed_analytics/ed_analytics.info:0 ed_answer/ed_answer.info:0 ed_blog/ed_blog.info:0 ed_bookmark/ed_bookmark.info:0 ed_cluster/ed_cluster.info:0 ed_competence_voc/ed_competence_voc.info:0 ed_dashboard/ed_dashboard.info:0 ed_event/ed_event.info:0 ed_file/ed_file.info:0 ed_forum/ed_forum.info:0 ed_learning_resource/ed_learning_resource.info:0 ed_learning_resource_voc/ed_learning_resource_voc.info:0 ed_news/ed_news.info:0 ed_page/ed_page.info:0 ed_portfolio/ed_portfolio.info:0 ed_subgroup/ed_subgroup.info:0 ed_task/ed_task.info:0 ed_user_extra/ed_user_extra.info:0
@@ -562,55 +613,7 @@ msgstr ""
 msgid "eDidaktikum Bookmark content type."
 msgstr ""
 
-#: ed_cluster/ed_cluster.pages.inc:41
-msgid "content"
-msgstr ""
-
-#: ed_cluster/ed_cluster.pages.inc:44
-msgid "blog post"
-msgstr ""
-
-#: ed_cluster/ed_cluster.pages.inc:47
-msgid "bookmark"
-msgstr ""
-
-#: ed_cluster/ed_cluster.pages.inc:50
-msgid "event"
-msgstr ""
-
-#: ed_cluster/ed_cluster.pages.inc:53
-msgid "news"
-msgstr ""
-
-#: ed_cluster/ed_cluster.pages.inc:56
-msgid "learning resource"
-msgstr ""
-
-#: ed_cluster/ed_cluster.pages.inc:59
-msgid "page"
-msgstr ""
-
-#: ed_cluster/ed_cluster.pages.inc:62
-msgid "discussion"
-msgstr ""
-
-#: ed_cluster/ed_cluster.pages.inc:65 ed_file/ed_file.module:158
-msgid "file"
-msgstr ""
-
-#: ed_cluster/ed_cluster.pages.inc:68
-msgid "portfolio"
-msgstr ""
-
-#: ed_cluster/ed_cluster.pages.inc:71
-msgid "task"
-msgstr ""
-
-#: ed_cluster/ed_cluster.pages.inc:74
-msgid "answer"
-msgstr ""
-
-#: ed_cluster/ed_cluster.pages.inc:79
+#: ed_cluster/ed_cluster.pages.inc:40
 msgid "!user shared @node_type_name !node @time"
 msgstr ""
 
@@ -714,7 +717,7 @@ msgstr ""
 msgid "Breadcrumbs of the node groups."
 msgstr ""
 
-#: ed_cluster/plugins/content_types/node_context/node_group_breadcrumbs.inc:13;14
+#: ed_cluster/plugins/content_types/node_context/node_group_breadcrumbs.inc:13;14 plugins/content_types/node_statistics_and_likes/node_statistics_and_likes.inc:10;11
 msgid "Node"
 msgstr ""
 
@@ -750,24 +753,36 @@ msgstr ""
 msgid "Discover"
 msgstr ""
 
-#: ed_dashboard/ed_dashboard.module:72
+#: ed_dashboard/ed_dashboard.module:78
 msgid "Hi! Nothing to show here at the moment. Join some group to see latest updates from it."
 msgstr ""
 
-#: ed_dashboard/ed_dashboard.module:121
+#: ed_dashboard/ed_dashboard.module:127
 msgid "Search tag"
 msgstr ""
 
-#: ed_dashboard/ed_dashboard.module:129;153 ed_learning_resource/ed_learning_resource.module:164
+#: ed_dashboard/ed_dashboard.module:135 ed_learning_resource/ed_learning_resource.module:164
 msgid "Search"
 msgstr ""
 
-#: ed_dashboard/ed_dashboard.module:136
-msgid "Save search"
+#: ed_dashboard/ed_dashboard.module:145
+msgid "Save Search"
+msgstr ""
+
+#: ed_dashboard/ed_dashboard.module:170
+msgid "@node_type_name !node by !user"
+msgstr ""
+
+#: ed_dashboard/ed_dashboard.module:250;271
+msgid "Saved searches"
 msgstr ""
 
 #: ed_dashboard/ed_dashboard.info:0
 msgid "eDidaktikum dashboard."
+msgstr ""
+
+#: ed_dashboard/js/ed_dashboard_discover.js:0
+msgid "Are you sure?"
 msgstr ""
 
 #: ed_event/ed_event.module:68
@@ -1338,19 +1353,19 @@ msgstr ""
 msgid "Create Task"
 msgstr ""
 
-#: ed_task/ed_task.module:639
+#: ed_task/ed_task.module:640
 msgid "New Task - eDidaktikum"
 msgstr ""
 
-#: ed_task/ed_task.module:640
+#: ed_task/ed_task.module:641
 msgid "@fullname assigned you a task: @taskname."
 msgstr ""
 
-#: ed_task/ed_task.module:641
+#: ed_task/ed_task.module:642
 msgid "Due date: @duedate"
 msgstr ""
 
-#: ed_task/ed_task.module:642
+#: ed_task/ed_task.module:643
 msgid "View task: @taskurl"
 msgstr ""
 
@@ -1396,5 +1411,25 @@ msgstr ""
 
 #: entityreference_dragdrop/entityreference_dragdrop.info:0
 msgid "Fields"
+msgstr ""
+
+#: js/ed_likes.js:0 plugins/content_types/node_statistics_and_likes/node_statistics_and_likes.inc:57
+msgid "@count likes"
+msgstr ""
+
+#: plugins/content_types/node_statistics_and_likes/node_statistics_and_likes.inc:8
+msgid "eDidaktikum node statistics and likes"
+msgstr ""
+
+#: plugins/content_types/node_statistics_and_likes/node_statistics_and_likes.inc:9
+msgid "Shows statistics and likes count."
+msgstr ""
+
+#: plugins/content_types/node_statistics_and_likes/node_statistics_and_likes.inc:45
+msgid "@totalcount views (@daycount today)"
+msgstr ""
+
+#: plugins/content_types/node_statistics_and_likes/node_statistics_and_likes.inc:71
+msgid "Node statistics"
 msgstr ""
 
