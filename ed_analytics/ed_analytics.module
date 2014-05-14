@@ -16,102 +16,203 @@ function ed_analytics_menu(){
     'type' => MENU_NORMAL_ITEM,
     'weight' => 0,
   );
+  $items['dashboard/analytics'] = array(
+    'title' => t('Learning Analytics'),
+    'page callback' => 'ed_analytics_page',
+    'access callback' => 'user_is_logged_in',
+    'weight' => 23,
+    'menu_name' => 'ed-dashboard-menu',
+    'type' => MENU_NORMAL_ITEM,
+  );
   return $items;
+}
+
+
+/**
+ * Learning analytics page in dashboard
+ */
+function ed_analytics_page(){
+  menu_tree_set_path('main-menu', 'dashboard');
+  
+  $content = array();
+  global $user;
+  
+  // dpm($user);
+  
+  $account = user_load($user->uid);
+  // dpm($account);
+  $groups = og_get_entity_groups();
+  
+  
+  if(empty($groups)){
+    $content['groups-not-found'] = array(
+      '#type' => 'markup',
+      '#prefix' => '<div class="ed-message ed-message-notice">',
+      '#markup' => t('Hi! Nothing to show here at the moment. Join some group to see latest updates from it.'),
+      '#suffix' => '</div>',
+    );
+  }
+  else{
+    $content['heading'] = array(
+      '#type' => 'markup',
+      '#prefix' => '<div class="ed-analytics-heading">',
+      '#markup' => '<h2>'.t('My Courses').'</h2>',
+      '#suffix' => '</div>',
+    );
+    $nodes = node_load_multiple($groups['node']);
+
+    foreach($nodes as $node){
+      $tasknids = _ed_analytics_get_group_tasks($node->nid);
+      
+      if(!empty($tasknids)){
+        $counttasks = count($tasknids);
+        
+        $countanswers = count(_ed_analytics_get_user_answers($node->nid, $user->uid));
+        
+        
+        $progress = round($countanswers/$counttasks*100);
+      }else{
+        $counttasks = 0;
+        $countanswers = 0;
+        $progress = 100;
+      }
+      $group = '<div class="span4">'.l($node->title, 'node/'.$node->nid).'</div>';
+      $progressbar = '<div class="span4"><div class="progress progress-success"><div class="bar" style="width: '.$progress.'%;"></div></div></div>';        
+      $info = '<div class="span4"><div class="description">'.$progress.'% '.t('done').' '.$countanswers.'/'.$counttasks.'</div></div>';
+      $row = $group.$progressbar.$info;        
+      $content[$node->nid] = array(
+        '#type' => 'markup',
+        '#prefix' => '<div class="row">',
+        '#markup' => $row,
+        '#suffix' => '</div>',
+      );
+      
+    }
+   
+  }
+  
+  return $content;
+  
+  
+}
+function _ed_analytics_get_user_answers($gid, $uid){
+  $query = db_select('node', 'n');
+  $query->fields('n', array('nid'))
+      ->condition('n.uid', $uid)
+      ->condition('n.type', 'ed_answer');
+  $query->join('og_membership', 'ogm', "n.nid = ogm.etid");
+  $nids = $query->execute()->fetchCol();
+  
+  return $nids;
+  
+}
+function _ed_analytics_get_group_tasks($gid){
+  
+  $query = db_select('node', 'n');
+  
+  $query->fields('n', array('nid'))
+      ->condition('n.type', 'ed_task')
+      ->join('og_membership', 'ogm', "n.nid = ogm.etid");
+  $query->condition('ogm.gid', $gid);
+      
+  
+      
+  $nids = $query->execute()->fetchCol();
+  
+  return $nids;
 }
 
 /*
  * Implements hook_node_insert().
  */
-function ed_analytics_node_insert($node){
-  switch($node->type){
-    case 'ed_task':
-      
-      _ed_analytics_sendToLocker($node, 'created');
-      /*
-      $action = db_insert('xapi_actions')
-        ->fields(array(
-          'sent' => 0,
-          'verb' => 'created',
-          'uid' => $node->uid,
-          'nid' => $node->nid,
-          'created' => REQUEST_TIME,
-        ))->execute();
-      */
-      
-      
-      
-      
-    break;
-    case 'ed_answer':
-      _ed_analytics_sendToLocker($node, 'answered');
-      /*
-      $action = db_insert('xapi_actions')
-        ->fields(array(
-          'sent' => 0,
-          'verb' => 'answered',
-          'uid' => $node->uid,
-          'nid' => $node->nid,
-          'created' => REQUEST_TIME,
-        ))->execute();
-    break;
-      */
-       
-  }
-}
-
-function _ed_analytics_sendToLocker($node, $verb){
-  $llaccount = variable_get('ed_analytics_ll_username');
-  $llpassword = variable_get('ed_analytics_ll_password');
-  $llendpoint = variable_get('ed_analytics_ll_endpoint');
-  $user = user_load($node->uid);
-  switch($verb){
-    case 'created':
-      $verbid = 'http://activitystrea.ms/schema/1.0/create';
-      $title = $node->title;
-    break;
-    case 'answered':
-      $verbid = 'http://adlnet.gov/expapi/verbs/answered';
-      
-      $tasknid = $node->field_ref_to_task[LANGUAGE_NONE][0]['target_id'];
-      $task = node_load($tasknid);
-      $title = $task->title.' - Answer';
-      error_log(print_r($node, true));
-    break;
-  }
-  $authcode = base64_encode($llaccount.':'.$llpassword);
-//  $path=drupal_get_path_alias('node/'.$node->nid);
-  $path=url('node/'.$node->nid, array('absolute' => TRUE));
-  $actor = $user->name;
-  $actoremail = $user->mail;
-  $stmt = '{
-              "actor":{
-                "objectType": "Agent",
-                "name": "'.$actor.'",
-                "mbox": "mailto:'.$actoremail.'"  
-              },
-              "verb":{
-                "id": "'.$verbid.'",
-                "display":{
-                  "en-US":"'.$verb.'"
-                }
-              },
-              "object":{
-                "id":"'.$path.'",
-                "definition":{
-                  "name":{
-                    "en-US":"'.$title.'"
-                  }
-                }  
-              }
-          }';
-  
-  $options = array(
-    'method' => 'POST',
-    'data' => $stmt,
-    'headers' => array('X-Experience-API-Version' => '1.0.1', 'Authorization' => 'Basic '.$authcode),
-  );
-  $response = drupal_http_request($llendpoint, $options);
-  //error_log($llendpoint);
-  //error_log(print_r($response, true));
-  
-}
+//function ed_analytics_node_insert($node){
+//  switch($node->type){
+//    case 'ed_task':
+//      
+//      _ed_analytics_sendToLocker($node, 'created');
+//      /*
+//      $action = db_insert('xapi_actions')
+//        ->fields(array(
+//          'sent' => 0,
+//          'verb' => 'created',
+//          'uid' => $node->uid,
+//          'nid' => $node->nid,
+//          'created' => REQUEST_TIME,
+//        ))->execute();
+//      */
+//      
+//      
+//      
+//      
+//    break;
+//    case 'ed_answer':
+//      _ed_analytics_sendToLocker($node, 'answered');
+//      /*
+//      $action = db_insert('xapi_actions')
+//        ->fields(array(
+//          'sent' => 0,
+//          'verb' => 'answered',
+//          'uid' => $node->uid,
+//          'nid' => $node->nid,
+//          'created' => REQUEST_TIME,
+//        ))->execute();
+//    break;
+//      */
+//       
+//  }
+//}
+//
+//function _ed_analytics_sendToLocker($node, $verb){
+//  $llaccount = variable_get('ed_analytics_ll_username');
+//  $llpassword = variable_get('ed_analytics_ll_password');
+//  $llendpoint = variable_get('ed_analytics_ll_endpoint');
+//  $user = user_load($node->uid);
+//  switch($verb){
+//    case 'created':
+//      $verbid = 'http://activitystrea.ms/schema/1.0/create';
+//      $title = $node->title;
+//    break;
+//    case 'answered':
+//      $verbid = 'http://adlnet.gov/expapi/verbs/answered';
+//      
+//      $tasknid = $node->field_ref_to_task[LANGUAGE_NONE][0]['target_id'];
+//      $task = node_load($tasknid);
+//      $title = $task->title.' - Answer';
+//      
+//    break;
+//  }
+//  $authcode = base64_encode($llaccount.':'.$llpassword);
+//  //$path=drupal_get_path_alias('node/'.$node->nid);
+//  $path=url('node/'.$node->nid, array('absolute' => TRUE));
+//  $actor = $user->name;
+//  $actoremail = $user->mail;
+//  $stmt = '{
+//              "actor":{
+//                "objectType": "Agent",
+//                "name": "'.$actor.'",
+//                "mbox": "mailto:'.$actoremail.'"  
+//              },
+//              "verb":{
+//                "id": "'.$verbid.'",
+//                "display":{
+//                  "en-US":"'.$verb.'"
+//                }
+//              },
+//              "object":{
+//                "id":"'.$path.'",
+//                "definition":{
+//                  "name":{
+//                    "en-US":"'.$title.'"
+//                  }
+//                }  
+//              }
+//          }';
+//  
+//  $options = array(
+//    'method' => 'POST',
+//    'data' => $stmt,
+//    'headers' => array('X-Experience-API-Version' => '1.0.1', 'Authorization' => 'Basic '.$authcode),
+//  );
+//  $response = drupal_http_request($llendpoint, $options);
+//  
+//}
