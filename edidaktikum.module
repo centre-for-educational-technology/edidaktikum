@@ -612,3 +612,86 @@ function edidaktikum_node_like($nid) {
   drupal_json_output($response);
 }
 
+/**
+ * Determines if current case is a special comment delete one and
+ * the user is allowed to delete a comment.
+ * The logic is everyone is allowed to delete own comments and a
+ * teacher role user is allowed to delte comments by students (any
+ * user having no special roles).
+ *
+ * @param Object $comment Comment object
+ * @return boolean
+ */
+function _edidaktikum_can_special_delete_comment(&$comment) {
+  if (!user_is_logged_in()) {
+    return FALSE;
+  }
+  $account = $GLOBALS['user'];
+
+  if ($account->uid === $comment->uid) {
+    // Show delete link to owner
+    return TRUE;
+  } else if (in_array('teacher', $account->roles)) {
+    $owner = user_load($comment->uid);
+    // Show delete link to teacher if creator is a student
+    if (!(in_array('teacher', $owner->roles) || in_array('administrator', $owner->roles))) {
+      return TRUE;
+    }
+  }
+
+  return FALSE;
+}
+
+/**
+ * Implements hook_comment_view_alter().
+ */
+function edidaktikum_comment_view_alter(&$build) {
+  if (!user_is_logged_in()) {
+    return;
+  }
+
+  if (isset($build['links']['comment']['#links']['comment-delete'])) {
+    return;
+  }
+
+  $comment = $build['#comment'];
+
+  if (_edidaktikum_can_special_delete_comment($comment)) {
+    $build['links']['comment']['#links']['comment-delete'] = array(
+      'title' => t('delete'),
+      'href' => "comment/$comment->cid/delete",
+      'html' => TRUE,
+    );
+  }
+}
+
+/**
+ * Determines if comment can be removed.
+ * Used as an access check.
+ * @param int $cid Comment id
+ * @return boolean
+ */
+function edidaktikum_comment_delete_access($cid) {
+  if (user_access('administer comments')) {
+    return TRUE;
+  }
+
+  if (!user_is_logged_in()) {
+    return FALSE;
+  }
+
+  $comment = comment_load($cid);
+
+  return _edidaktikum_can_special_delete_comment($comment);
+}
+
+/**
+ * Implements hook_menu_alter().
+ */
+function edidaktikum_menu_alter(&$items) {
+  if (user_is_logged_in()) {
+    $items['comment/%/delete']['access callback'] = 'edidaktikum_comment_delete_access';
+    $items['comment/%/delete']['access arguments'] = array(1);
+  }
+}
+
