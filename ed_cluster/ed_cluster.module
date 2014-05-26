@@ -758,7 +758,8 @@ function _ed_cluster_is_groups_admin_or_creator($uid, $groups) {
  */
 function ed_cluster_listing_page() {
   $content = array();
-  $og_groups = ed_cluster_get_clusters();
+  
+
   $account = $GLOBALS['user'];
   if(in_array('teacher', $account->roles)||in_array('administrator', $account->roles)){
     $content['add-new'] = array(
@@ -769,6 +770,26 @@ function ed_cluster_listing_page() {
       '#suffix' => '</div>',
     );
   }
+  $content['sorting'] = drupal_get_form('_ed_get_sorting_options');
+    if(isset($_GET['order'])){
+    $order = $_GET['order'];
+    switch($order){
+      case 'ASC':
+        $content['sorting']['select']['#value'] = t('Earliest First');
+      break;
+      case 'DESC':
+        $content['sorting']['select']['#value'] = t('Latest First');
+      break;
+      case 'title':
+        $content['sorting']['select']['#value'] = t('Title (A-Z)');
+      break;
+    } 
+    
+    
+  }else{
+    $order = 'DESC';
+  }
+  $og_groups = ed_cluster_get_clusters($order);
   if (!empty($og_groups)) {
     $nodes = node_load_multiple($og_groups);
     $build = node_view_multiple($nodes);
@@ -798,15 +819,21 @@ function _ed_is_nid_group($nid){
  * Returns paged ed_cluster node identifiers
  * NB! Ignores node_access
  */
-function ed_cluster_get_clusters() {
+function ed_cluster_get_clusters($order) {
   $query = db_select('node', 'n')
     ->extend('PagerDefault')
     ->fields('n', array('nid'))
     ->condition('n.status', 1)
     ->condition('n.type', 'ed_cluster')
-    ->orderBy('sticky', 'DESC')
-    ->orderBy('created', 'DESC')
-    ->limit(ed_get_paging_nr());
+    ->orderBy('sticky', 'DESC');
+  if($order == 'title'){
+    $query->orderBy('title', 'ASC');
+  }else{
+    $query->orderBy('created', $order);
+  }
+   
+      
+    $query->limit(ed_get_paging_nr());
   $nids = $query->execute()->fetchCol();
   return $nids;
 }
