@@ -235,6 +235,39 @@ function ed_get_paging_nr(){
   return variable_get('ed_paging');
 }
 
+function _ed_get_sorting_options($form_state){
+  $form = array();
+  $form['select'] = array(
+    '#type' => 'select',
+    '#options' => drupal_map_assoc(array(t('Latest First'), t('Earliest First'), t('Title (A-Z)'))),
+  );
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Sort'),    
+  );
+  return $form;
+}
+
+
+function _ed_get_sorting_options_submit($form, &$form_state) {
+  
+  $sortorder = $form_state['values']['select'];
+  switch($sortorder){
+    case t('Latest First'):
+      $sortordermn = 'DESC';
+    break;
+    case t('Earliest First'):
+      $sortordermn = 'ASC';
+    break;
+    case t('Title (A-Z)'):
+      $sortordermn = 'title';
+    break;
+  }
+  drupal_goto(current_path(),array('query' => array('order' => $sortordermn)));
+}
+
+
+
 /**
  * Implements hook_form_alter().
  */

@@ -40,10 +40,18 @@ function ed_learning_resource_node_view($node, $view_mode, $langcode){
  * Implements hook_menu().
  */
 function ed_learning_resource_menu() {
+//  $items['resources'] = array(
+//    'title' => t('Resources'),
+//    'page callback' => 'drupal_get_form',
+//    'page arguments' => array('ed_learning_resource_listing'),
+//    'access callback' => TRUE,
+//    'weight' => 15,
+//    'menu_name' => 'main-menu',
+//    'type' => MENU_NORMAL_ITEM,
+//  );
   $items['resources'] = array(
-    'title' => t('Resources'),
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('ed_learning_resource_listing'),
+    'title' => t('Learning Resources'),
+    'page callback' => 'ed_learning_resource_listing',
     'access callback' => TRUE,
     'weight' => 15,
     'menu_name' => 'main-menu',
@@ -69,55 +77,10 @@ function ed_learning_resource_menu() {
   return $items;
 }
 
-function ed_learning_resource_listing($form, &$form_state) {
-  drupal_set_title(t('Learning Resources'));
-  drupal_add_js(drupal_get_path('module', 'ed_learning_resource') . '/ed_learning_resource_js.js');
-  $catimgpath = drupal_get_path('module', 'edidaktikum').'/images/menu_icon_small.png';
-  $form['content_sort_select'] = array(
-    '#type' => 'select',
-    '#options' => drupal_map_assoc(array(t('Latest First'), t('Earliest First'), t('Title'))),
-  );
-  $term_reference_tree_path = drupal_get_path('module', 'term_reference_tree');
-  $path = drupal_get_path('module', 'ed_learning_resource');
-  /*$form['category'] = array(
-    '#type' => 'checkbox_tree',
-    '#title' => t('Filter by Category')." ".'<img src='.$catimgpath.'/>',
-    '#vocabulary' => _ed_get_vid(),
-    '#parent_tid' => 0,
-    '#value_key' => 'tid',
-    '#max_choices' => 999,
-    '#leaves_only' => 0,
-    '#start_minimized' => FALSE,
-    '#depth' => 0,
-    '#select_parents' => TRUE,
-    '#attached' => array(
-      'js' => array($term_reference_tree_path . '/term_reference_tree.js'),
-      'css' => array($term_reference_tree_path . '/term_reference_tree.css', $path . '/ed_learning_resource_css.css'),
-    ),
-    '#attributes' => array('class' => array('field-widget-term-reference-tree')),
-    '#element_validate' => array('_term_reference_Tree_widget_validate'),
-    '#value' => array(),
-    '#filter_view' => '',
-    '#max_depth' => '',
-    '#field_name' => '',
-    '#token_display' => '',
-    '#prefix' => '<div id="edit-ed-field-category">',   //Make it collapsible
-    '#suffix' => '</div>',
-  );*/
-  $form['content_submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Sort'),
-    '#validate' => array(),
-    '#limit_validation_errors' => array(),
-  );
-  $form['selection_fieldset'] = array(
-    '#type' => 'fieldset',
-    '#prefix' => '<div id="selection-fieldset-wrapper">',
-    '#suffix' => '</div>',
-  );
-
+function ed_learning_resource_listing(){
+  $content = array();  
   if(node_access('create', 'ed_learning_resource')){
-    $form['selection_fieldset']['add-new'] = array(
+    $content['add-new'] = array(
       '#type' => 'link',
       '#title' => t('Add new learning resource'),
       '#href' => 'node/add/ed-learning-resource',
@@ -125,53 +88,63 @@ function ed_learning_resource_listing($form, &$form_state) {
       '#suffix' => '</div>',
     );
   }
-
-  $order = t('Latest First');
-  if( !empty($form_state['values']['category'])){ // else{show from all categories}
-    $order = ($form_state['values']['content_sort_select']);
-    $form['content_sort_select']['#default_value'] = $order;
-    $catAll = $form_state['values']['category'];
-    $catValues = array_values_recursive($catAll);
-    if( !empty($catValues) ){
-      $resources = _ed_get_resources_category($catValues, $order);
-      $nids = node_load_multiple($resources);
-      $build = node_view_multiple($nids);
-      $build['pager'] = array(
-        '#theme' => 'pager',
-        '#weight' => 5,
-      );
-      $form['selection_fieldset']['resources'] = $build;
+  $content['sorting'] = drupal_get_form('_ed_get_sorting_options');
+  if(isset($_GET['order'])){
+    $order = $_GET['order'];
+    switch($order){
+      case 'ASC':
+        $content['sorting']['select']['#value'] = t('Earliest First');
+      break;
+      case 'DESC':
+        $content['sorting']['select']['#value'] = t('Latest First');
+      break;
+      case 'title':
+        $content['sorting']['select']['#value'] = t('Title (A-Z)');
+      break;
     }
+    
+    
+  }else{
+    $order = 'DESC';
   }
-  else{
-    if(!empty($form_state['input']['content_sort_select'])){
-      $order = ($form_state['input']['content_sort_select']);
-    }
-    $resources = _ed_get_all_resources($order);
-    $nids = node_load_multiple($resources);
-    $build = node_view_multiple($nids);
+  $nids = _ed_get_learning_resources($order);
+  if(!empty($nids)){
+    $nodes = node_load_multiple($nids);    
+    $build = node_view_multiple($nodes);
     $build['pager'] = array(
       '#theme' => 'pager',
       '#weight' => 5,
     );
-    $form['selection_fieldset']['resources'] = $build;
+    $content['pager']['resources'] = $build;
   }
-  return $form;
+  
+  
+  return $content;
 }
 
-function ed_learning_resource_listing_submit($form, &$form_state) {
-  switch($form_state['triggering_element']['#value']) {
-    case t('Search'):
-      $form_state['values']['content_sort_select'] = $form_state['input']['content_sort_select'];
-      //$help = array_values_recursive($form_state['input']['category']);
-      $help = array();
-      if(!empty($help)){
-        $form_state['values']['category'] = $help;
-      }
-    default:
-      $form_state['rebuild'] = TRUE;
+
+
+function _ed_get_learning_resources($order){  
+  $query = db_select('node', 'n')
+    ->extend('PagerDefault')
+    ->fields('n', array('nid'))
+    ->condition('n.type', 'ed_learning_resource')
+    ->condition('n.status', 1);
+  if($order == 'title'){
+    $query->orderBy('title', 'ASC');
+  }else{
+    $query->orderBy('created', $order);
   }
+  
+  $query->limit(ed_get_paging_nr());
+  $result = $query->execute()->fetchCol();
+  
+  return $result;
+  
+  
 }
+
+
 
 function ed_learning_resource_preprocess_node(&$vars){
   if ($vars['node']->type == 'ed_learning_resource') {
