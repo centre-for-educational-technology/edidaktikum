@@ -89,25 +89,28 @@ function ed_learning_resource_listing(){
     );
   }
   $content['sorting'] = drupal_get_form('_ed_get_sorting_options');
+
+  $sql_order = 'DESC';
   if(isset($_GET['order'])){
     $order = $_GET['order'];
     switch($order){
       case 'ASC':
         $content['sorting']['select']['#value'] = t('Earliest First');
-      break;
-      case 'DESC':
-        $content['sorting']['select']['#value'] = t('Latest First');
+        $sql_order = 'ASC';
       break;
       case 'title':
         $content['sorting']['select']['#value'] = t('Title (A-Z)');
+        $sql_order = 'title';
+      break;
+      case 'DESC':
+      default:
+        $content['sorting']['select']['#value'] = t('Latest First');
+        $sql_order = 'DESC';
       break;
     }
-    
-    
-  }else{
-    $order = 'DESC';
   }
-  $nids = _ed_get_learning_resources($order);
+
+  $nids = _ed_get_learning_resources($sql_order);
   if(!empty($nids)){
     $nodes = node_load_multiple($nids);    
     $build = node_view_multiple($nodes);

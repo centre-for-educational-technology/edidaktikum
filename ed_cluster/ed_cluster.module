@@ -771,25 +771,28 @@ function ed_cluster_listing_page() {
     );
   }
   $content['sorting'] = drupal_get_form('_ed_get_sorting_options');
-    if(isset($_GET['order'])){
+
+  $sql_order = 'DESC';
+  if(isset($_GET['order'])){
     $order = $_GET['order'];
     switch($order){
       case 'ASC':
         $content['sorting']['select']['#value'] = t('Earliest First');
-      break;
-      case 'DESC':
-        $content['sorting']['select']['#value'] = t('Latest First');
+        $sql_order = 'ASC';
       break;
       case 'title':
         $content['sorting']['select']['#value'] = t('Title (A-Z)');
+        $sql_order = 'title';
       break;
-    } 
-    
-    
-  }else{
-    $order = 'DESC';
+      case 'DESC':
+      default:
+        $content['sorting']['select']['#value'] = t('Latest First');
+        $sql_order = 'DESC';
+      break;
+    }
   }
-  $og_groups = ed_cluster_get_clusters($order);
+
+  $og_groups = ed_cluster_get_clusters($sql_order);
   if (!empty($og_groups)) {
     $nodes = node_load_multiple($og_groups);
     $build = node_view_multiple($nodes);
