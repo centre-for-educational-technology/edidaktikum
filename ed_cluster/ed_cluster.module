@@ -145,7 +145,7 @@ function ed_group_content_listing_access($filler, $gnode, $type){
   return $is_group;
 }
 
-function ed_listing_from_group($filler, $gnode, $type){
+function ed_listing_from_group($filler, $gnode, $type){  
   menu_tree_set_path('main-menu', 'clusters');
 
   // Add settings used for group events calendar
@@ -181,8 +181,20 @@ function ed_listing_from_group($filler, $gnode, $type){
     $type = array($type);
     $type[] = 'ed_answer';
   }
-
-  $content_nids = _ed_get_group_content_by_type($gnode->nid, $type);
+  $nosorting = array('ed_news', 'ed_event', 'ed_forum', 'ed_blog', 'ed_answer');
+  if(is_array($type)){
+    $content_nids = _ed_get_group_content_by_type($gnode->nid, $type);
+  }else{
+    if(!in_array($type, $nosorting)){
+      $content['sorting'] = drupal_get_form('_ed_get_sorting_options');
+      $sql_order = ed_get_sorting_type($content);
+      $content_nids = _ed_get_group_content_by_type($gnode->nid, $type, $sql_order);
+    }else{
+      $content_nids = _ed_get_group_content_by_type($gnode->nid, $type);
+    }
+  }
+  
+  //$content_nids = _ed_get_group_content_by_type($gnode->nid, $type);
   $nodes = node_load_multiple($content_nids);
   $build = node_view_multiple($nodes);
   $build['pager'] = array(
@@ -413,17 +425,24 @@ function _ed_get_group_content($gid){
   return $result;
 }
 
-function _ed_get_group_content_by_type($gid, $type){
-  $query = db_select('node', 'n');
+function _ed_get_group_content_by_type($gid, $type, $order = 'DESC'){
+  $query = db_select('node', 'n')
+      ->extend('PagerDefault');
   $query->join('og_membership', 'ogm', "n.nid = ogm.etid AND ogm.entity_type = 'node'");
-  $query->fields('n', array('nid'))
+  $query->fields('n', array('nid')) 
       ->condition('ogm.gid', $gid)
       ->condition('n.nid', $gid, '!=')
       ->condition('n.type', $type)
       ->addTag('node_access')
-      ->orderBy('n.sticky', 'DESC')
-      ->orderBy('n.created', 'DESC')
-      ->distinct();
+      ->orderBy('n.sticky', 'DESC');
+  if($order == 'title'){
+    $query->orderBy('n.title', 'ASC');
+  }else{
+    $query->orderBy('n.created', $order);
+  }
+  
+  $query->limit(ed_get_paging_nr());
+  $query->distinct();
   $result = $query->execute()->fetchCol();
   return $result;
 }
@@ -771,27 +790,8 @@ function ed_cluster_listing_page() {
     );
   }
   $content['sorting'] = drupal_get_form('_ed_get_sorting_options');
-
-  $sql_order = 'DESC';
-  if(isset($_GET['order'])){
-    $order = $_GET['order'];
-    switch($order){
-      case 'ASC':
-        $content['sorting']['select']['#value'] = t('Earliest First');
-        $sql_order = 'ASC';
-      break;
-      case 'title':
-        $content['sorting']['select']['#value'] = t('Title (A-Z)');
-        $sql_order = 'title';
-      break;
-      case 'DESC':
-      default:
-        $content['sorting']['select']['#value'] = t('Latest First');
-        $sql_order = 'DESC';
-      break;
-    }
-  }
-
+  $sql_order = ed_get_sorting_type($content);
+  
   $og_groups = ed_cluster_get_clusters($sql_order);
   if (!empty($og_groups)) {
     $nodes = node_load_multiple($og_groups);

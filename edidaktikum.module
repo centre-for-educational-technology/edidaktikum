@@ -266,6 +266,34 @@ function _ed_get_sorting_options_submit($form, &$form_state) {
   drupal_goto(current_path(),array('query' => array('order' => $sortordermn)));
 }
 
+/**
+ * Determine ordering for sql query and modify sorting form.
+ * @param array $content A drupal Form API array of the page content.
+ * @return string Ordering type.
+ */
+function ed_get_sorting_type(&$content){
+  $sql_order = 'DESC';
+  if(isset($_GET['order'])){
+    $order = $_GET['order'];
+    switch($order){
+      case 'ASC':
+        $content['sorting']['select']['#value'] = t('Earliest First');
+        $sql_order = 'ASC';
+      break;
+      case 'title':
+        $content['sorting']['select']['#value'] = t('Title (A-Z)');
+        $sql_order = 'title';
+      break;
+      case 'DESC':
+      default:
+        $content['sorting']['select']['#value'] = t('Latest First');
+        $sql_order = 'DESC';
+      break;
+    }
+  }
+  return $sql_order;
+}
+
 
 
 /**
