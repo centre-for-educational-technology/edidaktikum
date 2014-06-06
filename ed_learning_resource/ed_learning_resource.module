@@ -34,6 +34,47 @@ function ed_learning_resource_node_view($node, $view_mode, $langcode){
   if($view_mode == 'teaser'){
     $node->picture = 0;
     drupal_add_css('ul.links.inline {display: none;}', array('group' => CSS_THEME, 'type' => 'inline'));
+    
+    $viewscount = ed_get_views($node->nid);    
+    $likescount = ed_get_likes($node->nid);
+    $termtype = taxonomy_term_load($node->ed_learning_resource_type[LANGUAGE_NONE][0]['value']);
+    $authtids = array();
+    $authorsforparts = array();
+    if(!empty($node->ed_learning_resource_authors)){
+      foreach($node->ed_learning_resource_authors[LANGUAGE_NONE] as $term){        
+        array_push($authtids, $term['tid']);        
+      }
+      
+      $termauthors = taxonomy_term_load_multiple($authtids);      
+      foreach($termauthors as $author){
+        array_push($authorsforparts, l($author->name, 'resources/type'.$termtype->tid));
+      }
+      $parts = array(
+        l($termtype->name, 'resources/type/'.$termtype->tid),
+        implode(', ', $authorsforparts),
+        format_date(strtotime($node->ed_learning_resource_date[LANGUAGE_NONE][0]['value']), 'short'),
+        t('Views: ').$viewscount,
+        t('Likes: ').$likescount,
+      );
+      
+    }else{
+      $parts = array(
+        l($termtype->name, 'resources/type/'.$termtype->tid),      
+        format_date(strtotime($node->ed_learning_resource_date[LANGUAGE_NONE][0]['value']), 'short'),
+        t('Views: ').$viewscount,
+        t('Likes: ').$likescount,
+      );
+    }
+    
+    
+ 
+    $node->content['metadata'] = array(
+      '#type' => 'markup',
+      '#weight' => 50,
+      '#markup' => implode(' / ', $parts),
+      '#prefix' => '<div class="description">',
+      '#suffix' => '</div>',
+    );
   }
 }
 /*

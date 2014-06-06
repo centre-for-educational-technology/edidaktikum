@@ -723,3 +723,21 @@ function edidaktikum_menu_alter(&$items) {
   }
 }
 
+function ed_get_likes($nid){
+  $likescount = db_select('ed_node_like', 'enl')
+      ->fields('enl', array('uid'))
+      ->condition('enl.nid', $nid)
+      ->countQuery()->execute()->fetchField();
+  
+  return $likescount;
+}
+
+function ed_get_views($nid){
+  $viewscount = db_select('node_counter', 'nc')
+    ->fields('nc', array('totalcount'))
+    ->condition('nid', $nid)
+    ->countQuery()->execute()->fetchField();
+      
+  return $viewscount;
+}
+
