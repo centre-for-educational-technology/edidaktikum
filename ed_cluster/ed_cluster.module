@@ -126,6 +126,14 @@ function ed_cluster_menu() {
     'menu_name' => 'ed-dashboard-menu',
     'type' => MENU_NORMAL_ITEM,
   );
+  $items['clusters/user/autocomplete'] = array(
+    'title' => 'User autocomplete',
+    'page callback' => 'ed_cluster_user_autocomplete',
+    'access callback' => 'user_access',
+    'access arguments' => array('access user profiles'),
+    'type' => MENU_CALLBACK,
+    'file' => 'ed_cluster.pages.inc',
+  );
 
   return $items;
 }
@@ -870,6 +878,11 @@ function ed_cluster_form_alter(&$form, &$form_state, $form_id) {
     if (empty($form['#node']->nid)) {
       drupal_set_title(t('Create Group'));
     }
+  }
+  // Change group user add form autocomplete to our own endpoint.
+  if ('og_ui_add_users' == $form_id) {
+    $form['og_user']['name']['#title'] = t('Full name');
+    $form['og_user']['name']['#autocomplete_path'] = 'clusters/user/autocomplete';
   }
 }
 /**

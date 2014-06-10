@@ -102,3 +102,25 @@ function ed_cluster_get_group_events_ajax($gnode) {
   drupal_json_output($results);
 }
 
+/**
+ * Menu callback; Retrieve a JSON object containing autocomplete suggestions for existing users.
+ */
+function ed_cluster_user_autocomplete($string = '') {
+  $matches = array();
+  if ($string) {
+    //$result = db_select('users')->fields('users', array('name'))->condition('name', db_like($string) . '%', 'LIKE')->range(0, 10)->execute();
+    $query = db_select('users')
+      ->fields('users', array('name'));
+    $query->fields('fn', array('ed_field_full_name_value'));
+    $query->join('field_data_ed_field_full_name', 'fn', 'users.uid = fn.entity_id');
+    $query->condition('fn.ed_field_full_name_value', '%' . db_like($string) . '%', 'LIKE')
+      ->range(0, 10);
+    $result = $query->execute();
+    foreach ($result as $user) {
+      $matches[$user->name] = check_plain($user->ed_field_full_name_value);
+    }
+  }
+
+  drupal_json_output($matches);
+}
+
