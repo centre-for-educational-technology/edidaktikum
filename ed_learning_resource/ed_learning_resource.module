@@ -158,6 +158,7 @@ function _ed_get_learning_resources($order){
   $query = db_select('node', 'n')
     ->extend('PagerDefault')
     ->fields('n', array('nid'))
+    ->addTag('node_access')
     ->condition('n.type', 'ed_learning_resource')
     ->condition('n.status', 1);
   if($order == 'title'){
