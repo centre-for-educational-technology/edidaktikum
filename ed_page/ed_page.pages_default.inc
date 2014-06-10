@@ -36,7 +36,7 @@ $handler->weight = 4;
 $handler->conf = array(
   'title' => 'page',
   'no_blocks' => 0,
-  'pipeline' => 'standard',
+  'pipeline' => 'mlpanels_renderer_standard',
   'body_classes_to_remove' => '',
   'body_classes_to_add' => '',
   'css_id' => '',
@@ -335,9 +335,54 @@ $display->panels = array();
   $pane->uuid = '41559822-519c-4791-9335-855b12220b80';
   $display->content['new-41559822-519c-4791-9335-855b12220b80'] = $pane;
   $display->panels['right'][5] = 'new-41559822-519c-4791-9335-855b12220b80';
+  $pane = new stdClass();
+  $pane->pid = 'new-247cd96d-ba82-4303-9b20-9845a12f0b58';
+  $pane->panel = 'right';
+  $pane->type = 'entity_field_extra';
+  $pane->subtype = 'node:ed_page_revision';
+  $pane->shown = TRUE;
+  $pane->access = array();
+  $pane->configuration = array(
+    'mlpanels' => array(
+      'und' => array(
+        'view_mode' => 'full',
+        'context' => 'argument_entity_id:node_1',
+        'override_title' => 0,
+        'override_title_text' => 'Last Modified',
+      ),
+      'et' => array(
+        'view_mode' => 'full',
+        'context' => 'argument_entity_id:node_1',
+        'override_title' => 1,
+        'override_title_text' => 'Viimati Muudetud',
+      ),
+      'en' => array(
+        'view_mode' => 'full',
+        'context' => 'argument_entity_id:node_1',
+        'override_title' => 1,
+        'override_title_text' => 'Last Modified',
+      ),
+    ),
+    'view_mode' => 'full',
+    'context' => 'argument_entity_id:node_1',
+    'override_title' => 0,
+    'override_title_text' => '',
+  );
+  $pane->cache = array();
+  $pane->style = array(
+    'settings' => NULL,
+  );
+  $pane->css = array();
+  $pane->extras = array();
+  $pane->position = 6;
+  $pane->locks = array();
+  $pane->uuid = '247cd96d-ba82-4303-9b20-9845a12f0b58';
+  $display->content['new-247cd96d-ba82-4303-9b20-9845a12f0b58'] = $pane;
+  $display->panels['right'][6] = 'new-247cd96d-ba82-4303-9b20-9845a12f0b58';
 $display->hide_title = PANELS_TITLE_FIXED;
 $display->title_pane = 'new-33e24a4a-4fcf-4b74-8d52-58daae620d88';
 $handler->conf['display'] = $display;
+
 
   return $handler;
 }

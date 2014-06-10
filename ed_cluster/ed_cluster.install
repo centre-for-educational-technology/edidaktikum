@@ -275,3 +275,16 @@ function ed_cluster_update_7103(&$sandbox) {
   ed_cluster_node_add_field_content();
 }
 
+/**
+ * Grant edit any page post permissions to group members
+ */
+function ed_cluster_update_7104(&$sandbox){
+  $roles = og_roles('node', 'ed_cluster');
+    foreach($roles as $key=>$value){
+      if($value == 'member'){
+        $rid = $key;
+      }
+    }
+  og_role_grant_permissions($rid, $permissions = array('update any ed_page content'));
+}
+

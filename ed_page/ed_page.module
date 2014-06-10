@@ -47,3 +47,50 @@ function ed_page_ctools_plugin_api() {
   }
 }
 
+
+/**
+ * Implements hook_node_view().
+ */
+
+function ed_page_node_view($node, $view_mode, $langcode){
+  switch($node->type){
+    case 'ed_page':
+      $data = _ed_page_get_revision_uid_and_timestamp($node->nid);
+      $user = user_load($data['uid']);
+      $username = $user->ed_field_full_name[LANGUAGE_NONE][0]['safe_value'];
+      $datets = $data['timestamp'];      
+      if($view_mode == 'full'){        
+        $node->content['ed_page_revision'] = array(
+          '#type' => 'item',
+          '#label_display' => 'above',
+          '#markup' => format_date($datets, 'long').' '.t('By').' '.l($username, 'user/'.$data['uid']),
+        );
+      }
+    break;
+  }
+}
+
+/**
+ * Implements hook_field_extra_fields().
+ */
+function ed_page_field_extra_fields(){
+  $extra['node']['ed_page']['display'] = array(
+    'ed_page_revision' => array(
+      'label' => t('Node Type Page Revision container'),
+      'description' => t('Add ed_page revision info to panels'),
+      'weight' => 10,
+    ),
+  );
+  return $extra;
+}
+
+function _ed_page_get_revision_uid_and_timestamp($nid){
+  $query = db_select('node_revision', 'nr')
+      ->condition('nr.nid', $nid)
+      ->fields('nr', array('uid', 'timestamp'));
+  $result = $query->execute()->fetchAssoc();
+  return $result;
+  
+  
+}
+
