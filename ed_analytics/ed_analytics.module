@@ -36,13 +36,8 @@ function ed_analytics_page(){
   
   $content = array();
   global $user;
-  
-  // dpm($user);
-  
-  $account = user_load($user->uid);
-  // dpm($account);
+  $account = user_load($user->uid);  
   $groups = og_get_entity_groups();
-  
   
   if(empty($groups)){
     $content['groups-not-found'] = array(
@@ -51,25 +46,23 @@ function ed_analytics_page(){
       '#markup' => t('Hi! Nothing to show here at the moment. Join some group to see latest updates from it.'),
       '#suffix' => '</div>',
     );
+    
   }
   else{
-    $content['heading'] = array(
-      '#type' => 'markup',
-      '#prefix' => '<div class="ed-analytics-heading">',
-      '#markup' => '<h2>'.t('My Courses').'</h2>',
-      '#suffix' => '</div>',
-    );
+    
+    
     $nodes = node_load_multiple($groups['node']);
-
-    foreach($nodes as $node){
+    
+    foreach($nodes as $node){          
       $tasknids = _ed_analytics_get_group_tasks($node->nid);
+      $isAdmin = og_user_access('node', $node->nid, "administer group");
+      if($isAdmin){
+        break;
+      }
       
       if(!empty($tasknids)){
         $counttasks = count($tasknids);
-        
         $countanswers = count(_ed_analytics_get_user_answers($node->nid, $user->uid));
-        
-        
         $progress = round($countanswers/$counttasks*100);
       }else{
         $counttasks = 0;
@@ -80,20 +73,32 @@ function ed_analytics_page(){
       $progressbar = '<div class="span4"><div class="progress progress-success"><div class="bar" style="width: '.$progress.'%;"></div></div></div>';        
       $info = '<div class="span4"><div class="description">'.$progress.'% '.t('done').' '.$countanswers.'/'.$counttasks.'</div></div>';
       $row = $group.$progressbar.$info;        
-      $content[$node->nid] = array(
+      $content['progress'][$node->nid] = array(
         '#type' => 'markup',
         '#prefix' => '<div class="row">',
         '#markup' => $row,
         '#suffix' => '</div>',
+        '#weight' => 25,
       );
-      
     }
-   
-  }
-  
+    if(empty($content['progress'])){
+      $content['groups-not-found'] = array(
+      '#type' => 'markup',
+      '#prefix' => '<div class="ed-message ed-message-notice">',
+      '#markup' => t('Hi! Nothing to show here at the moment. Join some group to see latest updates from it.'),
+      '#suffix' => '</div>',
+    );
+    }else{
+      $content['heading'] = array(
+        '#type' => 'markup',
+        '#prefix' => '<div class="ed-analytics-heading">',
+        '#markup' => '<h2>'.t('My Courses').'</h2>',
+        '#suffix' => '</div>',
+        '#weight' => -5,
+      );
+    }
+  }  
   return $content;
-  
-  
 }
 function _ed_analytics_get_user_answers($gid, $uid){
   $query = db_select('node', 'n');
