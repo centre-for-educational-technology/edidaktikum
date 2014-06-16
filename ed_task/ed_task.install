@@ -26,7 +26,7 @@ function ed_task_install() {
   ed_task_add_og_audience();
 
   //Disable comments
-  variable_set('comment_ed_task', COMMENT_NODE_OPEN);
+  variable_set('comment_ed_task', COMMENT_NODE_CLOSED);
 }
 
 function ed_task_add_og_audience() {
@@ -83,13 +83,44 @@ function ed_task_uninstall() {
 }
 
 /**
- * Enable comments for ed_task.
+ * Add to_group_member field instance to ed_task.
+ * Also removes to_user instance and field.
+ */
+function ed_task_update_7101(&$sandbox) {
+  $instances = _ed_task_installed_instances();
+  $instance = $instances[ED_FIELD_TO_GROUP_MEMBER];
+  $instance['entity_type'] = 'node';
+  $instance['bundle'] = 'ed_task';
+  field_create_instance($instance);
+
+  $field_name = 'field_to_user';
+  if ($instance = field_info_instance('node', $field_name, 'ed_task')) {
+    field_delete_instance($instance);
+  }
+  if ($field = field_info_field($field_name)) {
+    field_delete_field($field_name);
+  }
+}
+
+/**
+ * Make competence instace start collapsed.
+ */
+function ed_task_update_7102(&$sandbox) {
+  $field_name = 'ed_field_competence';
+  if ($instance = field_info_instance('node', $field_name, 'ed_task')) {
+    $instance['widget']['settings']['start_minimized'] = TRUE;
+    field_update_instance($instance);
+  }
+}
+
+/**
+ * Disable comments for ed_task.
  * Also update any existing ones to comply.
  */
-function ed_task_update_7100(&$sandbox) {
+function ed_task_update_7103(&$sandbox) {
   $node_type = 'ed_task';
-  // Allowing comments on any new ed_task nodes by default
-  variable_set('comment_ed_task', COMMENT_NODE_OPEN);
+  // Disable comments on any new ed_task nodes by default
+  variable_set('comment_ed_task', COMMENT_NODE_CLOSED);
 
   // Initialize batch
   if (!isset($sandbox['total'])) {
@@ -120,7 +151,7 @@ function ed_task_update_7100(&$sandbox) {
     $nodes = node_load_multiple($nids, NULL, TRUE);
 
     foreach ($nodes as $node) {
-      $node->comment = COMMENT_NODE_OPEN;
+      $node->comment = COMMENT_NODE_CLOSED;
       node_save($node);
     }
   }
@@ -132,37 +163,6 @@ function ed_task_update_7100(&$sandbox) {
     return t('Updated @count nodes of type %type.', array('@count' => $sandbox['progress'], '%type' => $node_type));
   } else {
     $sandbox['#finished'] = $sandbox['progress'] / $sandbox['total'];
-  }
-}
-
-/**
- * Add to_group_member field instance to ed_task.
- * Also removes to_user instance and field.
- */
-function ed_task_update_7101(&$sandbox) {
-  $instances = _ed_task_installed_instances();
-  $instance = $instances[ED_FIELD_TO_GROUP_MEMBER];
-  $instance['entity_type'] = 'node';
-  $instance['bundle'] = 'ed_task';
-  field_create_instance($instance);
-
-  $field_name = 'field_to_user';
-  if ($instance = field_info_instance('node', $field_name, 'ed_task')) {
-    field_delete_instance($instance);
-  }
-  if ($field = field_info_field($field_name)) {
-    field_delete_field($field_name);
-  }
-}
-
-/**
- * Make competence instace start collapsed.
- */
-function ed_task_update_7102(&$sandbox) {
-  $field_name = 'ed_field_competence';
-  if ($instance = field_info_instance('node', $field_name, 'ed_task')) {
-    $instance['widget']['settings']['start_minimized'] = TRUE;
-    field_update_instance($instance);
   }
 }
 
