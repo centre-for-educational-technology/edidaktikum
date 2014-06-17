@@ -494,7 +494,7 @@ function _ed_learning_resource_language_list() {
 	  ->execute();
   $options = array();
   foreach($results as $term) {
-	  $options[$term->tid] = $term->name;
+	  $options[$term->tid] = t($term->name);
   }
   return $options;
 }
