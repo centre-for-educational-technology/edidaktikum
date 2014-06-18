@@ -120,8 +120,7 @@ function ed_portfolio_theme($existing, $type, $theme, $path) {
 
 function ed_portfolio_ctools_render_alter(&$info, &$page, &$context){
   if($context['contexts']['argument_entity_id:node_1']->data->type == 'ed_portfolio'){
-    if(!empty($context['contexts']['argument_entity_id:node_1']->data->ed_field_cover_image)){
-      dpm($context);
+    if(!empty($context['contexts']['argument_entity_id:node_1']->data->ed_field_cover_image)){      
       $imguri = $context['contexts']['argument_entity_id:node_1']->data->ed_field_cover_image[LANGUAGE_NONE][0]['uri'];
       $imgurl = file_create_url($imguri);    
       drupal_add_css('.node-type-ed-portfolio {background: white url('.$imgurl.') no-repeat;}',$option['type'] = 'inline');
