@@ -191,3 +191,47 @@ function ed_portfolio_delete_ed_portfolio_node_type() {
   }  
 }
 
+/**
+ * Creates ed_field_cover_image field and instanciates it on ed_portfolio
+ */
+
+
+function ed_portfolio_update_7100(&$sandbox){
+  $field_name = 'ed_field_cover_image';
+  if (!field_info_field($field_name)) {
+    $field = array(
+      'field_name' => $field_name,
+      'type' => 'image',
+      'entity_types' => array('node'),
+      'cardinality' => 1,
+      'locked' => FALSE,
+      'settings' => array(
+        'uri_scheme' => 'public',
+        'default_image' => 0,
+      ),
+    );
+    $field = field_create_field($field);
+  }
+  
+  $field_name = 'ed_field_cover_image';
+  $field = field_info_field($field_name);
+  if (!empty($field) && !field_info_instance('node', $field_name, 'ed_portfolio')) {
+    $instance = array(
+      'field_name' => $field_name,
+      'entity_type' => 'node',
+      'bundle' => 'ed_portfolio',
+      'label' => t('Cover image'),
+      'description' => '',
+      'settings' => array(
+        'file_directory' => 'ed_portfolio_cover_images',
+      ),
+      'widget' => array(
+        'type' => 'image_image',
+      ),
+      'required' => FALSE,
+    );
+    field_create_instance($instance);
+  }
+  
+}
+
