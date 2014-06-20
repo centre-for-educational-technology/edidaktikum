@@ -195,7 +195,30 @@ function _ed_get_due_date($nid) {
   return $result;
 }
 
-
+/**
+ * Implements hook_node_view().
+ */
+function ed_blog_node_view($node, $view_mode, $langcode){
+  if($view_mode == 'teaser'){
+    if(in_array($node->type, array('ed_blog', 'ed_answer'))){
+      $type = $node->type=='ed_blog' ? $type = t('Post') : node_type_get_name($node->type);
+      $author = user_load($node->uid);
+      $userfullname = edidaktikum_get_full_name_for_user_account($author);   
+      $parts = array(
+        $type,
+        l($userfullname, 'user/' . $author->uid),
+        format_date($node->created, 'short'),
+      );
+      $node->content['metadata'] = array(
+        '#type' => 'markup',
+        '#weight' => 50,
+        '#markup' => implode(' / ', $parts),
+        '#prefix' => '<div class="description">',
+        '#suffix' => '</div>',
+    );
+    }
+  }
+}
 
 
 /**
