@@ -324,7 +324,17 @@ function ed_cluster_node_view($node, $view_mode, $langcode){
           foreach ($recnt_content_nodes as $single) {
             $single_action = ($single->created == $single->changed) ? 'created' : 'changed';
               
-            $single_type = node_type_get_name($single);
+            $single_type = $single->type;
+            
+            if($single_type == 'ed_task'){
+              $single_type = t('Task');
+            }
+            else if($single_type == 'ed_news'){
+              $single_type = t('news');
+            }
+            else{
+              $single_type = node_type_get_name($single);
+            }
             // Determine the user who really acted in case of changed
             if ('changed' == $single_action) {
               $query = db_select('node_revision', 'nrv')
@@ -354,11 +364,11 @@ function ed_cluster_node_view($node, $view_mode, $langcode){
 
             if ('created' == $single_action) {
               $items[] = array(
-                'data' => t('!name added !node @time', array('!name' => $single_name, '!node' => $single_title, '@time' => format_date($single->created, 'short'))).' ('.$single_type.')',
+                'data' => t('!name added !node @time', array('!name' => $single_name, '!node' => $single_title, '@time' => format_date($single->created, 'short'))).' ('.ucfirst($single_type).')',
               );
             } else {
               $items[] = array(
-                'data' => t('!name changed !node @time', array('!name' => $single_name, '!node' => $single_title, '@time' => format_date($single->changed, 'short'))).' ('.$single_type.')',
+                'data' => t('!name changed !node @time', array('!name' => $single_name, '!node' => $single_title, '@time' => format_date($single->changed, 'short'))).' ('.ucfirst($single_type).')',
               );
 
             }
