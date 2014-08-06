@@ -294,7 +294,7 @@ function ed_cluster_node_view($node, $view_mode, $langcode){
             
             $type_nodes_count = _ed_get_group_content_by_type_count($node->nid, $type);
             
-            $headingmarkup =  _ed_cluster_plural_title_for_group_node_type($type) . ' (' . $type_nodes_count . ')';
+            $headingmarkup =  _ed_cluster_plural_title_for_group_node_type($type) . ' ('.t('Total') . ': ' . $type_nodes_count . ')';
             if ($show_link) {
               $headingmarkup = l($headingmarkup, _ed_cluster_destination_for_group_node_type($node, $type));
             }
