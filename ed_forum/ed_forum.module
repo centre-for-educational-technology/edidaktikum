@@ -46,3 +46,50 @@ function ed_forum_ctools_plugin_api() {
     return array("version" => 1);
   }
 }
+
+
+
+/**
+ * Implements hook_node_view().
+ */
+function ed_forum_node_view($node, $view_mode, $langcode){
+  if($node->type == 'ed_forum' && $view_mode == 'teaser'){
+    //dpm($node);
+    $author = user_load($node->uid);
+    //dpm($author);
+    $authorname = $author->name;
+    $commentspart = ed_forum_get_comment_count($node->nid);
+    if($commentspart == 1){
+      $commentspart = l(ed_forum_get_comment_count($node->nid).' '.t('answer'), 'node/'.$node->nid);
+    }else{
+      $commentspart = l(ed_forum_get_comment_count($node->nid).' '.t('answers'), 'node/'.$node->nid);
+    }
+    $parts = array(
+      l($author->ed_field_full_name[LANGUAGE_NONE][0]['value'], 'users/'.$node->uid),
+      format_date($node->created,'custom','d/m/Y'),
+      $commentspart,      
+    );
+    $node->content['metadata'] = array(
+      '#type' => 'markup',
+      '#weight' => 50,
+      '#markup' => implode(' / ', $parts),
+      '#prefix' => '<div class="description">',
+      '#suffix' => '</div>',
+    );
+  }
+}
+
+function ed_forum_get_comment_count($nid){
+  $comment_count = db_query
+    (
+      'SELECT COUNT(cid) FROM comment WHERE status = :one AND nid = :nid',
+      array
+      (
+        ':one' =>1,
+        ':nid' => $nid,
+      )
+    )->fetchField();
+  return $comment_count;
+}
+
+
