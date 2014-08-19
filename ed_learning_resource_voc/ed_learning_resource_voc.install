@@ -141,3 +141,11 @@ function _create_term($vocab, $term, $desc='', $weight = 0) {
 	taxonomy_term_save($term_obj);
   }
 }
+
+
+/**
+ * Adds new Learning Resource type term (other) to Learning Resource type vocabulary
+ */
+function ed_learning_resource_voc_update_7100(&$sandbox){
+  _create_term('ed_learning_resource_type_voc', t('other'), t('other'));
+}
