@@ -122,17 +122,21 @@ function ed_task_listing_page() {
   
   
   $per_page = ed_get_paging_nr();
-  $touser = _ed_get_tasks_to_user();
-  
-  foreach($touser as $key => $value){
-    $tousernids[] = (string)$key;
+  $touser = _ed_get_tasks_to_user();  
+  if(!empty($touser)){
+    foreach($touser as $key => $value){
+      $tousernids[] = (string)$key;
+    }
+  }
+
+  $togroups = _ed_get_group_tasks();
+  if(isset($tousernids)){
+    $tasknidstouser = array_merge($tousernids, $togroups);
+    $tasknidstouser = array_unique($tasknidstouser);
+  }else{
+    $tasknidstouser = $togroups;
   }
   
-  
-  
-  $togroups = _ed_get_group_tasks();
-  $tasknidstouser = array_merge($tousernids, $togroups);
-  $tasknidstouser = array_unique($tasknidstouser);
   
   $tasknodes = node_load_multiple($tasknidstouser);
   
