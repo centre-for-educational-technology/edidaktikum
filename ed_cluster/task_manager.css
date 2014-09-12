@@ -1,5 +1,5 @@
 .answered{
-    background-color: #60b560;
+    background-color: #63b463;
 }
 .answered a {
 	display: block;
@@ -9,8 +9,44 @@
 	text-decoration: none;
 }
 .unanswered{
-    background-color: #f9f9f9;
+    
 }
 .can-not-be-answered {
 	background-color: #666;
+}
+
+.rejected{
+    background-color:  #e96030;
+}
+.unchecked{
+    background-color: #fbc638;
+}
+
+.rejected a {
+	display: block;
+	text-decoration: none;
+}
+.rejected a:hover {
+	text-decoration: none;
+}
+.unchecked{
+    
+}
+.unchecked a {
+	display: block;
+	text-decoration: none;
+}
+.unchecked a:hover {
+	text-decoration: none;
+}
+
+.accepted{
+    background-color: #63b463;
+}
+.accpeted a {
+	display: block;
+	text-decoration: none;
+}
+.accepted a:hover {
+	text-decoration: none;
 }

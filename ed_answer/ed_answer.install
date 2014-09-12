@@ -235,3 +235,63 @@ function ed_answer_update_7101(&$sandbox) {
   }
 }
 
+/**
+ * Add Status field to ed_answer comment.
+ */
+
+function ed_answer_update_7109(&$sandbox){
+  $field = _ed_answer_create_status_field();
+  field_create_field($field);
+  $instance = _ed_answer_create_status_field_instance();
+  field_create_instance($instance);
+}
+
+function _ed_answer_create_status_field(){
+  $field = array(
+    'field_name' => 'ed_answer_status',
+	  'label' => t('Type'),
+	  'type' => 'list_text',
+	  'cardinality' => 1,
+	  'foreign keys' => array(),
+	  'indexes' => array(
+	    'value' => array(
+	      0 => 'value',
+	    ),
+	  ),
+	  'module' => 'list',
+	  'settings' => array(
+	    'allowed_values' => _ed_answer_status_list(),
+	  ),
+  );
+  return $field;
+}
+
+
+
+function _ed_answer_status_list(){
+  $statuses = array(
+      'unchecked' => t('Unchecked'), 
+      'rejected' => t('Rejected'), 
+      'accepted' => t('Accepted'),
+    );
+  return $statuses;
+}
+
+function _ed_answer_create_status_field_instance(){
+  $instance = array(
+    'field_name' => 'ed_answer_status',
+	  'label' => t('Status'),
+    'entity_type' => 'comment',
+    'bundle' => 'comment_node_ed_answer',
+	  'description' => t(''),
+	  'default_value' => array(array('value' => 'unchecked')),
+	  'widget' => array(
+	    'active' => 1,
+	    'module' => 'options',
+	    'settings' => array(),
+	    'type' => 'options_select',
+	  ),
+  );
+  return $instance;
+}
+

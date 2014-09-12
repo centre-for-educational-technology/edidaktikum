@@ -240,17 +240,64 @@ function ed_answer_form_alter(&$form, &$form_state, $form_id){
       }
     }
 
+  }else if($form_id == 'comment_node_ed_answer_form'){    
+    $isgadmin = ed_answer_is_group_manager($form['#node']->og_group_ref[LANGUAGE_NONE][0]['target_id']);
+    if(!$isgadmin){
+      $form['ed_answer_status']['#access'] = FALSE;    
+    }else{
+      
+     
+    }
   }
 }
 
-  function ed_answer_check_tid_parents($tid){
+
+
+function _ed_answer_get_user_comments($nid){
+  global $user;
+  $query = db_select('comment', 'c');
+  $query->fields('c', array('cid'))
+      ->condition('c.uid', $user->uid)
+      ->condition('c.nid', $nid);
+  $result = $query->execute()->fetchCol();
+  return $result;
+}
+function ed_answer_comment_insert($comment){
+  
+  
+  $usercomments = comment_load_multiple(_ed_answer_get_user_comments($comment->nid));
+  
+  
+  foreach($usercomments as $usercomment){
+    $usercomment->ed_answer_status = $comment->ed_answer_status;
+    comment_save($usercomment);
+  }
+  
+}
+
+function ed_answer_is_group_manager($gid){
+  global $user;
+  $group = node_load($gid);
+  if($user->uid == $group->uid){
+    return true;
+  }
+  if(in_array(OG_ADMINISTRATOR_ROLE, og_get_user_roles('node', $gid, $user->uid, FALSE))){
+    return true;
+  }
+  if (in_array('administrator', $user->roles)) {
+    return true;
+  }
+  return false;
+}
+
+function ed_answer_check_tid_parents($tid){
   $query = db_select('taxonomy_term_hierarchy', 't')
     ->condition('t.tid', $tid);
   $query->fields('t', array('parent'));
   $result = $query->execute()->fetchCol();
   return $result[0];
 }
-
+ 
 
 
 function ed_answer_check_tid_parent($tid){

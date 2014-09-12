@@ -597,17 +597,40 @@ function ed_task_manager($test, $node){
         $tmp_data = array('data' => '', 'class' => '');
 
         if (_ed_check_if_answered($member->uid, $node_single->nid)) {
-          $tmp_answer_nid = _ed_get_answer_nid($member->uid, $node_single->nid);
+          $tmp_answer_nid = _ed_get_answer_nid($member->uid, $node_single->nid);                   
           $tmp_data['data'] = l('&nbsp;', 'node/' . $tmp_answer_nid[0], array('html' => TRUE));
-          $tmp_data['class'] = 'answered';
+          $status = _ed_check_if_accepted($tmp_answer_nid[0]);          
+          if(empty($status)){
+            $tmp_data['class'] = 'unchecked';
+            $tmp_data['title'] = t('Unchecked');
+          }else{
+            switch($status[0]){
+              case('accepted'):
+                $tmp_data['class'] = 'answered';
+                $tmp_data['title'] = t('Accepted');
+              break;
+              case('rejected'):
+                $tmp_data['class'] = 'rejected';
+                $tmp_data['title'] = t('Rejected');                
+              break;
+              case('unchecked'):
+                $tmp_data['class'] = 'unchecked';
+                $tmp_data['title'] = t('Unchecked');
+              break;
+            }
+          }
+          
         } else {
           $tmp_data['class'] = 'unanswered';
+          $tmp_data['title'] = t('Not answered');
           if (!empty($node_single->{ED_FIELD_TO_GROUP_MEMBER}[LANGUAGE_NONE])) {
             if (!in_array($member->uid, array_map(function($element) { return $element['target_id']; }, $node_single->{ED_FIELD_TO_GROUP_MEMBER}[LANGUAGE_NONE]))) {
               $tmp_data['class'] = 'can-not-be-answered';
+              $tmp_data['title'] = t('Can not be answered');
             }
           }
         }
+        
 
         $rows[$index]['data'][$node_single->nid] = $tmp_data;
       }
@@ -637,12 +660,24 @@ function _ed_check_if_answered($uid, $tnid){
   $query->condition('ref.field_ref_to_task_target_id', $tnid);
   $result = $query->execute()->fetchCol();
   if(!empty($result)){
+    
     return TRUE;
   } else {
     return FALSE;
   }
   
   
+}
+
+function _ed_check_if_accepted($answer){
+
+  $query = db_select('comment', 'c');
+  $query->join('field_data_ed_answer_status', 's', 'c.cid = s.entity_id');
+  $query->fields('s',array('ed_answer_status_value'));
+  $query->condition('c.nid', $answer);
+  $result = $query->execute()->fetchCol();
+      
+  return $result;
 }
 
 /*
