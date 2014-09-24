@@ -35,6 +35,13 @@ function edidaktikum_home_page() {
     '#type' => 'markup',
     '#markup' => variable_get('ed_home_page_intro_text', ''),
   );
+  if(!(user_is_logged_in())){
+    $content['intro']['login'] = Array(
+      '#type' => 'markup',
+      '#markup' => '<div class="login-center">'.l(t('Sign in / Register'), '/user').'</div>',
+    );
+  }
+  
 
   $content['latest-content'] = array(
     '#type' => 'container',
