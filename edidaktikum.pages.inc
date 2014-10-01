@@ -12,6 +12,18 @@
 function edidaktikum_home_page() {
 
   drupal_set_title('');
+  
+  $content['intro-text']['text'] = array(
+    '#type' => 'markup',
+    '#markup' => '<div class="login-intro-text">'.variable_get('ed_home_page_intro_text', '').'</div>',
+  );
+
+  if(!(user_is_logged_in())){
+    $content['login'] = Array(
+      '#type' => 'markup',
+      '#markup' => '<div class="login-center">'.l(t('Sign in / Register'), 'user').'</div>',
+    );
+  }
 
   $content['intro'] = array(
     '#type' => 'container',
@@ -24,6 +36,7 @@ function edidaktikum_home_page() {
     '#type' => 'markup',
     '#markup' => '<div id="img"></div>',
   );
+
   
   $content['intro']['intro-text'] = array(
     '#type' => 'container',
@@ -31,17 +44,6 @@ function edidaktikum_home_page() {
       'id' => 'intro-text',
     ),
   );
-  $content['intro']['intro-text']['text'] = array(
-    '#type' => 'markup',
-    '#markup' => variable_get('ed_home_page_intro_text', ''),
-  );
-  if(!(user_is_logged_in())){
-    $content['intro']['login'] = Array(
-      '#type' => 'markup',
-      '#markup' => '<div class="login-center">'.l(t('Sign in / Register'), '/user').'</div>',
-    );
-  }
-  
 
   $content['latest-content'] = array(
     '#type' => 'container',
