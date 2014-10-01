@@ -263,16 +263,48 @@ function _ed_answer_get_user_comments($nid){
   return $result;
 }
 function ed_answer_comment_insert($comment){
-  
-  
-  $usercomments = comment_load_multiple(_ed_answer_get_user_comments($comment->nid));
-  
-  
-  foreach($usercomments as $usercomment){
-    $usercomment->ed_answer_status = $comment->ed_answer_status;
-    comment_save($usercomment);
+  if($comment->node_type=='comment_node_ed_answer'){
+    $usercomments = comment_load_multiple(_ed_answer_get_user_comments($comment->nid));
+    foreach($usercomments as $usercomment){
+      $usercomment->ed_answer_status = $comment->ed_answer_status;
+      comment_save($usercomment);
+    }
+    $node = node_load($comment->nid); 
+    $task = node_load($node->field_ref_to_task[LANGUAGE_NONE][0]);   
+    $recipient = user_load($node->uid);
+    $teacher = user_load($comment->uid);
+    $teacher_fullname = edidaktikum_get_full_name_for_user_account($teacher);
+    $language = user_preferred_language($recipient);
+    $params = array(
+      'fullname' => $teacher_fullname,
+      'taskname' => $task->title,      
+      'answerurl' => url('node/' . $node->nid, array('absolute' => TRUE)),
+      'status' => $comment->ed_answer_status[LANGUAGE_NONE][0]['value'],
+    );
+    drupal_mail('ed_answer', 'answer_status_modified', $recipient->mail, $language, $params, 'no-reply@edidaktikum.ee', TRUE);
   }
   
+  
+}
+
+function ed_answer_mail($key, &$message, $params){
+  if ('answer_status_modified' == $key)  {
+    $options = array('langcode' => $message['language']->language);    
+    switch($params['status']){      
+      case 'accepted':
+        $action = t('accepted');
+        break;
+      case 'rejected':
+        $action = t('rejected');
+        break;
+      case 'unchecked':
+      default:
+        $action = t('commented');
+        break;
+    }
+    $message['subject'] = t('@fullname @action your answer to task @taskname', array('@fullname' => $params['fullname'],'@action' => $action, '@taskname' => $params['taskname']), $options);
+    $message['body'][] = t('View your answer: @answerurl', array('@answerurl' => $params['answerurl']), $options);
+  }
 }
 
 function ed_answer_is_group_manager($gid){
