@@ -4,14 +4,14 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2014-06-19 12:12+0300\n"
-"PO-Revision-Date: 2014-06-19 12:12+0300\n"
+"POT-Creation-Date: 2014-10-01 16:15+0300\n"
+"PO-Revision-Date: 2014-10-01 16:15+0300\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+"Plural-Forms: nplurals=2; plural=((n==1)?(0):1);\n"
 
 #: field:ed_field_private_comment:#allowed_values:1
 msgctxt "ed_field_private_comment:#allowed_values:1"
@@ -115,6 +115,31 @@ msgstr ""
 #: field:ed_field_to_group_member:ed_file:label
 msgctxt "ed_field_to_group_member:ed_file:label"
 msgid "Specify user"
+msgstr ""
+
+#: field:ed_answer_status:#field:label
+msgctxt "ed_answer_status:#field:label"
+msgid "Type"
+msgstr ""
+
+#: field:ed_answer_status:#allowed_values:unchecked
+msgctxt "ed_answer_status:#allowed_values:unchecked"
+msgid "Unchecked"
+msgstr ""
+
+#: field:ed_answer_status:#allowed_values:rejected
+msgctxt "ed_answer_status:#allowed_values:rejected"
+msgid "Rejected"
+msgstr ""
+
+#: field:ed_answer_status:#allowed_values:accepted
+msgctxt "ed_answer_status:#allowed_values:accepted"
+msgid "Accepted"
+msgstr ""
+
+#: field:ed_answer_status:comment_node_ed_answer:label
+msgctxt "ed_answer_status:comment_node_ed_answer:label"
+msgid "Status"
 msgstr ""
 
 #: field:comment_body:comment_node_page:label
@@ -1869,4 +1894,9 @@ msgstr "Väljad"
 #: plugins/content_types/node_statistics_and_likes/node_statistics_and_likes.inc:8,  fuzzy
 msgid "eDidaktikum node statistics and likes"
 msgstr "eDidaktikumi statistika"
+
+#: field:ed_field_cover_image:ed_portfolio:label
+msgctxt "ed_field_cover_image:ed_portfolio:label"
+msgid "Cover image"
+msgstr "Taustapilt"
 
