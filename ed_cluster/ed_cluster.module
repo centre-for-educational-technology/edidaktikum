@@ -896,16 +896,16 @@ function ed_cluster_get_clusters($order) {
     ->extend('PagerDefault')
     ->fields('n', array('nid'))
     ->condition('n.status', 1)
-    ->condition('n.type', 'ed_cluster')
-    ->orderBy('sticky', 'DESC');
+    ->condition('n.type', 'ed_cluster');    
   if($order == 'title'){
     $query->orderBy('title', 'ASC');
-  }else{
+    //$query->orderBy('sticky', 'ASC');
+  }else{ 
     $query->orderBy('created', $order);
+    //$query->orderBy('sticky', $order);
   }
-   
-      
-    $query->limit(ed_get_paging_nr());
+     
+  $query->limit(ed_get_paging_nr());
   $nids = $query->execute()->fetchCol();
   return $nids;
 }
