@@ -898,14 +898,12 @@ function ed_cluster_get_clusters($order) {
     ->condition('n.status', 1)
     ->condition('n.type', 'ed_cluster');    
   if($order == 'title'){
-    $query->orderBy('title', 'ASC');
-    //$query->orderBy('sticky', 'ASC');
+    $query->orderBy('TRIM(title)', 'ASC');
   }else{ 
     $query->orderBy('created', $order);
-    //$query->orderBy('sticky', $order);
   }
-     
   $query->limit(ed_get_paging_nr());
+  
   $nids = $query->execute()->fetchCol();
   return $nids;
 }
