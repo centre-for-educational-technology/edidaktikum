@@ -139,16 +139,21 @@ function ed_task_listing_page() {
   
   
   $tasknodes = node_load_multiple($tasknidstouser);
-  
-  
-  
-  
+ 
   uasort($tasknodes, function($a, $b) {
     $ats = $a->ed_task_due_date[LANGUAGE_NONE][0]['value'];
     $bts = $b->ed_task_due_date[LANGUAGE_NONE][0]['value'];
     if ($ats == $bts) return 0;
     return ($ats < $bts) ? -1 : 1;
   });
+  
+  foreach($tasknodes as $key => $tasknode){
+    if(_is_task_answered($tasknode->nid)){
+      $temp = $tasknode;
+      unset($tasknodes[$key]);
+      array_push($tasknodes, $temp);
+    }
+  }
   
   $current_page = pager_default_initialize(count($tasknodes), $per_page, 2);
   
