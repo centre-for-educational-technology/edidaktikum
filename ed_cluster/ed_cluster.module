@@ -582,8 +582,8 @@ function ed_task_manager($test, $node){
   $header = array(t('Name'));
   $nodes = node_load_multiple($nids);
     
-  foreach(array_values($nodes) as $key => $node_single){    
-    array_push($header, l(t('Task').' '.($key+1), 'node/'.$node_single->nid, array('attributes' => array('title' => $node_single->title))));  
+  foreach(array_values($nodes) as $key => $node_single){
+    array_push($header, l(t('Task').' '.($key+1), 'node/'.$node_single->nid, array('attributes' => array('title' => $node_single->title))).'<br>'.'<div class="description">'.t('Due date: ').format_date($node_single->ed_task_due_date['und'][0]['value'], 'short').'</div>');  
   }
   $rows = array();
   
