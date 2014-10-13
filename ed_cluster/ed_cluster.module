@@ -931,7 +931,7 @@ function ed_cluster_views_api() {
 /**
  * Implements hook_form_alter().
  */
-function ed_cluster_form_alter(&$form, &$form_state, $form_id) {
+function ed_cluster_form_alter(&$form, &$form_state, $form_id) {   
   if ('ed_cluster_node_form' == $form_id) {
     menu_tree_set_path('main-menu', 'clusters');
     if (empty($form['#node']->nid)) {
@@ -943,7 +943,19 @@ function ed_cluster_form_alter(&$form, &$form_state, $form_id) {
     $form['og_user']['name']['#title'] = t('Full name');
     $form['og_user']['name']['#autocomplete_path'] = 'clusters/user/autocomplete';
   }
+  if('og_ui_confirm_subscribe' == $form_id){
+    $group = node_load($form['gid']['#value']);
+    if($group->group_access['und'][0]['value']){
+      array_push($form['#submit'], 'ed_cluster_redirect_after_submit');
+
+    }
+  }
 }
+
+function ed_cluster_redirect_after_submit($form, &$form_state){
+  $form_state['redirect'] = url('clusters', array('absolute' => true));
+}
+
 /**
  * Returns group menu title. Used within an override.
  */
