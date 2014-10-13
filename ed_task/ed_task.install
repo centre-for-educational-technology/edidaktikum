@@ -166,3 +166,13 @@ function ed_task_update_7103(&$sandbox) {
   }
 }
 
+/**
+ * Competence tree - Only lower level objects can be selected
+ */
+function ed_task_update_7104(&$sandbox){
+  $instance = field_info_instance('node', 'ed_field_competence', 'ed_task');
+  $instance['widget']['settings']['leaves_only'] = TRUE;
+  $instance['widget']['settings']['select_parents'] = FALSE;
+  field_update_instance($instance);
+}
+
