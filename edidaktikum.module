@@ -31,6 +31,12 @@ function edidaktikum_init() {
       ), 'setting');
     }
   }
+  if(isset($_COOKIE['Drupal_visitor_edidaktikum_logoff'])){
+    if($_COOKIE['Drupal_visitor_edidaktikum_logoff'] == 1){
+      drupal_set_message(t('Goodbye! You are now logged out from eDidaktikum'));
+      user_cookie_save(array('edidaktikum.logoff' => '0'));
+    }
+  }
 }
 
 /**
@@ -697,6 +703,13 @@ function edidaktikum_comment_view_alter(&$build) {
       'html' => TRUE,
     );
   }
+}
+
+/**
+ * Implements hook_user_logout().
+ */
+function edidaktikum_user_logout($account){
+  user_cookie_save(array('edidaktikum.logoff' => '1'));
 }
 
 /**
