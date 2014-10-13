@@ -53,151 +53,166 @@ function ed_task_menu(){
 
 function ed_task_listing_page() {
   menu_tree_set_path('main-menu', 'dashboard');
-
-  $content = array();
-  $table_suffix = 1;
-
-  if (node_access('create', 'ed_task')) {
-    $content['add-new-container'] = array(
-      '#type' => 'container',
-      '#attributes' => array(
-        'class' => array('ed-add-new-node', 'ed-add-new-ed-task'),
-      ),
-    );
-    $content['add-new-container']['add-task'] = array(
-      '#type' => 'link',
-      '#title' => t('Add new task'),
-      '#href' => 'node/add/ed-task',
-    );
-  }
-
-  $table_type = 'pager_table';
-
-
-
-
-  // Tasks that are made by the logged in user.
-  $nodes = _ed_get_cur_user_tasks();
-
-  if ( !empty($nodes) ) {
-    foreach($nodes as $node) {      
-      if(isset($node->{ED_FIELD_TO_GROUP_MEMBER}['und']['0']['target_id']) && !isset($node->{ED_FIELD_TO_GROUP_MEMBER}['und']['1']['target_id'])) {
-        $user = user_load($node->{ED_FIELD_TO_GROUP_MEMBER}['und']['0']['target_id']);
-        $username = ", ".$user->name;
-      }
-      elseif(isset($node->{ED_FIELD_TO_GROUP_MEMBER}['und']['1']['target_id'])){
-        $user = user_load($node->{ED_FIELD_TO_GROUP_MEMBER}['und']['0']['target_id']);
-        $username = ", ".$user->name."...";
-      }
-      else{
-        $username = '';
-      }
-
-      //$datehelp = strtotime($node->ed_task_due_date['und']['0']['value']);
-      if( isset($node->og_group_ref['und']['0']['target_id']) ){
-        $shared_to = $node->og_group_ref['und']['0']['target_id'];
-      } else {
-        $shared_to = '';
-      }
-      $group_title = _ed_get_group_name_from_id($shared_to);
-      $due_date_field = field_get_items('node', $node, 'ed_task_due_date');
-      $rows[] = array(
-        'data' => array(
-          'title' => l($node->title, 'node/' . $node->nid),
-          'shared_to' => t(l($group_title, 'node/' . $shared_to).$username),
-          //'due_date' => format_date($datehelp, 'custom','d/m/Y'),
-          'due_date' => format_date($due_date_field[0]['value'],'custom','d/m/Y'),          
-        ),
-      );
-    }
-
-    $content[$table_type.'-'.$table_suffix] = array(
-      '#theme' => 'table',
-      '#rows' => $rows,
-      '#header' => array(t('Tasks by me'), t('Shared To'), t('Due Date')),
-    );
-    $content['pager'] = array('#theme' => 'pager');
-  }
-
+  global $user;
+  $account = user_load($user->uid);  
+  $groups = og_get_entity_groups();
   
-  
-  $per_page = ed_get_paging_nr();
-  $touser = _ed_get_tasks_to_user();  
-  if(!empty($touser)){
-    foreach($touser as $key => $value){
-      $tousernids[] = (string)$key;
-    }
-  }
-
-  $togroups = _ed_get_group_tasks();
-  if(isset($tousernids)){
-    $tasknidstouser = array_merge($tousernids, $togroups);
-    $tasknidstouser = array_unique($tasknidstouser);
+  if(empty($groups)){
+    $content['groups-not-found'] = array(
+      '#type' => 'markup',
+      '#prefix' => '<div class="ed-message ed-message-notice">',
+      '#markup' => t('Hi! Nothing to show here at the moment. Join some group to see latest updates from it.'),
+      '#suffix' => '</div>',
+    );
+    return $content;
   }else{
-    $tasknidstouser = $togroups;
-  }
-  
-  
-  $tasknodes = node_load_multiple($tasknidstouser);
- 
-  uasort($tasknodes, function($a, $b) {
-    $ats = $a->ed_task_due_date[LANGUAGE_NONE][0]['value'];
-    $bts = $b->ed_task_due_date[LANGUAGE_NONE][0]['value'];
-    if ($ats == $bts) return 0;
-    return ($ats < $bts) ? -1 : 1;
-  });
-  
-  foreach($tasknodes as $key => $tasknode){
-    if(_is_task_answered($tasknode->nid)){
-      $temp = $tasknode;
-      unset($tasknodes[$key]);
-      array_push($tasknodes, $temp);
-    }
-  }
-  
-  $current_page = pager_default_initialize(count($tasknodes), $per_page, 2);
-  
-  $chunks = array_chunk($tasknodes, $per_page, TRUE);
-  
-  foreach($chunks[$current_page] as $tasknode){
-    $shared_to_arr = array();
-    if( isset($tasknode->og_group_ref[LANGUAGE_NONE]['0']['target_id']) ){
-      foreach($tasknode->og_group_ref[LANGUAGE_NONE] as $targetgroup){
-        $group_title = _ed_get_group_name_from_id($targetgroup['target_id']);
-        $shared_to_arr[] = l($group_title, 'node/' . $targetgroup['target_id']);
-      }      
-          
-    } else {
-      $shared_to_arr = '';
-    }
     
-    
-    
-    $shared_to_arr = implode(', ', $shared_to_arr);
-    
-    $rows2[] = array(
-        'data' => array(
-          'title' => l($tasknode->title, 'node/' . $tasknode->nid),
-          'group' => $shared_to_arr,
-          'due_date' => format_date($tasknode->ed_task_due_date[LANGUAGE_NONE][0]['value'],'custom','d/m/Y'),
-          'status' => (_is_task_answered($tasknode->nid) ? '<div class="ed-task-answered">' . t('Answered') . '</div>' : '<div class="ed-task-unanswered">' . t('Unanswered') . '</div>'),          
+  
+    $content = array();
+    $table_suffix = 1;
+
+    if (node_access('create', 'ed_task')) {
+      $content['add-new-container'] = array(
+        '#type' => 'container',
+        '#attributes' => array(
+          'class' => array('ed-add-new-node', 'ed-add-new-ed-task'),
         ),
       );
-  }
-  
-  
-  
-  $content[$table_type.'-2'] = array(
-      '#theme' => 'table',
-      '#rows' => $rows2,
-      '#header' => array(t('Task'), t('Group'), t('Due Date'), t('Status')),
-  );
-  $content['pager-2'] = array(
-          '#theme' => 'pager',
-          '#element' => 2,
+      $content['add-new-container']['add-task'] = array(
+        '#type' => 'link',
+        '#title' => t('Add new task'),
+        '#href' => 'node/add/ed-task',
+      );
+    }
+
+    $table_type = 'pager_table';
+
+
+
+
+    // Tasks that are made by the logged in user.
+    $nodes = _ed_get_cur_user_tasks();
+
+    if ( !empty($nodes) ) {
+      foreach($nodes as $node) {      
+        if(isset($node->{ED_FIELD_TO_GROUP_MEMBER}['und']['0']['target_id']) && !isset($node->{ED_FIELD_TO_GROUP_MEMBER}['und']['1']['target_id'])) {
+          $user = user_load($node->{ED_FIELD_TO_GROUP_MEMBER}['und']['0']['target_id']);
+          $username = ", ".$user->name;
+        }
+        elseif(isset($node->{ED_FIELD_TO_GROUP_MEMBER}['und']['1']['target_id'])){
+          $user = user_load($node->{ED_FIELD_TO_GROUP_MEMBER}['und']['0']['target_id']);
+          $username = ", ".$user->name."...";
+        }
+        else{
+          $username = '';
+        }
+
+        //$datehelp = strtotime($node->ed_task_due_date['und']['0']['value']);
+        if( isset($node->og_group_ref['und']['0']['target_id']) ){
+          $shared_to = $node->og_group_ref['und']['0']['target_id'];
+        } else {
+          $shared_to = '';
+        }
+        $group_title = _ed_get_group_name_from_id($shared_to);
+        $due_date_field = field_get_items('node', $node, 'ed_task_due_date');
+        $rows[] = array(
+          'data' => array(
+            'title' => l($node->title, 'node/' . $node->nid),
+            'shared_to' => t(l($group_title, 'node/' . $shared_to).$username),
+            //'due_date' => format_date($datehelp, 'custom','d/m/Y'),
+            'due_date' => format_date($due_date_field[0]['value'],'custom','d/m/Y'),          
+          ),
         );
-  
-  return $content;
+      }
+
+      $content[$table_type.'-'.$table_suffix] = array(
+        '#theme' => 'table',
+        '#rows' => $rows,
+        '#header' => array(t('Tasks by me'), t('Shared To'), t('Due Date')),
+      );
+      $content['pager'] = array('#theme' => 'pager');
+    }
+
+
+
+    $per_page = ed_get_paging_nr();
+    $touser = _ed_get_tasks_to_user();  
+    if(!empty($touser)){
+      foreach($touser as $key => $value){
+        $tousernids[] = (string)$key;
+      }
+    }
+
+    $togroups = _ed_get_group_tasks();
+    if(isset($tousernids)){
+      $tasknidstouser = array_merge($tousernids, $togroups);
+      $tasknidstouser = array_unique($tasknidstouser);
+    }else{
+      $tasknidstouser = $togroups;
+    }
+
+
+    $tasknodes = node_load_multiple($tasknidstouser);
+
+    uasort($tasknodes, function($a, $b) {
+      $ats = $a->ed_task_due_date[LANGUAGE_NONE][0]['value'];
+      $bts = $b->ed_task_due_date[LANGUAGE_NONE][0]['value'];
+      if ($ats == $bts) return 0;
+      return ($ats < $bts) ? -1 : 1;
+    });
+
+    foreach($tasknodes as $key => $tasknode){
+      if(_is_task_answered($tasknode->nid)){
+        $temp = $tasknode;
+        unset($tasknodes[$key]);
+        array_push($tasknodes, $temp);
+      }
+    }
+
+    $current_page = pager_default_initialize(count($tasknodes), $per_page, 2);
+
+    $chunks = array_chunk($tasknodes, $per_page, TRUE);
+
+    foreach($chunks[$current_page] as $tasknode){
+      $shared_to_arr = array();
+      if( isset($tasknode->og_group_ref[LANGUAGE_NONE]['0']['target_id']) ){
+        foreach($tasknode->og_group_ref[LANGUAGE_NONE] as $targetgroup){
+          $group_title = _ed_get_group_name_from_id($targetgroup['target_id']);
+          $shared_to_arr[] = l($group_title, 'node/' . $targetgroup['target_id']);
+        }      
+
+      } else {
+        $shared_to_arr = '';
+      }
+
+
+
+      $shared_to_arr = implode(', ', $shared_to_arr);
+
+      $rows2[] = array(
+          'data' => array(
+            'title' => l($tasknode->title, 'node/' . $tasknode->nid),
+            'group' => $shared_to_arr,
+            'due_date' => format_date($tasknode->ed_task_due_date[LANGUAGE_NONE][0]['value'],'custom','d/m/Y'),
+            'status' => (_is_task_answered($tasknode->nid) ? '<div class="ed-task-answered">' . t('Answered') . '</div>' : '<div class="ed-task-unanswered">' . t('Unanswered') . '</div>'),          
+          ),
+        );
+    }
+
+
+
+    $content[$table_type.'-2'] = array(
+        '#theme' => 'table',
+        '#rows' => $rows2,
+        '#header' => array(t('Task'), t('Group'), t('Due Date'), t('Status')),
+    );
+    $content['pager-2'] = array(
+            '#theme' => 'pager',
+            '#element' => 2,
+          );
+
+    return $content;
+  }
 }
 
 
