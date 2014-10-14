@@ -176,3 +176,11 @@ function ed_task_update_7104(&$sandbox){
   field_update_instance($instance);
 }
 
+/**
+ * Add competence label change
+ */
+function ed_task_update_7105(&$sandbox){
+  $instance = field_info_instance('node', 'ed_field_competence', 'ed_task');
+  $instance['label'] = t('Add competence');
+  field_update_instance($instance);
+}
