@@ -264,13 +264,13 @@ function _ed_answer_get_user_comments($nid){
 }
 function ed_answer_comment_insert($comment){
   if($comment->node_type=='comment_node_ed_answer'){
-    $usercomments = comment_load_multiple(_ed_answer_get_user_comments($comment->nid));
+    $usercomments = comment_load_multiple(_ed_answer_get_user_comments($comment->nid));    
     foreach($usercomments as $usercomment){
       $usercomment->ed_answer_status = $comment->ed_answer_status;
       comment_save($usercomment);
     }
     $node = node_load($comment->nid); 
-    $task = node_load($node->field_ref_to_task[LANGUAGE_NONE][0]);   
+    $task = node_load($node->field_ref_to_task[LANGUAGE_NONE][0]['target_id']);   
     $recipient = user_load($node->uid);
     $teacher = user_load($comment->uid);
     $teacher_fullname = edidaktikum_get_full_name_for_user_account($teacher);
