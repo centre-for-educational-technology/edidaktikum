@@ -218,8 +218,7 @@ function ed_cluster_my_listing_page() {
         $adminimages = array();
         foreach($groupadmins as $groupadmin){
           $admin = user_load($groupadmin);
-          if($admin->picture){
-            dpm($admin);
+          if($admin->picture){            
             $adminimages[] =l('<img src="'.file_create_url($admin->picture->uri).'" title="'.$admin->ed_field_full_name[LANGUAGE_NONE][0]['safe_value'].'" />', 'user/'.$admin->uid, array('html' => TRUE));
           }else{
             $adminimages[] =l('<img src="'.$GLOBALS['base_url'].'/'.path_to_theme().'/images/user_icon_default.png" title="'.$admin->ed_field_full_name[LANGUAGE_NONE][0]['safe_value'].'"/>', 'user/'.$admin->uid, array('html' => TRUE));
@@ -320,9 +319,10 @@ function ed_all_groups_listing(){
         foreach($groupadmins as $groupadmin){
           $admin = user_load($groupadmin);
           if($admin->picture){
-            $adminimages[] =l('<img src="'.file_create_url($admin->picture->uri).'" />', 'user/'.$admin->uid, array('html' => TRUE));
+            
+            $adminimages[] =l('<img src="'.file_create_url($admin->picture->uri).'" title="'.$admin->ed_field_full_name[LANGUAGE_NONE][0]['safe_value'].'" />', 'user/'.$admin->uid, array('html' => TRUE));
           }else{
-            $adminimages[] =l('<img src="'.$GLOBALS['base_url'].'/'.path_to_theme().'/images/user_icon_default.png" />', 'user/'.$admin->uid, array('html' => TRUE));
+            $adminimages[] =l('<img src="'.$GLOBALS['base_url'].'/'.path_to_theme().'/images/user_icon_default.png" title="'.$admin->ed_field_full_name[LANGUAGE_NONE][0]['safe_value'].'"/>', 'user/'.$admin->uid, array('html' => TRUE));
           }         
         }
         $build['row-'.$counter][$i] = array(
