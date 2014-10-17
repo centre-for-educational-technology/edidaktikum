@@ -1112,12 +1112,16 @@ function _ed_is_nid_group($nid){
 function ed_cluster_get_clusters($order, $remove_user_groups = FALSE) {
   if($remove_user_groups){
     $usergroups = og_get_groups_by_user();
+    
     $query = db_select('node', 'n')
       ->extend('PagerDefault')
       ->fields('n', array('nid'))
-      ->condition('n.status', 1)
-      ->condition('n.nid', $usergroups['node'], 'not in')
-      ->condition('n.type', 'ed_cluster');    
+      ->condition('n.status', 1);
+    if($usergroups){
+      $query->condition('n.nid', $usergroups['node'], 'not in');
+    }
+    
+    $query->condition('n.type', 'ed_cluster');    
     if($order == 'title'){
       $query->orderBy('TRIM(title)', 'ASC');
     }else{ 
