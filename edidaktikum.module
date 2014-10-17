@@ -247,6 +247,10 @@ function ed_get_paging_nr(){
   return variable_get('ed_paging');
 }
 
+function ed_get_grid_paging_nr(){
+  return variable_get('ed_grid_paging');
+}
+
 function _ed_get_sorting_options($form_state){
   $form = array();
   $form['select'] = array(

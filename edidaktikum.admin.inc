@@ -160,12 +160,18 @@ function edidaktikum_promoted_news_page_admin_form(){
 }
 
 function edidaktikum_configuration_page_admin_form(){
-
   $form['form']['ed_paging'] = array(
     '#type' => 'textfield',
     '#title' => t('Paging'),
     '#description' => t('How many elements per page'),
     '#default_value' => variable_get('ed_paging'),
+    '#required' => TRUE,
+  );
+  $form['form']['ed_grid_paging'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Paging in grids'),
+    '#description' => t('How many elements per grid based pages. Should be divideable by 4'),
+    '#default_value' => variable_get('ed_grid_paging', 20),
     '#required' => TRUE,
   );
   $form['ed_uservoice_api_key'] = array(

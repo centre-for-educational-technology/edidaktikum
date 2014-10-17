@@ -1,0 +1,48 @@
+.group-div-outer { 
+    border: 1px solid #EFEFEF;
+    background-color: #F5F5F5;
+    padding: 5px;
+    margin-bottom: 10px; 
+}
+
+.group-div-top {
+    height: 66%;
+    background: white;
+    padding: 5px;
+    text-align: center;
+}
+
+.group-div-bottom {
+    height: 33%;
+    padding-top: 5px;
+}
+
+.group-div-bottom-left {
+    padding: 5px;
+    
+}
+.group-div-bottom-left img{    
+    height: 30px;
+    width: 30px;
+    border-radius: 20px;
+}
+.group-div-bottom-right {
+    position:relative;
+    top: 7px;
+    text-align: center;
+    
+    
+}
+.group-div-bottom-right a{
+    color: white;
+    position: relative;
+    top: 3px;
+}
+.group-div-bottom-right a:hover,.group-div-bottom-right a:visited{
+    text-decoration:none;
+    color:white;
+}
+
+.group-div-top-cover img{
+    height: 150px;
+}
