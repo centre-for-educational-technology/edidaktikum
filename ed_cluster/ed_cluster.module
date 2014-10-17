@@ -238,7 +238,7 @@ function ed_cluster_my_listing_page() {
         $build['row-'.$counter][$i]['top']['top-top'] = array(
           '#type' => 'markup',
           '#prefix' => '<div class="group-div-top-cover">',
-          '#markup' => !empty($nodeschunk[$i]->ed_field_featured_image) ? '<img src="'.file_create_url($nodeschunk[$i]->ed_field_featured_image[LANGUAGE_NONE][0]['uri']).'">':'<img src="'.$GLOBALS['base_url'].'/'.path_to_theme().'/images/icons/ed_group_icon_default.png">',
+          '#markup' => !empty($nodeschunk[$i]->ed_field_featured_image) ? l('<img src="'.file_create_url($nodeschunk[$i]->ed_field_featured_image[LANGUAGE_NONE][0]['uri']).'">', 'node/'.$nodeschunk[$i]->nid, array('html' => TRUE)):l('<img src="'.$GLOBALS['base_url'].'/'.path_to_theme().'/images/icons/ed_group_icon_default.png">', 'node/'.$nodeschunk[$i]->nid, array('html' => true)),
           '#suffix' => '</div>',
         );
         $build['row-'.$counter][$i]['top']['top-bottom'] = array(
@@ -338,7 +338,7 @@ function ed_all_groups_listing(){
         $build['row-'.$counter][$i]['top']['top-top'] = array(
           '#type' => 'markup',
           '#prefix' => '<div class="group-div-top-cover">',
-          '#markup' => !empty($nodeschunk[$i]->ed_field_featured_image) ? '<img src="'.file_create_url($nodeschunk[$i]->ed_field_featured_image[LANGUAGE_NONE][0]['uri']).'">':'<img src="'.$GLOBALS['base_url'].'/'.path_to_theme().'/images/icons/ed_group_icon_default.png">',
+          '#markup' => !empty($nodeschunk[$i]->ed_field_featured_image) ? l('<img src="'.file_create_url($nodeschunk[$i]->ed_field_featured_image[LANGUAGE_NONE][0]['uri']).'">', 'node/'.$nodeschunk[$i]->nid, array('html' => TRUE)):l('<img src="'.$GLOBALS['base_url'].'/'.path_to_theme().'/images/icons/ed_group_icon_default.png">', 'node/'.$nodeschunk[$i]->nid, array('html' => true)),
           '#suffix' => '</div>',
         );
         $build['row-'.$counter][$i]['top']['top-bottom'] = array(
