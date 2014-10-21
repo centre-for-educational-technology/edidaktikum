@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2014-10-01 16:15+0300\n"
-"PO-Revision-Date: 2014-10-01 16:15+0300\n"
+"POT-Creation-Date: 2014-10-21 16:55+0300\n"
+"PO-Revision-Date: 2014-10-21 16:55+0300\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "MIME-Version: 1.0\n"
@@ -23,98 +23,9 @@ msgctxt "ed_field_private_comment:comment_node_ed_answer:label"
 msgid "Private comment"
 msgstr ""
 
-#: field:field_tags:ed_news:label
-msgctxt "field_tags:ed_news:label"
-msgid "Tags"
-msgstr ""
-
-#: field:ed_field_to_group_member:ed_task:label
-msgctxt "ed_field_to_group_member:ed_task:label"
-msgid "Specify user"
-msgstr ""
-
-#: field:ed_field_to_group_member:ed_answer:label
-msgctxt "ed_field_to_group_member:ed_answer:label"
-msgid "Specify user"
-msgstr ""
-
-#: field:field_tags:ed_event:label
-msgctxt "field_tags:ed_event:label"
-msgid "Tags"
-msgstr ""
-
-#: field:field_tags:ed_file:label
-msgctxt "field_tags:ed_file:label"
-msgid "Tags"
-msgstr ""
-
-#: field:ed_field_to_group_member:ed_forum:label
-msgctxt "ed_field_to_group_member:ed_forum:label"
-msgid "Specify user"
-msgstr ""
-
 #: field:ed_field_content:ed_cluster:label
 msgctxt "ed_field_content:ed_cluster:label"
 msgid "Content"
-msgstr ""
-
-#: field:ed_field_to_group_member:ed_learning_resource:label
-msgctxt "ed_field_to_group_member:ed_learning_resource:label"
-msgid "Specify user"
-msgstr ""
-
-#: field:ed_field_to_group_member:ed_blog:label
-msgctxt "ed_field_to_group_member:ed_blog:label"
-msgid "Specify user"
-msgstr ""
-
-#: field:ed_field_to_group_member:ed_bookmark:label
-msgctxt "ed_field_to_group_member:ed_bookmark:label"
-msgid "Specify user"
-msgstr ""
-
-#: field:ed_field_to_group_member:ed_page:label
-msgctxt "ed_field_to_group_member:ed_page:label"
-msgid "Specify user"
-msgstr ""
-
-#: field:field_tags:ed_page:label
-msgctxt "field_tags:ed_page:label"
-msgid "Tags"
-msgstr ""
-
-#: field:field_tags:ed_bookmark:label
-msgctxt "field_tags:ed_bookmark:label"
-msgid "Tags"
-msgstr ""
-
-#: field:field_tags:ed_blog:label
-msgctxt "field_tags:ed_blog:label"
-msgid "Tags"
-msgstr ""
-
-#: field:field_tags:ed_blog:description
-msgctxt "field_tags:ed_blog:description"
-msgid ""
-"Separate with commas. E.g. Mathematics, Force training, Jedi Mind "
-"Tricks"
-msgstr ""
-
-#: field:field_tags:ed_learning_resource:label
-msgctxt "field_tags:ed_learning_resource:label"
-msgid "Tags"
-msgstr ""
-
-#: field:field_tags:ed_learning_resource:description
-msgctxt "field_tags:ed_learning_resource:description"
-msgid ""
-"Separate with commas. E.g. Mathematics, Force training, Jedi Mind "
-"Tricks"
-msgstr ""
-
-#: field:ed_field_to_group_member:ed_file:label
-msgctxt "ed_field_to_group_member:ed_file:label"
-msgid "Specify user"
 msgstr ""
 
 #: field:ed_answer_status:#field:label
@@ -580,7 +491,7 @@ msgstr "Lisanõuded"
 #: field:ed_learning_resource_add_req:ed_learning_resource:label
 msgctxt "ed_learning_resource_add_req:ed_learning_resource:label"
 msgid "Additional Requirements"
-msgstr "Lisa nõuded"
+msgstr "Lisanõuded"
 
 #: field:ed_portfolio_field_items:ed_portfolio:label
 msgctxt "ed_portfolio_field_items:ed_portfolio:label"
@@ -619,7 +530,7 @@ msgstr "Pädevus"
 
 #: field:ed_field_competence:ed_file:label
 msgctxt "ed_field_competence:ed_file:label"
-msgid "Competence"
+msgid "Add competence"
 msgstr "Pädevus"
 
 #: field:ed_blog_tags:#field:label
@@ -702,6 +613,94 @@ msgctxt "group_content_access:ed_blog:label"
 msgid "Group content visibility"
 msgstr "Nähtavus"
 
+#: field:field_tags:ed_news:label
+msgctxt "field_tags:ed_news:label"
+msgid "Tags"
+msgstr "Märksõnad"
+
+#: field:ed_field_to_group_member:ed_task:label
+msgctxt "ed_field_to_group_member:ed_task:label"
+msgid "Specify user"
+msgstr "Määra kasutaja"
+
+#: field:ed_field_to_group_member:ed_answer:label
+msgctxt "ed_field_to_group_member:ed_answer:label"
+msgid "Specify user"
+msgstr "Määra kasutaja"
+
+#: field:field_tags:ed_event:label
+msgctxt "field_tags:ed_event:label"
+msgid "Tags"
+msgstr "Märksõnad"
+
+#: field:field_tags:ed_file:label
+msgctxt "field_tags:ed_file:label"
+msgid "Tags"
+msgstr "Märksõnad"
+
+#: field:ed_field_to_group_member:ed_forum:label
+msgctxt "ed_field_to_group_member:ed_forum:label"
+msgid "Specify user"
+msgstr "Määra kasutaja"
+
+#: field:ed_field_to_group_member:ed_learning_resource:label
+msgctxt "ed_field_to_group_member:ed_learning_resource:label"
+msgid "Specify user"
+msgstr "Määra kasutaja"
+
+#: field:ed_field_to_group_member:ed_blog:label
+msgctxt "ed_field_to_group_member:ed_blog:label"
+msgid "Specify user"
+msgstr "Määra kasutaja"
+
+#: field:ed_field_to_group_member:ed_bookmark:label
+msgctxt "ed_field_to_group_member:ed_bookmark:label"
+msgid "Specify user"
+msgstr "Määra kasutaja"
+
+#: field:ed_field_to_group_member:ed_page:label
+msgctxt "ed_field_to_group_member:ed_page:label"
+msgid "Specify user"
+msgstr "Määra kasutaja"
+
+#: field:field_tags:ed_page:label
+msgctxt "field_tags:ed_page:label"
+msgid "Tags"
+msgstr "Märksõnad"
+
+#: field:field_tags:ed_bookmark:label
+msgctxt "field_tags:ed_bookmark:label"
+msgid "Tags"
+msgstr "Märksõnad"
+
+#: field:field_tags:ed_blog:label
+msgctxt "field_tags:ed_blog:label"
+msgid "Tags"
+msgstr "Märksõnad"
+
+#: field:field_tags:ed_blog:description
+msgctxt "field_tags:ed_blog:description"
+msgid ""
+"Separate with commas. E.g. Mathematics, Force training, Jedi Mind "
+"Tricks"
+msgstr ""
+"Eralda märksõnad komaga, näiteks: matemaatika, karate, minu armas "
+"kool"
+
+#: field:field_tags:ed_learning_resource:label
+msgctxt "field_tags:ed_learning_resource:label"
+msgid "Tags"
+msgstr "Märksõnad"
+
+#: field:field_tags:ed_learning_resource:description
+msgctxt "field_tags:ed_learning_resource:description"
+msgid ""
+"Separate with commas. E.g. Mathematics, Force training, Jedi Mind "
+"Tricks"
+msgstr ""
+"Eralda märksõnad komaga, näiteks: matemaatika, karate, minu armas "
+"kool"
+
 #: field:ed_learning_resource_tags:ed_learning_resource:label
 msgctxt "ed_learning_resource_tags:ed_learning_resource:label"
 msgid "Tags"
@@ -752,6 +751,11 @@ msgid ""
 "Separate with commas. E.g. Mathematics, Force training, Jedi Mind "
 "Tricks"
 msgstr "Eralda komaga. Näiteks matemaatika, inglise keel, keemia"
+
+#: field:ed_field_to_group_member:ed_file:label
+msgctxt "ed_field_to_group_member:ed_file:label"
+msgid "Specify user"
+msgstr "Määra kasutaja"
 
 #: edidaktikum.admin.inc:12 edidaktikum.variable.inc:11
 msgid "Home page intro image URL"
