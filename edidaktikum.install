@@ -291,3 +291,14 @@ function edidaktikum_update_7100(&$sandbox) {
   drupal_install_schema('edidaktikum');
 }
 
+
+/**
+ * Update url_aliases table to set all languages to undefined.
+ */
+function edidaktikum_update_7101(&$sandbox){
+  $query = db_update('url_alias')
+    ->fields(array('language' => LANGUAGE_NONE));
+  $query->execute();
+}
+
+

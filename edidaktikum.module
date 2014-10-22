@@ -746,6 +746,24 @@ function edidaktikum_menu_alter(&$items) {
   }
 }
 
+/**
+Implements hook_pathauto_alias_alter.
+Set the language of our alias to neutral so that the alias is generated for all languages.
+We do not force language neutral if we have a node type being managed by other
+translation modules so we return early.
+*/
+function edidaktikum_pathauto_alias_alter(&$alias, array &$context) {
+  if ((module_exists('i18n_node')
+    && i18n_node_type_enabled($context['data']['node']->type))
+    || (module_exists('entity_translation')
+    && entity_translation_node_supported_type($context['data']['node']->type))) {
+    return;
+  }
+  $context['language'] = LANGUAGE_NONE;
+}
+
+
+
 function ed_get_likes($nid){
   $likescount = db_select('ed_node_like', 'enl')
       ->fields('enl', array('uid'))
