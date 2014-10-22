@@ -299,15 +299,16 @@ function ed_all_groups_listing(){
   $og_groups = ed_cluster_get_clusters($sql_order, $remove_user_groups);
   if (!empty($og_groups)) {
     $nodes = node_load_multiple($og_groups);
-    $nodeschunked = array_chunk($nodes, 4);    
+    $nodeschunked = array_chunk($nodes, 4);     
     $counter = 1;
-    foreach($nodeschunked as $nodeschunk){
+    $nodeschunked = array_reverse($nodeschunked);
+    foreach($nodeschunked as $nodeschunk){      
       $build['row-'.$counter] = array(
         '#type' => 'markup',
         '#prefix' => '<div class="row">',
         '#suffix' => '</div>',
       );
-      for($i=0;$i<count($nodeschunk);$i++){
+      for($i=0;$i<count($nodeschunk);$i++){        
         $query = new EntityFieldQuery();
         $query->entityCondition('entity_type', 'user')
             ->fieldCondition('og_user_node', 'target_id', $nodeschunk[$i]->nid, '=');
@@ -318,8 +319,7 @@ function ed_all_groups_listing(){
         $adminimages = array();
         foreach($groupadmins as $groupadmin){
           $admin = user_load($groupadmin);
-          if($admin->picture){
-            
+          if($admin->picture){            
             $adminimages[] =l('<img src="'.file_create_url($admin->picture->uri).'" title="'.$admin->ed_field_full_name[LANGUAGE_NONE][0]['safe_value'].'" />', 'user/'.$admin->uid, array('html' => TRUE));
           }else{
             $adminimages[] =l('<img src="'.$GLOBALS['base_url'].'/'.path_to_theme().'/images/user_icon_default.png" title="'.$admin->ed_field_full_name[LANGUAGE_NONE][0]['safe_value'].'"/>', 'user/'.$admin->uid, array('html' => TRUE));
