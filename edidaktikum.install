@@ -301,4 +301,17 @@ function edidaktikum_update_7101(&$sandbox){
   $query->execute();
 }
 
-
+/**
+ * Include home page notice text as translatable variable
+ */
+function edidaktikum_update_7102(&$sandbox){
+  $translatable_variables = array('ed_home_page_intro_notification_message');
+  $variable_realm_list_language = variable_get('variable_realm_list_language', array());
+  if (!empty($variable_realm_list_language)) {
+    $variable_realm_list_language = array_merge($variable_realm_list_language, $translatable_variables);
+  }
+  else {
+    $variable_realm_list_language = $translatable_variables;
+  }
+  variable_set('variable_realm_list_language', $variable_realm_list_language);
+}

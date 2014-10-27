@@ -49,6 +49,13 @@ function edidaktikum_variable_info($options) {
     'required' => FALSE,
     'group' => 'edidaktikum_settings',
   );
+  $variables['ed_home_page_intro_notification_message'] = array(
+    'type' => 'string',
+    'title' => t('Message to be displayed on front page', array(), $options),
+    'description' => t('If this is empty there will be no messages displayed on front page', array(), $options),
+    'required' => FALSE,
+    'group' => 'edidaktikum_settings',
+  );
 
   return $variables;
 }

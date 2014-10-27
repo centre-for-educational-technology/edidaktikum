@@ -28,3 +28,14 @@ div[class^="form-item form-type-checkbox-tree form-item-ed-field-competence"] la
 	color: red;
 }
 
+.ed-front-page-notice-container{
+    width:100%;
+}
+
+.ed-front-page-notice{
+    background-color: #ECC681;
+    margin: 0 auto;
+    text-align: center;
+    padding: 10px;
+    font-size: 18px;
+}

@@ -28,6 +28,13 @@ function edidaktikum_home_page_admin_form() {
     '#description' => t("Tour text to display in home page."),
     '#required' => FALSE,
   );
+  $form['ed_home_page_intro_notification_message'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Message to be displayed on front page'),
+    '#description' => t('If this is empty there will be no messages displayed on front page'),
+    '#default_value' => variable_get('ed_home_page_intro_notification_message', ''),
+    '#required' => FALSE,
+  );
   return system_settings_form($form);
 }
 
@@ -181,7 +188,7 @@ function edidaktikum_configuration_page_admin_form(){
     '#default_value' => variable_get('ed_uservoice_api_key'),
     '#required' => FALSE,
   );
-
+  
   return system_settings_form($form);
 }
 function edidaktikum_statistics_page_admin_form(){
