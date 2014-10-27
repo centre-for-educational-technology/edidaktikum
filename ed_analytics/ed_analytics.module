@@ -61,8 +61,32 @@ function ed_analytics_page(){
       }
       
       if(!empty($tasknids)){
-        $counttasks = count($tasknids);
-        $countanswers = count(_ed_analytics_get_user_answers($node->nid, $user->uid));
+        
+        $tasks = node_load_multiple($tasknids);        
+        $taskstouser = array();
+        
+        foreach($tasks as $task){
+          if(!empty($task->{ED_FIELD_TO_GROUP_MEMBER})){
+            if(in_array($user->uid, array_map(function($element) { return $element['target_id']; }, $task->{ED_FIELD_TO_GROUP_MEMBER}[LANGUAGE_NONE]))){
+              $taskstouser[$task->nid] = $task;
+            }
+          }else{
+            $taskstouser[$task->nid] = $task;
+          }
+        }
+        $answers = 0;
+        foreach($taskstouser as $tasktouser){
+          if(_ed_check_if_answered($user->uid, $tasktouser->nid)){
+            $tmp_answer_nid = _ed_get_answer_nid($user->uid, $tasktouser->nid);
+            $status = _ed_check_if_accepted($tmp_answer_nid[0]);           
+            if(!empty($status) && $status[0]=='accepted'){
+              $answers++;
+            }
+          }
+        }
+        
+        $counttasks = count($taskstouser);
+        $countanswers = $answers;
         $progress = round($countanswers/$counttasks*100);
       }else{
         $counttasks = 0;
