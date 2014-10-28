@@ -298,17 +298,29 @@ function ed_all_groups_listing(){
   $remove_user_groups = TRUE;
   $og_groups = ed_cluster_get_clusters($sql_order, $remove_user_groups);
   if (!empty($og_groups)) {
-    $nodes = node_load_multiple($og_groups);
-    $nodeschunked = array_chunk($nodes, 4);     
+    $nodes = node_load_multiple($og_groups);   
+    $nodeschunked = array_chunk($nodes, 4);    
+    
+    
+    $lastchunk = end($nodeschunked);
+  
+    if(count($lastchunk<4)){
+      foreach(range(1, 4-count($lastchunk))as $i){
+        $x = new stdClass();
+        array_push($lastchunk, $x);
+      }
+    }
+    $nodeschunked[count($nodeschunked)-1] = $lastchunk;           
     $counter = 1;
-    $nodeschunked = array_reverse($nodeschunked);
     foreach($nodeschunked as $nodeschunk){      
       $build['row-'.$counter] = array(
         '#type' => 'markup',
-        '#prefix' => '<div class="row">',
+        '#prefix' => '<div class="row" id="row-'.$counter.'">',
         '#suffix' => '</div>',
       );
-      for($i=0;$i<count($nodeschunk);$i++){        
+      for($i=0;$i<count($nodeschunk);$i++){
+        if(isset($nodeschunk[$i]->nid)){
+        
         $query = new EntityFieldQuery();
         $query->entityCondition('entity_type', 'user')
             ->fieldCondition('og_user_node', 'target_id', $nodeschunk[$i]->nid, '=');
@@ -319,11 +331,11 @@ function ed_all_groups_listing(){
         $adminimages = array();
         foreach($groupadmins as $groupadmin){
           $admin = user_load($groupadmin);
-          if($admin->picture){            
+          if($admin->picture){
             $adminimages[] =l('<img src="'.file_create_url($admin->picture->uri).'" title="'.$admin->ed_field_full_name[LANGUAGE_NONE][0]['safe_value'].'" />', 'user/'.$admin->uid, array('html' => TRUE));
           }else{
             $adminimages[] =l('<img src="'.$GLOBALS['base_url'].'/'.path_to_theme().'/images/user_icon_default.png" title="'.$admin->ed_field_full_name[LANGUAGE_NONE][0]['safe_value'].'"/>', 'user/'.$admin->uid, array('html' => TRUE));
-          }         
+          }
         }
         $build['row-'.$counter][$i] = array(
           '#type' => 'markup',          
@@ -365,14 +377,15 @@ function ed_all_groups_listing(){
           '#suffix' => '</div>',
         );
       }
+      }
       $counter++;
     }
-    $build['pager'] = array(
-      '#theme' => 'pager',
-      '#weight' => 5,
-    );
+        
     $content['clusters'] = $build;
-    //dpm($chunkednodes);
+    $content['pager'] = array(
+      '#theme' => 'pager',
+    );
+    
   }
   return $content;
 }
