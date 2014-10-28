@@ -53,7 +53,10 @@ function ed_task_menu(){
 
 function ed_task_listing_page() {
   menu_tree_set_path('main-menu', 'dashboard');
+  
+  //XXX do not use global $user
   global $user;
+  
   $account = user_load($user->uid);  
   $groups = og_get_entity_groups();
   
@@ -65,9 +68,7 @@ function ed_task_listing_page() {
       '#suffix' => '</div>',
     );
     return $content;
-  }else{
-    
-  
+  }else{ 
     $content = array();
     $table_suffix = 1;
 
@@ -96,12 +97,12 @@ function ed_task_listing_page() {
     if ( !empty($nodes) ) {
       foreach($nodes as $node) {      
         if(isset($node->{ED_FIELD_TO_GROUP_MEMBER}['und']['0']['target_id']) && !isset($node->{ED_FIELD_TO_GROUP_MEMBER}['und']['1']['target_id'])) {
-          $user = user_load($node->{ED_FIELD_TO_GROUP_MEMBER}['und']['0']['target_id']);
-          $username = ", ".$user->name;
+          $owner = user_load($node->{ED_FIELD_TO_GROUP_MEMBER}['und']['0']['target_id']);
+          $username = ", ".$owner->name;
         }
         elseif(isset($node->{ED_FIELD_TO_GROUP_MEMBER}['und']['1']['target_id'])){
-          $user = user_load($node->{ED_FIELD_TO_GROUP_MEMBER}['und']['0']['target_id']);
-          $username = ", ".$user->name."...";
+          $owner = user_load($node->{ED_FIELD_TO_GROUP_MEMBER}['und']['0']['target_id']);
+          $username = ", ".$owner->name."...";
         }
         else{
           $username = '';
