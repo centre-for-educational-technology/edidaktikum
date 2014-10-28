@@ -18,22 +18,24 @@ function ed_cluster_menu() {
   $items['clusters'] = array(
     'title' => t('Groups'),
     'type' => MENU_NORMAL_ITEM,
-    'page callback' => 'ed_cluster_my_listing_page',
+    'page callback' => 'ed_all_groups_listing', //ed_all_groups_listing
     'access callback' => TRUE,
     'weight' => 20,
     'menu_name' => 'main-menu',    
   );
-  $items['clusters/mygroups'] = array(
-    'title' => t('My Groups'),    
-    'type' => MENU_DEFAULT_LOCAL_TASK,    
-    'weight' => 0,
-  );
   $items['clusters/groups'] = array(
     'title' => t('All Groups'),    
-    'type' => MENU_LOCAL_TASK,
-    'page callback' => 'ed_all_groups_listing',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    //'page callback' => 'ed_all_groups_listing',
     'access callback' => TRUE,
     'weight' => 5,
+  );
+    $items['clusters/mygroups'] = array(
+    'title' => t('My Groups'),    
+    'type' => MENU_LOCAL_TASK,
+    'access callback' => 'user_is_logged_in',
+    'page callback' => 'ed_cluster_my_listing_page',
+    'weight' => 0,
   );
   $items['node/%node/task-manager'] = array(
     'title' => t('Task Manager'),
