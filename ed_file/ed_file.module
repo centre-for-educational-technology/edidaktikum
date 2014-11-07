@@ -88,7 +88,7 @@ function ed_file_and_folder_breadcrumb($node = NULL) {
     $breadcrumb[] = $node->title;
     $breadcrumb = ed_file_add_folder_to_breadcrumb($breadcrumb, $node);
   }
-  $breadcrumb[] = l('Files', 'dashboard/files');
+  $breadcrumb[] = l(t('Files'), 'dashboard/files');
   // Breadcrumbs are in reverse order, need to change positioning
   $breadcrumb = array_reverse($breadcrumb);
 

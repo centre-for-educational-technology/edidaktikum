@@ -421,7 +421,7 @@ msgstr "arutelu"
 
 #: edidaktikum.module:489 ed_file/ed_file.module:158
 msgid "file"
-msgstr "file"
+msgstr "fail"
 
 #: edidaktikum.module:492
 msgid "portfolio"
