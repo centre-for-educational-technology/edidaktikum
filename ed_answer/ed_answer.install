@@ -295,3 +295,43 @@ function _ed_answer_create_status_field_instance(){
   return $instance;
 }
 
+
+/**
+ * Update ed_status comment field instance to translatable.
+ */
+function ed_answer_update_7110(&$sandbox){
+  field_update_instance(array(
+    'label' => 'Status',
+    'description' => '',
+    'default_value' => array(
+      array(
+        'value' => 'unchecked',
+      ),
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_select',
+      'weight' => 3,
+    ),
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'type' => 'i18n_list_default',
+        'weight' => '2',
+        'settings' => array(),
+        'module' => 'i18n_field',
+      ),
+    ),
+    'required' => FALSE,
+    'field_name' => 'ed_answer_status',
+    'entity_type' => 'comment',
+    'bundle' => 'comment_node_ed_answer',
+    'deleted' => '0',
+  ));
+}
+
