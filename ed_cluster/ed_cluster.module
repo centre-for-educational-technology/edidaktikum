@@ -910,7 +910,8 @@ function _ed_check_if_answered($uid, $tnid){
   $query = db_select('node', 'n');
   $query->join('field_data_field_ref_to_task', 'ref', 'n.nid = ref.entity_id');
   $query->fields('n', array('nid'));
-  $query->condition('n.uid', $uid);
+  $query->condition('n.uid', $uid)
+      ->condition('n.status', 1);
   $query->condition('ref.field_ref_to_task_target_id', $tnid);
   $result = $query->execute()->fetchCol();
   if(!empty($result)){
