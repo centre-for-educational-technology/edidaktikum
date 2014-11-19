@@ -787,8 +787,11 @@ function ed_get_views($nid){
   $viewscount = db_select('node_counter', 'nc')
     ->fields('nc', array('totalcount'))
     ->condition('nid', $nid)
-    ->countQuery()->execute()->fetchField();
-      
-  return $viewscount;
+    ->execute()->fetchField();
+  if($viewscount>0){
+    return $viewscount;
+  }else{
+    return 0;
+  }
+  
 }
-
