@@ -99,15 +99,7 @@ function ed_cluster_menu() {
     'type' => MENU_LOCAL_TASK,
     'weight' => 50,
   );
-  $items['node/%node/page'] = array(
-    'title' => t('Pages'),
-    'page callback' => 'ed_listing_from_group',    
-    'access callback' => 'ed_group_content_listing_access',
-    'page arguments' => array('node', 1, 'ed_page'),
-    'access arguments' => array('node', 1, 'ed_page'),
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 50,
-  );
+  
   $items['node/%node/bookmark'] = array(
     'title' => t('Bookmarks'),
     'page callback' => 'ed_listing_from_group',
@@ -398,10 +390,10 @@ function ed_cluster_menu_alter(&$items) {
   if (isset($items['node/%/group'])) {
     $items['node/%/group']['title callback'] = '_ed_cluster_group_menu_title';
     $items['node/%/group']['title arguments'] = array('node', 1);
-  }
+  }  
 }
 
-function ed_analytics_og_ui_get_group_admin_alter(&$data, $gid){
+function ed_cluster_og_ui_get_group_admin_alter(&$data, $gid){
   global $user;
   if (!in_array('administrator', $user->roles)) {
     unset($data['roles']);
