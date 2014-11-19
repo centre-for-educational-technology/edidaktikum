@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2014-10-21 16:56+0300\n"
-"PO-Revision-Date: 2014-10-21 16:56+0300\n"
+"POT-Creation-Date: 2014-11-19 14:43+0200\n"
+"PO-Revision-Date: 2014-11-19 14:43+0200\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "MIME-Version: 1.0\n"
@@ -421,7 +421,7 @@ msgstr "arutelu"
 
 #: edidaktikum.module:489 ed_file/ed_file.module:158
 msgid "file"
-msgstr "fail"
+msgstr "file"
 
 #: edidaktikum.module:492
 msgid "portfolio"

@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2014-10-21 16:55+0300\n"
-"PO-Revision-Date: 2014-10-21 16:55+0300\n"
+"POT-Creation-Date: 2014-11-19 14:41+0200\n"
+"PO-Revision-Date: 2014-11-19 14:41+0200\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "MIME-Version: 1.0\n"
@@ -9642,10 +9642,6 @@ msgid ""
 "select the desired %realm."
 msgstr ""
 
-#: /et/node/10
-msgid "Add comment"
-msgstr ""
-
 #: /et/node/9
 msgid "Nimi"
 msgstr ""
@@ -11516,10 +11512,6 @@ msgstr ""
 msgid "Arutelu"
 msgstr ""
 
-#: /et/node/243
-msgid "Private comment"
-msgstr ""
-
 #: /et/group/node/268/subscribe/og_user_node
 msgid "Your subscription request was sent."
 msgstr ""
@@ -13377,10 +13369,6 @@ msgid "Identity deleted."
 msgstr ""
 
 #: /et/node/1139/task-manager
-msgid "Unchecked"
-msgstr ""
-
-#: /et/node/1139/task-manager
 msgid "Not answered"
 msgstr ""
 
@@ -13390,14 +13378,6 @@ msgstr ""
 
 #: /et/node/add/ed-answer?field_ref_to_task=1413
 msgid "<a href=\"/et/kategooriad/%C3%BClddidaktika\">Ülddidaktika</a><br />"
-msgstr ""
-
-#: /et/node/1025/task-manager
-msgid "Accepted"
-msgstr ""
-
-#: /et/node/1034/task-manager
-msgid "Rejected"
 msgstr ""
 
 #: /js/shs/json
@@ -14137,10 +14117,6 @@ msgstr ""
 msgid "<a href=\"/et/kategooriad/valdkonna-areng\">Valdkonna areng</a><br />"
 msgstr ""
 
-#: /et/node/978/task-manager
-msgid "Due date: "
-msgstr ""
-
 #: /et/node/add/ed-answer?field_ref_to_task=1707
 msgid ""
 "kavandab ja kohandab õppetegevusi kasutades digivahendeid, et "
@@ -14257,6 +14233,532 @@ msgstr ""
 
 #: /et/admin/reports/dblog
 msgid "Updated string %location for textgroup %textgroup: %string"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=1929
+msgid "Hindamine"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=1929
+msgid "<a href=\"/et/kategooriad/hindamine\">Hindamine</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=1929
+msgid ""
+"Toetab ennastjuhtiva õppija kujunemist, suunates õppijat "
+"õpieesmärkide seadmisele ja eneseanalüüsile"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=1929
+msgid ""
+"<a "
+"href=\"/et/competence/toetab-ennastjuhtiva-%C3%B5ppija-kujunemist-suunates-%C3%B5ppijat-%C3%B5pieesm%C3%A4rkide-seadmisele-ja\">Toetab "
+"ennastjuhtiva õppija kujunemist, suunates õppijat õpieesmärkide "
+"seadmisele ja eneseanalüüsile</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=1929
+msgid ""
+"Rakendab süsteemselt erinevaid õppimist toetavaid tagasiside ja "
+"hindamise viise, lähtudes õppija eripärast ja hindamist "
+"reguleerivatest dokumentidest"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=1929
+msgid ""
+"<a "
+"href=\"/et/competence/rakendab-s%C3%BCsteemselt-erinevaid-%C3%B5ppimist-toetavaid-tagasiside-ja-hindamise-viise-l%C3%A4htudes\">Rakendab "
+"süsteemselt erinevaid õppimist toetavaid tagasiside ja hindamise "
+"viise, lähtudes õppija eripärast ja hindamist reguleerivatest "
+"dokumentidest</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=1964
+msgid ""
+"Annab sisendit ja tagasisidet eelnõudele, ettepanekutele, "
+"arengukavadele jm"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=1964
+msgid ""
+"<a "
+"href=\"/et/competence/annab-sisendit-ja-tagasisidet-eeln%C3%B5udele-ettepanekutele-arengukavadele-jm\">Annab "
+"sisendit ja tagasisidet eelnõudele, ettepanekutele, arengukavadele "
+"jm</a><br />"
+msgstr ""
+
+#: /et/admin/config/edidaktikum/configuration
+msgid "Message to be displayed on front page"
+msgstr ""
+
+#: /et/admin/config/edidaktikum/configuration
+msgid "If this is empty there will be no messages displayed on front page"
+msgstr ""
+
+#: /et/admin/config/search/path/patterns
+msgid "Content paths"
+msgstr ""
+
+#: /et/admin/config/search/path/patterns
+msgid ""
+"Default path pattern (applies to all content types with blank patterns "
+"below)"
+msgstr ""
+
+#: /et/admin/config/search/path/patterns
+msgid "language neutral"
+msgstr ""
+
+#: /et/admin/config/search/path/patterns
+msgid "Pattern for all @node_type paths"
+msgstr ""
+
+#: /et/admin/config/search/path/patterns
+msgid ""
+"Default path pattern for @node_type (applies to all @node_type content "
+"types with blank patterns below)"
+msgstr ""
+
+#: /et/admin/config/search/path/patterns
+msgid "Pattern for all @language @node_type paths"
+msgstr ""
+
+#: /et/admin/config/search/path/patterns
+msgid "Taxonomy term paths"
+msgstr ""
+
+#: /et/admin/config/search/path/patterns
+msgid ""
+"Default path pattern (applies to all vocabularies with blank patterns "
+"below)"
+msgstr ""
+
+#: /et/admin/config/search/path/patterns
+msgid "Pattern for all %vocab-name paths"
+msgstr ""
+
+#: /et/admin/config/search/path/patterns
+msgid "User paths"
+msgstr ""
+
+#: /et/admin/config/search/path/patterns
+msgid "Pattern for user account page paths"
+msgstr ""
+
+#: /et/admin/config/search/path/patterns
+msgid "Replacement patterns"
+msgstr ""
+
+#: /et/admin/config/search/path/settings
+msgid "Verbose"
+msgstr ""
+
+#: /et/admin/config/search/path/settings
+msgid "Display alias changes (except during bulk updates)."
+msgstr ""
+
+#: /et/admin/config/search/path/settings
+msgid "Separator"
+msgstr ""
+
+#: /et/admin/config/search/path/settings
+msgid ""
+"Character used to separate words in titles. This will replace any "
+"spaces and punctuation characters. Using a space or + character can "
+"cause unexpected results."
+msgstr ""
+
+#: /et/admin/config/search/path/settings
+msgid "Character case"
+msgstr ""
+
+#: /et/admin/config/search/path/settings
+msgid "Leave case the same as source token values."
+msgstr ""
+
+#: /et/admin/config/search/path/settings
+msgid "Change to lower case"
+msgstr ""
+
+#: /et/admin/config/search/path/settings
+msgid "Maximum alias length"
+msgstr ""
+
+#: /et/admin/config/search/path/settings
+msgid ""
+"Maximum length of aliases to generate. 100 is the recommended length. "
+"@max is the maximum possible length. See <a "
+"href=\"@pathauto-help\">Pathauto help</a> for details."
+msgstr ""
+
+#: /et/admin/config/search/path/settings
+msgid "Maximum component length"
+msgstr ""
+
+#: /et/admin/config/search/path/settings
+msgid ""
+"Maximum text length of any component in the alias (e.g., [title]). 100 "
+"is the recommended length. @max is the maximum possible length. See <a "
+"href=\"@pathauto-help\">Pathauto help</a> for details."
+msgstr ""
+
+#: /et/admin/config/search/path/settings
+msgid ""
+"What should Pathauto do when updating an existing content item which "
+"already has an alias?"
+msgstr ""
+
+#: /et/admin/config/search/path/settings
+msgid ""
+"Considering installing the <a href=\"!url\">Redirect module</a> to get "
+"redirects when your aliases change."
+msgstr ""
+
+#: /et/admin/config/search/path/settings
+msgid "Update action"
+msgstr ""
+
+#: /et/admin/config/search/path/settings
+msgid "Do nothing. Leave the old alias intact."
+msgstr ""
+
+#: /et/admin/config/search/path/settings
+msgid "Create a new alias. Leave the existing alias functioning."
+msgstr ""
+
+#: /et/admin/config/search/path/settings
+msgid "Create a new alias. Delete the old alias."
+msgstr ""
+
+#: /et/admin/config/search/path/settings
+msgid "Transliterate prior to creating alias"
+msgstr ""
+
+#: /et/admin/config/search/path/settings
+msgid ""
+"When a pattern includes certain characters (such as those with "
+"accents) should Pathauto attempt to transliterate them into the "
+"ASCII-96 alphabet? Transliteration is handled by the Transliteration "
+"module."
+msgstr ""
+
+#: /et/admin/config/search/path/settings
+msgid "Reduce strings to letters and numbers"
+msgstr ""
+
+#: /et/admin/config/search/path/settings
+msgid ""
+"Filters the new alias to only letters and numbers found in the "
+"ASCII-96 set."
+msgstr ""
+
+#: /et/admin/config/search/path/settings
+msgid "Strings to Remove"
+msgstr ""
+
+#: /et/admin/config/search/path/settings
+msgid ""
+"Words to strip out of the URL alias, separated by commas. Do not use "
+"this to remove punctuation."
+msgstr ""
+
+#: /et/admin/config/search/path/settings
+msgid "Punctuation"
+msgstr ""
+
+#: /et/admin/config/search/path/settings
+msgid "Replace by separator"
+msgstr ""
+
+#: /et/admin/config/search/path/settings
+msgid "No action (do not replace)"
+msgstr ""
+
+#: /et/admin/config/search/path/update_bulk
+msgid "Select the types of un-aliased paths for which to generate URL aliases"
+msgstr ""
+
+#: /et/node/1034/task-manager
+msgid "Kõik grupid"
+msgstr ""
+
+#: /et/node/1034/task-manager
+msgid "Minu grupid"
+msgstr ""
+
+#: /et/admin/config/search/path/update_bulk
+msgid "Bulk updating URL aliases"
+msgstr ""
+
+#: /et/batch?id=1040&op=do
+msgid "Updated alias for node @nid."
+msgstr ""
+
+#: /et/batch?id=1040&op=finished
+msgid "Generated @count URL aliases."
+msgstr ""
+
+#: /et/admin/config/search/path/edit/12028?destination=admin/config/search/path/list/iseseisev-t%C3%B6%C3%B6-3-artiklite-anal%C3%BC%C3%BCs-vastus
+msgid ""
+"Specify the existing path you wish to alias. For example: node/28, "
+"forum/1, taxonomy/term/1."
+msgstr ""
+
+#: /et/batch?id=1048&op=finished
+msgid "No new URL aliases to generate."
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid "<a href=\"/et/content/kevad\">Kevad</a>"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid "<a href=\"/et/content/mari-grupp\">Mari grupp</a>"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid "<a href=\"/et/content/mari-grupp\">Mari grupp</a>, juku"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid "<a href=\"/et/content/education4future\">Education4Future</a>"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=2003
+msgid ""
+"Kogub kvalitatiivsete ja kvantitatiivsete meetoditega andmeid "
+"õppijate arengu ja motivatsiooni kohta, tagasisidestab"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=2003
+msgid ""
+"<a "
+"href=\"/et/competence/kogub-kvalitatiivsete-ja-kvantitatiivsete-meetoditega-andmeid-%C3%B5ppijate-arengu-ja\">Kogub "
+"kvalitatiivsete ja kvantitatiivsete meetoditega andmeid õppijate "
+"arengu ja motivatsiooni kohta, tagasisidestab</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=2003
+msgid ""
+"Kaasab õppijaid, lapsevanemaid, kolleege ja tugispetsialiste "
+"õpitegevusse, tagasisidesse ja hindamisse, kasutades erinevaid "
+"meetodeid"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=2003
+msgid ""
+"<a "
+"href=\"/et/competence/kaasab-%C3%B5ppijaid-lapsevanemaid-kolleege-ja-tugispetsialiste-%C3%B5pitegevusse-tagasisidesse-ja\">Kaasab "
+"õppijaid, lapsevanemaid, kolleege ja tugispetsialiste õpitegevusse, "
+"tagasisidesse ja hindamisse, kasutades erinevaid meetodeid</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=2002
+msgid ""
+"Rakendab õpetamisel erinevaid meetodeid ja rutiinseid toiminguid (nt "
+"eelteadmiste väljaselgitamine, oodatud õpitulemustest ja "
+"-tegevustest teavitamine, õpitegevused eesmärkide saavutamiseks, "
+"kokkuvõte saavutatud tulemustest, tagasiside)"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=2002
+msgid ""
+"<a "
+"href=\"/et/competence/rakendab-%C3%B5petamisel-erinevaid-meetodeid-ja-rutiinseid-toiminguid-nt-eelteadmiste\">Rakendab "
+"õpetamisel erinevaid meetodeid ja rutiinseid toiminguid (nt "
+"eelteadmiste väljaselgitamine, oodatud õpitulemustest ja "
+"-tegevustest teavitamine, õpitegevused eesmärkide saavutamiseks, "
+"kokkuvõte saavutatud tulemustest, tagasiside)</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=2002
+msgid ""
+"Analüüsib õpetamist ning kohandab tegevusi paindlikult lähtuvalt "
+"õppijate vajadustest"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=2002
+msgid ""
+"<a "
+"href=\"/et/competence/anal%C3%BC%C3%BCsib-%C3%B5petamist-ning-kohandab-tegevusi-paindlikult-l%C3%A4htuvalt-%C3%B5ppijate-vajadustest\">Analüüsib "
+"õpetamist ning kohandab tegevusi paindlikult lähtuvalt õppijate "
+"vajadustest</a><br />"
+msgstr ""
+
+#: /et/admin_menu/toggle-modules?token=6sHc1vOktRqdMGq0EYj6vZxHADg7QRt9M09SFPJe_Yk&destination=node/1014
+msgid "Disabled these modules: !module-list."
+msgstr ""
+
+#: /et
+msgid "Enable developer modules"
+msgstr ""
+
+#: /et/admin_menu/toggle-modules?token=6sHc1vOktRqdMGq0EYj6vZxHADg7QRt9M09SFPJe_Yk&destination=home
+msgid "Enabled these modules: !module-list."
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=2312
+msgid ""
+"Motiveerib õppima, pakkudes elulisi jõukohaseid õppeülesandeid ja "
+"luues eduelamuse igale õppijale"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=2312
+msgid ""
+"<a "
+"href=\"/et/competence/motiveerib-%C3%B5ppima-pakkudes-elulisi-j%C3%B5ukohaseid-%C3%B5ppe%C3%BClesandeid-ja-luues-eduelamuse-igale\">Motiveerib "
+"õppima, pakkudes elulisi jõukohaseid õppeülesandeid ja luues "
+"eduelamuse igale õppijale</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=2368
+msgid "Algklassid"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=2368
+msgid "<a href=\"/et/kategooriad/algklassid\">Algklassid</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=2368
+msgid "Riiklik Õppekava"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=2368
+msgid ""
+"<a href=\"/et/kategooriad/riiklik-%C3%B5ppekava\">Riiklik "
+"Õppekava</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=2368
+msgid ""
+"demonstreerib vilumust digitehnoloogia kasutamisel ja olemasoleva "
+"teadmuse ülekandmisel uutele tehnoloogiatele ja situatsioonidele;"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=2368
+msgid ""
+"<a "
+"href=\"/et/competence/demonstreerib-vilumust-digitehnoloogia-kasutamisel-ja-olemasoleva-teadmuse-%C3%BClekandmisel\">demonstreerib "
+"vilumust digitehnoloogia kasutamisel ja olemasoleva teadmuse "
+"ülekandmisel uutele tehnoloogiatele ja situatsioonidele;</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=2368
+msgid ""
+"demonstreerib liidrivõimeid uute digitehnoloogiate juurutamise "
+"visiooni kujundamisel, panustavad ühisotsustusse ning arendavad "
+"kolleegide eestvedamis- ja digitehnoloogiaoskusi"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=2368
+msgid ""
+"<a "
+"href=\"/et/competence/demonstreerib-liidriv%C3%B5imeid-uute-digitehnoloogiate-juurutamise-visiooni-kujundamisel\">demonstreerib "
+"liidrivõimeid uute digitehnoloogiate juurutamise visiooni "
+"kujundamisel, panustavad ühisotsustusse ning arendavad kolleegide "
+"eestvedamis- ja digitehnoloogiaoskusi</a><br />"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid ""
+"<a href=\"/et/content/r%C3%B5%C3%B5m-praktika-1415\">RÕÕM praktika "
+"14/15</a>"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=2425
+msgid ""
+"edastab efektiivselt asjakohast teavet ja ideid õppijatele, "
+"vanematele ja kolleegidele, erinevaid digiajastu meediume ja formaate "
+"kasutades;"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=2425
+msgid ""
+"<a "
+"href=\"/et/competence/edastab-efektiivselt-asjakohast-teavet-ja-ideid-%C3%B5ppijatele-vanematele-ja-kolleegidele\">edastab "
+"efektiivselt asjakohast teavet ja ideid õppijatele, vanematele ja "
+"kolleegidele, erinevaid digiajastu meediume ja formaate "
+"kasutades;</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=2425
+msgid ""
+"on eeskujuks tänapäevaste ja tulevaste digivahendite kasutamisel "
+"uurimistegevuses ning elukestvas õppes, sh suudavad leida, "
+"analüüsida, hinnata ja kasutada erinevaid infoallikaid"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=2425
+msgid ""
+"<a "
+"href=\"/et/competence/eeskujuks-t%C3%A4nap%C3%A4evaste-ja-tulevaste-digivahendite-kasutamisel-uurimistegevuses-ning\">on "
+"eeskujuks tänapäevaste ja tulevaste digivahendite kasutamisel "
+"uurimistegevuses ning elukestvas õppes, sh suudavad leida, "
+"analüüsida, hinnata ja kasutada erinevaid infoallikaid</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=2425
+msgid ""
+"teeb õppijate õpiedukuse ja innovaatilisuse toetamiseks "
+"digivahendite abil koostööd õppijate, kolleegide, vanemate ja "
+"teiste kogukonnaliikmetega"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=2425
+msgid ""
+"<a "
+"href=\"/et/competence/teeb-%C3%B5ppijate-%C3%B5piedukuse-ja-innovaatilisuse-toetamiseks-digivahendite-abil-koost%C3%B6%C3%B6d\">teeb "
+"õppijate õpiedukuse ja innovaatilisuse toetamiseks digivahendite "
+"abil koostööd õppijate, kolleegide, vanemate ja teiste "
+"kogukonnaliikmetega</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=2492
+msgid ""
+"Mõtestab oma rolli õpetajana ja analüüsib õpetajatöö "
+"põhiväärtusi, jagab neid kolleegide, õppijate ja lapsevanematega "
+"ühiste väärtushoiakute kujunemiseks"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=2492
+msgid ""
+"<a "
+"href=\"/et/competence/m%C3%B5testab-oma-rolli-%C3%B5petajana-ja-anal%C3%BC%C3%BCsib-%C3%B5petajat%C3%B6%C3%B6-p%C3%B5hiv%C3%A4%C3%A4rtusi-jagab-neid-kolleegide\">Mõtestab "
+"oma rolli õpetajana ja analüüsib õpetajatöö põhiväärtusi, "
+"jagab neid kolleegide, õppijate ja lapsevanematega ühiste "
+"väärtushoiakute kujunemiseks</a><br />"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid ""
+"<a "
+"href=\"/et/content/%C3%B5pikeskkond-ja-selle-kujundamine-p%C3%A4eva%C3%B5pe\">Õpikeskkond "
+"ja selle kujundamine - päevaõpe</a>"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid ""
+"<a "
+"href=\"/et/content/%C3%B5pikeskkond-ja-selle-kujundamine-kaug%C3%B5pe\">Õpikeskkond "
+"ja selle kujundamine - kaugõpe</a>"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid ""
+"<a "
+"href=\"/et/content/%C3%B5pikeskkond-ja-selle-kujundamine-ts%C3%BCkli%C3%B5pe\">Õpikeskkond "
+"ja selle kujundamine - tsükliõpe</a>"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid ""
+"<a "
+"href=\"/et/content/informaatika-didaktika-j%C3%A4relkursus\">Informaatika "
+"didaktika - järelkursus</a>"
+msgstr ""
+
+#: /et/user/50/edit
+msgid "The referenced entity (@type: @id) is invalid."
 msgstr ""
 
 #: ; misc/drupal.js
@@ -31118,6 +31620,10 @@ msgstr " ›"
 msgid "Contact Us"
 msgstr "Kontakt"
 
+#: /et/node/10
+msgid "Add comment"
+msgstr "Lisa kommentaar"
+
 #: /et/node/9
 msgid "Request group membership"
 msgstr "Taotle grupile ligipääsu"
@@ -32056,6 +32562,10 @@ msgstr "Õppematerjalide tüüpide nimekiri"
 msgid "A list of tags for learning resources"
 msgstr "Õppematerjalide märksõnade nimekiri"
 
+#: /et/node/243
+msgid "Private comment"
+msgstr "Privaatne kommentaar"
+
 #: /et/group/node/125/admin/people
 msgid "remove"
 msgstr "Kustuta"
@@ -32160,6 +32670,18 @@ msgstr "Kasutaja %name kuulub juba gruppi."
 msgid "Cover image"
 msgstr "Taustapilt"
 
+#: /et/node/1139/task-manager
+msgid "Unchecked"
+msgstr "Kontrollimata"
+
+#: /et/node/1025/task-manager
+msgid "Accepted"
+msgstr "Kinnitatud"
+
+#: /et/node/1034/task-manager
+msgid "Rejected"
+msgstr "Tagasi lükatud"
+
 #: /et/dashboard
 msgid "Leia ja avasta"
 msgstr "Leia ja avasta"
@@ -32171,6 +32693,10 @@ msgstr "Logi sisse / registreeru"
 #: /et
 msgid "Goodbye! You are now logged out from eDidaktikum"
 msgstr "Nägemiseni! Oled nüüd eDidaktikumist välja logitud."
+
+#: /et/node/978/task-manager
+msgid "Due date: "
+msgstr "Tähtaeg: "
 
 #: /et/admin_menu/flush-cache?token=HEV60-MNlBxNUX-xm2qvxnzXU61GFGHqGC26v7w1sOg&destination=admin/config/edidaktikum/configuration
 msgid "My Groups"
