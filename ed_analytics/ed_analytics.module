@@ -16,14 +16,14 @@ function ed_analytics_menu(){
     'type' => MENU_NORMAL_ITEM,
     'weight' => 0,
   );
-  $items['dashboard/analytics'] = array(
+  /*$items['dashboard/analytics'] = array(
     'title' => t('Learning Analytics'),
     'page callback' => 'ed_analytics_page',
     'access callback' => 'user_is_logged_in',
     'weight' => 23,
     'menu_name' => 'ed-dashboard-menu',
     'type' => MENU_NORMAL_ITEM,
-  );
+  );*/
   return $items;
 }
 
