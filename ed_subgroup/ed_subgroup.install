@@ -1,79 +1,495 @@
 <?php
 
-require_once('ed_subgroup_functions.inc');
 
 
 /**
  * Implements hook_install().
  */
-
 function ed_subgroup_install(){
-
-  foreach(_ed_subgroup_installed_instances() as $instance){
-    $instance['entity_type'] = 'node';
-    $instance['bundle'] = 'ed_subgroup';
-    field_create_instance($instance);
-  }
-  ed_subgroup_add_og_group_field();
-  ed_subgroup_add_og_audience();
-  ed_subgroup_add_og_group_access_field();
-  ed_subgroup_node_add_field_featured_image();
-}
-function ed_subgroup_node_add_field_featured_image() {
-  $field_name = 'ed_field_featured_image';
-  $field = field_info_field($field_name);
-  if (!empty($field) && !field_info_instance('node', $field_name, 'ed_subgroup')) {
-    $instance = array(
-      'field_name' => $field_name,
-      'entity_type' => 'node',
-      'bundle' => 'ed_subgroup',
-      'label' => t('Featured image'),
-      'description' => '',
+  field_create_instance(array(
+    'label' => 'Groups audience',
+    'widget' => array(
+      'weight' => '1',
+      'type' => 'og_complex',
+      'module' => 'og',
+      'active' => 0,
+      'settings' => array(),
+    ),
+    'settings' => array(
+      'behaviors' => array(
+        'prepopulate' => array(
+          'status' => 1,
+          'action' => 'hide',
+          'action_on_edit' => 1,
+          'fallback' => 'redirect',
+          'skip_perm' => '0',
+          'providers' => array(
+            'url' => 1,
+            'og_context' => FALSE,
+          ),
+        ),
+        'og_widget' => array(
+          'status' => TRUE,
+          'default' => array(
+            'widget_type' => 'options_select',
+          ),
+          'admin' => array(
+            'widget_type' => 'entityreference_autocomplete',
+          ),
+          'access_override' => 0,
+        ),
+      ),
+      'user_register_form' => FALSE,
+    ),
+    'view modes' => array(
+      'full' => array(
+        'label' => 'Full',
+        'type' => 'og_list_default',
+        'custom settings' => FALSE,
+      ),
+      'teaser' => array(
+        'label' => 'Teaser',
+        'type' => 'og_list_default',
+        'custom settings' => FALSE,
+      ),
+    ),
+    'display' => array(
+      'default' => array(
+        'type' => 'og_list_default',
+        'label' => 'above',
+        'settings' => array(),
+        'module' => 'og_ui',
+        'weight' => 1,
+      ),
+      'teaser' => array(
+        'type' => 'hidden',
+        'label' => 'above',
+        'settings' => array(),
+        'weight' => 0,
+      ),
+      'featured' => array(
+        'type' => 'hidden',
+        'label' => 'above',
+        'settings' => array(),
+        'weight' => 0,
+      ),
+      'front' => array(
+        'type' => 'hidden',
+        'label' => 'above',
+        'settings' => array(),
+        'weight' => 0,
+      ),
+      'dashboard' => array(
+        'type' => 'hidden',
+        'label' => 'above',
+        'settings' => array(),
+        'weight' => 0,
+      ),
+    ),
+    'required' => 0,
+    'description' => '',
+    'default_value' => NULL,
+    'default_value_function' => 'entityreference_prepopulate_field_default_value',
+    'field_name' => 'og_group_ref',
+    'entity_type' => 'node',
+    'bundle' => 'ed_subgroup',
+    'deleted' => '0',
+  ));
+  
+  field_create_instance(array(
+    'label' => 'Group',
+    'description' => 'Determine if this is an OG group.',
+    'display_label' => 1,
+    'widget' => array(
+      'module' => 'options',
       'settings' => array(
-        'file_directory' => 'ed_subgroup_featured_images',
+        'og_hide' => TRUE,
+        'display_label' => 0,
       ),
-      'widget' => array(
-        'type' => 'image_image',
+      'type' => 'options_onoff',
+      'weight' => 0,
+    ),
+    'default_value' => array(
+      array(
+        'value' => 1,
       ),
-      'required' => FALSE,
-    );
-    field_create_instance($instance);
-  }
-}
-
-function ed_subgroup_add_og_group_access_field(){
-  if(function_exists('og_create_field') && defined('OG_ACCESS_FIELD')){
-    og_create_field(OG_ACCESS_FIELD, 'node','ed_subgroup');
-  }
-}
-
-function ed_subgroup_add_og_group_field(){
-  if(function_exists('og_create_field') && defined('OG_GROUP_FIELD')){
-    og_create_field(OG_GROUP_FIELD, 'node', 'ed_subgroup');
-  }
-}
-
-function ed_subgroup_add_og_audience(){
-
-  if(function_exists('og_create_field') && defined('OG_AUDIENCE_FIELD')){
-
-    $og_field = og_fields_info(OG_AUDIENCE_FIELD);
-    $og_field['instance']['label'] = t('Subgroup');
-    $og_field['instance']['required'] = TRUE;
-    $og_field['instance']['settings']['behaviors']['prepopulate'] = array(
-      'status' => TRUE,
-      'action' => 'none',
-      'fallback' => 'none',
-      'skip_perm' => FALSE,
-    );
-    og_create_field(OG_AUDIENCE_FIELD, 'node', 'ed_subgroup', $og_field);
-  }
+    ),
+    'view modes' => array(
+      'full' => array(
+        'label' => 'Full',
+        'type' => 'og_group_subscribe',
+        'custom settings' => FALSE,
+      ),
+      'teaser' => array(
+        'label' => 'Teaser',
+        'type' => 'og_group_subscribe',
+        'custom settings' => FALSE,
+      ),
+    ),
+    'display' => array(
+      'default' => array(
+        'type' => 'og_group_subscribe',
+        'label' => 'above',
+        'settings' => array(
+          'field_name' => FALSE,
+        ),
+        'module' => 'og_ui',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'hidden',
+        'type' => 'og_group_subscribe',
+        'weight' => '0',
+        'settings' => array(
+          'field_name' => FALSE,
+        ),
+        'module' => 'og_ui',
+      ),
+      'featured' => array(
+        'type' => 'hidden',
+        'label' => 'above',
+        'settings' => array(),
+        'weight' => 0,
+      ),
+      'front' => array(
+        'type' => 'hidden',
+        'label' => 'above',
+        'settings' => array(),
+        'weight' => 0,
+      ),
+      'dashboard' => array(
+        'type' => 'hidden',
+        'label' => 'above',
+        'settings' => array(),
+        'weight' => 0,
+      ),
+    ),
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'required' => FALSE,
+    'field_name' => 'group_group',
+    'entity_type' => 'node',
+    'bundle' => 'ed_subgroup',
+  ));
+  field_create_instance(array(
+    'label' => 'Excerpt',
+    'description' => '',
+    'required' => TRUE,
+    'display' => array(
+      'teaser' => array(
+        'label' => 'hidden',
+        'type' => 'text_trimmed',
+        'weight' => '1',
+        'settings' => array(
+          'trim_length' => 600,
+        ),
+        'module' => 'text',
+      ),
+      'default' => array(
+        'label' => 'above',
+        'type' => 'text_default',
+        'settings' => array(),
+        'module' => 'text',
+        'weight' => 1,
+      ),
+      'featured' => array(
+        'type' => 'hidden',
+        'label' => 'above',
+        'settings' => array(),
+        'weight' => 0,
+      ),
+      'front' => array(
+        'type' => 'hidden',
+        'label' => 'above',
+        'settings' => array(),
+        'weight' => 0,
+      ),
+      'dashboard' => array(
+        'type' => 'hidden',
+        'label' => 'above',
+        'settings' => array(),
+        'weight' => 0,
+      ),
+    ),
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'type' => 'text_textarea',
+      'settings' => array(
+        'rows' => 5,
+      ),
+      'weight' => 1,
+      'module' => 'text',
+    ),
+    'field_name' => 'ed_field_excerpt',
+    'entity_type' => 'node',
+    'bundle' => 'ed_subgroup',
+    'default_value' => NULL,
+  ));
+  field_create_instance(array(
+    'label' => 'Categories',
+    'description' => '',
+    'widget' => array(
+      'type' => 'taxonomy_shs',
+      'settings' => array(
+        'start_minimized' => TRUE,
+        'leaves_only' => 0,
+        'filter_view' => '',
+        'select_parents' => 0,
+        'cascading_selection' => 0,
+        'track_list' => 0,
+        'token_display' => '',
+        'parent_term_id' => '',
+        'max_depth' => '',
+        'shs' => array(
+          'node_count' => FALSE,
+          'create_new_terms' => FALSE,
+          'create_new_levels' => FALSE,
+          'force_deepest' => FALSE,
+        ),
+      ),
+      'weight' => 2,
+      'module' => 'shs',
+    ),
+    'required' => FALSE,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'type' => 'taxonomy_term_reference_link',
+        'settings' => array(),
+        'module' => 'taxonomy',
+        'weight' => 2,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'type' => 'hidden',
+        'weight' => '0',
+        'settings' => array(),
+      ),
+      'featured' => array(
+        'type' => 'hidden',
+        'label' => 'above',
+        'settings' => array(),
+        'weight' => 0,
+      ),
+      'front' => array(
+        'type' => 'hidden',
+        'label' => 'above',
+        'settings' => array(),
+        'weight' => 0,
+      ),
+      'dashboard' => array(
+        'type' => 'hidden',
+        'label' => 'above',
+        'settings' => array(),
+        'weight' => 0,
+      ),
+    ),
+    'field_name' => 'ed_field_category',
+    'entity_type' => 'node',
+    'bundle' => 'ed_subgroup',
+    'default_value' => NULL,
+  ));
+  field_create_instance(array(
+    'label' => 'Group visibility',
+    'required' => TRUE,
+    'default_value' => array(
+      array(
+        'value' => 0,
+      ),
+    ),
+    'widget_type' => 'options_select',
+    'view modes' => array(
+      'full' => array(
+        'label' => 'above',
+        'type' => 'options_onoff',
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'type' => 'options_onoff',
+      ),
+    ),
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'type' => 'list_default',
+        'settings' => array(),
+        'module' => 'list',
+        'weight' => 3,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'type' => 'hidden',
+        'weight' => '0',
+        'settings' => array(),
+      ),
+      'featured' => array(
+        'type' => 'hidden',
+        'label' => 'above',
+        'settings' => array(),
+        'weight' => 0,
+      ),
+      'front' => array(
+        'type' => 'hidden',
+        'label' => 'above',
+        'settings' => array(),
+        'weight' => 0,
+      ),
+      'dashboard' => array(
+        'type' => 'hidden',
+        'label' => 'above',
+        'settings' => array(),
+        'weight' => 0,
+      ),
+    ),
+    'widget' => array(
+      'type' => 'options_buttons',
+      'settings' => array(),
+      'weight' => 3,
+      'module' => 'options',
+    ),
+    'description' => '',
+    'field_name' => 'group_access',
+    'entity_type' => 'node',
+    'bundle' => 'ed_subgroup',
+  ));
+  field_create_instance(array(
+    'label' => 'Featured image',
+    'description' => '',
+    'settings' => array(
+      'file_directory' => 'ed_cluster_featured_images',
+      'file_extensions' => 'png gif jpg jpeg',
+      'max_filesize' => '',
+      'alt_field' => 0,
+      'title_field' => 0,
+      'max_resolution' => '',
+      'min_resolution' => '',
+      'default_image' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'type' => 'image_image',
+      'settings' => array(
+        'progress_indicator' => 'throbber',
+        'preview_image_style' => 'thumbnail',
+      ),
+      'weight' => 4,
+      'module' => 'image',
+    ),
+    'required' => FALSE,
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'type' => 'image',
+        'settings' => array(
+          'image_style' => '',
+          'image_link' => '',
+        ),
+        'module' => 'image',
+        'weight' => 4,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'type' => 'hidden',
+        'weight' => '0',
+        'settings' => array(),
+      ),
+      'featured' => array(
+        'type' => 'hidden',
+        'label' => 'above',
+        'settings' => array(),
+        'weight' => 0,
+      ),
+      'front' => array(
+        'type' => 'hidden',
+        'label' => 'above',
+        'settings' => array(),
+        'weight' => 0,
+      ),
+      'dashboard' => array(
+        'type' => 'hidden',
+        'label' => 'above',
+        'settings' => array(),
+        'weight' => 0,
+      ),
+    ),
+    'id' => '14',
+    'field_id' => '7',
+    'field_name' => 'ed_field_featured_image',
+    'entity_type' => 'node',
+    'bundle' => 'ed_subgroup',
+    'deleted' => '0',
+  ));
+  field_create_instance(array(
+    'label' => 'Content',
+    'description' => '',
+    'settings' => array(
+      'text_processing' => TRUE,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'settings' => array(
+        'rows' => 20,
+      ),
+      'type' => 'text_textarea',
+      'weight' => 41,
+      'module' => 'text',
+    ),
+    'required' => FALSE,
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'type' => 'text_default',
+        'settings' => array(),
+        'module' => 'text',
+        'weight' => 5,
+      ),
+      'featured' => array(
+        'label' => 'hidden',
+        'type' => 'text_default',
+        'settings' => array(),
+        'module' => 'text',
+        'weight' => 1,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'type' => 'hidden',
+        'weight' => '0',
+        'settings' => array(),
+      ),
+      'front' => array(
+        'type' => 'hidden',
+        'label' => 'above',
+        'settings' => array(),
+        'weight' => 0,
+      ),
+      'dashboard' => array(
+        'type' => 'hidden',
+        'label' => 'above',
+        'settings' => array(),
+        'weight' => 0,
+      ),
+    ),
+    'field_name' => 'ed_field_content',
+    'entity_type' => 'node',
+    'bundle' => 'ed_subgroup',
+    'default_value' => NULL,
+  ));
+  
 }
 
 /**
  * Implements hook_uninstall().
  */
-
 function ed_subgroup_uninstall(){
   $result = db_select('node', 'n')
     ->fields('n', array('nid'))

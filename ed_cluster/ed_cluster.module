@@ -64,6 +64,15 @@ function ed_cluster_menu() {
     'type' => MENU_LOCAL_TASK,
     'weight' => 50,
   );
+  $items['node/%node/subgroups'] = array(
+    'title' => t('Subgroups'),
+    'page callback' => 'ed_listing_from_group',    
+    'access callback' => 'ed_group_content_listing_access',    
+    'page arguments' => array('node', 1, 'ed_subgroup'),
+    'access arguments' => array('node', 1, 'ed_subgroup'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 50,
+  );
   $items['node/%node/ajax/get/events'] = array(
     'page callback' => 'ed_cluster_get_group_events_ajax',
     'access callback' => 'ed_group_content_listing_access',
@@ -146,7 +155,7 @@ function ed_cluster_menu() {
 
 function ed_cluster_my_listing_page() {
   $content = array();
-  $mygroups = og_get_entity_groups(); 
+  $mygroups = og_get_entity_groups();
   drupal_set_title('My Groups A-Z');
   
   if(empty($mygroups)){
@@ -179,6 +188,13 @@ function ed_cluster_my_listing_page() {
     $mygroups = $mygroups['node'];
     
     $mygroupallnodes = node_load_multiple($mygroups);
+    
+    foreach($mygroupallnodes as $key => $value){
+      if($value->type != 'ed_cluster'){
+        unset($mygroupallnodes[$key]);
+      }
+    }
+    
     uasort($mygroupallnodes, function($a, $b){
       return strncasecmp(trim($a->title), trim($b->title), 15);
     });
@@ -525,7 +541,6 @@ function ed_cluster_node_view($node, $view_mode, $langcode){
           array_unshift($types, 'ed_task');
         }
         $types_unique = array_unique($types);
-                
         $options = array(
           'attributes' => array(),
           'query' => array(
@@ -539,8 +554,8 @@ function ed_cluster_node_view($node, $view_mode, $langcode){
 
         foreach($types_unique as $type){
           $show_link = true;
-          if($type!='ed_answer'){
-            if($type=='ed_task'){
+          if($type!='ed_answer' && $type!='ed_subgroup'){
+            if($type=='ed_task' ){
               if (!ed_task_manager_access('node', $node)) {
                 $show_link = false;
               }
