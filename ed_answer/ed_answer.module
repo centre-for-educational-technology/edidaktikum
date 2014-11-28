@@ -418,3 +418,13 @@ function ed_answer_node_validate($node, $form, &$form_state) {
   }
 }
 
+
+function ed_answer_comment_view_alter(&$build){
+  $gid = $build['#node']->og_group_ref[LANGUAGE_NONE][0]['target_id'];
+  $group = node_load($gid);
+  $admins = _ed_cluster_get_group_admins($group, true);
+  if(!in_array($build['comment_body']['#object']->uid, $admins)){
+    $build['ed_answer_status']['#access'] = FALSE;
+    
+  }
+}

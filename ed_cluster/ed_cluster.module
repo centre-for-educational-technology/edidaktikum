@@ -868,7 +868,8 @@ function ed_task_manager($test, $node){
         if (_ed_check_if_answered($member->uid, $node_single->nid)) {
           $tmp_answer_nid = _ed_get_answer_nid($member->uid, $node_single->nid);                   
           $tmp_data['data'] = l('&nbsp;', 'node/' . $tmp_answer_nid[0], array('html' => TRUE));
-          $status = _ed_check_if_accepted($tmp_answer_nid[0]);          
+          $status = _ed_check_if_accepted($tmp_answer_nid[0]);
+          dpm($status);
           if(empty($status)){
             $tmp_data['class'] = 'unchecked';
             $tmp_data['title'] = t('Unchecked');
@@ -940,11 +941,21 @@ function _ed_check_if_answered($uid, $tnid){
 }
 
 function _ed_check_if_accepted($answer){
-
+  
+  
+  $answernode = node_load($answer);
+  //dpm($answernode);
+  $groupnid = $answernode->og_group_ref[LANGUAGE_NONE][0]['target_id'];
+  $group = node_load($groupnid);
+  //dpm($group);
+  $groupadmins = _ed_cluster_get_group_admins($group, true);
+  //dpm($groupadmins);
+  
   $query = db_select('comment', 'c');
   $query->join('field_data_ed_answer_status', 's', 'c.cid = s.entity_id');
   $query->fields('s',array('ed_answer_status_value'));
   $query->condition('c.nid', $answer);
+  $query->condition('c.uid', $groupadmins, 'IN');
   $result = $query->execute()->fetchCol();
       
   return $result;
