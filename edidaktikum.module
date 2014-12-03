@@ -222,6 +222,36 @@ function edidaktikum_entity_info_alter(&$entity_info) {
   }
 }
 
+
+/**
+ * Implements ctools_render_alter().
+ *
+ * This is done since hook_node_view never gets called if the node is rendered by Ctools.
+ */
+function edidaktikum_ctools_render_alter($info, $page, $context) {
+  
+  
+  $node = node_load($context['args'][0]);
+  
+  if(!empty($node) && $node->status==0){
+    $nodetype = node_type_get_type($node);
+    
+    $markup = t('@type <b>@title</b> has been created, but not published. At the moment, only you can see it.', array('@type' => $nodetype->name, '@title' => $node->title));
+    
+    drupal_set_message($markup);
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
 /**
  * Implements hook_preprocess_node().
  */
