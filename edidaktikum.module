@@ -221,7 +221,25 @@ function edidaktikum_entity_info_alter(&$entity_info) {
     $entity_info['user']['label callback'] = 'edidaktikum_user_label_callback';
   }
 }
-
+function edidaktikum_node_view($node, $view_mode, $langcode){  
+  $typestochange = array('ed_learning_resource');
+  if(in_array($node->type, $typestochange) && $view_mode=='teaser'){
+    if(!empty($node->ed_field_featured_image)){
+      $imgpath = image_style_url('thumbnail', $node->ed_field_featured_image[LANGUAGE_NONE][0]['uri']);   
+    }
+    else{
+      $imgpath = $GLOBALS['base_url'].'/'.path_to_theme().'/images/icons/ed_group_icon_default.png';
+      
+    }
+    $node->content['batman'] = array(
+      '#type' => 'markup',
+      '#weight' => 55,
+      '#markup' => '<img src="'.$imgpath.'"/>',
+      '#prefix' => '<div class="cover-image">',
+      '#suffix' => '</div>',
+    );    
+  }
+}
 
 /**
  * Implements ctools_render_alter().
@@ -236,7 +254,7 @@ function edidaktikum_ctools_render_alter($info, $page, $context) {
   if(!empty($node) && $node->status==0){
     $nodetype = node_type_get_type($node);
     
-    $markup = t('@type <b>@title</b> has been created, but not published. At the moment, only you can see it.', array('@type' => $nodetype->name, '@title' => $node->title));
+    $markup = '<p class="unpublished-warning">'.t('@type <b>@title</b> has been created, but not published. At the moment, only you can see it.', array('@type' => $nodetype->name, '@title' => $node->title)).'</p>';
     
     drupal_set_message($markup);
   }
