@@ -15,6 +15,15 @@ define('ED_ACCESS_REALM', 'ed_access');
  * Implements hook_menu().
  */
 function ed_cluster_menu() {
+  $items['node/%node/tasks'] = array(
+    'title' => t('Tasks'),
+    'type' => MENU_LOCAL_TASK,
+    'page callback' => 'ed_task_listing_for_students',
+    'access callback' => 'ed_task_listing_for_students_access',
+    'page arguments' => array('node', 1),
+    'access arguments' => array('node', 1),
+    'weight' => 55,
+  );
   $items['clusters'] = array(
     'title' => t('Groups'),
     'type' => MENU_NORMAL_ITEM,
@@ -152,6 +161,124 @@ function ed_cluster_menu() {
 
   return $items;
 }
+
+
+
+function ed_task_listing_for_students_access($test, $node){
+
+  $account = $GLOBALS['user'];
+  if (in_array('administrator', $account->roles)) {
+    return false;
+  }
+
+  if ($node->uid === $account->uid) {
+    return false;
+  }
+
+  if (!in_array(OG_ADMINISTRATOR_ROLE, og_get_user_roles('node', $node->nid, $account->uid, FALSE))) {
+    return true;
+  }
+
+  return false;
+}
+
+function ed_task_listing_for_students($test, $node){
+  $content = array();
+  drupal_add_css(drupal_get_path('module', 'ed_cluster').'/task_manager.css');
+  $tasknids = _ed_get_group_tasks_for_group_task_page($node->nid);
+  $tasknodes = node_load_multiple($tasknids);
+  
+  $header = array(t('Task'), t('Due Date'), t('Status'));
+  global $user;
+  
+  foreach($tasknodes as $tasknode){
+    $titlelink = l($tasknode->title, 'node/'.$tasknode->nid);
+    $deadline = format_date($tasknode->ed_task_due_date[LANGUAGE_NONE][0]['value'], 'short');
+    
+    
+    
+    $tmp_data = array('data' => '', 'class' => '');
+
+        if (_ed_check_if_answered($user->uid, $tasknode->nid)) {
+          $tmp_answer_nid = _ed_get_answer_nid($user->uid, $tasknode->nid);                             
+          $status = _ed_check_if_accepted($tmp_answer_nid[0]);
+          
+          if(empty($status)){
+            $tmp_data['class'] = 'unchecked';
+            $tmp_data['data'] = l(t('Answered, Unchecked'), 'node/' . $tmp_answer_nid[0], array('html' => TRUE));
+            $tmp_data['title'] = t('Unchecked');
+          }else{
+            switch($status[0]){
+              case('accepted'):
+                $tmp_data['class'] = 'answered';
+                $tmp_data['data'] = l(t('Answered, Accepted'), 'node/' . $tmp_answer_nid[0], array('html' => TRUE));
+                $tmp_data['title'] = t('Accepted');
+              break;
+              case('rejected'):
+                $tmp_data['class'] = 'rejected';
+                $tmp_data['data'] = l(t('Answered, Rejected'), 'node/' . $tmp_answer_nid[0], array('html' => TRUE));
+                $tmp_data['title'] = t('Rejected');                
+              break;
+              case('unchecked'):
+                $tmp_data['class'] = 'unchecked';
+                $tmp_data['data'] = l(t('Answered, Unchecked'), 'node/' . $tmp_answer_nid[0], array('html' => TRUE));
+                $tmp_data['title'] = t('Unchecked');
+              break;
+            }
+          }
+          
+        } else {
+          $tmp_data['class'] = 'unanswered';
+          $tmp_data['data'] = t('Not Answered');
+          $tmp_data['title'] = t('Not answered');
+          if (!empty($tasknode->{ED_FIELD_TO_GROUP_MEMBER}[LANGUAGE_NONE])) {
+            if (!in_array($user->uid, array_map(function($element) { return $element['target_id']; }, $tasknode->{ED_FIELD_TO_GROUP_MEMBER}[LANGUAGE_NONE]))) {
+              $tmp_data['class'] = 'can-not-be-answered';
+              $tmp_data['data'] = l(t('Can not be answered'), 'node/' . $tmp_answer_nid[0], array('html' => TRUE));
+              $tmp_data['title'] = t('Can not be answered');
+            }
+          }
+        }
+        
+        
+        
+    $rows[] = array(
+      'data' => array(
+        'title' => $titlelink,
+        'deadline' => $deadline,
+        'status' => $tmp_data,
+      ),
+    );
+    
+  }
+  usort($rows, function($a, $b){
+    if($a['data']['status']['class'] === $b['data']['status']['class']){
+      return 0;
+    }
+    
+    if($a['data']['status']['class'] === 'unanswered'){
+      return -1;
+    }
+    else if($a['data']['status']['class'] === 'rejected' && $b['data']['status']['class'] !== 'unanswered'){
+      return -1;
+    }
+    else if($a['data']['status']['class'] === 'unchecked' && !in_array($b['data']['status']['class'], array('unanswered', 'rejected'))){
+      return -1;
+    }
+    return 1;
+  });
+  $content['tasks-table'] = array(
+        '#theme' => 'table',
+        '#rows' => $rows,
+        '#header' => $header,
+      );
+  $content['pager'] = array('#theme' => 'pager');
+  return $content;
+}
+
+
+
+
 
 function ed_cluster_my_listing_page() {
   $content = array();
@@ -749,6 +876,21 @@ function _ed_get_group_content_by_type($gid, $type, $order = 'DESC'){
   $result = $query->execute()->fetchCol();
   return $result;
 }
+
+function _ed_get_group_tasks_for_group_task_page($gid){
+  $query = db_select('node', 'n');
+  $query->join('og_membership', 'ogm', "n.nid = ogm.etid AND ogm.entity_type = 'node'");
+  $query->fields('n', array('nid')) 
+      ->condition('ogm.gid', $gid)
+      ->condition('n.nid', $gid, '!=')
+      ->condition('n.type', 'ed_task')
+      ->addTag('node_access')
+      ->orderBy('n.sticky', 'DESC');  
+  $query->distinct();
+  $result = $query->execute()->fetchCol();
+  return $result;
+}
+
 
 /**
  * Returns count for nodes of centain type within a group.
