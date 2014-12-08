@@ -992,7 +992,7 @@ function ed_task_manager($test, $node){
   }
   
   $group_members = user_load_multiple($group_members_uids);
-
+  sort($group_members);
   // Get all group tasks
   $query = db_select('node', 'n');
   $query->join('og_membership', 'ogm', "n.nid = ogm.etid AND ogm.entity_type='node' AND ogm.group_type = 'node' AND ogm.gid = :gid AND ogm.state = :active", array(':gid' => $node->nid, ':active' => OG_STATE_ACTIVE));
