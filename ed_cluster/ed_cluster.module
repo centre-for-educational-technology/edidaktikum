@@ -165,7 +165,10 @@ function ed_cluster_menu() {
 
 
 function ed_task_listing_for_students_access($test, $node){
-
+  $tasknids = _ed_get_group_tasks_for_group_task_page($node->nid);
+  if(empty($tasknids)){
+    return false;
+  }
   $account = $GLOBALS['user'];
   if (in_array('administrator', $account->roles)) {
     return false;
@@ -174,7 +177,7 @@ function ed_task_listing_for_students_access($test, $node){
   if ($node->uid === $account->uid) {
     return false;
   }
-
+  
   if (!in_array(OG_ADMINISTRATOR_ROLE, og_get_user_roles('node', $node->nid, $account->uid, FALSE))) {
     return true;
   }
