@@ -428,3 +428,15 @@ function ed_answer_comment_view_alter(&$build){
     
   }
 }
+
+function ed_answer_node_update($node){
+  if($node->type == 'ed_answer'){
+    $comments = comment_load_multiple(comment_get_thread($node, COMMENT_MODE_FLAT, 100));
+    foreach($comments as $comment){      
+      if($comment->ed_answer_status[LANGUAGE_NONE][0]['value'] == 'rejected'){
+        $comment->ed_answer_status[LANGUAGE_NONE][0]['value'] = 'unchecked';
+        comment_save($comment);
+      }
+    }    
+  }
+}
