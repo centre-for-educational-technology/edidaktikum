@@ -113,14 +113,14 @@ function ed_subgroup_menu(){
 }
 
 function ed_subgroup_content_listing_access($filler, $gnode, $type){
-  $is_group = _ed_is_nid_subgroup($gnode->nid);
+  $is_group = _ed_is_nid_subgroup($gnode->nid);  
   return $is_group;
 }
 
 function _ed_is_nid_subgroup($nid){
   $query = db_select('node', 'n')
     ->fields('n', array('nid'))
-    ->condition('n.type', 'ed_subgroup')
+    ->condition('n.type', array('ed_subgroup', 'ed_cluster'), 'IN')
     ->condition('n.nid', $nid);
   $nids = $query->execute()->fetchCol();
   if(!empty($nids)){

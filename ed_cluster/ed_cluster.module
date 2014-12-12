@@ -555,8 +555,12 @@ function ed_cluster_og_ui_get_group_admin_alter(&$data, $gid){
 }
 
 
-function ed_group_content_listing_access($filler, $gnode, $type){  
+function ed_group_content_listing_access($filler, $gnode, $type){
   $is_group = _ed_is_nid_group($gnode->nid);
+  
+  if($gnode->type=='ed_subgroup'&&$type=='ed_subgroup'){
+    return false;
+  }
   return $is_group;
 }
 
@@ -1274,15 +1278,11 @@ function _ed_cluster_is_groups_admin_or_creator($uid, $groups) {
   return FALSE;
 }
 
-/**
- * Clusters listing page.
- */
-
 
 function _ed_is_nid_group($nid){
   $query = db_select('node', 'n')
     ->fields('n', array('nid'))
-    ->condition('n.type', 'ed_cluster')
+    ->condition('n.type', array('ed_subgroup', 'ed_cluster'), 'IN')
     ->condition('n.nid', $nid);
   $nids = $query->execute()->fetchCol();
   if(!empty($nids)){
