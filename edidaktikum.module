@@ -221,23 +221,21 @@ function edidaktikum_entity_info_alter(&$entity_info) {
     $entity_info['user']['label callback'] = 'edidaktikum_user_label_callback';
   }
 }
-function edidaktikum_node_view($node, $view_mode, $langcode){  
-  $typestochange = array('ed_learning_resource');
+function edidaktikum_node_view($node, $view_mode, $langcode){
+  $typestochange = array('ed_learning_resource', 'ed_event', 'ed_news');
   if(in_array($node->type, $typestochange) && $view_mode=='teaser'){
     if(!empty($node->ed_field_featured_image)){
-      $imgpath = image_style_url('thumbnail', $node->ed_field_featured_image[LANGUAGE_NONE][0]['uri']);   
-    }
-    else{
-      $imgpath = $GLOBALS['base_url'].'/'.path_to_theme().'/images/icons/ed_group_icon_default.png';
+      $imgpath = image_style_url('thumbnail', $node->ed_field_featured_image[LANGUAGE_NONE][0]['uri']);
       
-    }
-    $node->content['batman'] = array(
-      '#type' => 'markup',
-      '#weight' => 55,
-      '#markup' => '<img src="'.$imgpath.'"/>',
-      '#prefix' => '<div class="cover-image">',
-      '#suffix' => '</div>',
-    );    
+      $node->content['cover-image'] = array(
+        '#type' => 'markup',
+        '#weight' => 55,
+        '#markup' => '<img src="'.$imgpath.'"/>',
+        '#prefix' => '<div class="cover-image">',
+        '#suffix' => '</div>',
+      );   
+      
+    }        
   }
 }
 
