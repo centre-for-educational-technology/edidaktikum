@@ -9,7 +9,7 @@
 	text-decoration: none;
 }
 .unanswered{
-    
+    color: red;
 }
 .can-not-be-answered {
 	background-color: #666;

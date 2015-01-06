@@ -53,7 +53,7 @@ function ed_task_menu(){
 
 function ed_task_listing_page() {
   menu_tree_set_path('main-menu', 'dashboard');
-  
+  drupal_add_css(drupal_get_path('module', 'ed_cluster').'/task_manager.css');
   //XXX do not use global $user
   global $user;
   
@@ -189,13 +189,49 @@ function ed_task_listing_page() {
 
 
       $shared_to_arr = implode(', ', $shared_to_arr);
-
+      $isanswered = _ed_check_if_answered($user->uid, $tasknode->nid);
+      $tmp_data = array('data' => '', 'class' => '');
+      if($isanswered){
+        $tmp_answer_nid = _ed_get_answer_nid($user->uid, $tasknode->nid);                             
+        $status = _ed_check_if_accepted($tmp_answer_nid[0]);
+       
+        switch($status ? $status[0] : 'invalid'){
+          case('accepted'):
+            $tmp_data['class'] = 'answered';
+            $tmp_data['data'] = l(t('Answered, Accepted'), 'node/' . $tmp_answer_nid[0], array('html' => TRUE));
+            $tmp_data['title'] = t('Accepted');
+          break;
+          case('rejected'):
+            $tmp_data['class'] = 'rejected';
+            $tmp_data['data'] = l(t('Answered, Rejected'), 'node/' . $tmp_answer_nid[0], array('html' => TRUE));
+            $tmp_data['title'] = t('Rejected');                
+          break;
+          case('unchecked'):
+          default:
+            $tmp_data['class'] = 'unchecked';
+            $tmp_data['data'] = l(t('Answered, Unchecked'), 'node/' . $tmp_answer_nid[0], array('html' => TRUE));
+            $tmp_data['title'] = t('Unchecked');
+          break;
+        }
+             
+      }else{
+        $tmp_data['class'] = 'unanswered';
+        $tmp_data['data'] = t('Not Answered');
+        $tmp_data['title'] = t('Not answered');
+        if (!empty($tasknode->{ED_FIELD_TO_GROUP_MEMBER}[LANGUAGE_NONE])) {
+          if (!in_array($user->uid, array_map(function($element) { return $element['target_id']; }, $tasknode->{ED_FIELD_TO_GROUP_MEMBER}[LANGUAGE_NONE]))) {
+            $tmp_data['class'] = 'can-not-be-answered';
+            $tmp_data['data'] = t('Can not be answered');
+            $tmp_data['title'] = t('Can not be answered');
+          }
+        }
+      }      
       $rows2[] = array(
           'data' => array(
             'title' => l($tasknode->title, 'node/' . $tasknode->nid),
             'group' => $shared_to_arr,
             'due_date' => format_date($tasknode->ed_task_due_date[LANGUAGE_NONE][0]['value'],'custom','d/m/Y'),
-            'status' => (_is_task_answered($tasknode->nid) ? '<div class="ed-task-answered">' . t('Answered') . '</div>' : '<div class="ed-task-unanswered">' . t('Unanswered') . '</div>'),          
+            'status' => $tmp_data,          
           ),
         );
     }
