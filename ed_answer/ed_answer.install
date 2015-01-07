@@ -335,3 +335,14 @@ function ed_answer_update_7110(&$sandbox){
   ));
 }
 
+/**
+ * Makes comment body field in ed_answer not required.
+ */
+function ed_answer_update_7111(&$sandbox){
+  $instances = field_info_instances('comment', 'comment_node_ed_answer');
+  $instances['comment_body']['required'] = FALSE;
+  
+  field_update_instance($instances['comment_body']);
+  
+}
+
