@@ -165,3 +165,13 @@ function ed_blog_update_7102(&$sandbox){
 	  ->fetchField();
   taxonomy_vocabulary_delete($vid);
 }
+/**
+ * Adds Competence field to ed_blog
+ */
+function ed_blog_update_7103(&$sandbox){
+  $instances = _ed_blog_installed_instances();
+  $instance = $instances['ed_field_competence'];
+  $instance['entity_type'] = 'node';
+  $instance['bundle'] = 'ed_blog';
+  field_create_instance($instance);
+}

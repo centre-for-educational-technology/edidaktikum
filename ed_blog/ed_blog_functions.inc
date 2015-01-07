@@ -86,6 +86,29 @@ function _ed_blog_installed_instances() {
     'required' => 0,
     'default_value' => NULL,
   );
+  $instances['ed_field_competence'] = array(
+    'field_name' => 'ed_field_competence',
+    'entity_type' => 'node',
+      'bundle' => 'ed_blog',
+      'label' => t('Add competence'),
+      'description' => '',
+      'widget' => array(
+        'type' => 'term_reference_tree',
+        'settings' => array(
+          'start_minimized' => TRUE,
+          'leaves_only' => TRUE,
+          'select_parents' => FALSE,
+        ),
+      ),
+      'required' => FALSE,
+      'display' => array(
+        'default' => array(
+          'label' => 'inline',
+          'type' => 'term_reference_tree',
+          'settings' => array(),
+        ),
+      ),
+  );
 
   return $instances;
 }
