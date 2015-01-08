@@ -176,8 +176,50 @@ function edidaktikum_menu() {
     'type' => MENU_CALLBACK,
     'access callback' => 'user_is_logged_in',
   );
+  $items['edidaktikum/autocomplete/from/group/%'] = array(
+    'page callback' => 'testimeee',
+    'page arguments' => array(4),
+    'theme callback' => 'ajax_base_page_theme',
+    'access callback' => 'user_access',
+    'access arguments' => array('access user profiles'),
+    'type' => MENU_CALLBACK,
+  );
 
   return $items;
+}
+
+
+function testimeee($gid, $string = ''){
+  //used some code from Views module.
+  $group_members_ids = og_get_group_members_properties(node_load($gid), array(), 'members', 'node');
+  $group_members = user_load_multiple($group_members_ids);
+  
+  $array = drupal_explode_tags($string);  
+  $last_string = trim(array_pop($array));
+  
+  $allmembers = array();
+  foreach($group_members as $member) {
+    $allmembers[$member->uid] = check_plain($member->ed_field_full_name[LANGUAGE_NONE][0]['safe_value']);
+  }
+  $result = array();
+  foreach($allmembers as $uid => $name){
+    if(strpos(strtolower($name), strtolower($last_string)) !== FALSE){
+      $result[$uid] = check_plain($name);
+    }
+  }
+  
+  $matches = array();
+  $prefix = count($array) ? implode(', ', $array) . ', ' : '';
+  foreach ($result as $uid => $account) {
+      $n = $account;
+      $userobj = user_load($uid);
+      if (strpos($account, ',') !== FALSE || strpos($account, '"') !== FALSE) {
+        $n = '"' . str_replace('"', '""', $userobj->name) . '"';
+      }     
+      $matches[$prefix . $userobj->name] = check_plain($account);
+    }
+  
+  drupal_json_output($matches);
 }
 
 /**
@@ -372,6 +414,12 @@ function ed_get_sorting_type(&$content){
  * Implements hook_form_alter().
  */
 function edidaktikum_form_alter(&$form, $form_state, $form_id) {
+  if($form_id=='views_exposed_form'){
+    if($form_state['view']->name == 'og_members_admin'){      
+      $form['uid']['#autocomplete_path'] = 'edidaktikum/autocomplete/from/group/'.$form_state['view']->args[1];
+    }  
+  }
+  
   // Student can only set Group content visibility to private
   // Remove any other options from the node edit form
   if (!empty($form['#node_edit_form']) && isset($form['group_content_access'])) {
@@ -841,3 +889,11 @@ function ed_get_views($nid){
   }
   
 }
+/*
+function edidaktikum_views_query_alter(&$view, &$query){
+  dpm($view, __FUNCTION__);
+  dpm($query, __FUNCTION__);
+}*/
+
+
+
