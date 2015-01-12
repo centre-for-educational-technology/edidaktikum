@@ -161,19 +161,61 @@ function ed_task_listing_page() {
       if ($ats == $bts) return 0;
       return ($ats < $bts) ? -1 : 1;
     });
-
+    $tasknodesgroupedbystatus = array();
     foreach($tasknodes as $key => $tasknode){
       if(_is_task_answered($tasknode->nid)){
-        $temp = $tasknode;
-        unset($tasknodes[$key]);
-        array_push($tasknodes, $temp);
+        $tmp_answer_nid = _ed_get_answer_nid($user->uid, $tasknode->nid);
+        $answernode = node_load($tmp_answer_nid[0]);
+        if($answernode->status == 0){
+          $tasknodesgroupedbystatus['unanswered'][$key] = $tasknode;     
+        }else{      
+          $status = _ed_check_if_accepted($tmp_answer_nid[0]);
+          if(empty($status)){
+            $tasknodesgroupedbystatus['unchecked'][$key] = $tasknode;
+          }else{
+            switch($status[0]){
+              case 'rejected':
+                $tasknodesgroupedbystatus['rejected'][$key] = $tasknode;
+                break;
+              case 'unchecked':
+                $tasknodesgroupedbystatus['unchecked'][$key] = $tasknode;
+                break;
+              case 'accepted':
+                $tasknodesgroupedbystatus['accepted'][$key] = $tasknode;
+                break;
+            }
+          }
+        }
+      }else{
+        if (!empty($tasknode->{ED_FIELD_TO_GROUP_MEMBER}[LANGUAGE_NONE]) && !in_array($user->uid, array_map(function($element) { return $element['target_id']; }, $tasknode->{ED_FIELD_TO_GROUP_MEMBER}[LANGUAGE_NONE]))) {
+          // do nothing
+        }else{
+          $tasknodesgroupedbystatus['unanswered'][$key] = $tasknode;        
+        }
       }
     }
-
+    
+    
+    
+    if(isset($tasknodesgroupedbystatus['unanswered'])){
+      $tasknodesgroupedbystatussorted[0] = $tasknodesgroupedbystatus['unanswered'];
+    }
+    if(isset($tasknodesgroupedbystatus['rejected'])){
+      $tasknodesgroupedbystatussorted[1] = $tasknodesgroupedbystatus['rejected'];
+    }
+    if(isset($tasknodesgroupedbystatus['unchecked'])){
+      $tasknodesgroupedbystatussorted[2] = $tasknodesgroupedbystatus['unchecked'];
+    }
+    if(isset($tasknodesgroupedbystatus['accepted'])){
+      $tasknodesgroupedbystatussorted[3] = $tasknodesgroupedbystatus['accepted'];
+    }
+        
+    $tasknodessorted = call_user_func_array('array_merge', $tasknodesgroupedbystatussorted);
+    
     $current_page = pager_default_initialize(count($tasknodes), $per_page, 2);
-
-    $chunks = array_chunk($tasknodes, $per_page, TRUE);
-
+    
+    $chunks = array_chunk($tasknodessorted, $per_page, TRUE);
+    
     foreach($chunks[$current_page] as $tasknode){
       $shared_to_arr = array();
       if( isset($tasknode->og_group_ref[LANGUAGE_NONE]['0']['target_id']) ){
@@ -225,7 +267,8 @@ function ed_task_listing_page() {
             $tmp_data['title'] = t('Can not be answered');
           }
         }
-      }      
+      }
+      
       $rows2[] = array(
           'data' => array(
             'title' => l($tasknode->title, 'node/' . $tasknode->nid),
@@ -237,6 +280,8 @@ function ed_task_listing_page() {
     }
 
 
+  
+  //@TODO: There are so many things wrong right here ..
 
     $content[$table_type.'-2'] = array(
         '#theme' => 'table',
@@ -539,7 +584,10 @@ function _ed_get_group_tasks(){
 }
 
 /**
- * Returns count of unanswered tasks for a user.
+ * Returns count of unanswered tasks for a user. 
+ * 
+ * UPDATE: returns the sum of unanswered and rejected tasks for a user.
+ * 
  * @param $account
  *   User account
  * @return int
@@ -586,6 +634,24 @@ function _ed_get_user_unanswered_tasks_count($account) {
     // Merge all task identifiers given to user groups
     // Make sure that identifiers are unique
     $task_nids = array_unique(array_merge($task_nids, $query->execute()->fetchCol()));
+    $unansweredcount = 0;
+    foreach($task_nids as $tasknid){
+      if(!(_ed_check_if_answered($account->uid, $tasknid))){
+        $unansweredcount++;
+      }else{
+        $tmp_answer_nid = _ed_get_answer_nid($account->uid, $tasknid);
+        $status = _ed_check_if_accepted($tmp_answer_nid[0]);
+        if(!empty($status) && $status[0] == 'rejected'){
+          $unansweredcount++;
+        }
+      }
+    }
+    return $unansweredcount;
+    //$tasknodes = node_load_multiple($task_nids);
+    
+    //dpm($tasknodes, 'nodes');
+    
+    
   }
 
   $count = sizeof($task_nids);
@@ -609,6 +675,12 @@ function _ed_get_user_unanswered_tasks_count($account) {
   $count -= $query->countQuery()->execute()->fetchField();
 
   return $count;
+}
+
+function ed_task_preprocess_page(&$variables){
+  if(in_array('page__dashboard__tasks', $variables['theme_hook_suggestions'])){
+    $variables['page']['content']['metatags']['global']['title']['#attached']['metatag_set_preprocess_variable'][0][2] = _ed_task_menu_title().' | eDidaktikum';
+  }
 }
 
 /**
