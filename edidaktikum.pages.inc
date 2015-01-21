@@ -165,9 +165,9 @@ function edidaktikum_contact_page() {
  * eDidaktikum FAQ page.
  */
 function edidaktikum_faq_page() {
-
-  drupal_set_title(t('FAQ'));
-
+  drupal_goto('https://edidaktikum.uservoice.com');
+  /*drupal_set_title(t('FAQ'));
+  
   $content['faq'] = array(
     '#type' => 'container',
     '#attributes' => array(
@@ -189,6 +189,6 @@ function edidaktikum_faq_page() {
     '#markup' => $faq_text,
   );
 
-  return $content;
+  return $content;*/
 }
 
