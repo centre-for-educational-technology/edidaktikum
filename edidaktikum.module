@@ -539,6 +539,8 @@ function edidaktikum_user_view_alter(&$build) {
  */
 function _edidaktikum_node_delete_redirect($form, &$form_state) {
   // Check if group set and grab first group URL
+  
+  /*
   if (!empty($form['#node']->og_group_ref[LANGUAGE_NONE])) {
     $group_url = url('node/' . $form['#node']->og_group_ref[LANGUAGE_NONE][0]['target_id'], array('absolute' => TRUE));
   }
@@ -615,6 +617,11 @@ function _edidaktikum_node_delete_redirect($form, &$form_state) {
   // Force redirect if $redirect_url not empty
   if (!empty($redirect_url)) {
     $form_state['redirect'] = $redirect_url;
+  }*/
+  if (!empty($form['#node']->og_group_ref[LANGUAGE_NONE])) {    
+    $form_state['redirect'] = 'node/'.$form['#node']->og_group_ref[LANGUAGE_NONE][0]['target_id'];
+  }else{
+    $form_state['redirect'] = 'dashboard';
   }
 }
 
