@@ -306,9 +306,31 @@ $display->panels = array();
   $pane->uuid = '0455d6db-21fb-454d-a658-016f1c8a5ddf';
   $display->content['new-0455d6db-21fb-454d-a658-016f1c8a5ddf'] = $pane;
   $display->panels['right'][4] = 'new-0455d6db-21fb-454d-a658-016f1c8a5ddf';
+  $pane = new stdClass();
+  $pane->pid = 'new-7550057d-88fc-4c22-89cb-576ad874b823';
+  $pane->panel = 'top';
+  $pane->type = 'node_group_breadcrumbs';
+  $pane->subtype = 'node_group_breadcrumbs';
+  $pane->shown = TRUE;
+  $pane->access = array();
+  $pane->configuration = array(
+    'context' => 'argument_entity_id:node_1',
+    'override_title' => 1,
+    'override_title_text' => '',
+  );
+  $pane->cache = array();
+  $pane->style = array();
+  $pane->css = array();
+  $pane->extras = array();
+  $pane->position = 0;
+  $pane->locks = array();
+  $pane->uuid = '7550057d-88fc-4c22-89cb-576ad874b823';
+  $display->content['new-7550057d-88fc-4c22-89cb-576ad874b823'] = $pane;
+  $display->panels['top'][0] = 'new-7550057d-88fc-4c22-89cb-576ad874b823';
 $display->hide_title = PANELS_TITLE_FIXED;
 $display->title_pane = 'new-9df63b12-41ab-412f-a6c5-c5b990a93c6b';
 $handler->conf['display'] = $display;
+
 
 
   return $handler;
