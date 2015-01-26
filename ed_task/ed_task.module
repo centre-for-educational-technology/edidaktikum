@@ -212,9 +212,18 @@ function ed_task_listing_page() {
         
     $tasknodessorted = call_user_func_array('array_merge', $tasknodesgroupedbystatussorted);
     
-    $current_page = pager_default_initialize(count($tasknodes), $per_page, 2);
+    
+    
+    foreach($tasknodessorted as $key => $tasknode){
+      if(!ed_task_can_user_answer_task($tasknode, $user)){
+        unset($tasknodessorted[$key]);
+      }
+    }
+    
+    $current_page = pager_default_initialize(count($tasknodessorted), $per_page, 2);
     
     $chunks = array_chunk($tasknodessorted, $per_page, TRUE);
+    
     
     foreach($chunks[$current_page] as $tasknode){
       $shared_to_arr = array();
