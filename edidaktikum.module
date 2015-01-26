@@ -184,8 +184,44 @@ function edidaktikum_menu() {
     'access arguments' => array('access user profiles'),
     'type' => MENU_CALLBACK,
   );
+  $items['ed-delete/%/%'] = array(
+    'title' => '',
+    'page callback' => 'edidaktikum_node_delete_page',
+    'access callback' => true,
+    'page arguments' => array(1, 2),
+  );
 
   return $items;
+}
+
+function edidaktikum_node_delete_page($groups, $deletedtitle){
+  
+  $content = array();
+  parse_str($groups, $groupsarray);
+
+  $groups = node_load_multiple($groupsarray);
+  
+  drupal_set_title($deletedtitle);
+  $content['delete-page'] = array(
+    '#type' => 'markup',
+    '#markup' => t('Continue to group page: '),
+  );
+  $content['delete-page-groups']['wrapper'] = array(
+    '#type' => 'markup',
+    '#markup' => '',
+    '#prefix' => '<ul>',
+    '#suffix' => '</ul>',
+  );
+  foreach($groups as $group){
+    $content['delete-page2-groups']['wrapper'][$group->nid] = array(
+      '#type' => 'markup',
+      '#markup' => l($group->title, 'node/'.$group->nid),
+      '#prefix' => '<li>',
+      '#suffix' => '</li>',
+    );
+  }
+  
+  return $content;
 }
 
 
@@ -618,8 +654,13 @@ function _edidaktikum_node_delete_redirect($form, &$form_state) {
   if (!empty($redirect_url)) {
     $form_state['redirect'] = $redirect_url;
   }*/
-  if (!empty($form['#node']->og_group_ref[LANGUAGE_NONE])) {    
-    $form_state['redirect'] = 'node/'.$form['#node']->og_group_ref[LANGUAGE_NONE][0]['target_id'];
+  if (!empty($form['#node']->og_group_ref[LANGUAGE_NONE])) {
+    $groups = array();    
+    foreach($form['#node']->og_group_ref[LANGUAGE_NONE] as $group){
+      array_push($groups, $group['target_id']);
+    }
+    $groups = drupal_http_build_query($groups);
+    $form_state['redirect'] = 'ed-delete/'.$groups.'/'.$form['#node']->title;
   }else{
     $form_state['redirect'] = 'dashboard';
   }
