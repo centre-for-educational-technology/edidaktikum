@@ -546,7 +546,7 @@ function ed_cluster_menu_alter(&$items) {
   if (isset($items['node/%/group'])) {
     $items['node/%/group']['title callback'] = '_ed_cluster_group_menu_title';
     $items['node/%/group']['title arguments'] = array('node', 1);
-  }  
+  }
 }
 
 function ed_cluster_og_ui_get_group_admin_alter(&$data, $gid){
@@ -1364,7 +1364,7 @@ function ed_cluster_views_api() {
 /**
  * Implements hook_form_alter().
  */
-function ed_cluster_form_alter(&$form, &$form_state, $form_id) {   
+function ed_cluster_form_alter(&$form, &$form_state, $form_id) {
   if ('ed_cluster_node_form' == $form_id) {
     menu_tree_set_path('main-menu', 'clusters');
     if (empty($form['#node']->nid)) {
@@ -1739,3 +1739,15 @@ function ed_cluster_node_presave( $node ) {
   }
 }
 
+
+
+
+function ed_cluster_page_alter(&$page){
+  if(isset($page['content']['system_main']['#form_id']) && $page['content']['system_main']['#form_id']=='og_ui_add_users'){
+    $gid = $page['content']['system_main']['gid']['#value'];
+    $page['content']['system_main']['backtofront'] = array(
+      '#type' => 'markup',
+      '#markup' => l(t('Return to group front page'), 'node/'.$gid),
+    );
+  }
+}
