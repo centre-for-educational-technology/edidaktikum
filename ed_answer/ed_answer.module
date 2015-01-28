@@ -240,17 +240,19 @@ function ed_answer_form_alter(&$form, &$form_state, $form_id){
       }
     }
 
-  }else if($form_id == 'comment_node_ed_answer_form'){    
+  }else if($form_id == 'comment_node_ed_answer_form'){
     $isgadmin = ed_answer_is_group_manager($form['#node']->og_group_ref[LANGUAGE_NONE][0]['target_id']);
     if(!$isgadmin){
       $form['ed_answer_status']['#access'] = FALSE;    
-    }else{
-      
-     
+    }else{           
+      $form['#submit'][] = 'ed_answer_redirect_to_taskmanager';
     }
   }
 }
 
+function ed_answer_redirect_to_taskmanager($form, &$form_state){
+  $form_state['redirect'] = 'node/'.$form['#node']->og_group_ref['und'][0]['target_id'].'/task-manager';
+}
 
 
 function _ed_answer_get_user_comments($nid){
@@ -423,9 +425,11 @@ function ed_answer_comment_view_alter(&$build){
   $gid = $build['#node']->og_group_ref[LANGUAGE_NONE][0]['target_id'];
   $group = node_load($gid);
   $admins = _ed_cluster_get_group_admins($group, true);
-  if(!in_array($build['comment_body']['#object']->uid, $admins)){
-    $build['ed_answer_status']['#access'] = FALSE;
-    
+  if(!empty($build['comment_body'])){
+    if(!in_array($build['comment_body']['#object']->uid, $admins)){
+      $build['ed_answer_status']['#access'] = FALSE;
+
+    }
   }
 }
 
