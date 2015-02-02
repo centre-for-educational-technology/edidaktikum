@@ -318,7 +318,7 @@ $handler->conf['display'] = $display;
 }
 
 function _ed_news_node_edit_page_handler() {
- $handler = new stdClass();
+$handler = new stdClass();
 $handler->disabled = FALSE; /* Edit this to true to make a default handler disabled initially */
 $handler->api_version = 1;
 $handler->name = 'node_edit_panel_ed_news';
@@ -638,9 +638,33 @@ $display->panels = array();
   $pane->uuid = 'a9d34ce5-b20c-41a1-a06f-a72775808b12';
   $display->content['new-a9d34ce5-b20c-41a1-a06f-a72775808b12'] = $pane;
   $display->panels['right'][3] = 'new-a9d34ce5-b20c-41a1-a06f-a72775808b12';
+  $pane = new stdClass();
+  $pane->pid = 'new-bc3e70d2-3d79-4b82-8490-358e201eb3e0';
+  $pane->panel = 'top';
+  $pane->type = 'node_group_breadcrumbs';
+  $pane->subtype = 'node_group_breadcrumbs';
+  $pane->shown = TRUE;
+  $pane->access = array();
+  $pane->configuration = array(
+    'context' => 'argument_node_edit_1',
+    'override_title' => 1,
+    'override_title_text' => '',
+  );
+  $pane->cache = array();
+  $pane->style = array(
+    'settings' => NULL,
+  );
+  $pane->css = array();
+  $pane->extras = array();
+  $pane->position = 0;
+  $pane->locks = array();
+  $pane->uuid = 'bc3e70d2-3d79-4b82-8490-358e201eb3e0';
+  $display->content['new-bc3e70d2-3d79-4b82-8490-358e201eb3e0'] = $pane;
+  $display->panels['top'][0] = 'new-bc3e70d2-3d79-4b82-8490-358e201eb3e0';
 $display->hide_title = PANELS_TITLE_FIXED;
 $display->title_pane = '0';
 $handler->conf['display'] = $display;
+
 
   return $handler;
 }

@@ -439,9 +439,33 @@ $display->panels = array();
   $pane->uuid = '94fb3c10-99ec-4048-84cf-5319ec188e35';
   $display->content['new-94fb3c10-99ec-4048-84cf-5319ec188e35'] = $pane;
   $display->panels['right'][7] = 'new-94fb3c10-99ec-4048-84cf-5319ec188e35';
+  $pane = new stdClass();
+  $pane->pid = 'new-fb2c0137-4787-4e5a-8cd6-3572005d3a98';
+  $pane->panel = 'top';
+  $pane->type = 'node_group_breadcrumbs';
+  $pane->subtype = 'node_group_breadcrumbs';
+  $pane->shown = TRUE;
+  $pane->access = array();
+  $pane->configuration = array(
+    'context' => 'argument_node_edit_1',
+    'override_title' => 1,
+    'override_title_text' => '',
+  );
+  $pane->cache = array();
+  $pane->style = array(
+    'settings' => NULL,
+  );
+  $pane->css = array();
+  $pane->extras = array();
+  $pane->position = 0;
+  $pane->locks = array();
+  $pane->uuid = 'fb2c0137-4787-4e5a-8cd6-3572005d3a98';
+  $display->content['new-fb2c0137-4787-4e5a-8cd6-3572005d3a98'] = $pane;
+  $display->panels['top'][0] = 'new-fb2c0137-4787-4e5a-8cd6-3572005d3a98';
 $display->hide_title = PANELS_TITLE_FIXED;
 $display->title_pane = '0';
 $handler->conf['display'] = $display;
+
 
 
     return $handler;
