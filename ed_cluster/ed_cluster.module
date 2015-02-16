@@ -91,7 +91,7 @@ function ed_cluster_menu() {
     'file' => 'ed_cluster.pages.inc',
   );
   $items['node/%node/blog'] = array(
-    'title' => t('Blog'),
+    'title' => t('Posts'),
     'page callback' => 'ed_listing_from_group',
     'access callback' => 'ed_group_content_listing_access',
     'page arguments' => array('node', 1, 'ed_blog'),
@@ -1395,9 +1395,9 @@ function ed_cluster_redirect_after_submit($form, &$form_state){
 function _ed_cluster_group_menu_title($type, $gid) {
   $pending_users_count = _ed_cluster_get_group_pending_members_count($gid);
   if ($pending_users_count > 0) {
-    return t('Group (@count)', array('@count' => $pending_users_count));
+    return t('Members (@count)', array('@count' => $pending_users_count));
   }
-  return t('Group');
+  return t('Members');
 }
 
 /**

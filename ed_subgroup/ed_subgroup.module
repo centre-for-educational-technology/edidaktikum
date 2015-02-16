@@ -63,7 +63,7 @@ function ed_subgroup_menu(){
     'weight' => 50,
   );
   $items['node/%node/blog'] = array(
-    'title' => t('Blog'),
+    'title' => t('Posts'),
     'page callback' => 'ed_listing_from_group',
     'access callback' => 'ed_subgroup_content_listing_access',
     'page arguments' => array('node', 1, 'ed_blog'),
