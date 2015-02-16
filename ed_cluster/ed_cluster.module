@@ -286,7 +286,7 @@ function ed_task_listing_for_students($test, $node){
 function ed_cluster_my_listing_page() {
   $content = array();
   $mygroups = og_get_entity_groups();
-  drupal_set_title('My Groups A-Z');
+  drupal_set_title(t('My Groups A-Z'));
   
   if(empty($mygroups)){
     $content['groups-not-found'] = array(
@@ -426,7 +426,7 @@ function ed_cluster_my_listing_page() {
 
 
 function ed_all_groups_listing(){
-  drupal_set_title('All Groups');
+  drupal_set_title(t('All Groups'));
   $content = array();
   $content['sorting'] = drupal_get_form('_ed_get_sorting_options');
   $sql_order = ed_get_sorting_type($content);
