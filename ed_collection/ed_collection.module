@@ -6,6 +6,58 @@
  */
 
 /**
+ * Implements hook_node_view()
+ */
+function ed_collection_node_view($node, $view_mode, $langcode){
+  if($view_mode == 'front'){
+    $node->picture = 0;
+    $node->content['links']['comment'] = 0;
+
+  }
+  if($view_mode == 'teaser'){
+    $node->picture = 0;
+    drupal_add_css('ul.links.inline {display: none;}', array('group' => CSS_THEME, 'type' => 'inline'));
+  }
+  if($view_mode == 'teaser' && $node->type == 'ed_collection'){
+    // TODO Use some default image if not provided
+    if(!empty($node->ed_field_featured_image)){
+      $imgpath = image_style_url('thumbnail', $node->ed_field_featured_image[LANGUAGE_NONE][0]['uri']);
+      
+      $node->content['cover-image'] = array(
+        '#type' => 'markup',
+        '#weight' => 55,
+        '#markup' => '<img src="'.$imgpath.'"/>',
+        '#prefix' => '<div class="1cover-image">',
+        '#suffix' => '</div>',
+      );
+
+    }
+
+    $author = user_load($node->uid);
+    $items_field = $node->ed_collection_field_items[LANGUAGE_NONE];
+    $items_count = is_array($items_field) ? count($items_field) : 0;
+    $views_count = ed_get_views($node->nid);
+    $likes_count = ed_get_likes($node->nid);
+    $username = edidaktikum_get_full_name_for_user_account($author);
+    
+    $parts = array(
+      l($username, 'user/'.$node->uid),
+      '<i class="fa fa-file-text-o"> ' . $items_count . '</i>',
+      '<i class="fa fa-eye"> ' . $views_count . '</i>',
+      '<i class="fa fa-heart"> ' . $likes_count . '</i>',
+    );
+
+    $node->content['metadata'] = array(
+      '#type' => 'markup',
+      '#weight' => 50,
+      '#markup' => implode('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', $parts),
+      '#prefix' => '<div class="description">',
+      '#suffix' => '</div>',
+    );
+  }
+}
+
+/**
  * Implements hook_menu().
  */
 function ed_collection_menu() {
@@ -45,53 +97,37 @@ function ed_collection_listing_page(){
     '#title' => t('Add new collection'),
     '#href' => 'node/add/ed-collection',
   );
-
-  $table_type = 'pager-table';
-  $user_collection_nids = ed_collection_get_user_collections();
-  $nodes = node_load_multiple($user_collection_nids);
-  $rows = array();
-  foreach($nodes as $node){
-    if($node->status=='1'){
-      $status = '<span class="pub-collection">'.t('Public').'</span>';
-    }else if($node->status=='0'){
-      $status = '<span class="priv-collection">'.t('Private').'</span>';
-    }else{
-      $status = t('error');
-    }
-    $rows[] = array(
-      'data' => array(
-        'status' => $status,
-        'title' => l($node->title, 'node/'.$node->nid),
-        'created' => format_date($node->created, 'custom', 'd/m/Y'),
-      ),
+  
+  $nids = ed_collection_get_user_collections();
+  if(!empty($nids)){
+    $nodes = node_load_multiple($nids);    
+    $build = node_view_multiple($nodes);
+    $build['pager'] = array(
+      '#theme' => 'pager',
+      '#weight' => 5,
     );
+    $content['pager']['collections'] = $build;
   }
-  $content[$table_type] = array(
-    '#theme' => 'table',
-    '#rows' => $rows,
-    '#header' => array(t('Status'), t('Title'), t('Date')),
-  );
-  $content['pager'] = array('#theme' => 'pager');
-  
-  drupal_add_css('span.pub-collection {color:green;}', array('group' => CSS_THEME, 'type' => 'inline'));
-  drupal_add_css('span.priv-collection {color:red;}', array('group' => CSS_THEME, 'type' => 'inline'));
-  
   
   return $content;
 }
 
 /**
  * User collection ids.
+ * Support pagination
  */
 function ed_collection_get_user_collections() {
   global $user;
   $query = db_select('node', 'n')
+    ->extend('PagerDefault')
     ->fields('n', array('nid'))
     ->condition('n.type', 'ed_collection')
     ->condition('n.uid', $user->uid)
     ->addTag('node_access')
     ->range()
-    ->orderBy('n.created', 'DESC');
+    ->orderBy('n.created', 'DESC')
+    ->limit(ed_get_paging_nr());
+
   $nids = $query->execute()->fetchCol();
   return $nids;
 }
