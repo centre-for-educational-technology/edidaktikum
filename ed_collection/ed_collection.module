@@ -1,0 +1,164 @@
+<?php
+
+/**
+ * @file
+ * eDidaktikum collection module.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function ed_collection_menu() {
+  $items['dashboard/collection'] = array(
+    'title' => t('Collection'),
+    'page callback' => 'ed_collection_listing_page',
+    'access callback' => 'user_is_logged_in',// XXX Need to check if current uset is a teacher
+    'weight' => 35,
+    'menu_name' => 'ed-dashboard-menu',
+    'type' => MENU_NORMAL_ITEM,
+  );
+  $items['collection/%'] = array(
+    'page callback' => 'ed_collection_page',
+    'page arguments' => array(1),  
+    'access callback' => TRUE,
+  );
+  return $items;
+}
+
+/**
+ * Collections listing page.
+ */
+
+function ed_collection_listing_page(){
+  menu_tree_set_path('main-menu', 'dashboard');
+  //drupal_add_css('ul.links.inline {display: none;}', array('group' => CSS_THEME, 'type' => 'inline'));
+  $content = array();
+
+  $content['add-new-container'] = array(
+    '#type' => 'container',
+    '#attributes' => array(
+      'class' => array('ed-add-new-node', 'ed-add-new-ed-collection'),
+    ),
+  );
+  $content['add-new-container']['add-new-collection'] = array(
+    '#type' => 'link',
+    '#title' => t('Add new collection'),
+    '#href' => 'node/add/ed-collection',
+  );
+
+  $table_type = 'pager-table';
+  $user_collection_nids = ed_collection_get_user_collections();
+  $nodes = node_load_multiple($user_collection_nids);
+  $rows = array();
+  foreach($nodes as $node){
+    if($node->status=='1'){
+      $status = '<span class="pub-collection">'.t('Public').'</span>';
+    }else if($node->status=='0'){
+      $status = '<span class="priv-collection">'.t('Private').'</span>';
+    }else{
+      $status = t('error');
+    }
+    $rows[] = array(
+      'data' => array(
+        'status' => $status,
+        'title' => l($node->title, 'node/'.$node->nid),
+        'created' => format_date($node->created, 'custom', 'd/m/Y'),
+      ),
+    );
+  }
+  $content[$table_type] = array(
+    '#theme' => 'table',
+    '#rows' => $rows,
+    '#header' => array(t('Status'), t('Title'), t('Date')),
+  );
+  $content['pager'] = array('#theme' => 'pager');
+  
+  drupal_add_css('span.pub-collection {color:green;}', array('group' => CSS_THEME, 'type' => 'inline'));
+  drupal_add_css('span.priv-collection {color:red;}', array('group' => CSS_THEME, 'type' => 'inline'));
+  
+  
+  return $content;
+}
+
+/**
+ * User collection ids.
+ */
+function ed_collection_get_user_collections() {
+  global $user;
+  $query = db_select('node', 'n')
+    ->fields('n', array('nid'))
+    ->condition('n.type', 'ed_collection')
+    ->condition('n.uid', $user->uid)
+    ->addTag('node_access')
+    ->range()
+    ->orderBy('n.created', 'DESC');
+  $nids = $query->execute()->fetchCol();
+  return $nids;
+}
+
+function ed_collection_page($nid) {
+  $node = node_load($nid);
+  if ($node && $node->type == 'ed_collection') {
+    echo theme('ed_collection_page', array('node_view' => node_view($node, 'entity_view')));
+    return NULL;
+  }
+  return array();
+}
+
+function ed_collection_theme($existing, $type, $theme, $path) {
+  return array(
+    'ed_collection_page' => array(
+      'variables' => array('node_view' => '', 'site_name' => variable_get('site_name', 'Drupal'), 'front_page' => variable_get('site_frontpage')),
+      'template' => 'ed_collection_page',
+      'path' => drupal_get_path('module', 'ed_collection'),
+      'render element' => 'element',
+    ), 
+  );  
+}
+
+function ed_collection_ctools_render_alter(&$info, &$page, &$context){  
+  if(isset($context['contexts']['argument_entity_id:node_1']) && $context['contexts']['argument_entity_id:node_1']->data->type == 'ed_collection'){
+    if(!empty($context['contexts']['argument_entity_id:node_1']->data->ed_field_cover_image)){      
+      $imguri = $context['contexts']['argument_entity_id:node_1']->data->ed_field_cover_image[LANGUAGE_NONE][0]['uri'];
+      $imgurl = file_create_url($imguri);    
+      drupal_add_css('.node-type-ed-collection {background: white url('.$imgurl.') no-repeat;}',$option['type'] = 'inline');
+    }else{
+      $themepath = drupal_get_path('theme',$GLOBALS['theme']);    
+      $defaultimagepath = $themepath.'/images/portfolio_bg.jpg';// XXX Probably need a new image
+      $defimageurl = file_create_url($defaultimagepath);
+      drupal_add_css('.node-type-ed-collection {background: white url('.$defimageurl.') no-repeat;}',$option['type'] = 'inline');  
+    }
+  }
+}
+
+/**
+ * Implements hook_ctools_plugin_api().
+ */
+function ed_collection_ctools_plugin_api() {
+  list($module, $api) = func_get_args();
+  if ($module == "page_manager" && $api == "pages_default") {
+    return array("version" => "1");
+  }
+}
+
+/**
+ * Implements hook_views_api().
+ */
+function ed_collection_views_api() {
+  return array(
+    'api' => 3,
+    'path' => drupal_get_path('module', 'ed_collection') . '/includes/views',
+  );
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function ed_collection_form_alter(&$form, &$form_state, $form_id) {
+  if ('ed_collection_node_form' == $form_id) {
+    if (empty($form['#node']->nid)) {
+      drupal_set_title(t('Create Collection'));
+    }
+  }
+}
+

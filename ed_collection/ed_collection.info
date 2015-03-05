@@ -1,0 +1,9 @@
+name = eDidaktikum collection
+description = eDidaktikum collection.
+package = eDidaktikum
+core = 7.x
+
+dependencies[] = edidaktikum
+dependencies[] = entityreference
+dependencies[] = views
+
