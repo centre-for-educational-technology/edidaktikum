@@ -483,11 +483,13 @@ $display->panels = array();
   $pane->access = array();
   $pane->configuration = array(
     'label' => 'hidden',
-    'formatter' => 'entityreference_entities_table',
+    'formatter' => 'entityreference_entity_view',
     'delta_limit' => '0',
     'delta_offset' => '0',
     'delta_reversed' => 0,
-    'formatter_settings' => array(),
+    'formatter_settings' => array(
+      'view_mode' => 'eref_contained',
+    ),
     'context' => 'argument_entity_id:node_1',
     'override_title' => 0,
     'override_title_text' => '',

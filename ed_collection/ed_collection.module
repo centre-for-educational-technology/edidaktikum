@@ -32,11 +32,15 @@ function ed_collection_node_view($node, $view_mode, $langcode){
     $username = edidaktikum_get_full_name_for_user_account($author);
     
     $parts = array(
-      l($username, 'user/'.$node->uid),
+      '<span class="single-creator">' . l($username, 'user/'.$node->uid) . '</span>',
       '<span class="single-icon-holder"><i class="fa fa-file-text-o"> ' . $items_count . '</i></span>',
       '<span clss="single-icon-holder"><i class="fa fa-eye"> ' . $views_count . '</i></span>',
       '<span class="single-icon-holder"><i class="fa fa-heart"> ' . $likes_count . '</i></span>',
     );
+    
+    if ( 1 === (int)$node->status ) {
+        array_push($parts, '<span class="label label-info single-publishing-status">' . t('Published') . '</span>');
+    }
 
     $node->content['metadata'] = array(
       '#type' => 'markup',
