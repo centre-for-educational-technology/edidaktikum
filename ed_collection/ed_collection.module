@@ -72,6 +72,12 @@ function ed_collection_menu() {
     'menu_name' => 'ed-dashboard-menu',
     'type' => MENU_NORMAL_ITEM,
   );
+  $items['collections/user/load/%'] = array(
+    'page callback' => 'ed_collection_load_user_collections',
+    'page arguments' => array(3),
+    'type' => MENU_CALLBACK,
+    'access callback' => 'ed_collection_teacher_or_admin_is_logged_in',
+  );
   return $items;
 }
 
@@ -225,6 +231,15 @@ function ed_collection_ctools_plugin_api() {
 }
 
 /**
+ * Implements hook_ctools_plugin_directory().
+ */
+function ed_collection_ctools_plugin_directory($module, $plugin) {
+  if(('content_types' == $plugin && 'ctools' == $module)) {
+    return 'plugins/' . $plugin;
+  }
+}
+
+/**
  * Implements hook_views_api().
  */
 function ed_collection_views_api() {
@@ -259,5 +274,35 @@ function ed_collection_teacher_or_admin_is_logged_in() {
   }
 
   return false;
+}
+
+/**
+ * Deals with ajax callback to delete a search.
+ */
+function ed_collection_load_user_collections($nid) {
+  $response = array(
+    'success' => false,
+  );
+
+  if (!$nid) {
+    drupal_json_output($response);
+  }
+  
+  // XXX Need to exclude any collections that the node already has
+  // Need to make some field query for that
+  global $user;
+  $query = db_select('node', 'n')
+    ->fields('n', array('nid', 'title'))
+    ->condition('n.type', 'ed_collection')
+    ->condition('n.uid', $user->uid)
+    ->addTag('node_access')
+    ->orderBy('n.created', 'DESC');
+
+  $collections_data = $query->execute()->fetchAllAssoc('nid');
+
+  $response['success'] = true;
+  $response['data'] = $collections_data;
+
+  drupal_json_output($response);
 }
 
