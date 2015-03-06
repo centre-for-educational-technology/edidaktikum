@@ -28,6 +28,7 @@ function ed_event_node_info() {
  * Implements hook_menu().
  */
 function ed_event_menu() {
+  /*
   $items['events'] = array(
     'title' => t('Events'),
     'page callback' => 'ed_event_listing_page',
@@ -36,6 +37,7 @@ function ed_event_menu() {
     'menu_name' => 'main-menu',
     'type' => MENU_NORMAL_ITEM,
   );
+   */
   $items['events/get/events'] = array(
     'page callback' => 'ed_event_get_events_ajax',
     'type' => MENU_CALLBACK,
