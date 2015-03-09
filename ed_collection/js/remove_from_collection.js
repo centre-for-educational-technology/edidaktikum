@@ -3,9 +3,12 @@
         attach: function(context, settings) {
             $('.single-remove-from-collection').on('click', function(e) {
                 e.preventDefault();
+                var confirmation = confirm(Drupal.t('Are you sure?'));
 
-                // TODO Add some question
-                // ARE YOU SURE
+                if (true != confirmation) {
+                    return false;
+                }
+
                 $.ajax({
                     url: Drupal.settings.basePath + Drupal.settings.pathPrefix + 'collections/remove/' + $(this).data('nid') + '/from/' + Drupal.settings.ed_collection.collectionNid,
                     dataType: 'json',
