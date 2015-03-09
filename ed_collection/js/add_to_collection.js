@@ -1,17 +1,43 @@
 (function ($) {
     Drupal.behaviors.add_to_collections = {
         attach: function(context, settings) {
-                    $('#add-to-collection-modal').find('button.btn-primary').on('click', function() {
+                    var modalElement = $('#add-to-collection-modal'),
+                        nid = modalElement.next('a').data('nid');
+
+                    modalElement.find('button.btn-primary').on('click', function() {
+                        var collectionsElement = modalElement.find('select[name="collections"]'),
+                            selectedCollections = collectionsElement.val();
+
+                        console.log(collectionsElement, selectedCollections);
+                        if ( !selectedCollections ) {
+                            return false;
+                        }
+
                         $(this).prop('disabled', true);
+                        collectionsElement.prop('disabled', true);
+
+                        $.ajax({
+                            url: Drupal.settings.basePath + Drupal.settings.pathPrefix + 'collections/user/add/' + nid,
+                            dataType: 'json',
+                            type: 'POST',
+                            data: { selected_collections : selectedCollections },
+                            cache: false,
+                            success: function(response) {
+                                if (true == response.success) {
+                                    modalElement.modal('hide');
+                                }
+                            }
+                        });
                     });
 
-                    $('#add-to-collection-modal').on('shown', function() {
-                        var that = this,
-                            nid = $(this).next('a').data('nid');
+                    modalElement.on('shown', function() {
+                        var that = this;
+
                         $.ajax({
                             url: Drupal.settings.basePath + Drupal.settings.pathPrefix + 'collections/user/load/' + nid,
                             dataType: 'json',
                             type: 'POST',
+                            cache: false,
                             success: function(response) {
                                 if (true == response.success) {
                                     if ( response.data ) {

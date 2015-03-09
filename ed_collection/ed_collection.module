@@ -78,6 +78,13 @@ function ed_collection_menu() {
     'type' => MENU_CALLBACK,
     'access callback' => 'ed_collection_teacher_or_admin_is_logged_in',
   );
+  $items['collections/user/add/%'] = array(
+    'page callback' => 'ed_collection_add_to_collections',
+    'page arguments' => array(3),
+    'type' => MENU_CALLBACK,
+    'access callback' => 'ed_collection_teacher_or_admin_is_logged_in',
+  );
+
   return $items;
 }
 
@@ -287,16 +294,32 @@ function ed_collection_load_user_collections($nid) {
   if (!$nid) {
     drupal_json_output($response);
   }
+
+  $account = $GLOBALS['user'];
+
+  // Load data on all collections item belongs to
+  $exclude_query = new EntityFieldQuery();
+  $exclude_query->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', 'ed_collection')
+    ->fieldCondition('ed_collection_field_items', 'target_id', $nid, '=')
+    ->propertyCondition('uid', $account->uid)
+    ->propertyOrderBy('created', 'DESC');
+
+  $exclude_result = $exclude_query->execute();
+  $excluded = array_keys($exclude_result['node']);
   
-  // XXX Need to exclude any collections that the node already has
-  // Need to make some field query for that
-  global $user;
+  // Load all collections accessible to user
   $query = db_select('node', 'n')
     ->fields('n', array('nid', 'title'))
     ->condition('n.type', 'ed_collection')
-    ->condition('n.uid', $user->uid)
+    ->condition('n.uid', $account->uid)
     ->addTag('node_access')
     ->orderBy('n.created', 'DESC');
+
+  // Exclude any collections the item already belongs to
+  if ( $excluded ) {
+    $query->condition('n.nid', $excluded, 'NOT IN');
+  }
 
   $collections_data = $query->execute()->fetchAllAssoc('nid');
 
@@ -304,5 +327,48 @@ function ed_collection_load_user_collections($nid) {
   $response['data'] = $collections_data;
 
   drupal_json_output($response);
+}
+
+function ed_collection_add_to_collections($nid) {
+  $response = array(
+    'success' => false,
+  );
+
+  if (!$nid) {
+    drupal_json_output($response);
+  }
+
+  $node = node_load($nid);
+
+  if (!$node) {
+    return drupal_json_output($response);
+  }
+
+  $collections = isset($_POST['selected_collections']) ? $_POST['selected_collections'] : NULL;
+
+  if (!$collections) {
+    return drupal_json_output($response);
+  }
+
+  $account = $GLOBALS['user'];
+
+  foreach($collections as $cnid) {
+    $collection = node_load($cnid);
+
+    if ($collection && $collection->type === 'ed_collection' && node_access('update', $collection, $account)) {
+      // TODO Need to catch exceptions
+      $wrapper = entity_metadata_wrapper('node', $collection);
+      $current_value = $wrapper->ed_collection_field_items->raw();
+      if (!in_array($node->nid, $current_value)) {
+        array_push($current_value, $node->nid);
+      }
+      $wrapper->ed_collection_field_items->set($current_value);
+      $wrapper->save();
+    }
+  }
+
+  $response['success'] = true;
+  drupal_json_output($response);
+
 }
 
