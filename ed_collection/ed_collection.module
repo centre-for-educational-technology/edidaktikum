@@ -52,6 +52,21 @@ function ed_collection_node_view($node, $view_mode, $langcode){
   }
 }
 
+function ed_collection_preprocess_node(&$variables) {
+  if ($variables['view_mode'] === 'eref_contained'
+    && ed_collection_teacher_or_admin_is_logged_in()
+    && node_access('update', $variables['node'])
+  ) {
+    drupal_add_js(drupal_get_path('module', 'ed_collection') . '/js/remove_from_collection.js', 'file');
+    $variables['content']['metadata']['#markup'] .= ' <a href="#" class="single-remove-from-collection" data-nid="'
+      . $variables['nid']
+      . '">'
+      . '<i class="fa fa-minus-square-o"></i> '
+      . t('Remove from Collection')
+      . '</a>';
+  }
+}
+
 /**
  * Implements hook_menu().
  */
@@ -81,6 +96,12 @@ function ed_collection_menu() {
   $items['collections/user/add/%'] = array(
     'page callback' => 'ed_collection_add_to_collections',
     'page arguments' => array(3),
+    'type' => MENU_CALLBACK,
+    'access callback' => 'ed_collection_teacher_or_admin_is_logged_in',
+  );
+  $items['collections/remove/%/from/%'] = array(
+    'page callback' => 'ed_collection_remove_item_from_collection',
+    'page arguments' => array(2, 4),
     'type' => MENU_CALLBACK,
     'access callback' => 'ed_collection_teacher_or_admin_is_logged_in',
   );
@@ -295,6 +316,16 @@ function ed_collection_load_user_collections($nid) {
     drupal_json_output($response);
   }
 
+  $node = node_load($nid);
+
+  if (!$node) {
+    drupal_json_output($response);
+  }
+
+  if ($node->type !== 'ed_learing_resource') {
+    drupal_json_output($response);
+  }
+
   $account = $GLOBALS['user'];
 
   // Load data on all collections item belongs to
@@ -344,6 +375,10 @@ function ed_collection_add_to_collections($nid) {
     return drupal_json_output($response);
   }
 
+  if ($node->type !== 'ed_learing_resource') {
+    return drupal_json_output($response);
+  }
+
   $collections = isset($_POST['selected_collections']) ? $_POST['selected_collections'] : NULL;
 
   if (!$collections) {
@@ -370,5 +405,24 @@ function ed_collection_add_to_collections($nid) {
   $response['success'] = true;
   drupal_json_output($response);
 
+}
+
+function ed_collection_remove_item_from_collection($item_nid, $collection_nid) {
+  $response = array(
+    'success' => false,
+  );
+
+  // TODO Add call logic along security checks
+  // In case of using metadata wrapper, there is a need to catch exceptions
+
+  drupal_json_output($response);
+}
+
+function ed_collection_ctools_render_alter(&$info, &$page, &$context) {
+  if(isset($context['contexts']['argument_entity_id:node_1']) && $context['contexts']['argument_entity_id:node_1']->data->type == 'ed_collection'){
+    $nid = $context['contexts']['argument_entity_id:node_1']->data->nid;
+    $setting = array('ed_collection' => array('collectionNid' => $nid));
+    drupal_add_js($setting, 'setting');
+  }
 }
 

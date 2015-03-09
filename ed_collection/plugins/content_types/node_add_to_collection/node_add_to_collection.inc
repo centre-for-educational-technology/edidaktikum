@@ -67,7 +67,7 @@ function ed_collection_node_add_to_collection_content_type_render($subtype, $con
   }
    */
   
-  drupal_add_js(drupal_get_path('module', 'ed_collection') . '/js/add_to_collection.js', 'file');
+  drupal_add_js(drupal_get_path('module', 'ed_collection') . '/js/add_to_collections.js', 'file');
   $modal_markup = '<div id="add-to-collection-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="add-to-collection-label" aria-hidden="true">'
     . '<div class="modal-header">'
     . '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>'
