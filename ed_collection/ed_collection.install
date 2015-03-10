@@ -128,8 +128,7 @@ function ed_collection_node_add_field_featured_image() {
 }
 
 function ed_collection_node_add_field_cover_image(){
-  // TODO Check if this is needed
-  // Probably could guess it has already been created
+  // This has probably been already created
   $field_name = 'ed_field_cover_image';
   if (!field_info_field($field_name)) {
     $field = array(
@@ -184,11 +183,11 @@ function ed_collection_node_add_field_items() {
       'description' => '',
       'required' => FALSE,
       'widget' => array(
-        'type' => 'entityreference_dragdrop',
+        'type' => 'options_select',
       ),
       'display' => array(
         'default' => array(
-          'type' => 'entityreference_entities_table',
+          'type' => 'entityreference_entity_view',
         ),
       ),
     );

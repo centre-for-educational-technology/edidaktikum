@@ -25,7 +25,7 @@ function ed_collection_node_view($node, $view_mode, $langcode){
     }
 
     $author = user_load($node->uid);
-    $items_field = $node->ed_collection_field_items[LANGUAGE_NONE];
+    $items_field = isset($node->ed_collection_field_items[LANGUAGE_NONE]) ? isset($node->ed_collection_field_items[LANGUAGE_NONE]) : [];
     $items_count = is_array($items_field) ? count($items_field) : 0;
     $views_count = ed_get_views($node->nid);
     $likes_count = ed_get_likes($node->nid);
@@ -52,6 +52,9 @@ function ed_collection_node_view($node, $view_mode, $langcode){
   }
 }
 
+/**
+ * Implement hook_preprocess_node()
+ */
 function ed_collection_preprocess_node(&$variables) {
   if ($variables['view_mode'] === 'eref_contained'
     && ed_collection_teacher_or_admin_is_logged_in()
@@ -105,6 +108,16 @@ function ed_collection_menu() {
     'type' => MENU_CALLBACK,
     'access callback' => 'ed_collection_teacher_or_admin_is_logged_in',
   );
+  $items['admin/config/edidaktikum/draft-collections'] = array(
+    'title' => 'eDidaktikum Draft Collections',
+    'description' => 'Publish Draft Collections',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('ed_collection_draft_collections_page_admin_form'),
+    'access arguments' => array('access administration pages'),
+    'file' => 'ed_collection.admin.inc',
+    'type' => MENU_NORMAL_ITEM,
+    'weight' => 8,
+  );
 
   return $items;
 }
@@ -112,7 +125,8 @@ function ed_collection_menu() {
 /**
  * Collections liting page.
  */
-function ed_collection_listing_page(){
+function ed_collection_listing_page() {
+  drupal_add_css('.page-collections .node-ed-collection .single-publishing-status { display: none; }', $option['type'] = 'inline');
   $content = array();
 
   if ( ed_collection_teacher_or_admin_is_logged_in() ) {
@@ -147,9 +161,9 @@ function ed_collection_listing_page(){
 /**
  * Collections dashboard listing page.
  */
-
 function ed_collection_dashboard_listing_page(){
   menu_tree_set_path('main-menu', 'dashboard');
+  drupal_add_css('.page-dashboard-collection .node-ed-collection .single-creator { display: none; }', $option['type'] = 'inline');
   $content = array();
 
   $content['add-new-container'] = array(
@@ -217,37 +231,6 @@ function ed_collection_get_published_collections() {
   return $nids;
 }
 
-/*function ed_collection_theme($existing, $type, $theme, $path) {
-  return array(
-    'ed_collection_page' => array(
-      'variables' => array('node_view' => '', 'site_name' => variable_get('site_name', 'Drupal'), 'front_page' => variable_get('site_frontpage')),
-      'template' => 'ed_collection_page',
-      'path' => drupal_get_path('module', 'ed_collection'),
-      'render element' => 'element',
-    ),
-    'node__ed_collection__kala' => array(
-      'template' => 'node--ed_collection--kala',
-      'variables' => array('node' => (object)array()),
-      'theme path' => drupal_get_path('module', 'ed_collection')
-    )
-  );  
-}*/
-
-/*function ed_collection_ctools_render_alter(&$info, &$page, &$context){  
-  if(isset($context['contexts']['argument_entity_id:node_1']) && $context['contexts']['argument_entity_id:node_1']->data->type == 'ed_collection'){
-    if(!empty($context['contexts']['argument_entity_id:node_1']->data->ed_field_cover_image)){      
-      $imguri = $context['contexts']['argument_entity_id:node_1']->data->ed_field_cover_image[LANGUAGE_NONE][0]['uri'];
-      $imgurl = file_create_url($imguri);    
-      drupal_add_css('.node-type-ed-collection {background: white url('.$imgurl.') no-repeat;}',$option['type'] = 'inline');
-    }else{
-      $themepath = drupal_get_path('theme',$GLOBALS['theme']);    
-      $defaultimagepath = $themepath.'/images/portfolio_bg.jpg';// XXX Probably need a new image
-      $defimageurl = file_create_url($defaultimagepath);
-      drupal_add_css('.node-type-ed-collection {background: white url('.$defimageurl.') no-repeat;}',$option['type'] = 'inline');  
-    }
-  }
-}*/
-
 /**
  * Implements hook_ctools_plugin_api().
  */
@@ -305,7 +288,9 @@ function ed_collection_teacher_or_admin_is_logged_in() {
 }
 
 /**
- * Deals with ajax callback to delete a search.
+ * Deals with ajax callback to load user collections.
+ * Excludes any collections that provided node identifier
+ * is part of.
  */
 function ed_collection_load_user_collections($nid) {
   $response = array(
@@ -358,6 +343,10 @@ function ed_collection_load_user_collections($nid) {
   return drupal_json_output($response);
 }
 
+/**
+ * Deals with ajax callback to add item to collections.
+ * Adds item to collection if items is not already part of one.
+ */
 function ed_collection_add_to_collections($nid) {
   $response = array(
     'success' => false,
@@ -416,6 +405,9 @@ function ed_collection_add_to_collections($nid) {
   return drupal_json_output($response);
 }
 
+/**
+ * Deals with ajax callback to remove an item from collection.
+ */
 function ed_collection_remove_item_from_collection($item_nid, $collection_nid) {
   $response = array(
     'success' => false,
@@ -475,8 +467,12 @@ function ed_collection_remove_item_from_collection($item_nid, $collection_nid) {
   return drupal_json_output($response);
 }
 
+/**
+ * Implements hook_ctools_render_alter().
+ */
 function ed_collection_ctools_render_alter(&$info, &$page, &$context) {
   if(isset($context['contexts']['argument_entity_id:node_1']) && $context['contexts']['argument_entity_id:node_1']->data->type == 'ed_collection'){
+    // Add collction nid to JS settings
     $nid = $context['contexts']['argument_entity_id:node_1']->data->nid;
     $setting = array('ed_collection' => array('collectionNid' => $nid));
     drupal_add_js($setting, 'setting');
