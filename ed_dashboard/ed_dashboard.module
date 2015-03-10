@@ -318,7 +318,7 @@ function ed_dashboard_delete_search($sid) {
   );
 
   if (!$sid) {
-    drupal_json_output($response);
+    return drupal_json_output($response);
   }
 
   $account = $GLOBALS['user'];
@@ -331,7 +331,7 @@ function ed_dashboard_delete_search($sid) {
     $response['success'] = true;
   }
 
-  drupal_json_output($response);
+  return drupal_json_output($response);
 }
 
 /**
