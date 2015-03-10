@@ -313,17 +313,15 @@ function ed_collection_load_user_collections($nid) {
   );
 
   if (!$nid) {
-    drupal_json_output($response);
+    $response['message'] = 'Item identifier not provided.';
+    return drupal_json_output($response);
   }
 
   $node = node_load($nid);
 
-  if (!$node) {
-    drupal_json_output($response);
-  }
-
-  if ($node->type !== 'ed_learing_resource') {
-    drupal_json_output($response);
+  if (!($node && $node->type === 'ed_learning_resource')) {
+    $response['message'] = 'Item not found or of wrong type.';
+    return drupal_json_output($response);
   }
 
   $account = $GLOBALS['user'];
@@ -357,7 +355,7 @@ function ed_collection_load_user_collections($nid) {
   $response['success'] = true;
   $response['data'] = $collections_data;
 
-  drupal_json_output($response);
+  return drupal_json_output($response);
 }
 
 function ed_collection_add_to_collections($nid) {
@@ -366,45 +364,56 @@ function ed_collection_add_to_collections($nid) {
   );
 
   if (!$nid) {
-    drupal_json_output($response);
+    $response['message'] = 'Item identifier not provided.';
+    return drupal_json_output($response);
   }
 
   $node = node_load($nid);
 
-  if (!$node) {
-    return drupal_json_output($response);
-  }
-
-  if ($node->type !== 'ed_learing_resource') {
+  if (!($node && $node->type === 'ed_learning_resource')) {
+    $response['message'] = 'Item node not found or of wrong type.';
     return drupal_json_output($response);
   }
 
   $collections = isset($_POST['selected_collections']) ? $_POST['selected_collections'] : NULL;
 
   if (!$collections) {
+    $response['message'] = 'No collection identifiers provided.';
     return drupal_json_output($response);
   }
-
-  $account = $GLOBALS['user'];
 
   foreach($collections as $cnid) {
     $collection = node_load($cnid);
 
-    if ($collection && $collection->type === 'ed_collection' && node_access('update', $collection, $account)) {
-      // TODO Need to catch exceptions
-      $wrapper = entity_metadata_wrapper('node', $collection);
-      $current_value = $wrapper->ed_collection_field_items->raw();
-      if (!in_array($node->nid, $current_value)) {
-        array_push($current_value, $node->nid);
+    if ($collection && $collection->type === 'ed_collection' && node_access('update', $collection)) {
+      try {
+        $wrapper = entity_metadata_wrapper('node', $collection);
+        $current_value = $wrapper->ed_collection_field_items->raw();
+
+        if (!in_array($node->nid, $current_value)) {
+          array_push($current_value, $node->nid);
+          $wrapper->ed_collection_field_items->set($current_value);
+          $wrapper->save();
+        }
+      } catch (EntityMetadataWrapperException $exc) {
+        $response['error'] = 'Metadata wrapper exception occured.';
+        watchdog(
+          'ed_collection',
+          'See '  . __FUNCTION__ . '() <pre>' .  $exc->getTraceAsString() . '</pre>',
+          NULL, WATCHDOG_ERROR
+        );
       }
-      $wrapper->ed_collection_field_items->set($current_value);
-      $wrapper->save();
+    } else {
+      watchdog(
+        'ed_collection',
+        'See '  . __FUNCTION__ . '() <pre>Provided node identifier ' . $cnid . ' does not belong to collection.</pre>',
+        NULL, WATCHDOG_NOTICE
+      );
     }
   }
 
   $response['success'] = true;
-  drupal_json_output($response);
-
+  return drupal_json_output($response);
 }
 
 function ed_collection_remove_item_from_collection($item_nid, $collection_nid) {
@@ -412,10 +421,58 @@ function ed_collection_remove_item_from_collection($item_nid, $collection_nid) {
     'success' => false,
   );
 
-  // TODO Add call logic along security checks
-  // In case of using metadata wrapper, there is a need to catch exceptions
+  if (!$item_nid) {
+    $response['message'] = 'Item identifier not found.';
+    return drupal_json_output($response);
+  }
 
-  drupal_json_output($response);
+  if (!$collection_nid) {
+    $response['message'] = 'Collection identifier not found.';
+    return drupal_json_output($response);
+  }
+
+  $item = node_load($item_nid);
+
+  if (!($item && $item->type === 'ed_learning_resource')) {
+    $response['message'] = 'Item node not found or of wrong type.';
+    return drupal_json_output($response);
+  }
+
+  $collection = node_load($collection_nid);
+
+  if (!($collection && $collection->type === 'ed_collection')) {
+    $response['message'] = 'Collection node not found or wrong type.';
+    return drupal_json_output($response);
+  }
+
+  if (!node_access('update', $collection)) {
+    $response['message'] = 'Not allowed to update collection.';
+    return drupal_json_output($response);
+  }
+  
+  try {
+    $wrapper = entity_metadata_wrapper('node', $collection);
+    $current_value = $wrapper->ed_collection_field_items->raw();
+
+    if (($key = array_search($item->nid, $current_value)) !== false) {
+      unset($current_value[$key]);
+      $wrapper->ed_collection_field_items->set($current_value);
+      $wrapper->save();
+    } else {
+      $response['message'] = 'Item already in collection.';
+    }
+
+    $response['success'] = true;
+  } catch (EntityMetadataWrapperException $exc) {
+    $response['error'] = 'Metadata wrapper exception occured.';
+    watchdog(
+      'ed_collection',
+      'See '  . __FUNCTION__ . '() <pre>' .  $exc->getTraceAsString() . '</pre>',
+      NULL, WATCHDOG_ERROR
+    );
+  }
+
+  return drupal_json_output($response);
 }
 
 function ed_collection_ctools_render_alter(&$info, &$page, &$context) {

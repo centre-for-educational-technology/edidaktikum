@@ -3,7 +3,8 @@
         attach: function(context, settings) {
             $('.single-remove-from-collection').on('click', function(e) {
                 e.preventDefault();
-                var confirmation = confirm(Drupal.t('Are you sure?'));
+                var that = this,
+                    confirmation = confirm(Drupal.t('Are you sure?'));
 
                 if (true != confirmation) {
                     return false;
@@ -15,7 +16,9 @@
                     type: 'POST',
                     cache: false,
                     success: function(response) {
-                        console.log(response);
+                        if (true == response.success) {
+                            $(that).parents('.node').remove();
+                        }
                     }
                 });
             });
