@@ -527,7 +527,7 @@ function _check_for_parents($tid, &$parentArray){
 }
 
 /**
- * Returns identifiers for promoted node of type ptovided or false.
+ * Returns identifiers for promoted node of type provided or false.
  * @param $node_type
  *   Node type to check promoted for
  */
@@ -538,6 +538,25 @@ function ed_get_promoted_by_node_type($node_type) {
     ->condition('n.type', $node_type)
     ->condition('n.status', 1)
     ->condition('n.promote', 1)
+    ->orderBy('n.created', 'DESC');
+  $nids = $query->execute()->fetchCol();
+  if( !empty($nids) ) {
+    return $nids;
+  }
+  return FALSE;
+}
+
+/**
+ * Returns identifiers for draft nodes of type provided or false.
+ * @param $node_type
+ *   Node type to check promoted for
+ */
+function ed_get_drafts_by_node_type($node_type) {
+  $query = db_select('node', 'n');
+  $query->fields('n', array('nid'))
+    ->addTag('node_access')
+    ->condition('n.type', $node_type)
+    ->condition('n.status', 0)
     ->orderBy('n.created', 'DESC');
   $nids = $query->execute()->fetchCol();
   if( !empty($nids) ) {
