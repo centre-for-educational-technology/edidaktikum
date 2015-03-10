@@ -476,6 +476,17 @@ function ed_collection_ctools_render_alter(&$info, &$page, &$context) {
     $nid = $context['contexts']['argument_entity_id:node_1']->data->nid;
     $setting = array('ed_collection' => array('collectionNid' => $nid));
     drupal_add_js($setting, 'setting');
+    
+    if(!empty($context['contexts']['argument_entity_id:node_1']->data->ed_field_cover_image)){      
+      $imguri = $context['contexts']['argument_entity_id:node_1']->data->ed_field_cover_image[LANGUAGE_NONE][0]['uri'];
+      $imgurl = file_create_url($imguri);    
+      drupal_add_css('.node-type-ed-collection #header {background: white url('.$imgurl.') no-repeat;}',$option['type'] = 'inline');
+    }else{
+      $themepath = drupal_get_path('theme',$GLOBALS['theme']);    
+      $defaultimagepath = $themepath.'/images/portfolio_bg.jpg';    
+      $defimageurl = file_create_url($defaultimagepath);
+      drupal_add_css('.node-type-ed-collection #header {background: white url('.$defimageurl.') no-repeat;}',$option['type'] = 'inline');  
+    }
   }
 }
 
