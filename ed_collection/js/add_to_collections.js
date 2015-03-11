@@ -8,7 +8,6 @@
                         var collectionsElement = modalElement.find('select[name="collections"]'),
                             selectedCollections = collectionsElement.val();
 
-                        console.log(collectionsElement, selectedCollections);
                         if ( !selectedCollections ) {
                             return false;
                         }
