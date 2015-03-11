@@ -1,0 +1,240 @@
+<?php
+
+/**
+ * @file
+ * ed_collection.install
+ */
+
+/**
+ * Implements hook_install().
+ */
+function ed_collection_install() {
+  ed_collection_create_field_items();
+  ed_collection_create_ed_collection_node_type();
+  ed_collection_node_add_field_excerpt();
+  ed_collection_node_add_field_featured_image();
+  ed_collection_node_add_field_cover_image();
+  ed_collection_node_add_field_items();
+  ed_collection_set_permissions();
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function ed_collection_uninstall() {
+  ed_collection_delete_ed_collection_nodes();
+  ed_collection_delete_ed_collection_node_type();
+  field_delete_field('ed_collection_field_items');
+}
+
+/**
+ * Creates collectoion items field if not exists.
+ */
+function ed_collection_create_field_items() {
+  $field_name = 'ed_collection_field_items';
+  if (!field_info_field($field_name)) {
+    $field = array(
+      'field_name' => $field_name,
+      'type' => 'entityreference',
+      'entity_types' => array('node'),
+      'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+      'locked' => FALSE,
+      'settings' => array(
+        'handler' => 'views',
+        'handler_settings' => array(
+          'view' => array(
+            'view_name' => 'user_ed_collection_items',
+            'display_name' => 'entityreference',
+            'args' => '',
+          ),
+        ),
+      ),
+    );
+    $field = field_create_field($field);
+  }
+}
+
+/**
+ * Creates ed_collection node type.
+ */
+function ed_collection_create_ed_collection_node_type() {
+  if (!in_array('ed_collection', node_type_get_names())) {
+    $type = array(
+      'type' => 'ed_collection',
+      'name' => t('Collection'),
+      'base' => 'node_content',
+      'custom' => FALSE,
+      'modified' => FALSE,
+      'locked' => TRUE,
+      'has_title' => TRUE,
+      'title_label' => t('Title'),
+      'module' => 'ed_collection',
+    );
+    $type = node_type_set_defaults($type);
+    node_type_save($type);
+    variable_set('comment_ed_collection', COMMENT_NODE_CLOSED);
+    variable_set('node_options_ed_collection', array());
+  }
+}
+
+function ed_collection_node_add_field_excerpt() {
+  $field_name = 'ed_field_excerpt';
+  $field = field_info_field($field_name);
+  if (!empty($field) && !field_info_instance('node', $field_name, 'ed_collection')) {
+    $instance = array(
+      'field_name' => $field_name,
+      'entity_type' => 'node',
+      'bundle' => 'ed_collection',
+      'label' => t('Excerpt'),
+      'description' => '',
+      'required' => TRUE,
+      'display' => array(
+        'teaser' => array(
+          'label' => 'hidden',
+          'type' => 'text_trimmed',
+          'weight' => 5,
+        ),
+        'front' => array(
+          'label' => 'hidden',
+          'type' => 'text_trimmed',
+        ),
+      ),
+    );
+
+    field_create_instance($instance);
+  }
+}
+
+function ed_collection_node_add_field_featured_image() {
+  $field_name = 'ed_field_featured_image';
+  $field = field_info_field($field_name);
+  if (!empty($field) && !field_info_instance('node', $field_name, 'ed_collection')) {
+    $instance = array(
+      'field_name' => $field_name,
+      'entity_type' => 'node',
+      'bundle' => 'ed_collection',
+      'label' => t('Featured image'),
+      'description' => '',
+      'settings' => array(
+        'file_directory' => 'ed_collection_featured_images',
+      ),
+      'widget' => array(
+        'type' => 'image_image',
+      ),
+      'required' => FALSE,
+    );
+    field_create_instance($instance);
+  }
+}
+
+function ed_collection_node_add_field_cover_image(){
+  // This has probably been already created
+  $field_name = 'ed_field_cover_image';
+  if (!field_info_field($field_name)) {
+    $field = array(
+      'field_name' => $field_name,
+      'type' => 'image',
+      'entity_types' => array('node'),
+      'cardinality' => 1,
+      'locked' => FALSE,
+      'settings' => array(
+        'uri_scheme' => 'public',
+        'default_image' => 0,
+      ),
+    );
+    $field = field_create_field($field);
+  }
+  
+  $field_name = 'ed_field_cover_image';
+  $field = field_info_field($field_name);
+  if (!empty($field) && !field_info_instance('node', $field_name, 'ed_collection')) {
+    $instance = array(
+      'field_name' => $field_name,
+      'entity_type' => 'node',
+      'bundle' => 'ed_collection',
+      'label' => t('Cover image'),
+      'description' => '',
+      'settings' => array(
+        'file_directory' => 'ed_collection_cover_images',
+      ),
+      'widget' => array(
+        'type' => 'image_image',
+      ),
+      'required' => FALSE,
+    );
+    field_create_instance($instance);
+  }
+  
+}
+
+
+/**
+ * Adds field ed_collection_field_items to ed_collection node type.
+ */
+function ed_collection_node_add_field_items() {
+  $field_name = 'ed_collection_field_items';
+  $field = field_info_field($field_name);
+  if (!empty($field) && !field_info_instance('node', $field_name, 'ed_collection')) {
+    $instance = array(
+      'field_name' => $field_name,
+      'entity_type' => 'node',
+      'bundle' => 'ed_collection',
+      'label' => t('Collection items'),
+      'description' => '',
+      'required' => FALSE,
+      'widget' => array(
+        'type' => 'options_select',
+      ),
+      'display' => array(
+        'default' => array(
+          'type' => 'entityreference_entity_view',
+        ),
+      ),
+    );
+    field_create_instance($instance);
+  }
+}
+
+/**
+ * Sets permissions for ed_collection.
+ */
+function ed_collection_set_permissions() {
+  $teacher_role = user_role_load_by_name('teacher');
+  $teacher_rid = $teacher_role ? $teacher_role->rid : NULL;
+  $permissions = array(
+    'create ed_collection content' => TRUE,  
+    'edit own ed_collection content' => TRUE,  
+    'delete own ed_collection content' => TRUE,  
+  );
+
+  if ( $teacher_rid ) {
+    user_role_change_permissions(DRUPAL_AUTHENTICATED_RID, $permissions);
+  }
+}
+
+/**
+ * Deletes all ed_collection nodes.
+ */
+function ed_collection_delete_ed_collection_nodes() {
+  $nids = array();
+  $query = db_select('node', 'n')
+    ->fields('n', array('nid'))
+    ->condition('n.type', 'ed_collection');
+  $nids = $query->execute()->fetchCol();
+  if (!empty($nids)) {
+    node_delete_multiple($nids);
+  }
+}
+
+/**
+ * Deletes ed_collection node type.
+ */
+function ed_collection_delete_ed_collection_node_type() {
+  if (array_key_exists('ed_collection', node_type_get_names())) {
+    node_type_delete('ed_collection');
+    node_types_rebuild();  
+    variable_del('comment_ed_collection');
+    variable_del('node_options_ed_collection');
+  }  
+}
+

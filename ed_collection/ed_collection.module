@@ -1,0 +1,492 @@
+<?php
+
+/**
+ * @file
+ * eDidaktikum collection module.
+ */
+
+/**
+ * Implements hook_node_view()
+ */
+function ed_collection_node_view($node, $view_mode, $langcode){
+  if($view_mode == 'teaser' && $node->type == 'ed_collection'){
+    // TODO Use some default image if not provided
+    if(!empty($node->ed_field_featured_image)){
+      $imgpath = image_style_url('thumbnail', $node->ed_field_featured_image[LANGUAGE_NONE][0]['uri']);
+      
+      $node->content['cover-image'] = array(
+        '#type' => 'markup',
+        '#weight' => 5,
+        '#markup' => '<img src="'.$imgpath.'"/>',
+        '#prefix' => '<div class="cover-image">',
+        '#suffix' => '</div>',
+      );
+
+    }
+
+    $author = user_load($node->uid);
+    $items_field = isset($node->ed_collection_field_items[LANGUAGE_NONE]) ? isset($node->ed_collection_field_items[LANGUAGE_NONE]) : [];
+    $items_count = is_array($items_field) ? count($items_field) : 0;
+    $views_count = ed_get_views($node->nid);
+    $likes_count = ed_get_likes($node->nid);
+    $username = edidaktikum_get_full_name_for_user_account($author);
+    
+    $parts = array(
+      '<span class="single-creator">' . l($username, 'user/'.$node->uid) . '</span>',
+      '<span class="single-icon-holder"><i class="fa fa-file-text-o"> ' . $items_count . '</i></span>',
+      '<span clss="single-icon-holder"><i class="fa fa-eye"> ' . $views_count . '</i></span>',
+      '<span class="single-icon-holder"><i class="fa fa-heart"> ' . $likes_count . '</i></span>',
+    );
+    
+    if ( 1 === (int)$node->status ) {
+        array_push($parts, '<span class="label label-info single-publishing-status">' . t('Published') . '</span>');
+    }
+
+    $node->content['metadata'] = array(
+      '#type' => 'markup',
+      '#weight' => 50,
+      '#markup' => implode(' ', $parts),
+      '#prefix' => '<div class="description">',
+      '#suffix' => '</div>',
+    );
+  }
+}
+
+/**
+ * Implement hook_preprocess_node()
+ */
+function ed_collection_preprocess_node(&$variables) {
+  if ($variables['view_mode'] === 'eref_contained'
+    && ed_collection_teacher_or_admin_is_logged_in()
+    && node_access('update', $variables['node'])
+  ) {
+    drupal_add_js(drupal_get_path('module', 'ed_collection') . '/js/remove_from_collection.js', 'file');
+    $variables['content']['metadata']['#markup'] .= ' <a href="#" class="single-remove-from-collection" data-nid="'
+      . $variables['nid']
+      . '">'
+      . '<i class="fa fa-minus-square-o"></i> '
+      . t('Remove from Collection')
+      . '</a>';
+  }
+}
+
+/**
+ * Implements hook_menu().
+ */
+function ed_collection_menu() {
+  $items['collections'] = array(
+    'title' => t('Collections'),
+    'page callback' => 'ed_collection_listing_page',
+    'access callback' => TRUE,
+    'weight' => 10,
+    'menu_name' => 'main-menu',
+    'type' => MENU_NORMAL_ITEM,
+  );
+  $items['dashboard/collection'] = array(
+    'title' => t('Collection'),
+    'page callback' => 'ed_collection_dashboard_listing_page',
+    'access callback' => 'ed_collection_teacher_or_admin_is_logged_in',
+    'weight' => 35,
+    'menu_name' => 'ed-dashboard-menu',
+    'type' => MENU_NORMAL_ITEM,
+  );
+  $items['collections/user/load/%'] = array(
+    'page callback' => 'ed_collection_load_user_collections',
+    'page arguments' => array(3),
+    'type' => MENU_CALLBACK,
+    'access callback' => 'ed_collection_teacher_or_admin_is_logged_in',
+  );
+  $items['collections/user/add/%'] = array(
+    'page callback' => 'ed_collection_add_to_collections',
+    'page arguments' => array(3),
+    'type' => MENU_CALLBACK,
+    'access callback' => 'ed_collection_teacher_or_admin_is_logged_in',
+  );
+  $items['collections/remove/%/from/%'] = array(
+    'page callback' => 'ed_collection_remove_item_from_collection',
+    'page arguments' => array(2, 4),
+    'type' => MENU_CALLBACK,
+    'access callback' => 'ed_collection_teacher_or_admin_is_logged_in',
+  );
+  $items['admin/config/edidaktikum/draft-collections'] = array(
+    'title' => 'eDidaktikum Draft Collections',
+    'description' => 'Publish Draft Collections',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('ed_collection_draft_collections_page_admin_form'),
+    'access arguments' => array('access administration pages'),
+    'file' => 'ed_collection.admin.inc',
+    'type' => MENU_NORMAL_ITEM,
+    'weight' => 8,
+  );
+
+  return $items;
+}
+
+/**
+ * Collections liting page.
+ */
+function ed_collection_listing_page() {
+  drupal_add_css('.page-collections .node-ed-collection .single-publishing-status { display: none; }', $option['type'] = 'inline');
+  $content = array();
+
+  if ( ed_collection_teacher_or_admin_is_logged_in() ) {
+    $content['add-new-container'] = array(
+      '#type' => 'container',
+      '#attributes' => array(
+        'class' => array('ed-add-new-node', 'ed-add-new-ed-collection'),
+      ),
+    );
+    $content['add-new-container']['add-new-collection'] = array(
+      '#type' => 'link',
+      '#title' => t('Add new collection'),
+      '#href' => 'node/add/ed-collection',
+    );
+  }
+  
+  $nids = ed_collection_get_published_collections();
+  if(!empty($nids)){
+    $nodes = node_load_multiple($nids);    
+    $build = node_view_multiple($nodes);
+    $build['pager'] = array(
+      '#theme' => 'pager',
+      '#weight' => 5,
+    );
+    $content['pager']['collections'] = $build;
+  }
+  
+  return $content;
+}
+
+
+/**
+ * Collections dashboard listing page.
+ */
+function ed_collection_dashboard_listing_page(){
+  menu_tree_set_path('main-menu', 'dashboard');
+  drupal_add_css('.page-dashboard-collection .node-ed-collection .single-creator { display: none; }', $option['type'] = 'inline');
+  $content = array();
+
+  $content['add-new-container'] = array(
+    '#type' => 'container',
+    '#attributes' => array(
+      'class' => array('ed-add-new-node', 'ed-add-new-ed-collection'),
+    ),
+  );
+  $content['add-new-container']['add-new-collection'] = array(
+    '#type' => 'link',
+    '#title' => t('Add new collection'),
+    '#href' => 'node/add/ed-collection',
+  );
+  
+  $nids = ed_collection_get_user_collections();
+  if(!empty($nids)){
+    $nodes = node_load_multiple($nids);    
+    $build = node_view_multiple($nodes);
+    $build['pager'] = array(
+      '#theme' => 'pager',
+      '#weight' => 5,
+    );
+    $content['pager']['collections'] = $build;
+  }
+  
+  return $content;
+}
+
+/**
+ * User collections ids.
+ * Support pagination
+ */
+function ed_collection_get_user_collections() {
+  global $user;
+  $query = db_select('node', 'n')
+    ->extend('PagerDefault')
+    ->fields('n', array('nid'))
+    ->condition('n.type', 'ed_collection')
+    ->condition('n.uid', $user->uid)
+    ->addTag('node_access')
+    ->range()
+    ->orderBy('n.created', 'DESC')
+    ->limit(ed_get_paging_nr());
+
+  $nids = $query->execute()->fetchCol();
+  return $nids;
+}
+
+/**
+ * Published collections ids.
+ * Support pagination
+ */
+function ed_collection_get_published_collections() {
+  $query = db_select('node', 'n')
+    ->extend('PagerDefault')
+    ->fields('n', array('nid'))
+    ->condition('n.type', 'ed_collection')
+    ->condition('n.status', 1)
+    ->addTag('node_access')
+    ->range()
+    ->orderBy('n.created', 'DESC')
+    ->limit(ed_get_paging_nr());
+
+  $nids = $query->execute()->fetchCol();
+  return $nids;
+}
+
+/**
+ * Implements hook_ctools_plugin_api().
+ */
+function ed_collection_ctools_plugin_api() {
+  list($module, $api) = func_get_args();
+  if ($module == "page_manager" && $api == "pages_default") {
+    return array("version" => "1");
+  }
+}
+
+/**
+ * Implements hook_ctools_plugin_directory().
+ */
+function ed_collection_ctools_plugin_directory($module, $plugin) {
+  if(('content_types' == $plugin && 'ctools' == $module)) {
+    return 'plugins/' . $plugin;
+  }
+}
+
+/**
+ * Implements hook_views_api().
+ */
+function ed_collection_views_api() {
+  return array(
+    'api' => 3,
+    'path' => drupal_get_path('module', 'ed_collection') . '/includes/views',
+  );
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function ed_collection_form_alter(&$form, &$form_state, $form_id) {
+  if ('ed_collection_node_form' == $form_id) {
+    if (empty($form['#node']->nid)) {
+      drupal_set_title(t('Create Collection'));
+    }
+  }
+}
+
+/**
+ * Checks if logged in user is teacher or admin.
+ */
+function ed_collection_teacher_or_admin_is_logged_in() {
+  if (!user_is_logged_in()) {
+    return false;
+  }
+
+  $account = $GLOBALS['user'];
+  if (in_array('teacher', $account->roles) || in_array('administrator', $account->roles)) {
+    return true;
+  }
+
+  return false;
+}
+
+/**
+ * Deals with ajax callback to load user collections.
+ * Excludes any collections that provided node identifier
+ * is part of.
+ */
+function ed_collection_load_user_collections($nid) {
+  $response = array(
+    'success' => false,
+  );
+
+  if (!$nid) {
+    $response['message'] = 'Item identifier not provided.';
+    return drupal_json_output($response);
+  }
+
+  $node = node_load($nid);
+
+  if (!($node && $node->type === 'ed_learning_resource')) {
+    $response['message'] = 'Item not found or of wrong type.';
+    return drupal_json_output($response);
+  }
+
+  $account = $GLOBALS['user'];
+
+  // Load data on all collections item belongs to
+  $exclude_query = new EntityFieldQuery();
+  $exclude_query->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', 'ed_collection')
+    ->fieldCondition('ed_collection_field_items', 'target_id', $nid, '=')
+    ->propertyCondition('uid', $account->uid)
+    ->propertyOrderBy('created', 'DESC');
+
+  $exclude_result = $exclude_query->execute();
+  $excluded = array_keys($exclude_result['node']);
+  
+  // Load all collections accessible to user
+  $query = db_select('node', 'n')
+    ->fields('n', array('nid', 'title'))
+    ->condition('n.type', 'ed_collection')
+    ->condition('n.uid', $account->uid)
+    ->addTag('node_access')
+    ->orderBy('n.created', 'DESC');
+
+  // Exclude any collections the item already belongs to
+  if ( $excluded ) {
+    $query->condition('n.nid', $excluded, 'NOT IN');
+  }
+
+  $collections_data = $query->execute()->fetchAllAssoc('nid');
+
+  $response['success'] = true;
+  $response['data'] = $collections_data;
+
+  return drupal_json_output($response);
+}
+
+/**
+ * Deals with ajax callback to add item to collections.
+ * Adds item to collection if items is not already part of one.
+ */
+function ed_collection_add_to_collections($nid) {
+  $response = array(
+    'success' => false,
+  );
+
+  if (!$nid) {
+    $response['message'] = 'Item identifier not provided.';
+    return drupal_json_output($response);
+  }
+
+  $node = node_load($nid);
+
+  if (!($node && $node->type === 'ed_learning_resource')) {
+    $response['message'] = 'Item node not found or of wrong type.';
+    return drupal_json_output($response);
+  }
+
+  $collections = isset($_POST['selected_collections']) ? $_POST['selected_collections'] : NULL;
+
+  if (!$collections) {
+    $response['message'] = 'No collection identifiers provided.';
+    return drupal_json_output($response);
+  }
+
+  foreach($collections as $cnid) {
+    $collection = node_load($cnid);
+
+    if ($collection && $collection->type === 'ed_collection' && node_access('update', $collection)) {
+      try {
+        $wrapper = entity_metadata_wrapper('node', $collection);
+        $current_value = $wrapper->ed_collection_field_items->raw();
+
+        if (!in_array($node->nid, $current_value)) {
+          array_push($current_value, $node->nid);
+          $wrapper->ed_collection_field_items->set($current_value);
+          $wrapper->save();
+        }
+      } catch (EntityMetadataWrapperException $exc) {
+        $response['error'] = 'Metadata wrapper exception occured.';
+        watchdog(
+          'ed_collection',
+          'See '  . __FUNCTION__ . '() <pre>' .  $exc->getTraceAsString() . '</pre>',
+          NULL, WATCHDOG_ERROR
+        );
+      }
+    } else {
+      watchdog(
+        'ed_collection',
+        'See '  . __FUNCTION__ . '() <pre>Provided node identifier ' . $cnid . ' does not belong to collection.</pre>',
+        NULL, WATCHDOG_NOTICE
+      );
+    }
+  }
+
+  $response['success'] = true;
+  return drupal_json_output($response);
+}
+
+/**
+ * Deals with ajax callback to remove an item from collection.
+ */
+function ed_collection_remove_item_from_collection($item_nid, $collection_nid) {
+  $response = array(
+    'success' => false,
+  );
+
+  if (!$item_nid) {
+    $response['message'] = 'Item identifier not found.';
+    return drupal_json_output($response);
+  }
+
+  if (!$collection_nid) {
+    $response['message'] = 'Collection identifier not found.';
+    return drupal_json_output($response);
+  }
+
+  $item = node_load($item_nid);
+
+  if (!($item && $item->type === 'ed_learning_resource')) {
+    $response['message'] = 'Item node not found or of wrong type.';
+    return drupal_json_output($response);
+  }
+
+  $collection = node_load($collection_nid);
+
+  if (!($collection && $collection->type === 'ed_collection')) {
+    $response['message'] = 'Collection node not found or wrong type.';
+    return drupal_json_output($response);
+  }
+
+  if (!node_access('update', $collection)) {
+    $response['message'] = 'Not allowed to update collection.';
+    return drupal_json_output($response);
+  }
+  
+  try {
+    $wrapper = entity_metadata_wrapper('node', $collection);
+    $current_value = $wrapper->ed_collection_field_items->raw();
+
+    if (($key = array_search($item->nid, $current_value)) !== false) {
+      unset($current_value[$key]);
+      $wrapper->ed_collection_field_items->set($current_value);
+      $wrapper->save();
+    } else {
+      $response['message'] = 'Item already in collection.';
+    }
+
+    $response['success'] = true;
+  } catch (EntityMetadataWrapperException $exc) {
+    $response['error'] = 'Metadata wrapper exception occured.';
+    watchdog(
+      'ed_collection',
+      'See '  . __FUNCTION__ . '() <pre>' .  $exc->getTraceAsString() . '</pre>',
+      NULL, WATCHDOG_ERROR
+    );
+  }
+
+  return drupal_json_output($response);
+}
+
+/**
+ * Implements hook_ctools_render_alter().
+ */
+function ed_collection_ctools_render_alter(&$info, &$page, &$context) {
+  if(isset($context['contexts']['argument_entity_id:node_1']) && $context['contexts']['argument_entity_id:node_1']->data->type == 'ed_collection'){
+    // Add collction nid to JS settings
+    $nid = $context['contexts']['argument_entity_id:node_1']->data->nid;
+    $setting = array('ed_collection' => array('collectionNid' => $nid));
+    drupal_add_js($setting, 'setting');
+    
+    if(!empty($context['contexts']['argument_entity_id:node_1']->data->ed_field_cover_image)){      
+      $imguri = $context['contexts']['argument_entity_id:node_1']->data->ed_field_cover_image[LANGUAGE_NONE][0]['uri'];
+      $imgurl = file_create_url($imguri);    
+      drupal_add_css('.node-type-ed-collection #header {background: white url('.$imgurl.') no-repeat;}',$option['type'] = 'inline');
+    }else{
+      $themepath = drupal_get_path('theme',$GLOBALS['theme']);    
+      $defaultimagepath = $themepath.'/images/portfolio_bg.jpg';    
+      $defimageurl = file_create_url($defaultimagepath);
+      drupal_add_css('.node-type-ed-collection #header {background: white url('.$defimageurl.') no-repeat;}',$option['type'] = 'inline');  
+    }
+  }
+}
+

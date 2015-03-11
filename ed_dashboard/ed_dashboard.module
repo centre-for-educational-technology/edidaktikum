@@ -38,7 +38,7 @@ function ed_dashboard_menu() {
     'page callback' => 'drupal_get_form',
     'access callback' => 'user_is_logged_in',
     'page arguments' => array('ed_dashboard_discover_page', 2),
-    'weight' => 35,
+    'weight' => 40,
     'menu_name' => 'ed-dashboard-menu',
     'type' => MENU_NORMAL_ITEM,
   );
@@ -318,7 +318,7 @@ function ed_dashboard_delete_search($sid) {
   );
 
   if (!$sid) {
-    drupal_json_output($response);
+    return drupal_json_output($response);
   }
 
   $account = $GLOBALS['user'];
@@ -331,7 +331,7 @@ function ed_dashboard_delete_search($sid) {
     $response['success'] = true;
   }
 
-  drupal_json_output($response);
+  return drupal_json_output($response);
 }
 
 /**

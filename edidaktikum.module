@@ -295,6 +295,10 @@ function edidaktikum_entity_info_alter(&$entity_info) {
     'label' => t('Dashboard'),
     'custom settings' => TRUE,
   );
+  $entity_info['node']['view modes']['eref_contained'] = array(
+    'label' => t('Entity Reference Contained'),
+    'custom settings' => TRUE,
+  );
   if (isset($entity_info['user'])) {
     $entity_info['user']['label callback'] = 'edidaktikum_user_label_callback';
   }
@@ -366,6 +370,12 @@ function edidaktikum_preprocess_node(&$vars) {
     $vars['dashboard'] = TRUE;
     $vars['theme_hook_suggestions'][] = 'node__dashboard';
     $vars['theme_hook_suggestions'][] = 'node__' . $vars['type'] . '__dashboard';
+  }
+  if ($vars['view_mode'] == 'eref_contained') {
+    $vars['eref_contained'] = TRUE;
+    $vars['theme_hook_suggestions'][] = 'node__eref_contained';
+    $vars['theme_hook_suggestions'][] = 'node__' . $vars['type'] . '__eref_contained';
+    $vars['user_picture'] = '';
   }
   if ('teaser' === $vars['view_mode'] && $vars['type'] !== 'ed_portfolio') {
     if (TRUE === $vars['logged_in'] && $vars['uid'] === $vars['user']->uid) {
@@ -517,7 +527,7 @@ function _check_for_parents($tid, &$parentArray){
 }
 
 /**
- * Returns identifiers for promoted node of type ptovided or false.
+ * Returns identifiers for promoted node of type provided or false.
  * @param $node_type
  *   Node type to check promoted for
  */
@@ -528,6 +538,25 @@ function ed_get_promoted_by_node_type($node_type) {
     ->condition('n.type', $node_type)
     ->condition('n.status', 1)
     ->condition('n.promote', 1)
+    ->orderBy('n.created', 'DESC');
+  $nids = $query->execute()->fetchCol();
+  if( !empty($nids) ) {
+    return $nids;
+  }
+  return FALSE;
+}
+
+/**
+ * Returns identifiers for draft nodes of type provided or false.
+ * @param $node_type
+ *   Node type to check promoted for
+ */
+function ed_get_drafts_by_node_type($node_type) {
+  $query = db_select('node', 'n');
+  $query->fields('n', array('nid'))
+    ->addTag('node_access')
+    ->condition('n.type', $node_type)
+    ->condition('n.status', 0)
     ->orderBy('n.created', 'DESC');
   $nids = $query->execute()->fetchCol();
   if( !empty($nids) ) {

@@ -473,7 +473,6 @@ function _ed_learning_resource_type_list() {
 	  ->condition("t.vid", $vid)
 	  ->execute();
   $options = array();
-  $langcode = $GLOBALS['user']->language;
   foreach($results as $term) {
 	  $options[$term->tid] = t($term->name); 
   }
