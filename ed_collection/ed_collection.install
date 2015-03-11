@@ -199,17 +199,44 @@ function ed_collection_node_add_field_items() {
  * Sets permissions for ed_collection.
  */
 function ed_collection_set_permissions() {
+  $admin_role = user_role_load_by_name('administrator');
+  $admin_rid = $admin_role ? $admin_role->rid : NULL;
+
+  if ($admin_rid) {
+    $admin_permissions = array(
+      'create ed_collection content' => TRUE,
+      'edit own ed_collection content' => TRUE,
+      'edit any ed_collection content' => TRUE,
+      'delete own ed_collection content' => TRUE,
+      'delete any ed_collection content' => TRUE,
+    );
+
+    user_role_change_permissions($admin_rid, $admin_permissions);
+  }
+
   $teacher_role = user_role_load_by_name('teacher');
   $teacher_rid = $teacher_role ? $teacher_role->rid : NULL;
-  $permissions = array(
-    'create ed_collection content' => TRUE,  
-    'edit own ed_collection content' => TRUE,  
-    'delete own ed_collection content' => TRUE,  
-  );
 
-  if ( $teacher_rid ) {
-    user_role_change_permissions(DRUPAL_AUTHENTICATED_RID, $permissions);
+  if ($teacher_rid) {
+    $teacher_permissions = array(
+      'create ed_collection content' => TRUE,
+      'edit own ed_collection content' => TRUE,
+      'edit any ed_collection content' => FALSE,
+      'delete own ed_collection content' => TRUE,
+      'delete any ed_collection content' => FALSE,
+    );
+
+    user_role_change_permissions($teacher_rid, $teacher_permissions);
   }
+
+  $auth_permissions = array(
+    'create ed_collection content' => FALSE,
+    'edit own ed_collection content' => FALSE,
+    'edit any ed_collection content' => FALSE,
+    'delete own ed_collection content' => FALSE,
+    'delete any ed_collection content' => FALSE,
+  );
+  user_role_change_permissions(DRUPAL_AUTHENTICATED_RID, $auth_permissions);
 }
 
 /**

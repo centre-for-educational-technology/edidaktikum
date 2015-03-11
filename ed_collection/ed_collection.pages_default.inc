@@ -74,7 +74,20 @@ $display->panels = array();
   $pane->type = 'node_form_publishing';
   $pane->subtype = 'node_form_publishing';
   $pane->shown = TRUE;
-  $pane->access = array();
+  $pane->access = array(
+    'plugins' => array(
+      0 => array(
+        'name' => 'role',
+        'settings' => array(
+          'rids' => array(
+            0 => 3,
+          ),
+        ),
+        'context' => 'logged-in-user',
+        'not' => FALSE,
+      ),
+    ),
+  );
   $pane->configuration = array(
     'context' => 'argument_node_edit_1',
     'override_title' => 0,
@@ -190,7 +203,7 @@ $display->panels = array();
   $pane->panel = 'left';
   $pane->type = 'entity_form_field';
   $pane->subtype = 'node:ed_collection_field_items';
-  $pane->shown = FALSE;
+  $pane->shown = TRUE;
   $pane->access = array();
   $pane->configuration = array(
     'mlpanels' => array(

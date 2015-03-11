@@ -1,7 +1,11 @@
 (function ($) {
     Drupal.behaviors.remove_from_collection = {
         attach: function(context, settings) {
-            $('.single-remove-from-collection').on('click', function(e) {
+            if (Drupal.settings.ed_collection.canUpdate !== true ) {
+                return;
+            }
+
+            $('.single-remove-from-collection').show().on('click', function(e) {
                 e.preventDefault();
                 var that = this,
                     confirmation = confirm(Drupal.t('Are you sure?'));
