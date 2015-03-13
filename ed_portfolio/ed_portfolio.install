@@ -14,6 +14,11 @@ function ed_portfolio_install() {
   ed_portfolio_node_add_field_content();
   ed_portfolio_node_add_field_featured_image();
   ed_portfolio_node_add_field_items();
+  
+  ed_portfolio_create_field_show_competence_profile();
+  
+  ed_portfolio_node_add_field_show_competence_profile();
+  
   ed_portfolio_set_permissions();
 }
 
@@ -24,6 +29,27 @@ function ed_portfolio_uninstall() {
   ed_portfolio_delete_ed_portfolio_nodes();
   ed_portfolio_delete_ed_portfolio_node_type();
   field_delete_field('ed_portfolio_field_items');
+}
+
+/**
+ * Creates portfolio show competence field if not exists
+ */
+function ed_portfolio_create_field_show_competence_profile(){
+  $field_name = 'ed_portfolio_show_comp_profile';
+  if(!field_info_field($field_name)) {
+    $field = array(
+      'field_name' => $field_name,
+      'type' => 'list_boolean',
+      'cardinality' => 1,
+      'settings' => array(
+        'allowed_values' => array(
+          '0' => t('No'),
+          '1' => t('Yes'),
+        ),
+      ),
+    );
+    $field = field_create_field($field);
+  }
 }
 
 /**
@@ -98,6 +124,35 @@ function ed_portfolio_node_add_field_content() {
         'default' => array(
           'label' => 'hidden',
           'type' => 'text_default',
+        ),
+      ),
+    );
+    field_create_instance($instance);
+  }
+}
+
+/**
+ * Adds show competence profile field instance
+ */
+function ed_portfolio_node_add_field_show_competence_profile(){
+  $field_name = 'ed_portfolio_show_comp_profile';
+  $field = field_info_field($field_name);
+  if(!empty($field) && !field_info_instance('node', $field_name, 'ed_portfolio')) {
+    $instance = array(
+      'field_name' => $field_name,
+      'entity_type' => 'node',
+      'bundle' => 'ed_portfolio',
+      'label' => t('Show competency profile'),
+      'required' => false,
+      'display' => array(
+        'default' => array(
+          'type' => 'hidden',
+        ),
+      ),
+      'widget' => array(
+        'type' => 'options_onoff',
+        'settings' => array(
+          'display_label' => 1,
         ),
       ),
     );
@@ -235,3 +290,11 @@ function ed_portfolio_update_7100(&$sandbox){
   
 }
 
+/**
+ * creates and adds ed_portfolio_show_competence_profile field and instanciates it on ed_portfolio
+ */
+function ed_portfolio_update_7102(&$sandbox) {
+  ed_portfolio_create_field_show_competence_profile();
+  
+  ed_portfolio_node_add_field_show_competence_profile();
+}

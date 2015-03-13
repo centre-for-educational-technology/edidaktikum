@@ -22,13 +22,209 @@ function ed_portfolio_menu() {
     'page arguments' => array(1),  
     'access callback' => TRUE,
   );
+  $items['node/%node/competency-profile'] = array(
+    'title' => t('Competency profile'),
+    'weight' => 2,
+    'page callback' => 'ed_portfolio_competency_profile',
+    'type' => MENU_LOCAL_TASK,
+    'page arguments' => array(1),
+    'access callback' => 'ed_portfolio_competency_profile_access',
+    'access arguments' => array(1),
+  );
   return $items;
 }
+
+function ed_portfolio_competency_profile($node){
+  $content = array();
+  
+  if(!empty($node->ed_field_cover_image)) {
+    $imguri = $node->ed_field_cover_image[LANGUAGE_NONE][0]['uri'];
+    $imgurl = file_create_url($imguri);    
+    drupal_add_css('.node-type-ed-portfolio {background: white url('.$imgurl.') no-repeat;}',$option['type'] = 'inline');
+  }else{
+      $themepath = drupal_get_path('theme',$GLOBALS['theme']);    
+      $defaultimagepath = $themepath.'/images/portfolio_bg.jpg';    
+      $defimageurl = file_create_url($defaultimagepath);
+      drupal_add_css('.node-type-ed-portfolio {background: white url('.$defimageurl.') no-repeat;}',$option['type'] = 'inline');  
+  }
+  if(!empty($node->ed_portfolio_field_items)){
+    $portfolioitemsnodes = array();
+    foreach($node->ed_portfolio_field_items[LANGUAGE_NONE] as $portfolioitem){
+      $itemnode = node_load($portfolioitem['target_id']);
+      if(!empty($itemnode->ed_field_competence)){
+        array_push($portfolioitemsnodes, $itemnode);
+      }
+    }
+    $competences = array();
+    
+    $vocabulary = taxonomy_get_tree(taxonomy_vocabulary_machine_name_load('ed_competence_voc')->vid, 0, 1);
+    $fullvocabulary = taxonomy_get_nested_tree(taxonomy_vocabulary_machine_name_load('ed_competence_voc')->vid);
+
+    foreach($portfolioitemsnodes as $portfolioitem){
+      foreach($portfolioitem->ed_field_competence[LANGUAGE_NONE] as $competence){
+        
+        if (!isset($competences[$competence['tid']])) {
+          $competences[$competence['tid']] = array('tid' => $competence['tid'], 'evidences' => array($portfolioitem->nid));
+        } else {
+          $competences[$competence['tid']]['evidences'][] = $portfolioitem->nid;
+        }
+      }
+    }
+    
+    foreach($fullvocabulary as &$highestterm){
+      $leaves = array();
+      get_all_leaves($leaves, $highestterm);
+      $highestterm->leaves = $leaves;
+      $highestterm->acquired = array_intersect(array_keys($competences), array_keys($leaves));
+    }
+    
+    $content['container'] = array(
+      '#type' => 'container',
+      '#attributes' => array(),
+      '#prefix' => '<div class="competency-profile-container">',
+      '#suffix' => '</div>',
+    );  
+    foreach($fullvocabulary as $highestterm){
+      $content['container'][$highestterm->tid] = array(
+        '#type' => 'container',
+        '#attributes' => array(),
+        '#prefix' => '<div class="row">',
+        '#suffix' => '</div>',
+      );
+      $content['container'][$highestterm->tid]['progress-row'] = array(
+        '#type' => 'container',
+        '#attributes' => array(),
+        '#prefix' => '<div class="row">',
+        '#suffix' => '</div>',
+      );
+      $content['container'][$highestterm->tid]['progress-row']['name'] = array(
+        '#type' => 'markup',
+        '#markup' => l($highestterm->name, 'taxonomy/term/'.$highestterm->tid),
+        '#prefix' => '<div class="term-name span5">',
+        '#suffix' => '</div>'
+      );
+      $content['container'][$highestterm->tid]['progress-row']['progress'] = array(
+        '#type' => 'markup',
+        '#markup' => '<div class="bar" style="width:'. round(count($highestterm->acquired)/count($highestterm->leaves)*100) .'%"></div>',
+        '#prefix' => '<div class="progress span4">',
+        '#suffix' => '</div>'
+      );
+      $content['container'][$highestterm->tid]['progress-row']['summary'] = array(
+        '#type' => 'markup',
+        '#markup' => '<div class="description span3 competence-profile-summary">'. round(count($highestterm->acquired)/count($highestterm->leaves)*100) .'% '.t('done').' '.count($highestterm->acquired).'/'.count($highestterm->leaves).'</div>',  
+      );
+      if(count($highestterm->acquired)!=0){
+        $content['container'][$highestterm->tid]['detailed-view'] = array(
+          '#type' => 'container',
+          '#attributes' => array(),
+          '#prefix' => '<div class="detailed-view-container">',
+          '#suffix' => '</div>'
+        );
+        $content['container'][$highestterm->tid]['detailed-view']['heading'] = array(
+          '#type' => 'markup',
+          '#markup' => t('Competence'),
+          '#prefix' => '<div class="detailed-view-heading">',
+          '#suffix' => '</div>',
+        );
+        $content['container'][$highestterm->tid]['detailed-view']['body'] = array(
+          '#type' => 'container',
+          '#attributes' => array(),
+          '#prefix' => '<div class="detailed-view-body">',
+          '#suffix' => '</div>',
+        );
+        $content['container'][$highestterm->tid]['detailed-view']['body']['competence-description'] = array(
+          '#type' => 'markup',
+          '#markup' => 'many many words',
+          '#prefix' => '<div class="row acquired-competence-description">',
+          '#suffix' => '</div>',
+        );
+        $content['container'][$highestterm->tid]['detailed-view']['body']['competence-table'] = array(
+          '#type' => 'markup',
+          '#markup' => 'table',
+          '#prefix' => '<div class="row acquired-competence-table">',
+          '#suffix' => '</div>',
+        );
+        
+      }
+      
+    }
+
+  }
+  
+  return $content;
+}
+
+
+function get_all_leaves(&$leaves, $term){
+  if (isset($term->children)) {
+    foreach($term->children as $child) {
+      get_all_leaves($leaves, $child);
+    }
+  } else {
+    $leaves[$term->tid] = $term;
+  }
+}
+
+
+/**
+ * 
+ * @param type $vocabulary - Competence vocabulary with term->done = true as acquired competence
+ * @return type array - Full competency profile
+ */
+function _ed_get_competency_profile($vocabulary){
+  dpm($vocabulary);
+  $profile = array();
+  return $profile;
+}
+
+
+
+/**
+ * https://api.drupal.org/comment/50023#comment-50023
+ */
+function taxonomy_get_nested_tree($vid_or_terms = array(), $max_depth = NULL, $parent = 0, $parents_index = array(), $depth = 0) {
+
+  if (!is_array($vid_or_terms)) {
+    $vid_or_terms = taxonomy_get_tree($vid_or_terms);
+  }
+
+  foreach ($vid_or_terms as $term) {
+
+    foreach ($term->parents as $term_parent) {
+      if ($term_parent == $parent) {
+        $return[$term->tid] = $term;
+      }
+      else {
+        $parents_index[$term_parent][$term->tid] = $term;
+      }
+    }
+  }
+
+  foreach ($return as &$term) {
+    if (isset($parents_index[$term->tid]) && (is_null($max_depth) || $depth < $max_depth)) {
+      $term->children = taxonomy_get_nested_tree($parents_index[$term->tid], $max_depth, $term->tid, $parents_index, $depth + 1);
+    }
+  }
+
+  return $return;
+}
+
+function ed_portfolio_competency_profile_access($node){
+  if($node->type != 'ed_portfolio'){
+    return false;
+  }else{
+    if($node->ed_portfolio_show_comp_profile[LANGUAGE_NONE][0]['value']){
+      return true;
+    }else{
+      return false;
+    }
+  }
+}
+
 
 /**
  * Portfolios listing page.
  */
-
 function ed_portfolio_listing_page(){
   menu_tree_set_path('main-menu', 'dashboard');
   //drupal_add_css('ul.links.inline {display: none;}', array('group' => CSS_THEME, 'type' => 'inline'));
@@ -118,7 +314,7 @@ function ed_portfolio_theme($existing, $type, $theme, $path) {
 
 
 
-function ed_portfolio_ctools_render_alter(&$info, &$page, &$context){  
+function ed_portfolio_ctools_render_alter(&$info, &$page, &$context){
   if(isset($context['contexts']['argument_entity_id:node_1']) && $context['contexts']['argument_entity_id:node_1']->data->type == 'ed_portfolio'){
     if(!empty($context['contexts']['argument_entity_id:node_1']->data->ed_field_cover_image)){      
       $imguri = $context['contexts']['argument_entity_id:node_1']->data->ed_field_cover_image[LANGUAGE_NONE][0]['uri'];
