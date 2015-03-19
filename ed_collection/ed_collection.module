@@ -263,8 +263,6 @@ function ed_collection_views_api() {
  */
 function ed_collection_form_alter(&$form, &$form_state, $form_id) {
   if ('ed_collection_node_form' == $form_id) {
-    // Hide items field
-    drupal_add_css('.pane-node-ed-collection-field-items { display: none; }', $option['type'] = 'inline');
 
     if (empty($form['#node']->nid)) {
       drupal_set_title(t('Create Collection'));
@@ -498,6 +496,25 @@ function ed_collection_ctools_render_alter(&$info, &$page, &$context) {
       $defaultimagepath = $themepath.'/images/portfolio_bg.jpg';    
       $defimageurl = file_create_url($defaultimagepath);
       drupal_add_css('.node-type-ed-collection #header {background: white url('.$defimageurl.') no-repeat;}',$option['type'] = 'inline');  
+    }
+  }
+}
+
+/**
+ * Implements hook_field_attach_submit().
+ */
+function ed_collection_field_attach_submit($entity_type, $entity, $form, &$form_state) {
+  if ('node' === $entity_type && 'ed_collection_node_form' === $form['#form_id']) {
+    // Only kick in if editing existing node
+    if ($entity->nid) {
+      // Loads current node and extracts ed_collection_filed_items value
+      // Then sets it to the newly saved $entity
+      // This way the data is being preserved without corresponding
+      // field being part of the form
+      // TODO Consider loading only field values
+      $node_current = node_load($entity->nid);
+      $items_current = $node_current->ed_collection_field_items;
+      $entity->ed_collection_field_items = $items_current;
     }
   }
 }
