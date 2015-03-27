@@ -405,7 +405,7 @@ $display->panel_settings = array(
   ),
 );
 $display->cache = array();
-$display->title = '%user:ed_field_full_name - %node:title';
+$display->title = '';
 $display->uuid = '42b871d3-112e-41eb-84c6-799eb6d5a5a7';
 $display->content = array();
 $display->panels = array();
