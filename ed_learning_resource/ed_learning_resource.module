@@ -83,6 +83,11 @@ function ed_learning_resource_node_view($node, $view_mode, $langcode){
       '#suffix' => '</div>',
     );
   } else if ($view_mode == 'eref_contained' && $node->type == 'ed_learning_resource') {
+	// Remove comment from links
+	if (isset($node->content['links']['comment'])) {
+	  $node->content['links']['comment']['#access'] = FALSE;
+	}
+	
     // TODO Use some default image if not provided
     if(!empty($node->ed_field_featured_image)){
       $imgpath = image_style_url('thumbnail', $node->ed_field_featured_image[LANGUAGE_NONE][0]['uri']);
