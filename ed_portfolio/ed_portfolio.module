@@ -37,6 +37,7 @@ function ed_portfolio_menu() {
 function ed_portfolio_competency_profile($node){
   $content = array();
   
+  drupal_add_js(drupal_get_path('module', 'ed_portfolio') . '/ed_competence_profile_portfolio.js', 'file');
   if(!empty($node->ed_field_cover_image)) {
     $imguri = $node->ed_field_cover_image[LANGUAGE_NONE][0]['uri'];
     $imgurl = file_create_url($imguri);    
@@ -47,6 +48,7 @@ function ed_portfolio_competency_profile($node){
       $defimageurl = file_create_url($defaultimagepath);
       drupal_add_css('.node-type-ed-portfolio {background: white url('.$defimageurl.') no-repeat;}',$option['type'] = 'inline');  
   }
+  
   if(!empty($node->ed_portfolio_field_items)){
     $portfolioitemsnodes = array();
     foreach($node->ed_portfolio_field_items[LANGUAGE_NONE] as $portfolioitem){
@@ -58,6 +60,7 @@ function ed_portfolio_competency_profile($node){
     $competences = array();
     
     $vocabulary = taxonomy_get_tree(taxonomy_vocabulary_machine_name_load('ed_competence_voc')->vid, 0, 1);
+    
     $fullvocabulary = taxonomy_get_nested_tree(taxonomy_vocabulary_machine_name_load('ed_competence_voc')->vid);
 
     foreach($portfolioitemsnodes as $portfolioitem){
@@ -77,6 +80,7 @@ function ed_portfolio_competency_profile($node){
       $highestterm->leaves = $leaves;
       $highestterm->acquired = array_intersect(array_keys($competences), array_keys($leaves));
     }
+
     
     $content['container'] = array(
       '#type' => 'container',
@@ -84,63 +88,91 @@ function ed_portfolio_competency_profile($node){
       '#prefix' => '<div class="competency-profile-container">',
       '#suffix' => '</div>',
     );  
-    foreach($fullvocabulary as $highestterm){
-      $content['container'][$highestterm->tid] = array(
+    
+    
+    foreach($fullvocabulary as $parentterm){
+      $colorcode = taxonomy_term_load($parentterm->tid)->ed_competence_color_field[LANGUAGE_NONE][0]['safe_value'];
+      $content['container'][$parentterm->tid] = array(
         '#type' => 'container',
         '#attributes' => array(),
         '#prefix' => '<div class="row">',
         '#suffix' => '</div>',
       );
-      $content['container'][$highestterm->tid]['progress-row'] = array(
+      $content['container'][$parentterm->tid]['progress-row'] = array(
         '#type' => 'container',
         '#attributes' => array(),
         '#prefix' => '<div class="row">',
         '#suffix' => '</div>',
       );
-      $content['container'][$highestterm->tid]['progress-row']['name'] = array(
+      $content['container'][$parentterm->tid]['progress-row']['name'] = array(
         '#type' => 'markup',
-        '#markup' => l($highestterm->name, 'taxonomy/term/'.$highestterm->tid),
+        '#markup' => l($parentterm->name, 'taxonomy/term/'.$parentterm->tid).' <i class="fa fa-angle-down"></i>',
         '#prefix' => '<div class="term-name span5">',
         '#suffix' => '</div>'
       );
-      $content['container'][$highestterm->tid]['progress-row']['progress'] = array(
+      $content['container'][$parentterm->tid]['progress-row']['progress'] = array(
         '#type' => 'markup',
-        '#markup' => '<div class="bar" style="width:'. round(count($highestterm->acquired)/count($highestterm->leaves)*100) .'%"></div>',
+        '#markup' => '<div class="bar" style="width:'. round(count($parentterm->acquired)/count($parentterm->leaves)*100) .'%; background-image:none; background-color:'.$colorcode.';"></div>',
         '#prefix' => '<div class="progress span4">',
         '#suffix' => '</div>'
       );
-      $content['container'][$highestterm->tid]['progress-row']['summary'] = array(
+      $content['container'][$parentterm->tid]['progress-row']['summary'] = array(
         '#type' => 'markup',
-        '#markup' => '<div class="description span3 competence-profile-summary">'. round(count($highestterm->acquired)/count($highestterm->leaves)*100) .'% '.t('done').' '.count($highestterm->acquired).'/'.count($highestterm->leaves).'</div>',  
+        '#markup' => '<div class="description span3 competence-profile-summary">'. round(count($parentterm->acquired)/count($parentterm->leaves)*100) .'% '.t('done').' '.count($parentterm->acquired).'/'.count($parentterm->leaves).'</div>',  
       );
-      if(count($highestterm->acquired)!=0){
-        $content['container'][$highestterm->tid]['detailed-view'] = array(
+      if(count($parentterm->acquired)!=0){
+        $content['container'][$parentterm->tid]['detailed-view'] = array(
           '#type' => 'container',
           '#attributes' => array(),
-          '#prefix' => '<div class="detailed-view-container">',
+          '#prefix' => '<div style="display:none;" class="detailed-view-container">',
           '#suffix' => '</div>'
         );
-        $content['container'][$highestterm->tid]['detailed-view']['heading'] = array(
+        $content['container'][$parentterm->tid]['detailed-view']['heading'] = array(
           '#type' => 'markup',
           '#markup' => t('Competence'),
-          '#prefix' => '<div class="detailed-view-heading">',
-          '#suffix' => '</div>',
+          '#prefix' => '<div class="detailed-view-heading"><h3>',
+          '#suffix' => '</h3></div>',
         );
-        $content['container'][$highestterm->tid]['detailed-view']['body'] = array(
+        $content['container'][$parentterm->tid]['detailed-view']['body'] = array(
           '#type' => 'container',
           '#attributes' => array(),
           '#prefix' => '<div class="detailed-view-body">',
           '#suffix' => '</div>',
         );
-        $content['container'][$highestterm->tid]['detailed-view']['body']['competence-description'] = array(
+
+        $content['container'][$parentterm->tid]['detailed-view']['body']['competence-description'] = array(
           '#type' => 'markup',
-          '#markup' => 'many many words',
+          '#markup' => (!empty($parentterm->description)) ? t($parentterm->description): '',
           '#prefix' => '<div class="row acquired-competence-description">',
           '#suffix' => '</div>',
         );
-        $content['container'][$highestterm->tid]['detailed-view']['body']['competence-table'] = array(
-          '#type' => 'markup',
-          '#markup' => 'table',
+        
+        $rows = array();
+        $number=1;
+        foreach($parentterm->acquired as $acquiredcompetence){
+
+          
+          
+          $evidences = $competences[$acquiredcompetence]['evidences'];
+          $evidenceslinks = array();
+          foreach($evidences as $evidence){
+            array_push($evidenceslinks, l(url('node/'.$evidence, array('absolute' => true)), 'node/'.$evidence));
+          }
+          $evidences = implode('<br>', $evidenceslinks);
+          $rows[] = array(
+            'data' => array(
+              'number' => $number,
+              'comp_peace' => (!empty(taxonomy_term_load($acquiredcompetence)->description)) ? '<p title="'.t(taxonomy_term_load($acquiredcompetence)->description).'">'.t(taxonomy_term_load($acquiredcompetence)->name).'</p>' : t(taxonomy_term_load($acquiredcompetence)->name),
+              'evidences' => $evidences,
+            ),
+          );
+          $number++;
+        }
+        
+        $content['container'][$parentterm->tid]['detailed-view']['body']['competence-table'] = array(
+          '#theme' => 'table',
+          '#rows' => $rows,
+          '#header' => array(t('#'), t('Competence Piece'), t('Evidence')),
           '#prefix' => '<div class="row acquired-competence-table">',
           '#suffix' => '</div>',
         );
@@ -172,7 +204,7 @@ function get_all_leaves(&$leaves, $term){
  * @return type array - Full competency profile
  */
 function _ed_get_competency_profile($vocabulary){
-  dpm($vocabulary);
+  
   $profile = array();
   return $profile;
 }

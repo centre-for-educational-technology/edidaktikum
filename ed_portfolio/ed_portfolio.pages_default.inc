@@ -307,6 +307,31 @@ $display->panels = array();
   $display->content['new-303d2871-f3e1-4f7c-970b-8450197faa39'] = $pane;
   $display->panels['right'][1] = 'new-303d2871-f3e1-4f7c-970b-8450197faa39';
   $pane = new stdClass();
+  $pane->pid = 'new-219f9e97-1f9f-4640-89d4-1a7257e2bda7';
+  $pane->panel = 'right';
+  $pane->type = 'entity_form_field';
+  $pane->subtype = 'node:ed_portfolio_show_comp_profile';
+  $pane->shown = TRUE;
+  $pane->access = array();
+  $pane->configuration = array(
+    'label' => '',
+    'formatter' => '',
+    'context' => 'argument_node_edit_1',
+    'override_title' => 0,
+    'override_title_text' => '',
+  );
+  $pane->cache = array();
+  $pane->style = array(
+    'settings' => NULL,
+  );
+  $pane->css = array();
+  $pane->extras = array();
+  $pane->position = 2;
+  $pane->locks = array();
+  $pane->uuid = '219f9e97-1f9f-4640-89d4-1a7257e2bda7';
+  $display->content['new-219f9e97-1f9f-4640-89d4-1a7257e2bda7'] = $pane;
+  $display->panels['right'][2] = 'new-219f9e97-1f9f-4640-89d4-1a7257e2bda7';
+  $pane = new stdClass();
   $pane->pid = 'new-64e07df5-b3e3-403a-9d0b-a8ad3d806df6';
   $pane->panel = 'top';
   $pane->type = 'node_group_breadcrumbs';
@@ -332,6 +357,7 @@ $display->panels = array();
 $display->hide_title = PANELS_TITLE_FIXED;
 $display->title_pane = 'new-c87ae23b-88e7-45f3-89d7-293c185075b6';
 $handler->conf['display'] = $display;
+
 
 
 

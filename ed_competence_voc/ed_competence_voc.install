@@ -91,3 +91,28 @@ function ed_comp_voc_delete_voc(){
     taxonomy_vocabulary_delete($vocabulary->vid);
   }
 }
+
+/**
+ * Creates color field type and instanciates it to ed_competence vocabulary
+ */
+function ed_competence_voc_update_7100(&$sandbox){
+  $field = array(
+    'field_name' => 'ed_competence_color_field',
+    'type' => 'text',
+    'label' => t('Color'),
+  );
+  field_create_field($field);
+  
+  $instance = array(
+    'field_name' => 'ed_competence_color_field',
+    'entity_type' => 'taxonomy_term',
+    'bundle' => 'ed_competence_voc',
+    'label' => t('Color'),
+    'description' => t('Color that fills progress bars'),
+    'required' => false,
+    'widget' => array(
+      'type' => 'text_textfield',
+    ),
+  );
+  field_create_instance($instance);
+}
