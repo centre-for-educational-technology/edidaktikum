@@ -38,6 +38,7 @@ function ed_portfolio_competency_profile($node){
   $content = array();
   
   drupal_add_js(drupal_get_path('module', 'ed_portfolio') . '/ed_competence_profile_portfolio.js', 'file');
+  drupal_add_css(drupal_get_path('module', 'ed_portfolio') . '/ed_competence_profile_portfolio.css', 'file');
   if(!empty($node->ed_field_cover_image)) {
     $imguri = $node->ed_field_cover_image[LANGUAGE_NONE][0]['uri'];
     $imgurl = file_create_url($imguri);    
@@ -80,7 +81,7 @@ function ed_portfolio_competency_profile($node){
       $highestterm->leaves = $leaves;
       $highestterm->acquired = array_intersect(array_keys($competences), array_keys($leaves));
     }
-
+    
     
     $content['container'] = array(
       '#type' => 'container',
@@ -344,10 +345,68 @@ function ed_portfolio_theme($existing, $type, $theme, $path) {
   );  
 }
 
+function ed_portfolio_get_competency_profile_bar($nid){
+  $node = node_load($nid);
+  
+  
+  if(!empty($node->ed_portfolio_field_items)){
+    $portfolioitemsnodes = array();
+    foreach($node->ed_portfolio_field_items[LANGUAGE_NONE] as $portfolioitem){
+      $itemnode = node_load($portfolioitem['target_id']);
+      if(!empty($itemnode->ed_field_competence)){
+        array_push($portfolioitemsnodes, $itemnode);
+      }
+    }
+    $competences = array();
+    
+    $vocabulary = taxonomy_get_tree(taxonomy_vocabulary_machine_name_load('ed_competence_voc')->vid, 0, 1);
+    
+    $fullvocabulary = taxonomy_get_nested_tree(taxonomy_vocabulary_machine_name_load('ed_competence_voc')->vid);
 
+    foreach($portfolioitemsnodes as $portfolioitem){
+      foreach($portfolioitem->ed_field_competence[LANGUAGE_NONE] as $competence){
+        
+        if (!isset($competences[$competence['tid']])) {
+          $competences[$competence['tid']] = array('tid' => $competence['tid'], 'evidences' => array($portfolioitem->nid));
+        } else {
+          $competences[$competence['tid']]['evidences'][] = $portfolioitem->nid;
+        }
+      }
+    }
+    
+    foreach($fullvocabulary as &$highestterm){
+      $leaves = array();
+      get_all_leaves($leaves, $highestterm);
+      $highestterm->leaves = $leaves;
+      $highestterm->acquired = array_intersect(array_keys($competences), array_keys($leaves));
+    }
+    $acquired = 0;
+    $profile = array();
+    foreach($fullvocabulary as $highestlevel){
+      if(count($highestlevel->acquired)!=0){
+        $acquired += count($highestlevel->acquired);
+        $profile[$highestlevel->tid] = array(
+          'color' => taxonomy_term_load($highestlevel->tid)->ed_competence_color_field[LANGUAGE_NONE][0]['safe_value'],
+          'count' => count($highestlevel->acquired),
+        );
+      }
+    }
+    foreach($profile as &$acqterm){
+      $acqterm['count'] = $acqterm['count']/$acquired;
+    }
+    //$profile['nid'] = $nid;
+    $setting = array('ed_portfolio' => array('profile' => $profile, 'nid' => $nid));
+    drupal_add_js($setting, 'setting');
+  }
+  
+  
+}
 
 function ed_portfolio_ctools_render_alter(&$info, &$page, &$context){
   if(isset($context['contexts']['argument_entity_id:node_1']) && $context['contexts']['argument_entity_id:node_1']->data->type == 'ed_portfolio'){
+    $nid = $context['contexts']['argument_entity_id:node_1']->data->nid;
+    $progressbar = ed_portfolio_get_competency_profile_bar($nid);
+    drupal_add_js(drupal_get_path('module', 'ed_portfolio') . '/ed_portfolio_progress_bar.js', 'file');
     if(!empty($context['contexts']['argument_entity_id:node_1']->data->ed_field_cover_image)){      
       $imguri = $context['contexts']['argument_entity_id:node_1']->data->ed_field_cover_image[LANGUAGE_NONE][0]['uri'];
       $imgurl = file_create_url($imguri);    
@@ -360,6 +419,7 @@ function ed_portfolio_ctools_render_alter(&$info, &$page, &$context){
     }
   }
 }
+
 
 /**
  * Implements hook_ctools_plugin_api().

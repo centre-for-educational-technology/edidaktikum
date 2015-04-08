@@ -11,7 +11,7 @@
                     nexti.removeClass('fa-angle-up');
                     nexti.addClass('fa-angle-down');
                 }
-                $(this).parent().parent().parent().next('.detailed-view-container').toggle();
+                $(this).parent().parent().parent().next('.detailed-view-container').slideToggle("fast");
             });
         }
     };
