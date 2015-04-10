@@ -28,7 +28,7 @@ function _ed_bookmark_view_page_handler() {
 $handler = new stdClass();
 $handler->disabled = FALSE; /* Edit this to true to make a default handler disabled initially */
 $handler->api_version = 1;
-$handler->name = 'node_view_panel_context_5';
+$handler->name = 'node_view_panel_ed_bookmark';
 $handler->task = 'node_view';
 $handler->subtask = '';
 $handler->handler = 'panel_context';
