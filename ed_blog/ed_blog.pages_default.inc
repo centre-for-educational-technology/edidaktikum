@@ -23,7 +23,7 @@
 $handler = new stdClass();
 $handler->disabled = FALSE; /* Edit this to true to make a default handler disabled initially */
 $handler->api_version = 1;
-$handler->name = 'node_edit_panel_context';
+$handler->name = 'node_edit_panel_ed_blog';
 $handler->task = 'node_edit';
 $handler->subtask = '';
 $handler->handler = 'panel_context';
@@ -352,7 +352,7 @@ $handler->conf['display'] = $display;
 $handler = new stdClass();
 $handler->disabled = FALSE; /* Edit this to true to make a default handler disabled initially */
 $handler->api_version = 1;
-$handler->name = 'node_view_panel_context_2';
+$handler->name = 'node_view_panel_ed_blog';
 $handler->task = 'node_view';
 $handler->subtask = '';
 $handler->handler = 'panel_context';
