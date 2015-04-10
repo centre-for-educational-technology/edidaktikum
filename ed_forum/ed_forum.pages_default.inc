@@ -28,7 +28,7 @@ function _ed_forum_view_page_handler() {
 $handler = new stdClass();
 $handler->disabled = FALSE; /* Edit this to true to make a default handler disabled initially */
 $handler->api_version = 1;
-$handler->name = 'node_view_panel_context_4';
+$handler->name = 'node_view_panel_ed_forum';
 $handler->task = 'node_view';
 $handler->subtask = '';
 $handler->handler = 'panel_context';
