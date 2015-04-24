@@ -6,6 +6,7 @@
 
 function ed_user_extra_user_view_alter(&$build){
   drupal_set_title($build['ed_field_full_name']['#items'][0]['value']);
+  $build['ed_notification_content_types']['#access'] = false;
 }
 
 
@@ -17,11 +18,224 @@ function ed_user_extra_ctools_plugin_directory($module, $plugin) {
 
 
 
+/**
+ * Implements hook_form_alter().
+ */
 function ed_user_extra_form_alter(&$form, &$form_state, $form_id){
   if($form_id=='user_profile_form'){
     $form['field_pref_lang']['#access'] = FALSE;
   }
 }
 
-//Maybe integrate this module into the eDidaktikum main module..?
+/**
+ * Implements hook_node_insert().
+ */
+function ed_user_extra_node_insert($node){
+  
+  if(in_array($node->type, array('ed_news', 'ed_learning_resource', 'ed_event', 'ed_page', 'ed_bookmark', 'ed_forum', 'ed_blog', 'ed_file'))){
+    
+    $tousers = ed_user_extra_get_to_user($node, $node->type);
+    $creator = user_load($node->uid);
+    $creator_fullname = edidaktikum_get_full_name_for_user_account($creator);
+    if(is_array($tousers) && !empty($tousers)){
+      $touserobjects = user_load_multiple($tousers);
+      
+      foreach($touserobjects as $recipient){
+        $language = user_preferred_language($recipient);
+        $params = array(
+          'fullname' => $creator_fullname,
+          'contentname' => $node->title,
+          'contenturl' => url('node/' . $node->nid, array('absolute' => TRUE)),
+        );
+        drupal_mail('ed_user_extra', 'content_created', $recipient->mail, $language, $params, 'no-reply-TESTSERVICE@edidaktikum.ee', TRUE);
+      }
+      
+    }else{
+      $groups = og_get_entity_groups('node', $node->nid);
+      foreach($groups['node'] as $group){
+        $members = og_get_group_members_properties(node_load($group), array(), 'members__1', 'node');
+        $memberobjects = user_load_multiple($members);
+        $recipients = array();
+        foreach($memberobjects as $memberobject){
+          if(isset($memberobject->ed_notification_content_types[LANGUAGE_NONE]) && is_array($memberobject->ed_notification_content_types[LANGUAGE_NONE])){
+            
+          
+            $vals = array_map(function($elem){
+              return $elem['value'];
+            }, $memberobject->ed_notification_content_types[LANGUAGE_NONE]);
+            if(in_array(ed_user_extra_node_type_to_notification_type($node->type), $vals) && $node->uid != $memberobject->uid){
+              array_push($recipients, $memberobject);
+            }
+          }
+        }
+
+        if(!empty($recipients)){
+          foreach ($recipients as $recipient) {
+            $language = user_preferred_language($recipient);
+            $params = array(
+              'fullname' => $creator_fullname,
+              'contentname' => $node->title,
+              'contenturl' => url('node/' . $node->nid, array('absolute' => TRUE)),
+            );
+            drupal_mail('ed_user_extra', 'content_created', $recipient->mail, $language, $params, 'no-reply-TESTSERVICE@edidaktikum.ee', TRUE);
+          }
+        }
+      }
+    }
+  }
+  if($node->type == 'ed_answer'){
+    $tasknid = $node->field_ref_to_task[LANGUAGE_NONE][0]['target_id'];
+    $tasknode = node_load($tasknid);
+    $taskcreator = $tasknode->uid;
+    if(user_wants_notification($taskcreator, $node->type)){
+      $recipient = user_load($taskcreator);
+      $language = user_preferred_language($recipient);
+      $answerer = user_load($node->uid);
+      $params = array(
+        'answererfullname' => edidaktikum_get_full_name_for_user_account($answerer),
+        'taskurl' => url('node/' . $tasknid, array('absolute' => TRUE)),
+        'answerurl' => url('node/'. $node->nid, array('absolute' => TRUE)),
+      );
+      drupal_mail('ed_user_extra', 'task_answered', $recipient->mail, $language, $params, 'no-reply-TESTSERVICE@edidaktikum.ee', TRUE);
+    }
+    
+  }
+}
+
+
+
+/**
+ * Implements hook_comment_insert().
+ */
+function ed_user_extra_comment_insert($comment){
+  $node = node_load($comment->nid);
+  $contentauthor = $node->uid;
+  if($node->type == 'ed_forum'){
+    if(user_wants_notification($contentauthor, 'ed_forum')){
+      $recipient = user_load($contentauthor);
+      $language = user_preferred_language($recipient);
+      $commentator = user_load($comment->uid);
+      $params = array(
+        'commentatorfullname' => edidaktikum_get_full_name_for_user_account($commentator),
+        'contentname' => $node->title,
+        'contenturl' => url('node/' . $node->nid, array('absolute' => TRUE)),
+      );
+      drupal_mail('ed_user_extra', 'forum_post_commented', $recipient->mail, $language, $params, 'no-reply-TESTSERVICE@edidaktikum.ee', TRUE);
+    }
+  }
+  
+}
+
+
+function ed_user_extra_og_membership_insert($og_membership){
+  if($og_membership->state == OG_STATE_PENDING){
+    $gnode = node_load($og_membership->gid);
+    $gadmins = _ed_cluster_get_group_admins($gnode, true);
+    foreach($gadmins as $gadmin){
+      $recipient = user_load($gadmin);
+      $language = user_preferred_language($recipient);
+      $subscriber = user_load($og_membership->etid);
+      $params = array(
+        'subscriberfullname' => edidaktikum_get_full_name_for_user_account($subscriber),
+        'groupurl' => url('node/'.$gnode->nid, array('absolute' => true)),
+        'peoplepage' => url('group/node/'.$gnode->nid.'/admin/people', array('absolute' => true)),
+        'groupname' => $gnode->title,
+      );
+      drupal_mail('ed_user_extra', 'new_subscription', $recipient->mail, $language, $params, 'no-reply-TESTSERVICE@edidaktikum.ee', true);
+    }
+  }
+  
+  
+}
+
+
+/**
+ * Implements hook_mail().
+ */
+function ed_user_extra_mail($key, &$message, $params) {
+  if ('content_created' == $key) {
+    $options = array('langcode' => $message['language']->language);
+    $message['subject'] = t('New Content - eDidaktikum', array(), $options);
+    $message['body'][] = t('@fullname created new content: @contentname.', array('@fullname' => $params['fullname'], '@contentname' => $params['contentname']), $options);
+    $message['body'][] = t('View content: @contenturl', array('@contenturl' => $params['contenturl']), $options);
+  }
+  if('forum_post_commented' == $key){
+    $options = array('langcode' => $message['language']->language);
+    $message['subject'] = t('New Reply - eDidaktikum', array(), $options);
+    $message['body'][] = t('@commentatorfullname answered in Discussion board @contentname.', array('@commentatorfullname' => $params['commentatorfullname'], '@contentname' => $params['contentname']), $options);
+    $message['body'][] = t('View Discussion Board: @contenturl', array('@contenturl' => $params['contenturl']), $options);
+  }
+  if('task_answered' == $key){
+    $options = array('langcode' => $message['language']->language);
+    $message['subject'] = t('New answer - eDidaktikum', array(), $options);
+    $message['body'][] = t('@answererfullname has answered your task @taskurl', array('@answererfullname' => $params['answererfullname'], '@taskurl' => $params['taskurl']), $options);
+    $message['body'][] = t('Answer can be found at @answerurl', array('@answerurl' => $params['answerurl']), $options);
+  }
+  if('new_subscription' == $key){
+    $options = array('langcode' => $message['language']->language);
+    $message['subject'] = t('New group membership request', array(), $options);
+    $message['body'][] = t('@subscriberfullname has requested membership to your group @groupname', array('@subscriberfullname' => $params['subscriberfullname'], '@groupname' => $params['groupname']), $options);
+    $message['body'][] = t('Manage group members: @peoplepage', array('@peoplepage' => $params['peoplepage']), $options);
+  }
+}
+
+function ed_user_extra_get_to_user($node, $type){
+  if(!empty($node->ed_field_to_group_member)){
+    $tomembers = array();
+    foreach($node->ed_field_to_group_member[LANGUAGE_NONE] as $tomember){
+      if(user_wants_notification($tomember['target_id'], $type)){
+        array_push($tomembers, $tomember['target_id']);
+      }
+    }
+    return $tomembers;
+  }else{
+    return false;
+  }
+}
+function user_wants_notification($uid, $type){
+  $type = ed_user_extra_node_type_to_notification_type($type);
+  $query = db_select('field_data_ed_notification_content_types', 'nct')
+      ->fields('nct', array('ed_notification_content_types_value'));
+  $query->condition('nct.entity_id', $uid);
+  $query->condition('nct.ed_notification_content_types_value', $type);
+  $result = $query->execute()->rowCount();
+  if($result!=0){
+    return true;
+  }else{
+    return false;
+  }
+}
+function ed_user_extra_node_type_to_notification_type($nodetype){
+  switch($nodetype){
+    case('ed_answer'):
+      $type = 'answer_given_to_task';
+      break;
+    case('ed_learning_resource'):
+      $type = 'new_learning_resource';
+      break;
+    case('ed_forum'):
+      $type = 'new_forum_topic';
+      break;
+    case('ed_event'):
+      $type = 'new_event';
+      break;
+    case('ed_news'):
+      $type = 'new_news';
+      break;
+    case('ed_blog'):
+      $type = 'new_blog';
+      break;
+    case('ed_bookmark'):
+      $type = 'new_bookmark';
+      break;
+    case('ed_file'):
+      $type = 'new_file';
+      break;
+    case('ed_page'):
+      $type = 'new_page';
+      break;
+  }
+  return $type;
+}
+
 

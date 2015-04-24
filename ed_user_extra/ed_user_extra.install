@@ -1,7 +1,7 @@
 <?php
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//  WHEN CHANGING THE FIELD NAMES, FIELD NAMES MUST BE CHANGED IN ENTITYREFERENCE/CTOOLS SELECTION PLUGIN  //
+//  WHEN CHANGING THE FIELD NAMES, FIELD NAMES MUST BE CHANGED IN ENTITYREFERENCE/CTOOLS SELECTION PLUGIN       //
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function ed_user_extra_enable() {
@@ -153,4 +153,129 @@ function ed_user_extra_uninstall(){
   foreach(array_keys(_ed_user_extra_installed_instances()) as $instance) {
     field_delete_instance($instance);
   }
+}
+
+
+/**
+ * Adds notifications field to users. Also checks the checkboxes for all current users
+ */
+function ed_user_extra_update_7100(&$sandbox){
+  if(!field_info_field('ed_notification_content_types')){
+    $field = array(
+      'field_name' => 'ed_notification_content_types',
+      'label' => t('Receive notifications for the following'),
+      'type' => 'list_text',
+      'cardinality' => '-1',
+      'foreign keys' => array(),
+      'module' => 'list',
+      'settings' => array(
+        'allowed_values' => _ed_user_extra_notification_options_list(),
+      ),
+    );
+    field_create_field($field);
+  }
+  
+  if(!field_info_instance('user', 'ed_notification_content_types', 'user')){
+    $instance = array(
+      'field_name' => 'ed_notification_content_types',
+      'label' => t('Receive notifications for the following'),
+      'description' => t('Select the checkboxes you want to receive notifications from'),
+      'default_value' => array(
+        array('value' => 'answer_given_to_task'), 
+        array('value' => 'new_group_member'), 
+        array('value' => 'new_learning_resource'), 
+        array('value' => 'new_forum_topic'), 
+        array('value' => 'new_event'), 
+        array('value' => 'new_news'), 
+        array('value' => 'new_blog'), 
+        array('value' => 'new_bookmark'), 
+        array('value' => 'new_file'), 
+        array('value' => 'new_page')
+      ),
+      'required' => false,
+      'entity_type' => 'user',
+      'bundle' => 'user',
+      'display' => array(
+        'default' => array(
+          'label' => 'above',
+          'type' => 'list_default',
+          'module' => 'list',
+        ),
+      ),
+      'widget' => array(
+        'active' => 1,
+        'module' => 'options',
+        'settings' => array(),
+        'type' => 'options_buttons'
+      ),
+    );
+    field_create_instance($instance);
+  }
+  
+  if(!isset($sandbox['max'])){
+    $query = db_select('users' , 'u');
+    $query->addExpression('COUNT(*)', 'count');
+    $query->condition('u.uid', array(0,1), 'NOT IN');
+    $sandbox['max'] = $query->execute()->fetchField();
+    $sandbox['current_position'] = 0;
+  }
+  if($sandbox['max'] > 0){
+    $limit = 10;
+    $uids = db_select('users', 'u')
+        ->fields('u', array('uid'))
+        ->condition('u.uid', array(0,1), 'NOT IN')
+        ->orderBy('u.uid')
+        ->range($sandbox['current_position'], $limit)
+        ->execute()
+        ->fetchCol();
+    $edusers = user_load_multiple($uids);
+    foreach($edusers as $eduser){
+      $user->ed_notification_content_types = array(
+        LANGUAGE_NONE => array(
+          array('value' => 'answer_given_to_task'), 
+          array('value' => 'new_group_member'), 
+          array('value' => 'new_learning_resource'), 
+          array('value' => 'new_forum_topic'), 
+          array('value' => 'new_event'), 
+          array('value' => 'new_news'), 
+          array('value' => 'new_blog'), 
+          array('value' => 'new_bookmark'), 
+          array('value' => 'new_file'), 
+          array('value' => 'new_page')
+        ),
+      );
+      user_save($eduser);
+    }
+    $sandbox['current_position'] += $limit;
+    $sandbox['#finished'] = $sandbox['current_position'] / $sandbox['max'];
+    }
+    else {
+      $sandbox['#finished'] = 1;
+    }
+
+    if ($sandbox['#finished'] >= 1) {
+      return format_plural($sandbox['max'], '1 user updated', '@count users updated');
+    }
+  
+  
+}
+
+
+
+
+function _ed_user_extra_notification_options_list(){
+  $options = array(
+    'answer_given_to_task'  => t('Answer given to task'),
+    'new_group_member'  => t('New group member'),
+    'new_learning_resource'  => t('Learning resource'),
+    'new_forum_topic'  => t('Forum topic'),
+    'new_event'  => t('Event'),
+    'new_news'  => t('News'),
+    'new_blog'  => t('Blog'),
+    'new_bookmark'  => t('Bookmark'),
+    'new_file' => t('File'),
+    'new_page' => t('Page'),
+  );
+  
+  return $options;
 }
