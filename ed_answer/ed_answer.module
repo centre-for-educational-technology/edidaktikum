@@ -244,14 +244,21 @@ function ed_answer_form_alter(&$form, &$form_state, $form_id){
     $isgadmin = ed_answer_is_group_manager($form['#node']->og_group_ref[LANGUAGE_NONE][0]['target_id']);
     if(!$isgadmin){
       $form['ed_answer_status']['#access'] = FALSE;    
-    }else{           
+    }else{
       $form['#submit'][] = 'ed_answer_redirect_to_taskmanager';
     }
   }
 }
 
 function ed_answer_redirect_to_taskmanager($form, &$form_state){
-  $form_state['redirect'] = 'node/'.$form['#node']->og_group_ref['und'][0]['target_id'].'/task-manager';
+  $form_state['redirect'] = array(
+    'node/'.$form['#node']->og_group_ref['und'][0]['target_id'].'/task-manager',
+    array(
+      'query' => array(
+        'tasknid' => $form['#node']->field_ref_to_task[LANGUAGE_NONE][0]['target_id'],
+      ),
+    ),
+  );
 }
 
 
@@ -264,9 +271,13 @@ function _ed_answer_get_user_comments($nid){
   $result = $query->execute()->fetchCol();
   return $result;
 }
+
+/**
+ * Implements hook_comment_insert().
+ */
 function ed_answer_comment_insert($comment){
   if($comment->node_type=='comment_node_ed_answer'){
-    $usercomments = comment_load_multiple(_ed_answer_get_user_comments($comment->nid));    
+    $usercomments = comment_load_multiple(_ed_answer_get_user_comments($comment->nid));
     foreach($usercomments as $usercomment){
       $usercomment->ed_answer_status = $comment->ed_answer_status;
       comment_save($usercomment);
@@ -284,11 +295,12 @@ function ed_answer_comment_insert($comment){
       'status' => $comment->ed_answer_status[LANGUAGE_NONE][0]['value'],
     );
     drupal_mail('ed_answer', 'answer_status_modified', $recipient->mail, $language, $params, 'no-reply@edidaktikum.ee', TRUE);
-  }
-  
-  
+  }  
 }
 
+/**
+ * Implements hook_mail().
+ */
 function ed_answer_mail($key, &$message, $params){
   if ('answer_status_modified' == $key)  {
     $options = array('langcode' => $message['language']->language);    

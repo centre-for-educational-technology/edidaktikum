@@ -1115,10 +1115,22 @@ function ed_task_manager_access($test, $node){
 function ed_task_manager($test, $node){
   menu_tree_set_path('main-menu', 'clusters');
   drupal_add_css(drupal_get_path('module', 'ed_cluster').'/task_manager.css');
+  drupal_add_js(drupal_get_path('module', 'ed_cluster').'/js/ed_task_manager_task_filter.js');
   $account = $GLOBALS['user'];
+  $query = db_select('node', 'n');
+  $query->join('og_membership', 'ogm', "n.nid = ogm.etid AND ogm.entity_type='node' AND ogm.group_type = 'node' AND ogm.gid = :gid AND ogm.state = :active", array(':gid' => $node->nid, ':active' => OG_STATE_ACTIVE));
+  $query->fields('n', array('nid'))
+    ->condition('n.type', 'ed_task');
+  $alltasknids = $query->execute()->fetchCol();
   
+  $alltasknidswithtitle = array();
+  foreach($alltasknids as $tasknid){
+    $alltasknidswithtitle[$tasknid] = node_load($tasknid)->title;
+  }
+  $firstItem = array(0 => t('All tasks'));
+  $alltasknidswithtitle = $firstItem + $alltasknidswithtitle;
   $content = array();
- 
+
   $options = array(
     'attributes' => array(),
     'query' => array(
@@ -1136,7 +1148,27 @@ function ed_task_manager($test, $node){
     '#type' => 'markup',
     '#markup' => l(t('Add new'), 'node/add/ed-task', $options),
   );
-
+  $content['task-filter-container'] = array(
+    '#type' => 'container',
+    '#attributes' => array(
+       'class' => array('ed-filter-tasks'),
+    ),
+  );
+  $content['task-filter-container']['selection-box'] = array(
+    '#type' => 'select',
+    '#title' => t('Select task to filter'),
+    '#options' => $alltasknidswithtitle,
+    '#description' => t('Choose a task'),
+    '#value' => (isset($_GET['tasknid'])?$_GET['tasknid'] : 0),
+    '#attributes' => array(
+      'class' => array('ed_task_selection_for_filtering'),
+      'data-cluster' => $node->nid,
+    ),
+  );
+  $content['task-filter-container']['submit-button'] = array(
+    '#type' => 'markup',
+    '#markup' => '<button class="btn btn-primary ed_filter_tasks">'.t('Filter').'</button>',
+  );
   $group_members_uids = _get_users_in_group($node->nid);
   
   // Remove creator
@@ -1155,17 +1187,29 @@ function ed_task_manager($test, $node){
   $group_members = user_load_multiple($group_members_uids);
   sort($group_members);
   // Get all group tasks
-  $query = db_select('node', 'n');
-  $query->join('og_membership', 'ogm', "n.nid = ogm.etid AND ogm.entity_type='node' AND ogm.group_type = 'node' AND ogm.gid = :gid AND ogm.state = :active", array(':gid' => $node->nid, ':active' => OG_STATE_ACTIVE));
-  $query->fields('n', array('nid'))
-    ->condition('n.type', 'ed_task');
-  $nids = $query->execute()->fetchCol();
-
+  
+  
+  if(isset($_GET['tasknid'])){
+    $filteredtasknid = $_GET['tasknid'];
+    $query = db_select('node', 'n');
+    $query->join('og_membership', 'ogm', "n.nid = ogm.etid AND n.nid=:tasknid AND ogm.entity_type='node' AND ogm.group_type = 'node' AND ogm.gid = :gid AND ogm.state = :active", array(':gid' => $node->nid, ':active' => OG_STATE_ACTIVE, ':tasknid' => $filteredtasknid));
+    $query->fields('n', array('nid'))
+      ->condition('n.type', 'ed_task');
+    $nids = $query->execute()->fetchCol();
+  }else{
+    $nids = $alltasknids;
+  }
+  
+  
   $header = array(t('Name'));
   $nodes = node_load_multiple($nids);
-    
-  foreach(array_values($nodes) as $key => $node_single){
-    array_push($header, l(t('Task').' '.($key+1), 'node/'.$node_single->nid, array('attributes' => array('title' => $node_single->title))).'<br>'.'<div class="description">'.t('Due date: ').format_date($node_single->ed_task_due_date[LANGUAGE_NONE][0]['value'], 'short').'</div>');  
+  if(isset($_GET['tasknid'])){
+    $node_single = node_load($_GET['tasknid']);
+    array_push($header, l($node_single->title, 'node/'.$_GET['tasknid'], array('attributes' => array('title' => $node_single->title))).'<br>'.'<div class="description">'.t('Due date: ').format_date($node_single->ed_task_due_date[LANGUAGE_NONE][0]['value'], 'short').'</div>');
+  }else{
+    foreach(array_values($nodes) as $key => $node_single){
+      array_push($header, l(t('Task').' '.($key+1), 'node/'.$node_single->nid, array('attributes' => array('title' => $node_single->title))).'<br>'.'<div class="description">'.t('Due date: ').format_date($node_single->ed_task_due_date[LANGUAGE_NONE][0]['value'], 'short').'</div>');  
+    }
   }
   $rows = array();
   
