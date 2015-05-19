@@ -47,7 +47,7 @@ function ed_user_extra_node_insert($node){
           'contentname' => $node->title,
           'contenturl' => url('node/' . $node->nid, array('absolute' => TRUE)),
         );
-        drupal_mail('ed_user_extra', 'content_created', $recipient->mail, $language, $params, 'no-reply-TESTSERVICE@edidaktikum.ee', TRUE);
+        drupal_mail('ed_user_extra', 'content_created', $recipient->mail, $language, $params, 'no-reply@edidaktikum.ee', TRUE);
       }
       
     }else{
