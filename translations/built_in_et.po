@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2014-11-19 14:41+0200\n"
-"PO-Revision-Date: 2014-11-19 14:41+0200\n"
+"POT-Creation-Date: 2015-06-11 16:06+0300\n"
+"PO-Revision-Date: 2015-06-11 16:06+0300\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "MIME-Version: 1.0\n"
@@ -6282,10 +6282,6 @@ msgstr ""
 msgid "Entity Reference Autocomplete"
 msgstr ""
 
-#: /et/node/add/ed-learning-resource
-msgid "Enable rich-text"
-msgstr ""
-
 #: /et/admin/structure
 msgid ""
 "Add, edit and remove overridden system pages and user defined pages "
@@ -9287,10 +9283,6 @@ msgid ""
 msgstr ""
 
 #: /et/admin/config
-msgid "Value"
-msgstr ""
-
-#: /et/admin/config
 msgid "The specific value of the array."
 msgstr ""
 
@@ -10855,10 +10847,6 @@ msgid ""
 "users."
 msgstr ""
 
-#: /et/group/node/178/admin/people?state=1&uid=
-msgid "Choose the state to set for the selected users in the group."
-msgstr ""
-
 #: /et/dashboard/tasks
 msgid "<a href=\"/et/node/66\">Mari grupp</a>"
 msgstr ""
@@ -10926,22 +10914,6 @@ msgid "The file in the !name field was unable to be uploaded."
 msgstr ""
 
 #: /et/group/node/2/admin/people
-msgid "Are you sure you want to perform %operation on the selected items?"
-msgstr ""
-
-#: /et/group/node/2/admin/people
-msgid "@entity in group @group"
-msgstr ""
-
-#: /et/group/node/2/admin/people
-msgid "item"
-msgstr ""
-
-#: /et/group/node/2/admin/people
-msgid "You selected the following <strong>!count</strong>:"
-msgstr ""
-
-#: /et/group/node/2/admin/people
 msgid "Performing %operation on the selected items..."
 msgstr ""
 
@@ -10951,10 +10923,6 @@ msgstr ""
 
 #: /et/batch?id=138&op=do
 msgid "Processed @current out of @total"
-msgstr ""
-
-#: /et/batch?id=138&op=do
-msgid "Performed %operation on @items."
 msgstr ""
 
 #: /et/dashboard/tasks
@@ -11170,10 +11138,6 @@ msgstr ""
 msgid ""
 "Creates a @to_entity context from @from_entity using the @field_name "
 "field on @from_entity."
-msgstr ""
-
-#: /et/node/add/ed-task?og_group_ref=268&destination=node/268
-msgid "Tähtaeg"
 msgstr ""
 
 #: /et/admin/config/group/fields
@@ -11510,10 +11474,6 @@ msgstr ""
 
 #: /et/node/478
 msgid "Arutelu"
-msgstr ""
-
-#: /et/group/node/268/subscribe/og_user_node
-msgid "Your subscription request was sent."
 msgstr ""
 
 #: /et/group/node/268/subscribe/og_user_node
@@ -13480,10 +13440,6 @@ msgid "@fullname @action your answer to task @taskname"
 msgstr ""
 
 #: /et/node/1044
-msgid "View your answer: @answerurl"
-msgstr ""
-
-#: /et/node/1044
 msgid "accepted"
 msgstr ""
 
@@ -14197,10 +14153,6 @@ msgid ""
 "õpetaja töökava, arvestades õppekava</a><br />"
 msgstr ""
 
-#: /update.php?op=selection&token=1dsO1UYzMtUuoIdPONJ4CHMOdYdelN83tKAI9IbSPG4&id=1019&op=do
-msgid "Add competence"
-msgstr ""
-
 #: /et/admin/config/edidaktikum/configuration
 msgid "Paging"
 msgstr ""
@@ -14759,6 +14711,521 @@ msgstr ""
 
 #: /et/user/50/edit
 msgid "The referenced entity (@type: @id) is invalid."
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid "<a href=\"/et/content/mari-grupp\">Mari grupp</a>, "
+msgstr ""
+
+#: /et/admin/reports/dblog?page=2
+msgid "Unable to generate the derived image located at %path."
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid ""
+"<a "
+"href=\"/et/content/hik-%C3%B5pigrupp-muutunud-%C3%B5pik%C3%A4situs\">HIK "
+"õpigrupp - muutunud õpikäsitus</a>"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid "<a href=\"/et/node/2423\"></a>"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid "<a href=\"/et/node/2423\"></a>, tammets"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid ""
+"<a href=\"/et/content/g%C3%BCmnaasiumi-10-klass\">Gümnaasiumi 10. "
+"klass</a>"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid ""
+"<a href=\"/et/content/g%C3%BCmnaasiumi-12-klass\">Gümnaasiumi 12. "
+"klass</a>"
+msgstr ""
+
+#: /et/group/node/2436/unsubscribe
+msgid "As the manager of %group, you can not leave the group."
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=2788
+msgid ""
+"kasutab õpikeskkonnas digivahendeid, mis äratavad uudishimu ja "
+"innustavad õppijaid osalema oma õpieesmärkide püstitamisel, "
+"õppimise juhtimisel ja arengu hindamisel"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=2788
+msgid ""
+"<a "
+"href=\"/et/competence/kasutab-%C3%B5pikeskkonnas-digivahendeid-mis-%C3%A4ratavad-uudishimu-ja-innustavad-%C3%B5ppijaid-osalema\">kasutab "
+"õpikeskkonnas digivahendeid, mis äratavad uudishimu ja innustavad "
+"õppijaid osalema oma õpieesmärkide püstitamisel, õppimise "
+"juhtimisel ja arengu hindamisel</a><br />"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid "<a href=\"/et/content/testr%C3%BChm\">Testrühm</a>"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid ""
+"<a href=\"/et/content/f%C3%BC%C3%BCsika-ajalugu-test\">Füüsika "
+"ajalugu (test)</a>"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=2560
+msgid "<a href=\"/et\"></a><br />"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid "<a href=\"/et/content/lii-testgrupp\">lii testgrupp</a>"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=2790
+msgid ""
+"edendab õppijate refleksiooni koostöövahendite abil, et avaldada ja "
+"avardada õppijate kontseptuaalset arusaamist ja mõtlemist, "
+"planeerimist ning loomingulisi protsesse"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=2790
+msgid ""
+"<a "
+"href=\"/et/competence/edendab-%C3%B5ppijate-refleksiooni-koost%C3%B6%C3%B6vahendite-abil-et-avaldada-ja-avardada-%C3%B5ppijate\">edendab "
+"õppijate refleksiooni koostöövahendite abil, et avaldada ja "
+"avardada õppijate kontseptuaalset arusaamist ja mõtlemist, "
+"planeerimist ning loomingulisi protsesse</a><br />"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid "<a href=\"/et/content/eky-testgrupp\">EKY testgrupp</a>"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=2851
+msgid ""
+"Lähtuvalt eesmärkidest valib õpetamiseks ja õppimiseks sobivad "
+"meetodid, hindamismudeli ning planeerib tegevuste aja"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=2851
+msgid ""
+"<a "
+"href=\"/et/competence/l%C3%A4htuvalt-eesm%C3%A4rkidest-valib-%C3%B5petamiseks-ja-%C3%B5ppimiseks-sobivad-meetodid-hindamismudeli\">Lähtuvalt "
+"eesmärkidest valib õpetamiseks ja õppimiseks sobivad meetodid, "
+"hindamismudeli ning planeerib tegevuste aja</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=2851
+msgid "Kasutab õpetaja töö kavandamisel (teadus)kirjandust"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=2851
+msgid ""
+"<a "
+"href=\"/et/competence/kasutab-%C3%B5petaja-t%C3%B6%C3%B6-kavandamisel-teaduskirjandust\">Kasutab "
+"õpetaja töö kavandamisel (teadus)kirjandust</a><br />"
+msgstr ""
+
+#: /et/content/r%C3%B5%C3%B5m-praktika-1415
+msgid "Alamgrupid"
+msgstr ""
+
+#: /et/clusters
+msgid "Private Group"
+msgstr ""
+
+#: /et/content/edidaktikumi-koolitus
+msgid "Ülesanded"
+msgstr ""
+
+#: /et/node/3092
+msgid ""
+"@type <b>@title</b> has been created, but not published. At the "
+"moment, only you can see it."
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=2652
+msgid "Kõnearendus-, lugemis-, kuulamis- ja kirjutamisteemad"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=2652
+msgid ""
+"<a "
+"href=\"/et/kategooriad/k%C3%B5nearendus-lugemis-kuulamis-ja-kirjutamisteemad-4\">Kõnearendus-, "
+"lugemis-, kuulamis- ja kirjutamisteemad</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=2652
+msgid "Eesti keel (võõrkeel)"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=2652
+msgid ""
+"<a href=\"/et/kategooriad/eesti-keel-v%C3%B5%C3%B5rkeel\">Eesti keel "
+"(võõrkeel)</a><br />"
+msgstr ""
+
+#: /et/group/node/3283/admin/people
+msgid ""
+"You have not chosen any role to add or remove. Please select something "
+"to do."
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid ""
+"<a href=\"/et/content/%C3%B5petaja-kui-uurija\">Õpetaja kui "
+"uurija</a>"
+msgstr ""
+
+#: /et/admin/structure/menu/item/512/edit
+msgid ""
+"The maximum depth for a link and all its children is fixed at "
+"!maxdepth. Some menu links may not be available as parents if "
+"selecting them would exceed this limit."
+msgstr ""
+
+#: /et/content/tervisek%C3%A4itumine-ja-t%C3%B5endusp%C3%B5hine-%C3%B5petus
+msgid "Group breadcrumbs"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid ""
+"<a "
+"href=\"/et/content/eka-kunsti%C3%B5petajate-t%C3%A4iendkoolitus\">EKA "
+"kunstiõpetajate täiendkoolitus</a>, "
+"hybridauth_Google_104994020645154556143"
+msgstr ""
+
+#: /et/admin/people
+msgid "delete any ed_subgroup content"
+msgstr ""
+
+#: /et/admin/people
+msgid "edit any ed_subgroup content"
+msgstr ""
+
+#: /et/admin/people
+msgid "delete own ed_subgroup content"
+msgstr ""
+
+#: /et/admin/people
+msgid "edit own ed_subgroup content"
+msgstr ""
+
+#: /et/admin/people
+msgid "create ed_subgroup content"
+msgstr ""
+
+#: /et/ed-delete/0%3D66/jukule%20post
+msgid "Continue to group page: "
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid "<a href=\"/et/content/eky6001\">EKY6001</a>"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=3616
+msgid "Kasvatusteaduslikud teooriad"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=3616
+msgid ""
+"<a "
+"href=\"/et/kategooriad/kasvatusteaduslikud-teooriad\">Kasvatusteaduslikud "
+"teooriad</a><br />"
+msgstr ""
+
+#: /et/node/3869/edit
+msgid "You must select one or more groups for this content."
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid ""
+"<a href=\"/et/content/g%C3%BCmnaasiumi-11-klass\">Gümnaasiumi 11. "
+"klass</a>"
+msgstr ""
+
+#: /et/clusters/searchgroup?search_term=meediakasvatus%20a%C3%B6ushariduses%20
+msgid "<b><i> @querystring </i></b>did not return any results"
+msgstr ""
+
+#: /et/group/node/3497/admin/people/add-user
+msgid "Return to group front page"
+msgstr ""
+
+#: /et/group/node/3483/admin/people?state=All&uid=&page=1
+msgid "1 row"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid ""
+"<a "
+"href=\"/et/content/saksa-keele-%C3%B5petamise-didaktika-ja-metoodika\">Saksa "
+"keele õpetamise didaktika ja metoodika</a>"
+msgstr ""
+
+#: /et/node/4207/edit
+msgid ""
+"analüüsib ja mõtestab regulaarselt ajakohaseid uuringuid ja "
+"toimivaid praktikaid õppimise toetamisel digivahenditega;"
+msgstr ""
+
+#: /et/node/4207/edit
+msgid ""
+"<a "
+"href=\"/et/competence/anal%C3%BC%C3%BCsib-ja-m%C3%B5testab-regulaarselt-ajakohaseid-uuringuid-ja-toimivaid-praktikaid-%C3%B5ppimise\">analüüsib "
+"ja mõtestab regulaarselt ajakohaseid uuringuid ja toimivaid "
+"praktikaid õppimise toetamisel digivahenditega;</a><br />"
+msgstr ""
+
+#: /et/node/4207/edit
+msgid ""
+"Oskus leida õppeainetevahelisi seoseid ja realiseerida "
+"õppeainetevahelise integratsiooni võimalusi, teha koostööd teiste "
+"õpetajatega"
+msgstr ""
+
+#: /et/node/4207/edit
+msgid ""
+"<a "
+"href=\"/et/competence/oskus-leida-%C3%B5ppeainetevahelisi-seoseid-ja-realiseerida-%C3%B5ppeainetevahelise-integratsiooni\">Oskus "
+"leida õppeainetevahelisi seoseid ja realiseerida õppeainetevahelise "
+"integratsiooni võimalusi, teha koostööd teiste õpetajatega</a><br "
+"/>"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid ""
+"<a href=\"/et/content/saksa-keele-didaktika-praktikum\">Saksa keele "
+"didaktika praktikum</a>"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid ""
+"<a href=\"/et/content/haridustehnoloogia-praktika\">Haridustehnoloogia "
+"praktika</a>"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid "<a href=\"/et/node/877\"></a>"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid ""
+"<a href=\"/et/content/haridustehnoloogia-keskus\">Haridustehnoloogia "
+"keskus</a>, kairit..."
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid ""
+"<a "
+"href=\"/et/content/eka-kunsti%C3%B5petajate-t%C3%A4iendkoolitus\">EKA "
+"kunstiõpetajate täiendkoolitus</a>"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=3454
+msgid ""
+"osaleb kutse- või erialastes kohalikes ja üleilmsetes "
+"õpikogukondades eesmärgiga avastada digitehnoloogia loomingulise "
+"rakendamise uusi võimalusi;"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=3454
+msgid ""
+"<a "
+"href=\"/et/competence/osaleb-kutse-v%C3%B5i-erialastes-kohalikes-ja-%C3%BCleilmsetes-%C3%B5pikogukondades-eesm%C3%A4rgiga-avastada\">osaleb "
+"kutse- või erialastes kohalikes ja üleilmsetes õpikogukondades "
+"eesmärgiga avastada digitehnoloogia loomingulise rakendamise uusi "
+"võimalusi;</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=3454
+msgid ""
+"kaasab õppijaid eluliste küsimuste ja probleemide uurimisse ning "
+"lahendamisse"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=3454
+msgid ""
+"<a "
+"href=\"/et/competence/kaasab-%C3%B5ppijaid-eluliste-k%C3%BCsimuste-ja-probleemide-uurimisse-ning-lahendamisse\">kaasab "
+"õppijaid eluliste küsimuste ja probleemide uurimisse ning "
+"lahendamisse</a><br />"
+msgstr ""
+
+#: /et/node/5091/edit
+msgid "Otsi gruppi"
+msgstr ""
+
+#: /et/node/4518/file
+msgid "Postitused"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid "<a href=\"/et/content/eky6002\">EKY6002</a>"
+msgstr ""
+
+#: /et/taxonomy/term/10618/feed
+msgid "Search result highlighting input"
+msgstr ""
+
+#: /
+msgid "Entity Reference Contained"
+msgstr ""
+
+#: /et/comment/1917
+msgid "Show competency profile"
+msgstr ""
+
+#: /et/content/villu-jaanisoo
+msgid "Network"
+msgstr ""
+
+#: /et/admin_menu/flush-cache?token=QSjK_-CltjtlwFSjAkH78kDjGI-lpG5hADNLp8ctFDs&destination=node/5097
+msgid "Competency profile"
+msgstr ""
+
+#: /et/admin/people
+msgid ""
+"Define how text is handled by combining filters into <a "
+"href=\"@url\">text formats</a>."
+msgstr ""
+
+#: /en/group/node/5651/subscribe/og_user_node
+msgid "New group membership request"
+msgstr ""
+
+#: /en/group/node/5651/subscribe/og_user_node
+msgid "@subscriberfullname has requested membership to your group @groupname"
+msgstr ""
+
+#: /en/group/node/5651/subscribe/og_user_node
+msgid "Manage group members: @peoplepage"
+msgstr ""
+
+#: /et/admin/modules
+msgid ""
+"Administration and debugging functionality for developers and site "
+"builders."
+msgstr ""
+
+#: /et/admin/modules
+msgid ""
+"Provides a dropdown menu to most administrative tasks and other common "
+"destinations (to users with the proper permissions)."
+msgstr ""
+
+#: /et/admin/modules
+msgid "A better Toolbar."
+msgstr ""
+
+#: /et/admin/modules
+msgid "eDidaktikum analytics module. Integration with Learning Locker."
+msgstr ""
+
+#: /et/admin/modules
+msgid "eDidaktikum collection."
+msgstr ""
+
+#: /et/admin/modules
+msgid "Subgroup module for eDidaktikum"
+msgstr ""
+
+#: /et/admin/modules
+msgid ""
+"Allows your site to be tracked by Google Analytics by adding a "
+"Javascript tracking code to every page."
+msgstr ""
+
+#: /et/admin/modules
+msgid "Mitigates spam form submissions using the honeypot method."
+msgstr ""
+
+#: /et/admin/modules
+msgid "Provides HybridAuth social sign-on."
+msgstr ""
+
+#: /et/admin/modules
+msgid ""
+"Provides HybridAuth bonus features, like roles choosing upon "
+"registration."
+msgstr ""
+
+#: /et/admin/modules
+msgid "Migrate uLogin identities to HybridAuth."
+msgstr ""
+
+#: /et/admin/modules
+msgid "Adds support and an API to implement meta tags."
+msgstr ""
+
+#: /et/admin/modules
+msgid ""
+"Assigned Metatag using Context definitions, allowing them to be "
+"assigned by path and other criteria."
+msgstr ""
+
+#: /et/admin/modules
+msgid ""
+"Provides the fifteen <a "
+"href=\"http://dublincore.org/documents/dces/\">Dublin Core Metadata "
+"Element Set 1.1</a> meta tags from the <a "
+"href=\"http://dublincore.org/\">Dublin Core Metadata Institute</a>."
+msgstr ""
+
+#: /et/admin/modules
+msgid "Provides support for open graph meta tags."
+msgstr ""
+
+#: /et/admin/modules
+msgid "Provides Metatag integration within the Panels interface."
+msgstr ""
+
+#: /et/admin/modules
+msgid "Provides support for Twitter's Card meta tags."
+msgstr ""
+
+#: /et/admin/modules
+msgid "Provides Metatag integration within the Views interface."
+msgstr ""
+
+#: /et/admin/modules
+msgid ""
+"Provides development / debugging functionality for the Metatag module. "
+"Integrates with Devel Generate."
+msgstr ""
+
+#: /et/admin/modules
+msgid "Multilingual support for panel panes"
+msgstr ""
+
+#: /et/admin/modules
+msgid "Supports translatable panels items."
+msgstr ""
+
+#: /et/admin/modules
+msgid "Creates a simple hierarchical select widget for taxonomy fields."
+msgstr ""
+
+#: /et/admin/modules
+msgid "Controls access to context based upon term depth"
+msgstr ""
+
+#: /et/admin/modules
+msgid "Spam control"
+msgstr ""
+
+#: /et/admin/modules
+msgid "SEO"
+msgstr ""
+
+#: /et/admin/modules
+msgid "QTools"
 msgstr ""
 
 #: ; misc/drupal.js
@@ -19121,7 +19588,7 @@ msgstr "Portfoolio objektid"
 
 #: ed_task/ed_task_functions.inc:5 ed_task/ed_task.module:117;146;182
 msgid "Due Date"
-msgstr "Tähtaeg"
+msgstr "Tähtaeg "
 
 #: ed_answer/ed_answer.module:125 ed_file/ed_file.install:392,,,  ed_task/ed_task_functions.inc:170
 msgid "Competence"
@@ -19145,6 +19612,10 @@ msgstr "Järjestus"
 #: /et/node/add/ed-learning-resource
 msgid "Disable rich-text"
 msgstr "Lülita tekstitööriistad välja (HTML-i, embed-koodi sisestamiseks)"
+
+#: /et/node/add/ed-learning-resource
+msgid "Enable rich-text"
+msgstr "Lülita tekstitööriistad sisse"
 
 msgid "More information about text formats"
 msgstr "Rohkem teavet tekstivormingute kohta"
@@ -21507,7 +21978,7 @@ msgid "How many content items to display in \"day\" list."
 msgstr "Kui mitu objekti kuvada \"päeva\" nimekirjas."
 
 msgid "Posts"
-msgstr "Postitusi"
+msgstr "Postitused"
 
 msgid "Randomize"
 msgstr "Juhuslikult"
@@ -31610,6 +32081,10 @@ msgstr "Saint-Barthélemy"
 msgid "Curaçao"
 msgstr "Curaçao"
 
+#: /et/admin/config
+msgid "Value"
+msgstr "Väärtus"
+
 msgid "‹ "
 msgstr "‹ "
 
@@ -31638,11 +32113,11 @@ msgstr "Sorteeri"
 
 #: ed_learning_resource/ed_learning_resource_ajax.inc:20;119,,,  ed_learning_resource/ed_learning_resource.module:78;129;222;248
 msgid "Latest First"
-msgstr "Vanemad eespool"
+msgstr "Värskemad eespool"
 
 #: ed_learning_resource/ed_learning_resource_ajax.inc:20;132,,,  ed_learning_resource/ed_learning_resource.module:78;225;251
 msgid "Earliest First"
-msgstr "Värskemad eespool"
+msgstr "Vanemad eespool"
 
 #: ed_learning_resource/ed_learning_resource.module:78
 msgid "Likes(not facebook)"
@@ -32378,6 +32853,10 @@ msgstr "Lisa roll"
 msgid "Remove roles"
 msgstr "Eemalda roll"
 
+#: /et/group/node/178/admin/people?state=1&uid=
+msgid "Choose the state to set for the selected users in the group."
+msgstr "Määra staatus valitud kasutajatele käesolevas grupis."
+
 #: /et/node/add/ed-bookmark?og_group_ref=178&destination=node/178
 msgid "The URL %url is not valid."
 msgstr "Veebiaadress %url ei ole korrektne."
@@ -32445,6 +32924,26 @@ msgstr "KKK lehe sisu"
 #: edidaktikum.admin.inc:71 edidaktikum.variable.inc:48
 msgid "Text to display on FAQ page."
 msgstr "Tekst, mida kuvatakse KKK lehel."
+
+#: /et/group/node/2/admin/people
+msgid "Are you sure you want to perform %operation on the selected items?"
+msgstr "Oled Sa kindel, et soovid teha järgmist tegevust: %operation ?"
+
+#: /et/group/node/2/admin/people
+msgid "@entity in group @group"
+msgstr "@entity grupis @group "
+
+#: /et/group/node/2/admin/people
+msgid "item"
+msgstr "objekt"
+
+#: /et/group/node/2/admin/people
+msgid "You selected the following <strong>!count</strong>:"
+msgstr "Valisid järgmised <strong>!count</strong>: "
+
+#: /et/batch?id=138&op=do
+msgid "Performed %operation on @items."
+msgstr "Edukalt sooritatud %operation asukohas @items. "
 
 #: ed_file/ed_file.module:151
 msgid "Add new !file or !folder"
@@ -32550,6 +33049,10 @@ msgstr "Arutelu"
 msgid "!task-title - Answer"
 msgstr "!task-title - Vastus"
 
+#: /et/node/add/ed-task?og_group_ref=268&destination=node/268
+msgid "Tähtaeg"
+msgstr "Tähtaeg"
+
 #: ed_forum/ed_forum.module:35
 msgid "Create Discussion Board"
 msgstr "Loo uus arutelu teema"
@@ -32565,6 +33068,10 @@ msgstr "Õppematerjalide märksõnade nimekiri"
 #: /et/node/243
 msgid "Private comment"
 msgstr "Privaatne kommentaar"
+
+#: /et/group/node/268/subscribe/og_user_node
+msgid "Your subscription request was sent."
+msgstr "Sinu liitumissoov on edastatud."
 
 #: /et/group/node/125/admin/people
 msgid "remove"
@@ -32690,6 +33197,10 @@ msgstr "Leia ja avasta"
 msgid "Sign in / Register"
 msgstr "Logi sisse / registreeru"
 
+#: /et/node/1044
+msgid "View your answer: @answerurl"
+msgstr "Vaata oma vastust: @answerurl"
+
 #: /et
 msgid "Goodbye! You are now logged out from eDidaktikum"
 msgstr "Nägemiseni! Oled nüüd eDidaktikumist välja logitud."
@@ -32697,6 +33208,10 @@ msgstr "Nägemiseni! Oled nüüd eDidaktikumist välja logitud."
 #: /et/node/978/task-manager
 msgid "Due date: "
 msgstr "Tähtaeg: "
+
+#: /update.php?op=selection&token=1dsO1UYzMtUuoIdPONJ4CHMOdYdelN83tKAI9IbSPG4&id=1019&op=do
+msgid "Add competence"
+msgstr "Lisa pädevus"
 
 #: /et/admin_menu/flush-cache?token=HEV60-MNlBxNUX-xm2qvxnzXU61GFGHqGC26v7w1sOg&destination=admin/config/edidaktikum/configuration
 msgid "My Groups"
@@ -32709,4 +33224,60 @@ msgstr "Kõik grupid"
 #: /et/clusters
 msgid "Leave"
 msgstr "Lahku"
+
+#: /et/node/2772/tasks
+msgid "Not Answered"
+msgstr "Vastamata"
+
+#: /et/node/1131/tasks
+msgid "Answered, Unchecked"
+msgstr "Vastatud, kontrollimata"
+
+#: /et/node/705/tasks
+msgid "Answered, Accepted"
+msgstr "Vastatud, kinnitatud"
+
+#: /et/node/705/tasks
+msgid "Answered, Rejected"
+msgstr "Vastatud, tagasi lükatud"
+
+#: /et/content/keelelabori-projekti-tekstikeskne-keele%C3%B5petus-materjalid
+msgid "Illustration"
+msgstr "Illustratsioon"
+
+#: /et/content/informaatika-didaktika-p%C3%A4eva%C3%B5pe
+msgid "Members"
+msgstr "Liikmed"
+
+#: /et/content/informaatika-didaktika-p%C3%A4eva%C3%B5pe
+msgid "Search for a group"
+msgstr "Otsi gruppi"
+
+#: /et/clusters/searchgroup
+msgid "Group name: "
+msgstr "Grupi nimi:"
+
+#: /et/clusters/mygroups
+msgid "My Groups A-Z"
+msgstr "Minu grupid A-Z"
+
+#: /et/content/kujundav-hindamine-t%C3%A4iend%C3%B5pe
+msgid "Members (@count)"
+msgstr "Liikmed (@count)"
+
+#: /et/comment/1917
+msgid "Receive notifications for the following"
+msgstr "E-posti peale saadetavad teated uuendustest"
+
+#: /et/node/4518/task-manager
+msgid "All tasks"
+msgstr "Kõik ülesanded"
+
+#: /et/node/4518/task-manager
+msgid "Select task to filter"
+msgstr "Vali kuvatav ülesanne"
+
+#: /et/node/4518/task-manager
+msgid "Choose a task"
+msgstr "Vali ülesanne"
 

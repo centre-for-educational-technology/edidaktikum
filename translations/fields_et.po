@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2014-11-19 14:42+0200\n"
-"PO-Revision-Date: 2014-11-19 14:42+0200\n"
+"POT-Creation-Date: 2015-06-11 16:07+0300\n"
+"PO-Revision-Date: 2015-06-11 16:07+0300\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "MIME-Version: 1.0\n"
@@ -26,6 +26,76 @@ msgstr ""
 #: field:ed_answer_status:#field:label
 msgctxt "ed_answer_status:#field:label"
 msgid "Type"
+msgstr ""
+
+#: field:og_group_ref:ed_subgroup:label
+msgctxt "og_group_ref:ed_subgroup:label"
+msgid "Groups audience"
+msgstr ""
+
+#: field:group_group:ed_subgroup:description
+msgctxt "group_group:ed_subgroup:description"
+msgid "Determine if this is an OG group."
+msgstr ""
+
+#: field:ed_field_excerpt:ed_subgroup:label
+msgctxt "ed_field_excerpt:ed_subgroup:label"
+msgid "Excerpt"
+msgstr ""
+
+#: field:ed_field_category:ed_subgroup:label
+msgctxt "ed_field_category:ed_subgroup:label"
+msgid "Categories"
+msgstr ""
+
+#: field:group_access:ed_subgroup:label
+msgctxt "group_access:ed_subgroup:label"
+msgid "Group visibility"
+msgstr ""
+
+#: field:ed_field_featured_image:ed_subgroup:label
+msgctxt "ed_field_featured_image:ed_subgroup:label"
+msgid "Featured image"
+msgstr ""
+
+#: field:ed_field_content:ed_subgroup:label
+msgctxt "ed_field_content:ed_subgroup:label"
+msgid "Content"
+msgstr ""
+
+#: field:comment_body:comment_node_ed_subgroup:label
+msgctxt "comment_body:comment_node_ed_subgroup:label"
+msgid "Comment"
+msgstr ""
+
+#: field:ed_portfolio_show_comp_profile:#allowed_values:0
+msgctxt "ed_portfolio_show_comp_profile:#allowed_values:0"
+msgid "No"
+msgstr ""
+
+#: field:ed_portfolio_show_comp_profile:#allowed_values:1
+msgctxt "ed_portfolio_show_comp_profile:#allowed_values:1"
+msgid "Yes"
+msgstr ""
+
+#: field:ed_portfolio_show_comp_profile:ed_portfolio:label
+msgctxt "ed_portfolio_show_comp_profile:ed_portfolio:label"
+msgid "Show competency profile"
+msgstr ""
+
+#: field:ed_competence_color_field:#field:label
+msgctxt "ed_competence_color_field:#field:label"
+msgid "Color"
+msgstr ""
+
+#: field:ed_competence_color_field:ed_competence_voc:label
+msgctxt "ed_competence_color_field:ed_competence_voc:label"
+msgid "Color"
+msgstr ""
+
+#: field:ed_competence_color_field:ed_competence_voc:description
+msgctxt "ed_competence_color_field:ed_competence_voc:description"
+msgid "Color that fills progress bars"
 msgstr ""
 
 #: field:comment_body:comment_node_page:label
@@ -1903,4 +1973,79 @@ msgstr "Kinnitatud"
 msgctxt "ed_answer_status:comment_node_ed_answer:label"
 msgid "Status"
 msgstr "Staatus"
+
+#: field:ed_field_competence:ed_blog:label
+msgctxt "ed_field_competence:ed_blog:label"
+msgid "Add competence"
+msgstr "Lisa pädevus"
+
+#: field:group_group:ed_subgroup:label
+msgctxt "group_group:ed_subgroup:label"
+msgid "Group"
+msgstr "Grupp"
+
+#: field:ed_notification_content_types:#field:label
+msgctxt "ed_notification_content_types:#field:label"
+msgid "Receive notifications for the following"
+msgstr "E-posti peale saadetavad teated uuendustest"
+
+#: field:ed_notification_content_types:#allowed_values:answer_given_to_task
+msgctxt "ed_notification_content_types:#allowed_values:answer_given_to_task"
+msgid "Answer given to task"
+msgstr "Ülesandele antud vastus"
+
+#: field:ed_notification_content_types:#allowed_values:new_group_member
+msgctxt "ed_notification_content_types:#allowed_values:new_group_member"
+msgid "New group member"
+msgstr "Grupi liige"
+
+#: field:ed_notification_content_types:#allowed_values:new_learning_resource
+msgctxt "ed_notification_content_types:#allowed_values:new_learning_resource"
+msgid "Learning resource"
+msgstr "Õppematerjal"
+
+#: field:ed_notification_content_types:#allowed_values:new_forum_topic
+msgctxt "ed_notification_content_types:#allowed_values:new_forum_topic"
+msgid "Forum topic"
+msgstr "Foorumi teema"
+
+#: field:ed_notification_content_types:#allowed_values:new_event
+msgctxt "ed_notification_content_types:#allowed_values:new_event"
+msgid "Event"
+msgstr "Sündmus"
+
+#: field:ed_notification_content_types:#allowed_values:new_news
+msgctxt "ed_notification_content_types:#allowed_values:new_news"
+msgid "News"
+msgstr "Uudis"
+
+#: field:ed_notification_content_types:#allowed_values:new_blog
+msgctxt "ed_notification_content_types:#allowed_values:new_blog"
+msgid "Blog"
+msgstr "Ajaveebi postitus"
+
+#: field:ed_notification_content_types:#allowed_values:new_bookmark
+msgctxt "ed_notification_content_types:#allowed_values:new_bookmark"
+msgid "Bookmark"
+msgstr "Järjehoidja"
+
+#: field:ed_notification_content_types:#allowed_values:new_file
+msgctxt "ed_notification_content_types:#allowed_values:new_file"
+msgid "File"
+msgstr "Fail"
+
+#: field:ed_notification_content_types:#allowed_values:new_page
+msgctxt "ed_notification_content_types:#allowed_values:new_page"
+msgid "Page"
+msgstr "Lehekülg"
+
+#: field:ed_notification_content_types:user:label
+msgctxt "ed_notification_content_types:user:label"
+msgid "Receive notifications for the following"
+msgstr "E-posti peale saadetavad teated uuendustest"
+
+#: field:ed_notification_content_types:user:description
+msgctxt "ed_notification_content_types:user:description"
+msgid "Select the checkboxes you want to receive notifications from"
+msgstr "Vali, milliste muudatuste kohta soovid teavitust"
 
