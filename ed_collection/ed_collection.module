@@ -25,7 +25,7 @@ function ed_collection_node_view($node, $view_mode, $langcode){
     }
 
     $author = user_load($node->uid);
-    $items_field = isset($node->ed_collection_field_items[LANGUAGE_NONE]) ? isset($node->ed_collection_field_items[LANGUAGE_NONE]) : [];
+    $items_field = isset($node->ed_collection_field_items[LANGUAGE_NONE]) ? $node->ed_collection_field_items[LANGUAGE_NONE] : [];
     $items_count = is_array($items_field) ? count($items_field) : 0;
     $views_count = ed_get_views($node->nid);
     $likes_count = ed_get_likes($node->nid);
