@@ -231,7 +231,7 @@ function ed_subgroup_listing_from_group($filler, $gnode, $type){
           foreach($groupadmins as $groupadmin){
             $admin = user_load($groupadmin);
             if($admin->picture){
-              $adminimages[] =l('<img src="'.file_create_url($admin->picture->uri).'" title="'.$admin->ed_field_full_name[LANGUAGE_NONE][0]['safe_value'].'" />', 'user/'.$admin->uid, array('html' => TRUE));
+              $adminimages[] =l('<img src="'.image_style_url('thumbnail', $admin->picture->uri).'" title="'.$admin->ed_field_full_name[LANGUAGE_NONE][0]['safe_value'].'" />', 'user/'.$admin->uid, array('html' => TRUE));
             }else{
               $adminimages[] =l('<img src="'.$GLOBALS['base_url'].'/'.path_to_theme().'/images/user_icon_default.png" title="'.$admin->ed_field_full_name[LANGUAGE_NONE][0]['safe_value'].'"/>', 'user/'.$admin->uid, array('html' => TRUE));
             }
@@ -254,7 +254,7 @@ function ed_subgroup_listing_from_group($filler, $gnode, $type){
           $build['row-'.$counter][$i]['top']['top-top'] = array(
             '#type' => 'markup',
             '#prefix' => '<div class="group-div-top-cover">',
-            '#markup' => !empty($nodeschunk[$i]->ed_field_featured_image) ? l('<img src="'.file_create_url($nodeschunk[$i]->ed_field_featured_image[LANGUAGE_NONE][0]['uri']).'">', 'node/'.$nodeschunk[$i]->nid, array('html' => TRUE)):l('<img src="'.$GLOBALS['base_url'].'/'.path_to_theme().'/images/icons/ed_group_icon_default.png">', 'node/'.$nodeschunk[$i]->nid, array('html' => true)),
+            '#markup' => !empty($nodeschunk[$i]->ed_field_featured_image) ? l('<img src="'.image_style_url('medium', $nodeschunk[$i]->ed_field_featured_image[LANGUAGE_NONE][0]['uri']).'">', 'node/'.$nodeschunk[$i]->nid, array('html' => TRUE)):l('<img src="'.$GLOBALS['base_url'].'/'.path_to_theme().'/images/icons/ed_group_icon_default.png">', 'node/'.$nodeschunk[$i]->nid, array('html' => true)),
             '#suffix' => '</div>',
           );
           $build['row-'.$counter][$i]['top']['top-bottom'] = array(
@@ -381,7 +381,7 @@ function ed_cluster_search_page($form, &$form_state){
           foreach($groupadmins as $groupadmin){
             $admin = user_load($groupadmin);
             if($admin->picture){
-              $adminimages[] =l('<img src="'.file_create_url($admin->picture->uri).'" title="'.$admin->ed_field_full_name[LANGUAGE_NONE][0]['safe_value'].'" />', 'user/'.$admin->uid, array('html' => TRUE));
+              $adminimages[] =l('<img src="'.image_style_url('thumbnail', $admin->picture->uri).'" title="'.$admin->ed_field_full_name[LANGUAGE_NONE][0]['safe_value'].'" />', 'user/'.$admin->uid, array('html' => TRUE));
             }else{
               $adminimages[] =l('<img src="'.$GLOBALS['base_url'].'/'.path_to_theme().'/images/user_icon_default.png" title="'.$admin->ed_field_full_name[LANGUAGE_NONE][0]['safe_value'].'"/>', 'user/'.$admin->uid, array('html' => TRUE));
             }
@@ -404,7 +404,7 @@ function ed_cluster_search_page($form, &$form_state){
           $build['row-'.$counter][$i]['top']['top-top'] = array(
             '#type' => 'markup',
             '#prefix' => '<div class="group-div-top-cover">',
-            '#markup' => !empty($nodeschunk[$i]->ed_field_featured_image) ? l('<img src="'.file_create_url($nodeschunk[$i]->ed_field_featured_image[LANGUAGE_NONE][0]['uri']).'">', 'node/'.$nodeschunk[$i]->nid, array('html' => TRUE)):l('<img src="'.$GLOBALS['base_url'].'/'.path_to_theme().'/images/icons/ed_group_icon_default.png">', 'node/'.$nodeschunk[$i]->nid, array('html' => true)),
+            '#markup' => !empty($nodeschunk[$i]->ed_field_featured_image) ? l('<img src="'.image_style_url('medium', $nodeschunk[$i]->ed_field_featured_image[LANGUAGE_NONE][0]['uri']).'">', 'node/'.$nodeschunk[$i]->nid, array('html' => TRUE)):l('<img src="'.$GLOBALS['base_url'].'/'.path_to_theme().'/images/icons/ed_group_icon_default.png">', 'node/'.$nodeschunk[$i]->nid, array('html' => true)),
             '#suffix' => '</div>',
           );
           $build['row-'.$counter][$i]['top']['top-bottom'] = array(
@@ -652,7 +652,7 @@ function ed_cluster_my_listing_page() {
         foreach($groupadmins as $groupadmin){
           $admin = user_load($groupadmin);
           if($admin->picture){            
-            $adminimages[] =l('<img src="'.file_create_url($admin->picture->uri).'" title="'.$admin->ed_field_full_name[LANGUAGE_NONE][0]['safe_value'].'" />', 'user/'.$admin->uid, array('html' => TRUE));
+            $adminimages[] =l('<img src="'.image_style_url('thumbnail', $admin->picture->uri).'" title="'.$admin->ed_field_full_name[LANGUAGE_NONE][0]['safe_value'].'" />', 'user/'.$admin->uid, array('html' => TRUE));
           }else{
             $adminimages[] =l('<img src="'.$GLOBALS['base_url'].'/'.path_to_theme().'/images/user_icon_default.png" title="'.$admin->ed_field_full_name[LANGUAGE_NONE][0]['safe_value'].'"/>', 'user/'.$admin->uid, array('html' => TRUE));
           }         
@@ -675,7 +675,7 @@ function ed_cluster_my_listing_page() {
         $build['row-'.$counter][$i]['top']['top-top'] = array(
           '#type' => 'markup',
           '#prefix' => '<div class="group-div-top-cover">',
-          '#markup' => !empty($nodeschunk[$i]->ed_field_featured_image) ? l('<img src="'.file_create_url($nodeschunk[$i]->ed_field_featured_image[LANGUAGE_NONE][0]['uri']).'">', 'node/'.$nodeschunk[$i]->nid, array('html' => TRUE)):l('<img src="'.$GLOBALS['base_url'].'/'.path_to_theme().'/images/icons/ed_group_icon_default.png">', 'node/'.$nodeschunk[$i]->nid, array('html' => true)),
+          '#markup' => !empty($nodeschunk[$i]->ed_field_featured_image) ? l('<img src="'.image_style_url('medium', $nodeschunk[$i]->ed_field_featured_image[LANGUAGE_NONE][0]['uri']).'">', 'node/'.$nodeschunk[$i]->nid, array('html' => TRUE)):l('<img src="'.$GLOBALS['base_url'].'/'.path_to_theme().'/images/icons/ed_group_icon_default.png">', 'node/'.$nodeschunk[$i]->nid, array('html' => true)),
           '#suffix' => '</div>',
         );
         $build['row-'.$counter][$i]['top']['top-bottom'] = array(
@@ -770,7 +770,7 @@ function ed_all_groups_listing(){
         foreach($groupadmins as $groupadmin){
           $admin = user_load($groupadmin);
           if($admin->picture){
-            $adminimages[] =l('<img src="'.file_create_url($admin->picture->uri).'" title="'.$admin->ed_field_full_name[LANGUAGE_NONE][0]['safe_value'].'" />', 'user/'.$admin->uid, array('html' => TRUE));
+            $adminimages[] =l('<img src="'.image_style_url('thumbnail', $admin->picture->uri).'" title="'.$admin->ed_field_full_name[LANGUAGE_NONE][0]['safe_value'].'" />', 'user/'.$admin->uid, array('html' => TRUE));
           }else{
             $adminimages[] =l('<img src="'.$GLOBALS['base_url'].'/'.path_to_theme().'/images/user_icon_default.png" title="'.$admin->ed_field_full_name[LANGUAGE_NONE][0]['safe_value'].'"/>', 'user/'.$admin->uid, array('html' => TRUE));
           }
@@ -793,7 +793,7 @@ function ed_all_groups_listing(){
         $build['row-'.$counter][$i]['top']['top-top'] = array(
           '#type' => 'markup',
           '#prefix' => '<div class="group-div-top-cover">',
-          '#markup' => !empty($nodeschunk[$i]->ed_field_featured_image) ? l('<img src="'.file_create_url($nodeschunk[$i]->ed_field_featured_image[LANGUAGE_NONE][0]['uri']).'">', 'node/'.$nodeschunk[$i]->nid, array('html' => TRUE)):l('<img src="'.$GLOBALS['base_url'].'/'.path_to_theme().'/images/icons/ed_group_icon_default.png">', 'node/'.$nodeschunk[$i]->nid, array('html' => true)),
+          '#markup' => !empty($nodeschunk[$i]->ed_field_featured_image) ? l('<img src="'.image_style_url('medium', $nodeschunk[$i]->ed_field_featured_image[LANGUAGE_NONE][0]['uri']).'">', 'node/'.$nodeschunk[$i]->nid, array('html' => TRUE)):l('<img src="'.$GLOBALS['base_url'].'/'.path_to_theme().'/images/icons/ed_group_icon_default.png">', 'node/'.$nodeschunk[$i]->nid, array('html' => true)),
           '#suffix' => '</div>',
         );
         $build['row-'.$counter][$i]['top']['top-bottom'] = array(
