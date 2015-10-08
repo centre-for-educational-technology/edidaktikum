@@ -17,29 +17,114 @@ function ed_user_extra_ctools_plugin_directory($module, $plugin) {
 }
 
 
+/*
+ * Receive notifications user menu tab
+ * Implements hook_menu().
+ */
+
+function ed_user_extra_menu() {
+
+  $items['user/%user/notifications'] = array(
+    'title' => 'Notifications',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('ed_user_notifications_page', 1),
+    'access callback' => 'user_edit_access',
+    'access arguments' => array(1),
+    'type' => MENU_LOCAL_TASK,
+  );
+
+  return $items;
+
+}
+
+
+/*
+ * Form builder; Receive notifications page
+ */
+function ed_user_notifications_page($form, &$form_state, $user) {
+
+  // During initial form build, add the entity to the form state for use during
+  // form building and processing. During a rebuild, use what is in the form
+  // state.
+  if (!isset($form_state['user'])) {
+    $form_state['user'] = $user;
+  }
+  else {
+    $user = $form_state['user'];
+  }
+
+  field_attach_form('user', $user, $form, $form_state, NULL, array(
+    'field_name' => 'ed_notification_content_types',
+  ));
+
+  $form['actions'] = array('#type' => 'actions');
+  $form['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save'),
+  );
+
+  //Set form entity
+  $form['#entity'] = $user;
+
+
+  //Form submission handler
+  $form['#submit'][] = 'ed_user_notifications_page_submit';
+
+  return $form;
+
+}
+
+
+/**
+ * Submit function for Receive notifications page form.
+ */
+function ed_user_notifications_page_submit($form, &$form_state) {
+
+  $user = $form_state['user'];
+
+  entity_form_submit_build_entity('user', $user, $form, $form_state);
+
+  $edit = array_intersect_key((array) $user, $form_state['values']);
+  user_save($user, $edit);
+
+  drupal_set_message(t('The changes have been saved.'));
+
+}
+
 
 /**
  * Implements hook_form_alter().
  */
 function ed_user_extra_form_alter(&$form, &$form_state, $form_id){
+
   if($form_id=='user_profile_form'){
+
     $form['field_pref_lang']['#access'] = FALSE;
+
+    $form['ed_notification_content_types']['#access'] = FALSE;
+  }else if ($form_id=='ed_user_notifications_page'){
+    if (isset($form['#metatags'])){
+      unset($form['#metatags']);
+
+
+    }
   }
 }
+
 
 /**
  * Implements hook_node_insert().
  */
 function ed_user_extra_node_insert($node){
-  
+
   if(in_array($node->type, array('ed_news', 'ed_learning_resource', 'ed_event', 'ed_page', 'ed_bookmark', 'ed_forum', 'ed_blog', 'ed_file'))){
-    
+
     $tousers = ed_user_extra_get_to_user($node, $node->type);
     $creator = user_load($node->uid);
     $creator_fullname = edidaktikum_get_full_name_for_user_account($creator);
     if(is_array($tousers) && !empty($tousers)){
       $touserobjects = user_load_multiple($tousers);
-      
+
       foreach($touserobjects as $recipient){
         $language = user_preferred_language($recipient);
         $params = array(
@@ -49,7 +134,7 @@ function ed_user_extra_node_insert($node){
         );
         drupal_mail('ed_user_extra', 'content_created', $recipient->mail, $language, $params, 'no-reply@edidaktikum.ee', TRUE);
       }
-      
+
     }else{
       $groups = og_get_entity_groups('node', $node->nid);
       foreach($groups['node'] as $group){
@@ -58,8 +143,8 @@ function ed_user_extra_node_insert($node){
         $recipients = array();
         foreach($memberobjects as $memberobject){
           if(isset($memberobject->ed_notification_content_types[LANGUAGE_NONE]) && is_array($memberobject->ed_notification_content_types[LANGUAGE_NONE])){
-            
-          
+
+
             $vals = array_map(function($elem){
               return $elem['value'];
             }, $memberobject->ed_notification_content_types[LANGUAGE_NONE]);
@@ -98,7 +183,7 @@ function ed_user_extra_node_insert($node){
       );
       drupal_mail('ed_user_extra', 'task_answered', $recipient->mail, $language, $params, 'no-reply-TESTSERVICE@edidaktikum.ee', TRUE);
     }
-    
+
   }
 }
 
@@ -123,7 +208,7 @@ function ed_user_extra_comment_insert($comment){
       drupal_mail('ed_user_extra', 'forum_post_commented', $recipient->mail, $language, $params, 'no-reply-TESTSERVICE@edidaktikum.ee', TRUE);
     }
   }
-  
+
 }
 
 
@@ -144,8 +229,8 @@ function ed_user_extra_og_membership_insert($og_membership){
       drupal_mail('ed_user_extra', 'new_subscription', $recipient->mail, $language, $params, 'no-reply-TESTSERVICE@edidaktikum.ee', true);
     }
   }
-  
-  
+
+
 }
 
 
