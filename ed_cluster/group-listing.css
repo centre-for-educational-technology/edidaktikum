@@ -1,7 +1,7 @@
 .private-group-title{
     color: red;
+    font-size: 70%;
 }
-
 
 .group-div-outer { 
     border: 1px solid #EFEFEF;
@@ -23,29 +23,40 @@
 }
 
 .group-div-bottom-left {
-    padding: 5px;
-    
+    padding: 5px;  
 }
+
 .group-div-bottom-left img{    
     height: 30px;
     width: 30px;
     border-radius: 20px;
 }
+
 .group-div-bottom-right {
     position:relative;
     top: 7px;
     text-align: center;
-    
-    
 }
+
 .group-div-bottom-right a{
     color: white;
     position: relative;
     top: 3px;
 }
-.group-div-bottom-right a:hover,.group-div-bottom-right a:visited{
+
+.group-div-bottom-right a {
+	font-weight: 100;
+	color: #f0f0f0;
+}
+
+.group-div-bottom-right a:hover {
     text-decoration:none;
-    color:white;
+    color: white;
+}
+
+.group-div-bottom-right a:visited {
+	text-decoration: none;
+    color: white;
 }
 
 .group-div-top-cover img{

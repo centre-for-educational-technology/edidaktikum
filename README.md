@@ -6,6 +6,7 @@ eDidaktikum main module.
 Agreements
 ----------
 
+* All development happens in the **master** branch, once release is ready the code is merged into **production** and that is used as the source for tagging releases and knowing the current state of the codebase.
 * We use prefix **ed_** wherever possible (e.g. module names, content type names, database table names).
 * We use **node** subtypes for our custom content types as a rule of thumb (if it proves to be problematic, custom entities can be used instead).
 * Any submodule should belong to package **eDidaktikum** in order for all related modules to be located in the same place.

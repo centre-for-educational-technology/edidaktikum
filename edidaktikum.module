@@ -583,7 +583,7 @@ function edidaktikum_user_view_alter(&$build) {
     if(isset($build['ed_field_full_name'])){
       //drupal_set_title($build['ed_field_full_name']['#items'][0]['value']);
       $build['ed_field_full_name']['#title'] = t('E-mail');
-      $build['ed_field_full_name'][0]['#markup'] = '<a href="'.$build['#account']->mail.'">'.$build['#account']->mail.'</a>';
+      $build['ed_field_full_name'][0]['#markup'] = '<a href="mailto:'.$build['#account']->mail.'?subject=eDidaktikum e-mail">'.$build['#account']->mail.'</a>';
     }
     if(!isset($build['ed_user_view_email'])){
       

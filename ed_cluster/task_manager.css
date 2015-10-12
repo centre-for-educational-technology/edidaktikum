@@ -50,3 +50,8 @@
 .accepted a:hover {
 	text-decoration: none;
 }
+
+.ed_filter_tasks {
+    margin-top: 52px;
+    margin-left: -80px;
+}
