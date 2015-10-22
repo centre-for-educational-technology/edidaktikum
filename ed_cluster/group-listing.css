@@ -10,6 +10,13 @@
     margin-bottom: 10px; 
 }
 
+.group-div-outer.ed_mygroup_inactive {
+    border: 1px solid #d1d1d1;
+    background-color: #d7d7d7;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
 .group-div-top {
     height: 66%;
     background: white;
