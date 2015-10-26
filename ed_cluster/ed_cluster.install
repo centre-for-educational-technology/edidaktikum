@@ -14,6 +14,7 @@ function ed_cluster_install() {
   ed_cluster_node_add_field_excerpt();  
   ed_cluster_node_add_field_content();
   ed_cluster_node_add_field_category();
+  ed_cluster_node_add_field_group_state();
   ed_cluster_node_add_og_group_access_field();
   ed_cluster_node_add_field_featured_image();
   ed_cluster_add_field_private_comment();
@@ -172,6 +173,39 @@ function ed_cluster_node_add_field_category() {
 }
 
 /**
+ * Adds group state field to ed_cluster node type.
+ */
+function ed_cluster_node_add_field_group_state() {
+  $field_name = 'ed_field_group_state';
+  $field = field_info_field($field_name);
+  if (!empty($field) && !field_info_instance('node', $field, 'ed_cluster')) {
+    $instance = array(
+        'field_name' => $field_name,
+        'entity_type' => 'node',
+        'bundle' => 'ed_cluster',
+        'label' => t('Group state'),
+        'description' => '',
+        'widget' => array(
+            'type' => 'radio',
+            'settings' => array(
+                'display_label' => TRUE,
+            ),
+        ),
+        'required' => TRUE,
+
+        'default_value' => array(
+            '0' => array(
+                'value' => 1,
+            ),
+        ),
+
+    );
+    field_create_instance($instance);
+  }
+
+}
+
+/**
  * Adds og group access field to ed_cluster node type. 
  */
 function ed_cluster_node_add_og_group_access_field() {
@@ -286,5 +320,33 @@ function ed_cluster_update_7104(&$sandbox){
       }
     }
   og_role_grant_permissions($rid, $permissions = array('update any ed_page content'));
+}
+
+/**
+ * Add ed_field_group_state field
+ */
+function ed_cluster_update_7105(&$sandbox){
+  ed_cluster_node_add_field_group_state();
+
+  // Get all nodes of 'ed_cluster' type, populate the field with a value of '1' - active group state.
+  $groups = db_query("SELECT nid, vid FROM {node} WHERE type = 'ed_cluster'")->fetchAllAssoc('nid');
+  foreach ($groups as $nid => $values) {
+    $fields = array(
+        'entity_type' => 'node',
+        'bundle' => 'ed_cluster',
+        'deleted' => 0,
+        'entity_id' => $values->nid,
+        'revision_id' => $values->vid,
+        'language' => LANGUAGE_NONE,
+        'delta' => 0,
+        'ed_field_group_state_value' => 1,
+    );
+    db_insert('field_data_ed_field_group_state')
+        ->fields($fields)
+        ->execute();
+    db_insert('field_revision_ed_field_group_state')
+        ->fields($fields)
+        ->execute();
+  }
 }
 

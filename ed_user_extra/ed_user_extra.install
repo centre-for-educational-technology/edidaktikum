@@ -230,24 +230,26 @@ function ed_user_extra_update_7100(&$sandbox){
         ->fetchCol();
     $edusers = user_load_multiple($uids);
     foreach($edusers as $eduser){
-      $user->ed_notification_content_types = array(
+      $eduser->ed_notification_content_types = array(
         LANGUAGE_NONE => array(
-          array('value' => 'answer_given_to_task'), 
-          array('value' => 'new_group_member'), 
-          array('value' => 'new_learning_resource'), 
-          array('value' => 'new_forum_topic'), 
-          array('value' => 'new_event'), 
-          array('value' => 'new_news'), 
-          array('value' => 'new_blog'), 
-          array('value' => 'new_bookmark'), 
-          array('value' => 'new_file'), 
+          array('value' => 'answer_given_to_task'),
+          array('value' => 'new_group_member'),
+          array('value' => 'new_learning_resource'),
+          array('value' => 'new_forum_topic'),
+          array('value' => 'new_event'),
+          array('value' => 'new_news'),
+          array('value' => 'new_blog'),
+          array('value' => 'new_bookmark'),
+          array('value' => 'new_file'),
           array('value' => 'new_page')
         ),
       );
       user_save($eduser);
     }
     $sandbox['current_position'] += $limit;
-    $sandbox['#finished'] = $sandbox['current_position'] / $sandbox['max'];
+    $sandbox['#finished'] = ($sandbox['current_position'] >= $sandbox['max']) ? TRUE : ($sandbox['current_position'] / $sandbox['max']);
+    //Causes update.php calling this update repeatedly
+    //$sandbox['#finished'] = $sandbox['current_position'] / $sandbox['max'];
     }
     else {
       $sandbox['#finished'] = 1;

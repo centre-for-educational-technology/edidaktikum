@@ -579,9 +579,9 @@ function edidaktikum_user_login(&$edit, $account) {
  * Implements hook_user_view_alter().
  */
 function edidaktikum_user_view_alter(&$build) {
+
   if ('full' == $build['#view_mode']) {
     if(isset($build['ed_field_full_name'])){
-      //drupal_set_title($build['ed_field_full_name']['#items'][0]['value']);
       $build['ed_field_full_name']['#title'] = t('E-mail');
       $build['ed_field_full_name'][0]['#markup'] = '<a href="mailto:'.$build['#account']->mail.'?subject=eDidaktikum e-mail">'.$build['#account']->mail.'</a>';
     }
@@ -589,6 +589,23 @@ function edidaktikum_user_view_alter(&$build) {
       
     }
     if (isset($build['og_user_node']) && is_array($build['og_user_node']) && !empty($build['og_user_node']) && !empty($build['og_user_node']['#items'])) {
+      $items_nodes = node_load_multiple(array_map(function ($item) {
+        return $item['target_id'];
+      }, $build['og_user_node']['#items']));
+
+      //Sort inactive groups
+      foreach(array_values($items_nodes) as $index => $item_node) {
+        if (isset($item_node->ed_field_group_state) && $item_node->ed_field_group_state[LANGUAGE_NONE][0]['value'] == 0) {
+          $build['og_user_node'][$index]['#attributes'] = array('class' => 'ed_group_inactive');
+          $build['og_user_node']['#items'][$index]['weight'] = 10;
+        }
+        //Not belonging to ed_cluster, subgroup
+        else if(!isset($item_node->ed_field_group_state)){
+          unset($build['og_user_node'][$index]);
+        }
+      }
+      uasort($build['og_user_node']['#items'], 'drupal_sort_weight');
+
       // Checks if last element of the array is just a #markup
       // and removes if that is true
       $last = end($build['og_user_node']);
@@ -597,6 +614,7 @@ function edidaktikum_user_view_alter(&$build) {
         array_pop($build['og_user_node']);
       }
       unset($last);
+
     }
     if (isset($build['summary'])) {
       $build['summary']['#title'] = '';

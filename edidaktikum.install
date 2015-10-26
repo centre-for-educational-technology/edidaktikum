@@ -13,6 +13,11 @@ function edidaktikum_install() {
   edidaktikum_create_vocabulary();
   edidaktikum_create_fields();
   edidaktikum_set_translatable_variables();
+
+  db_update('system')
+      ->fields(array('weight' => 10))
+      ->condition('name', 'edidaktikum', '=')
+      ->execute();
 }
 
 /**
@@ -154,6 +159,29 @@ function edidaktikum_create_field_excerpt() {
       'locked' => FALSE,
     );
     $field = field_create_field($field);
+  }
+}
+
+/**
+ * Creates group state field if not exists.
+ */
+function edidaktikum_create_field_group_state() {
+  $field_name = 'ed_field_group_state';
+  if (!field_info_field($field_name)) {
+    $field = array(
+        'field_name' => $field_name,
+        'type' => 'list_boolean',
+        'entity_types' => array('node'),
+        'cardinality' => 1,
+        'locked' => FALSE,
+        'settings' => array(
+            'allowed_values' => array(
+                '0' => 'Inactive - new members cannot join',
+                '1' => 'Active - new members can join',
+            ),
+        ),
+    );
+    field_create_field($field);
   }
 }
 
@@ -314,4 +342,22 @@ function edidaktikum_update_7102(&$sandbox){
     $variable_realm_list_language = $translatable_variables;
   }
   variable_set('variable_realm_list_language', $variable_realm_list_language);
+}
+
+/**
+ * Update module weight to avoid overriding of name fields
+ */
+function edidaktikum_update_7103(&$sandbox){
+  db_update('system')
+      ->fields(array('weight' => 10))
+      ->condition('name', 'edidaktikum', '=')
+      ->execute();
+}
+
+
+/**
+ * Create ed_field_group_state field
+ */
+function edidaktikum_update_7104(&$sandbox){
+  edidaktikum_create_field_group_state();
 }
