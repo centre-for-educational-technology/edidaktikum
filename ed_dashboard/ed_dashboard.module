@@ -67,6 +67,13 @@ function ed_dashboard_page() {
 
   if (!empty($groups)) {
     $content['groups-listing'] = node_view_multiple($groups, 'dashboard');
+
+    foreach ($content['groups-listing']['nodes'] as $node){
+      if (isset($node['#node']->picture)) {
+        //Hide user picture
+        $node['#node']->picture['#printed'] = false;
+      }
+    }
     $content['groups-listing']['pager'] = array(
       '#theme' => 'pager',
       '#weight' => 5,
@@ -79,7 +86,7 @@ function ed_dashboard_page() {
       '#suffix' => '</div>',
     );
   }
- 
+
   return $content; 
 }
 
