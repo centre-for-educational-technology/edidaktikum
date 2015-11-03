@@ -58,6 +58,25 @@ function edidaktikum_node_statistics_and_likes_content_type_render($subtype, $co
     '#suffix' => '</div>',
   );
 
+  //Group state, show active/inactive status
+  $group_state = field_get_items('node', $node, 'ed_field_group_state', $node->language);
+
+  if(isset($group_state[0]['value']) && $group_state[0]['value']==1){
+    $content['statistics']['group_state'] = array(
+        '#type' => 'markup',
+        '#prefix' => '<div class="ed-node-statistics-group-state">',
+        '#markup' => '<span class="ed-group-state"><i class="fa fa-group" style="color: #258e1f;"></i>Active group </span>',
+        '#suffix' => '</div>',
+    );
+  }else if (isset($group_state[0]['value']) && $group_state[0]['value']==0){
+    $content['statistics']['group_state'] = array(
+        '#type' => 'markup',
+        '#prefix' => '<div class="ed-node-statistics-group-state">',
+        '#markup' => '<span class="ed-group-state"><i class="fa fa-group" style="color: #8e8e8e;"></i>Inactive group </span>',
+        '#suffix' => '</div>',
+    );
+  }
+
   if (user_is_logged_in()) {
     drupal_add_js(drupal_get_path('module', 'edidaktikum') . '/js/ed_likes.js', 'file');
     $content['statistics']['likes']['#markup'] = '<a href="#" data-id="' . $node->nid . '"><i class="fa fa-heart"></i></a>' . $content['statistics']['likes']['#markup'];
