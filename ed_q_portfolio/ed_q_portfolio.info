@@ -7,4 +7,5 @@ dependencies[] = edidaktikum
 dependencies[] = entityreference
 dependencies[] = entityreference_dragdrop
 dependencies[] = views
+dependencies[] = ctools
 

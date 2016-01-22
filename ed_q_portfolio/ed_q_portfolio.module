@@ -195,14 +195,159 @@ function ed_q_portfolio_form($form, $form_state) {
  * Drupal form submit handler.
  */
 function ed_q_portfolio_form_submit(&$form, &$form_state) {
+
   // Generate the new link using the submitted text value.
   $link = ed_q_portfolio_make_link($form_state['build_info']['args'][0]);
+
+
+//  $link = ed_q_portfolio_make_link($form_state['values']['new_link_text']);
+
+//
+//  $node = node_load($form['#node']->nid); // 1 is node id we want to load
+//
+//  dpm($node->ed_q_portfolio_competence_desc);
+//
+//// Change field value
+//  $node->ed_q_portfolio_competence_desc[$node->language][0]['value'] = 'glebcom';
+//
+//// Get the numeric id of your field by passing field name
+//  $info = field_info_field('ed_q_portfolio_competence_desc');
+//  $fields = array($info['id']);
+//
+//// Execute the storage function
+//  field_sql_storage_field_storage_write('node', $node, 'update', $fields);
+//
+//// Clear field cache
+//  cache_clear_all("field:node:$node->nid", 'cache_field');
+//
 
   // Tell the browser to close the modal.
   $form_state['ajax_commands'][] = ctools_modal_command_dismiss();
 
   // Tell the browser to replace the old link with the new one.
   $form_state['ajax_commands'][] = ajax_command_replace('.termtext', $link);
+}
+
+
+/*
+ * Implements hook_field_info
+ */
+
+function ed_q_portfolio_field_info() {
+  return array (
+  'ed_q_portfolio_competence_desc' => array (
+  'label' => t('Competence description'),
+      'description' => t('This field stores competence description'),
+      'default_widget' => 'ed_q_portfolio_competence_desc_widget',
+      'default_formatter' => 'ed_q_portfolio_competence_desc_default',
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_widget_info().
+ */
+function ed_q_portfolio_field_widget_info() {
+  return array(
+      'ed_q_portfolio_competence_desc_widget' => array(
+          'label' => t('Default'),
+          'field types' => array('ed_q_portfolio_competence_desc'),
+      ),
+  );
+}
+
+/**
+ * Implements hook_field_widget_form().
+ */
+function ed_q_portfolio_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
+//  switch ($instance['widget']['type']) {
+//    case 'ed_q_portfolio_competence_desc_widget' :
+//      $element['competence_desc'] = array(
+//          '#type' => 'fieldset',
+//          '#title' => $element['#title'],
+//          '#tree' => TRUE,
+//      );
+      $element['tid'] = array(
+          '#type' => 'textfield',
+          '#title' => t('Taxonomy id'),
+          '#required' => $element['#required'],
+          '#size' => 7,
+          '#attributes' => array('maxlength' => 7),
+      );
+      $element['desc'] = array(
+          '#type' => 'textfield',
+          '#title' => t('Competence desc'),
+          '#required' => $element['#required'],
+          '#size' => 2000,
+          '#attributes' => array('maxlength' => 2000),
+      );
+//      break;
+//  }
+  return $element;
+}
+
+
+/**
+ * Implements hook_field_is_empty().
+ */
+//function ed_q_portfolio_field_is_empty($item, $field) {
+//  if (empty($item['desc'])) {
+//    return TRUE;
+//  }
+//  return FALSE;
+//}
+
+function ed_q_portfolio_field_is_empty($item, $field) {
+  $temp = array_keys($field['columns']);
+  $key = array_shift($temp);
+  return empty($item[$key]);
+}
+
+/**
+ * Implements hook_field_validate().
+ */
+function ed_q_portfolio_field_validate($entity_type, $entity, $field, $instance, $langcode, $items, &$errors) {
+  // Loop through field items in the case of multiple values.
+  foreach ($items as $delta => $item) {
+    if (isset($item['desc']) && $item['desc'] != '') {
+      if (strlen($item['desc']) > 2000) {
+        $errors[$field['field_name']][$langcode][$delta][] = array(
+            'error' => 'ed_q_portfolio_invalid_full',
+            'message' => t('%title: Competence description cannot be empty', array('%title' => $instance['label'])),
+        );
+      }
+    }
+  }
+
+}
+
+/**
+ * Implements hook_field_formatter_info().
+ */
+function ed_q_portfolio_field_formatter_info() {
+  return array(
+      'ed_q_portfolio_competence_desc_default' => array(
+          'label' => t('Default'),
+          'field types' => array('ed_q_portfolio_competence_desc'),
+      ),
+  );
+}
+
+/**
+ * Implements hook_field_formatter_view().
+ */
+function ed_q_portfolio_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  $element = array();
+  switch ($display['type']) {
+    case 'ed_q_portfolio_competence_desc_default' :
+      foreach ($items as $delta => $item) {
+        if (isset($item['tid'])) {
+          $element[$delta]['#markup'] = $item['tid'] . ' ' . $item['desc'];
+        }
+      }
+      break;
+  }
+  return $element;
 }
 
 /**
@@ -346,28 +491,34 @@ function ed_q_portfolio_vocabulary_tree($vid, $tid) {
   $num_at_depth = 0;
   $tree = taxonomy_get_tree($vid, $tid);
 
-  $markup = "<ul class=\"termlist\">\n<li class=\"term\">";
-  foreach ($tree as $term) {
-    if ($term->depth > $depth) {
-      $markup .= "\n<ul>\n<li class=\"term\">";
-      $depth = $term->depth;
-      $num_at_depth = 0;
-    }
-    if ($term->depth < $depth) {
-      $diffdepth= $depth -$term->depth;
-      while ($diffdepth > 0){
-        $markup .= "</li>\n</ul>\n";
-        $diffdepth--;
+  if(!empty($tree)) {
+
+    $markup = "<ul class=\"termlist\">\n<li class=\"term\">";
+    foreach ($tree as $term) {
+      if ($term->depth > $depth) {
+        $markup .= "\n<ul>\n<li class=\"term\">";
+        $depth = $term->depth;
+        $num_at_depth = 0;
       }
-      $depth = $term->depth;
+      if ($term->depth < $depth) {
+        $diffdepth = $depth - $term->depth;
+        while ($diffdepth > 0) {
+          $markup .= "</li>\n</ul>\n";
+          $diffdepth--;
+        }
+        $depth = $term->depth;
+      }
+      if (($term->depth == $depth) && ($num_at_depth > 0)) {
+        $markup .= "</li>\n<li class=\"term\">";
+      }
+      $markup .= ed_q_portfolio_build_term($term->name, $term->tid);
+      $num_at_depth++;
     }
-    if (($term->depth == $depth) && ($num_at_depth > 0)) {
-      $markup .= "</li>\n<li class=\"term\">";
-    }
-    $markup .= ed_q_portfolio_build_term($term->name, $term->tid);
-    $num_at_depth++;
+    $markup .= "</li>\n</ul>\n";
+
+  }else{
+    $markup = "No taxonomy terms for this level added.";
   }
-  $markup .= "</li>\n</ul>\n";
   return $markup;
 }
 

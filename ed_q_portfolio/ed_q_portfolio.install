@@ -14,6 +14,8 @@ function ed_q_portfolio_install() {
   ed_q_portfolio_node_add_field_content();
   ed_q_portfolio_node_create_field_level();
   ed_q_portfolio_node_add_field_level();
+  ed_q_portfolio_create_field_competence_desc();
+  ed_q_portfolio_node_add_field_competence_desc();
 
   ed_q_portfolio_set_permissions();
 }
@@ -26,6 +28,7 @@ function ed_q_portfolio_uninstall() {
   ed_q_portfolio_delete_ed_q_portfolio_nodes();
   ed_q_portfolio_delete_ed_q_portfolio_node_type();
   field_delete_field('ed_q_portfolio_field_level');
+  field_delete_field('ed_q_portfolio_competence_desc');
 }
 
 function ed_create_qualification_voc() {
@@ -184,6 +187,86 @@ function ed_q_portfolio_node_add_field_level() {
 
     field_create_instance($instance);
   }
+}
+
+
+/**
+ * Creates portfolio competence description
+ */
+function ed_q_portfolio_create_field_competence_desc(){
+  $field_name = 'ed_q_portfolio_competence_desc';
+  if(!field_info_field($field_name)) {
+    $field = array(
+        'field_name' => $field_name,
+        'type' => 'ed_q_portfolio_competence_desc',
+    );
+    field_create_field($field);
+  }
+}
+
+function ed_q_portfolio_node_add_field_competence_desc() {
+  $field_name = 'ed_q_portfolio_competence_desc';
+  $field = field_info_field($field_name);
+  if (!empty($field) && !field_info_instance('node', $field_name, 'ed_q_portfolio')) {
+    $instance = array(
+        'field_name' => $field_name,
+        'entity_type' => 'node',
+        'bundle' => 'ed_q_portfolio',
+        'label' => t('Competence description'),
+        'widget' => array(
+            'type' => 'default'
+        ),
+        'required' => false,
+//        'display' => array(
+//            'default' => array(
+//                'label' => 'hidden',
+//            ),
+//            'full' => array(
+//                'label' => 'hidden',
+//            ),
+//            'teaser' => array(
+//                'label' => 'hidden',
+//            ),
+//        )
+    );
+    field_create_instance($instance);
+  }
+}
+
+
+
+/**
+ * Implements hook_field_schema().
+ */
+function ed_q_portfolio_field_schema($field) {
+  $schema = array(
+      'columns' => array(
+          'tid' => array(
+              'type' => 'varchar',
+              'length' => 7,
+              'not null' => TRUE,
+          ),
+          'desc' => array(
+              'type' => 'varchar',
+              'length' => 2000,
+              'not null' => FALSE,
+          ),
+      ),
+      'indexes' => array(
+          'tid' => array('tid')
+      ),
+  );
+//  $entity_type = 'place';
+//  $bundles = field_info_bundles('node');
+//  if (!empty($bundles['place'])) {
+//    $schema['foreign keys']['place'] = array(
+//        'table' => 'place',
+//        'columns' => array('place_id' => 'nid')
+//    );
+//  }
+
+  return $schema;
+
 }
 
 
