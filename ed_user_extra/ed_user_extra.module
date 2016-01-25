@@ -132,7 +132,7 @@ function ed_user_extra_node_insert($node){
           'contentname' => $node->title,
           'contenturl' => url('node/' . $node->nid, array('absolute' => TRUE)),
         );
-        drupal_mail('ed_user_extra', 'content_created', $recipient->mail, $language, $params, 'no-reply@edidaktikum.ee', TRUE);
+        drupal_mail('ed_user_extra', 'content_created', $recipient->mail, $language, $params, EDIDAKTIKUM_NO_REPLY_EMAIL, TRUE);
       }
 
     }else{
@@ -162,7 +162,7 @@ function ed_user_extra_node_insert($node){
               'contentname' => $node->title,
               'contenturl' => url('node/' . $node->nid, array('absolute' => TRUE)),
             );
-            drupal_mail('ed_user_extra', 'content_created', $recipient->mail, $language, $params, 'no-reply-TESTSERVICE@edidaktikum.ee', TRUE);
+            drupal_mail('ed_user_extra', 'content_created', $recipient->mail, $language, $params, EDIDAKTIKUM_NO_REPLY_EMAIL, TRUE);
           }
         }
       }
@@ -181,7 +181,7 @@ function ed_user_extra_node_insert($node){
         'taskurl' => url('node/' . $tasknid, array('absolute' => TRUE)),
         'answerurl' => url('node/'. $node->nid, array('absolute' => TRUE)),
       );
-      drupal_mail('ed_user_extra', 'task_answered', $recipient->mail, $language, $params, 'no-reply-TESTSERVICE@edidaktikum.ee', TRUE);
+      drupal_mail('ed_user_extra', 'task_answered', $recipient->mail, $language, $params, EDIDAKTIKUM_NO_REPLY_EMAIL, TRUE);
     }
 
   }
@@ -205,7 +205,7 @@ function ed_user_extra_comment_insert($comment){
         'contentname' => $node->title,
         'contenturl' => url('node/' . $node->nid, array('absolute' => TRUE)),
       );
-      drupal_mail('ed_user_extra', 'forum_post_commented', $recipient->mail, $language, $params, 'no-reply-TESTSERVICE@edidaktikum.ee', TRUE);
+      drupal_mail('ed_user_extra', 'forum_post_commented', $recipient->mail, $language, $params, EDIDAKTIKUM_NO_REPLY_EMAIL, TRUE);
     }
   }
 
@@ -226,7 +226,7 @@ function ed_user_extra_og_membership_insert($og_membership){
         'peoplepage' => url('group/node/'.$gnode->nid.'/admin/people', array('absolute' => true)),
         'groupname' => $gnode->title,
       );
-      drupal_mail('ed_user_extra', 'new_subscription', $recipient->mail, $language, $params, 'no-reply-TESTSERVICE@edidaktikum.ee', true);
+      drupal_mail('ed_user_extra', 'new_subscription', $recipient->mail, $language, $params, EDIDAKTIKUM_NO_REPLY_EMAIL, true);
     }
   }
 

@@ -772,7 +772,7 @@ function ed_task_node_insert($node) {
           'duedate' => format_date($node->ed_task_due_date[LANGUAGE_NONE][0]['value'], 'short', '', NULL, $language->language),
           'taskurl' => url('node/' . $node->nid, array('absolute' => TRUE)),
         );
-        drupal_mail('ed_task', 'task_given', $recipient->mail, $language, $params, 'no-reply@edidaktikum.ee', TRUE);
+        drupal_mail('ed_task', 'task_given', $recipient->mail, $language, $params, EDIDAKTIKUM_NO_REPLY_EMAIL, TRUE);
       }
     }
   }
