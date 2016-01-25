@@ -6,6 +6,11 @@
  */
 
 /**
+ * Email to be used with automatic system messages
+ */
+define('EDIDAKTIKUM_NO_REPLY_EMAIL', 'no-reply@edidaktikum.ee');
+
+/**
  * Implements hook_init().
  */
 function edidaktikum_init() {

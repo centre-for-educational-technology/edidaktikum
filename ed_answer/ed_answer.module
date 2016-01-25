@@ -294,7 +294,7 @@ function ed_answer_comment_insert($comment){
       'answerurl' => url('node/' . $node->nid, array('absolute' => TRUE)),
       'status' => $comment->ed_answer_status[LANGUAGE_NONE][0]['value'],
     );
-    drupal_mail('ed_answer', 'answer_status_modified', $recipient->mail, $language, $params, 'no-reply@edidaktikum.ee', TRUE);
+    drupal_mail('ed_answer', 'answer_status_modified', $recipient->mail, $language, $params, EDIDAKTIKUM_NO_REPLY_EMAIL, TRUE);
   }  
 }
 
