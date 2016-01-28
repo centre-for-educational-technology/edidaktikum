@@ -19,9 +19,9 @@ function ed_q_portfolio_menu() {
   );
 
 
-  $items['ed_q_portfolio/%ctools_js/%'] = array(
+  $items['ed_q_portfolio/%ctools_js/%node/%'] = array(
       'page callback' => 'ed_q_portfolio_callback',
-      'page arguments' => array(1,2),
+      'page arguments' => array(1,2,3),
       'access callback' => TRUE,
       'type' => MENU_CALLBACK,
   );
@@ -134,7 +134,7 @@ function ed_q_portfolio_make_link($link_text = '') {
 /**
  * Ajax menu callback.
  */
-function ed_q_portfolio_callback($ajax, $tid) {
+function ed_q_portfolio_callback($ajax, $node, $tid) {
 
   if ($ajax) {
     ctools_include('ajax');
@@ -142,12 +142,13 @@ function ed_q_portfolio_callback($ajax, $tid) {
 
     $form_state = array(
         'ajax' => TRUE,
-        'title' => t('MyModule Modal Form'),
+        'title' => t('Enter Competence Description'),
     );
 
-    $form_state['build_info']['args'] = array($tid);
+    $form_state['build_info']['args'] = array($node, $tid);
 
-    dpm($form_state);
+
+    $value = $node->ed_q_portfolio_competence_desc[$node->language][0]['value'];
 
     // Use ctools to generate ajax instructions for the browser to create
     // a form in a modal popup.
@@ -178,9 +179,10 @@ function ed_q_portfolio_form($form, $form_state) {
 
 
 
-  $form['new_link_text'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Link text'),
+  $form['competence_desc'] = array(
+      '#type' => 'textarea',
+      '#attributes' => array('maxlength' => 2000, 'size' => 200),
+      '#title' => t('Competence description'),
   );
 
   $form['submit'] = array(
@@ -196,19 +198,23 @@ function ed_q_portfolio_form($form, $form_state) {
  */
 function ed_q_portfolio_form_submit(&$form, &$form_state) {
 
-  // Generate the new link using the submitted text value.
-  $link = ed_q_portfolio_make_link($form_state['build_info']['args'][0]);
-
-
-//  $link = ed_q_portfolio_make_link($form_state['values']['new_link_text']);
-
+//  // Generate the new link using the submitted text value.
+//  $link = ed_q_portfolio_make_link($form_state['build_info']['args'][0]);
 //
-//  $node = node_load($form['#node']->nid); // 1 is node id we want to load
 //
-//  dpm($node->ed_q_portfolio_competence_desc);
+//
+////  $link = ed_q_portfolio_make_link($form_state['values']['new_link_text']);
+//
+//
+  $node = $form_state['build_info']['args'][0]; // 1 is node id we want to load
+
+
 //
 //// Change field value
 //  $node->ed_q_portfolio_competence_desc[$node->language][0]['value'] = 'glebcom';
+//
+//  dpm($node->ed_q_portfolio_competence_desc);
+//
 //
 //// Get the numeric id of your field by passing field name
 //  $info = field_info_field('ed_q_portfolio_competence_desc');
@@ -221,11 +227,85 @@ function ed_q_portfolio_form_submit(&$form, &$form_state) {
 //  cache_clear_all("field:node:$node->nid", 'cache_field');
 //
 
+  /*
+  $nid = db_insert('field_data_ed_q_portfolio_competence_desc')
+      ->fields(array(
+          'entity_type' => 'node',
+          'bundle' => 'ed_q_portfolio',
+          'deleted' => 0,
+          'entity_id' => $node->nid,
+          'revision_id' => $node->nid,
+          'language' => LANGUAGE_NONE,
+          'delta' => 0,
+          'ed_q_portfolio_competence_desc_tid' => $form_state['build_info']['args'][1],
+          'ed_q_portfolio_competence_desc_desc' => $form_state['values']['competence_desc'],
+      ))
+      ->execute();
+  */
+
+  $wrapper = entity_metadata_wrapper('node', $node);
+
+  if ( isset($node->ed_q_portfolio_competence_desc[LANGUAGE_NONE]) && is_array($node->ed_q_portfolio_competence_desc[LANGUAGE_NONE])) {
+    $position = null;
+    foreach ($node->ed_q_portfolio_competence_desc[LANGUAGE_NONE] as $key => $value ) {
+      if ( $value['tid'] === $form_state['build_info']['args'][1] ) {
+        $position = $key;
+      }
+    }
+    if ( isset($position) ) {
+      $node->ed_q_portfolio_competence_desc[LANGUAGE_NONE][$position]['desc'] = $form_state['values']['competence_desc'];
+    } else {
+      $node->ed_q_portfolio_competence_desc[LANGUAGE_NONE][count($node->ed_q_portfolio_competence_desc[LANGUAGE_NONE])] = array(
+          'tid' => $form_state['build_info']['args'][1],
+          'desc' => $form_state['values']['competence_desc'],
+      );
+    }
+
+  } else {
+//    $node->ed_q_portfolio_competence_desc[LANGUAGE_NONE][0] = array(
+//        'tid' => $form_state['build_info']['args'][1],
+//        'desc' => $form_state['values']['competence_desc'],
+//    );
+    $wrapper->ed_q_portfolio_competence_desc[0]->set(array(
+        'tid' => $form_state['build_info']['args'][1],
+        'desc' => $form_state['values']['competence_desc'],
+    ));
+  }
+
+
+
+
+  dpm($wrapper->ed_q_portfolio_competence_desc->raw());
+
+  dpm(_wrapper_debug($wrapper));
+
+  $wrapper->save();
+
+
+//
+//  node_save($node);
+//
+
+  dpm($node);
+
+
+
+
+
+
   // Tell the browser to close the modal.
   $form_state['ajax_commands'][] = ctools_modal_command_dismiss();
 
-  // Tell the browser to replace the old link with the new one.
-  $form_state['ajax_commands'][] = ajax_command_replace('.termtext', $link);
+//  // Tell the browser to replace the old link with the new one.
+//  $form_state['ajax_commands'][] = ajax_command_replace('.termtext', $link);
+}
+
+function _wrapper_debug($w) {
+  $values = array();
+  foreach ($w->getPropertyInfo() as $key => $val) {
+    $values[$key] = $w->$key->value();
+  }
+  return $values;
 }
 
 
@@ -240,7 +320,28 @@ function ed_q_portfolio_field_info() {
       'description' => t('This field stores competence description'),
       'default_widget' => 'ed_q_portfolio_competence_desc_widget',
       'default_formatter' => 'ed_q_portfolio_competence_desc_default',
+      'property_type' => 'ed_q_portfolio_competence_desc', // we add the propert type here
+      'property_callbacks' => array('ed_q_portfolio_competence_desc_property_info_callback'), // we add the callback
     ),
+  );
+}
+
+function ed_q_portfolio_competence_desc_property_info_callback(&$info, $entity_type, $field, $instance, $field_type) {
+  $property = &$info[$entity_type]['bundles'][$instance['bundle']]['properties'][$field['field_name']];
+
+  $property['getter callback'] = 'entity_metadata_field_verbatim_get';
+  $property['setter callback'] = 'entity_metadata_field_verbatim_set';
+  unset($property['query callback']);
+
+  $property['property info']['tid'] = array(
+      'type' => 'integer',
+      'label' => t('tid'),
+      'setter callback' => 'entity_property_verbatim_set',
+  );
+  $property['property info']['desc'] = array(
+      'type' => 'text',
+      'label' => t('desc'),
+      'setter callback' => 'entity_property_verbatim_set',
   );
 }
 
@@ -455,7 +556,7 @@ function ed_q_portfolio_node_view($node, $view_mode, $langcode) {
       $node->content['ed_q_portfolio_level'] = array(
           '#type' => 'item',
           '#label_display' => 'above',
-          '#markup' => ed_q_portfolio_vocabulary_tree(taxonomy_vocabulary_machine_name_load('ed_qualification_voc')->vid, $term->tid),
+          '#markup' => ed_q_portfolio_vocabulary_tree(taxonomy_vocabulary_machine_name_load('ed_qualification_voc')->vid, $node->nid, $term->tid),
       );
 
       drupal_add_js(drupal_get_path('module', 'ed_q_portfolio') . '/js/ed_q_portfolio.js', 'file');
@@ -486,7 +587,7 @@ function ed_q_portfolio_node_view($node, $view_mode, $langcode) {
 }
 
 
-function ed_q_portfolio_vocabulary_tree($vid, $tid) {
+function ed_q_portfolio_vocabulary_tree($vid, $nid, $tid) {
   $depth = 0;
   $num_at_depth = 0;
   $tree = taxonomy_get_tree($vid, $tid);
@@ -511,7 +612,7 @@ function ed_q_portfolio_vocabulary_tree($vid, $tid) {
       if (($term->depth == $depth) && ($num_at_depth > 0)) {
         $markup .= "</li>\n<li class=\"term\">";
       }
-      $markup .= ed_q_portfolio_build_term($term->name, $term->tid);
+      $markup .= ed_q_portfolio_build_term($term->name, $nid, $term->tid);
       $num_at_depth++;
     }
     $markup .= "</li>\n</ul>\n";
@@ -523,9 +624,9 @@ function ed_q_portfolio_vocabulary_tree($vid, $tid) {
 }
 
 
-function ed_q_portfolio_build_term($name, $tid) {
+function ed_q_portfolio_build_term($name, $nid, $tid) {
 //  $count = db_query("SELECT COUNT(nid) FROM {taxonomy_index} WHERE tid IN (:tids) ", array(':tids' => implode(',', $tids)))->fetchField();
-  $markup = l($name, 'ed_q_portfolio/nojs/'.$tid, array('attributes' => (array('class' => array('termtext', 'ctools-use-modal'), 'data-tid' => $tid))));
+  $markup = l($name, 'ed_q_portfolio/nojs/'.$nid.'/'.$tid, array('attributes' => (array('class' => array('termtext', 'ctools-use-modal'), 'data-tid' => $tid))));
 
 //  $markup = "<span>" . $name . "<span>";
   return $markup;

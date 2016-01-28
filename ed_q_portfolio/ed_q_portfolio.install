@@ -199,6 +199,7 @@ function ed_q_portfolio_create_field_competence_desc(){
     $field = array(
         'field_name' => $field_name,
         'type' => 'ed_q_portfolio_competence_desc',
+        'cardinality' => FIELD_CARDINALITY_UNLIMITED,
     );
     field_create_field($field);
   }
@@ -231,6 +232,11 @@ function ed_q_portfolio_node_add_field_competence_desc() {
     );
     field_create_instance($instance);
   }
+//
+  // Drop all primary keys.
+  db_drop_primary_key('field_data_ed_q_portfolio_competence_desc');
+// Add primary keys.
+  db_add_primary_key('field_data_ed_q_portfolio_competence_desc', array('entity_type', 'deleted', 'entity_id', 'language', 'delta', 'ed_q_portfolio_competence_desc_tid'));
 }
 
 
@@ -242,8 +248,9 @@ function ed_q_portfolio_field_schema($field) {
   $schema = array(
       'columns' => array(
           'tid' => array(
-              'type' => 'varchar',
-              'length' => 7,
+              'type' => 'int',
+              'unsigned' => TRUE,
+              'length' => 10,
               'not null' => TRUE,
           ),
           'desc' => array(
@@ -252,9 +259,11 @@ function ed_q_portfolio_field_schema($field) {
               'not null' => FALSE,
           ),
       ),
-      'indexes' => array(
-          'tid' => array('tid')
-      ),
+
+//      'indexes' => array(
+//          'tid' => array('tid'),
+//      ),
+
   );
 //  $entity_type = 'place';
 //  $bundles = field_info_bundles('node');
