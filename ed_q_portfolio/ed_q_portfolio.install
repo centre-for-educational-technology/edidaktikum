@@ -18,6 +18,9 @@ function ed_q_portfolio_install() {
   ed_q_portfolio_node_add_field_competence_desc();
 
   ed_q_portfolio_set_permissions();
+
+  //Disable comments
+  variable_set('ed-q-portfolio', COMMENT_NODE_CLOSED);
 }
 
 /**
@@ -29,6 +32,8 @@ function ed_q_portfolio_uninstall() {
   ed_q_portfolio_delete_ed_q_portfolio_node_type();
   field_delete_field('ed_q_portfolio_field_level');
   field_delete_field('ed_q_portfolio_competence_desc');
+  //delete set variables
+  variable_del('ed-q-portfolio');
 }
 
 function ed_create_qualification_voc() {
@@ -148,18 +153,21 @@ function ed_q_portfolio_node_add_field_content() {
  */
 
 function ed_q_portfolio_node_create_field_level() {
-  $vocabulary = taxonomy_vocabulary_machine_name_load('ed_qualification_voc');
+
   $field = array(
       'field_name' => 'ed_q_portfolio_field_level',
-      'type' => 'taxonomy_term_reference',
-      'settings' => array(
-      'allowed_values' => array(
-          array(
-              'vocabulary' => $vocabulary->machine_name,
-              'parent' => 0
+      'type' => 'list_integer',
+      'cardinality' => 1,
+      'foreign keys' => array(),
+      'indexes' => array(
+          'value' => array(
+              0 => 'value',
           ),
       ),
-    ),
+      'module' => 'list',
+      'settings' => array(
+          'allowed_values_function' => '_ed_q_portfolio_field_level_list',
+      ),
   );
 
   field_create_field($field);
@@ -177,7 +185,8 @@ function ed_q_portfolio_node_add_field_level() {
         'bundle' => 'ed_q_portfolio',
         'required' => true,
         'widget' => array(
-            'type' => 'options_select'
+            'type' => 'options_select',
+            'module' => 'options',
         ),
         'display' => array(
             'default' => array('type' => 'hidden'),

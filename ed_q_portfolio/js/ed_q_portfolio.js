@@ -1,7 +1,55 @@
 (function ($) {
   Drupal.behaviors.ed_q_portfolio = {
     attach: function(context, settings) {
+
+
+
+      //
+      //$(document).ajaxSuccess(function() {
+      //  $('.competence-desc').slideDown('slow');
+      //  $('.competence i').toggleClass("fa-chevron-up fa-chevron-down").once();
+      //  console.log("ffff");
+      //});
+      //
+      //
+      //
+
+
+      $('.competence i').once().click(function() {
+
+        $(this).toggleClass("fa-chevron-down fa-chevron-up");
+
+        if($(this).closest('li').hasClass('open')){
+          $(this).parent().next().slideUp('slow');
+        }else{
+          $(this).parent().next().slideDown('slow');
+
+        }
+
+        $(this).closest('li').toggleClass('open');
+
+        return false;
+      });
+
+      $('.competence a').once().click(function() {
+
+
+        if(!$(this).closest("li").hasClass('open')){
+          $(this).closest("li").find("i").toggleClass("fa-chevron-down fa-chevron-up");
+          $(this).parent().next().slideDown('slow');
+          $(this).closest('li').toggleClass('open');
+        }
+
+        return false;
+      });
+
+
+
+
+
       $('.termtext', context).on('click', function(e) {
+
+
 
         //
         //
