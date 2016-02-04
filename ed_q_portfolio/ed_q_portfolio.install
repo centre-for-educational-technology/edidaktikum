@@ -267,6 +267,12 @@ function ed_q_portfolio_field_schema($field) {
               'length' => 2000,
               'not null' => FALSE,
           ),
+          'fid' => array(
+              'type' => 'int',
+              'unsigned' => TRUE,
+              'length' => 10,
+              'not null' => FALSE,
+          ),
       ),
 
 //      'indexes' => array(

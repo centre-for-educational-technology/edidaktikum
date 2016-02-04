@@ -134,11 +134,14 @@ function ed_q_portfolio_make_link($link_text = '') {
 /**
  * Ajax menu callback.
  */
-function ed_q_portfolio_callback($ajax, $node, $tid, $form, &$form_state) {
-
+function ed_q_portfolio_callback($ajax, $node, $tid) {
+//  global $user;
   if ($ajax) {
+
     ctools_include('ajax');
     ctools_include('modal');
+
+
 
     $val = db_select('field_data_ed_q_portfolio_competence_desc', 'f')
         ->fields('f', array('ed_q_portfolio_competence_desc_desc'))
@@ -151,14 +154,15 @@ function ed_q_portfolio_callback($ajax, $node, $tid, $form, &$form_state) {
         'ajax' => TRUE,
         'text' => $val,
         'title' => t('Enter Competence Description'),
+        'node' => $node,
     );
 
     $form_state['build_info']['args'] = array($node, $tid);
 
+    form_load_include($form_state, 'inc', 'node', 'node.pages');
 
 
-
-    $value = $node->ed_q_portfolio_competence_desc[$node->language][0]['value'];
+//    $value = $node->ed_q_portfolio_competence_desc[$node->language][0]['value'];
 
     // Use ctools to generate ajax instructions for the browser to create
     // a form in a modal popup.
@@ -173,6 +177,41 @@ function ed_q_portfolio_callback($ajax, $node, $tid, $form, &$form_state) {
     // Return the ajax instructions to the browser via ajax_render().
     print ajax_render($output);
     drupal_exit();
+
+//
+//    ctools_include('node.pages', 'node', '');
+//    ctools_include('modal');
+//    ctools_include('ajax');
+//
+//    // Create a blank node object here.
+//    $node = (object) array(
+//        'uid' => $user->uid,
+//        'name' => (isset($user->name) ? $user->name : ''),
+//        'type' => 'psuedo_portfolio',
+//        'language' => LANGUAGE_NONE,
+//    );
+//
+//    $form_state = array(
+//        'ajax' => TRUE,
+//        'text' => "hello",
+//        'title' => t('Enter Competence Description'),
+//        'node' => $node,
+//    );
+//    $form_state['build_info']['args'] = isset($form_state['build_info']['args']) ? $form_state['build_info']['args'] : array($node);
+//    form_load_include($form_state, 'inc', 'node', 'node.pages');
+//    drupal_add_library('system', 'ui.dialog');
+//    // change this to your type node form
+//    $output = ctools_modal_form_wrapper('ed_q_portfolio_form', $form_state);
+//
+//    // This means the form has been exectued
+//    if (!empty($form_state['executed'])) {
+//      $output = array();
+//      // Close the modal
+//      $output[] = ctools_modal_command_dismiss();
+//    }
+//
+//    print ajax_render($output);
+//    exit;
   }
   else {
     return drupal_get_form('mymodule_form');
@@ -196,6 +235,14 @@ function ed_q_portfolio_form($form, $form_state) {
       '#default_value' => !empty($form_state['text'])
           ? $form_state['text']
           : '',
+  );
+
+
+  $form['competence_file'] = array(
+      '#type' => 'managed_file',
+      '#title' => t('Choose a file'),
+      '#description' => t('The uploaded image will be displayed on this page using the image style choosen below.'),
+      '#upload_location' => 'public://ed_q_portfolio_file_uploads',
   );
 
   $form['submit'] = array(
@@ -233,8 +280,20 @@ function ed_q_portfolio_form_submit(&$form, &$form_state) {
 //
   $node = $form_state['build_info']['args'][0]; // 1 is node id we want to load
 
+  dpm($form_state['values']);
 
+
+//  $file = $form_state['values']['competence_file'];
+//  // We are done with the file, remove it from storage.
+//  unset($form_state['values']['competence_file']);
+//  // Make the storage of the file permanent.
+//  $file->status = FILE_STATUS_PERMANENT;
+//  // Save file status.
+//  file_save($file);
+//  // Set a response to the user.
+//  drupal_set_message(t('The form has been submitted and the image has been saved, filename: @filename.', array('@filename' => $file->filename)));
 //
+////
 //// Change field value
 //  $node->ed_q_portfolio_competence_desc[$node->language][0]['value'] = 'glebcom';
 //
@@ -268,12 +327,15 @@ function ed_q_portfolio_form_submit(&$form, &$form_state) {
       ->execute();
   */
 
+
+
   $wrapper = entity_metadata_wrapper('node', $node);
 
   $competences = $wrapper->ed_q_portfolio_competence_desc->raw();
 
   $tid = $form_state['build_info']['args'][1];
   $desc = $form_state['values']['competence_desc'];
+  $fid = $form_state['values']['competence_file'];
 
 //  //Without wrapper version
 //  $competences = $node->ed_q_portfolio_competence_desc[LANGUAGE_NONE];
