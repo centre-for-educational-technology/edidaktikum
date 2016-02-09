@@ -1,4 +1,4 @@
-
+//Disabled
 (function ($){
 
   Drupal.behaviors.ed_task = {

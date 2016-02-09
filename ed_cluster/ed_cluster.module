@@ -766,12 +766,12 @@ function ed_all_groups_listing(){
     }
   drupal_add_css(drupal_get_path('module', 'ed_cluster').'/group-listing.css');
   $remove_user_groups = TRUE;
-  $og_groups = ed_cluster_get_clusters($sql_order, $remove_user_groups);
+  $og_groups = ed_cluster_get_clusters($sql_order, $remove_user_groups, false);
   if (!empty($og_groups)) {
-    $nodes = node_load_multiple($og_groups);   
+    $nodes = node_load_multiple($og_groups);
+
     $nodeschunked = array_chunk($nodes, 4);    
-    
-    
+
     $lastchunk = end($nodeschunked);
   
     if(count($lastchunk<4)){
@@ -782,7 +782,8 @@ function ed_all_groups_listing(){
     }
     $nodeschunked[count($nodeschunked)-1] = $lastchunk;           
     $counter = 1;
-    foreach($nodeschunked as $nodeschunk){      
+    foreach($nodeschunked as $nodeschunk){
+
       $build['row-'.$counter] = array(
         '#type' => 'markup',
         '#prefix' => '<div class="row" id="row-'.$counter.'">',
@@ -790,7 +791,6 @@ function ed_all_groups_listing(){
       );
       for($i=0;$i<count($nodeschunk);$i++){
         if(isset($nodeschunk[$i]->nid)){
-        
         $query = new EntityFieldQuery();
         $query->entityCondition('entity_type', 'user')
             ->fieldCondition('og_user_node', 'target_id', $nodeschunk[$i]->nid, '=');
@@ -884,9 +884,12 @@ function ed_cluster_my_inactive_listing_page(){
   }
   drupal_add_css(drupal_get_path('module', 'ed_cluster').'/group-listing.css');
   $remove_user_groups = TRUE;
-  $og_groups = ed_cluster_get_clusters($sql_order, $remove_user_groups);
+  $og_groups = ed_cluster_get_clusters($sql_order, $remove_user_groups, true);
   if (!empty($og_groups)) {
     $nodes = node_load_multiple($og_groups);
+
+
+
     $nodeschunked = array_chunk($nodes, 4);
 
 
@@ -906,11 +909,9 @@ function ed_cluster_my_inactive_listing_page(){
           '#prefix' => '<div class="row" id="row-'.$counter.'">',
           '#suffix' => '</div>',
       );
+
       for($i=0;$i<count($nodeschunk);$i++){
         if(isset($nodeschunk[$i]->nid)){
-          //If inactive group
-          if(!($nodeschunk[$i]->ed_field_group_state[LANGUAGE_NONE][0]['value'])) {
-
             $query = new EntityFieldQuery();
             $query->entityCondition('entity_type', 'user')
                 ->fieldCondition('og_user_node', 'target_id', $nodeschunk[$i]->nid, '=');
@@ -927,6 +928,7 @@ function ed_cluster_my_inactive_listing_page(){
                 $adminimages[] = l('<img src="' . $GLOBALS['base_url'] . '/' . path_to_theme() . '/images/user_icon_default.png" title="' . $admin->ed_field_full_name[LANGUAGE_NONE][0]['safe_value'] . '"/>', 'user/' . $admin->uid, array('html' => TRUE));
               }
             }
+
             if ($nodeschunk[$i]->group_access[LANGUAGE_NONE][0]['value']) {
               $title = l($nodeschunk[$i]->title, 'node/' . $nodeschunk[$i]->nid) . ' <p class="private-group-title">' . t('Private Group') . '</p>';
             } else {
@@ -965,17 +967,16 @@ function ed_cluster_my_inactive_listing_page(){
                 '#markup' => implode(' ', $adminimages),
                 '#suffix' => '</div>',
             );
-            if ($nodeschunk[$i]->ed_field_group_state[LANGUAGE_NONE][0]['value']) {
-              $build['row-' . $counter][$i]['bottom']['bottom-right'] = array(
-                  '#type' => 'markup',
-                  '#prefix' => '<div class="span3 group-div-bottom-right label label-success">',
-                  '#markup' => l(t('Join'), 'group/node/' . $nodeschunk[$i]->nid . '/subscribe/og_user_node'),
-                  '#suffix' => '</div>',
-              );
-            }
+
+          //Inactive group
+//            $build['row-' . $counter][$i]['bottom']['bottom-right'] = array(
+//                '#type' => 'markup',
+//                '#prefix' => '<div class="span3 group-div-bottom-right label label-success">',
+//                '#markup' => l(t('Join'), 'group/node/' . $nodeschunk[$i]->nid . '/subscribe/og_user_node'),
+//                '#suffix' => '</div>',
+//            );
 
 
-          }
 
         }
       }
@@ -1847,25 +1848,38 @@ function ed_cluster_get_subgroups($order, $gnid) {
  * Returns paged ed_cluster node identifiers
  * NB! Ignores node_access
  */
-function ed_cluster_get_clusters($order, $remove_user_groups = FALSE) {
+function ed_cluster_get_clusters($order, $remove_user_groups = FALSE, $inactive) {
   if($remove_user_groups){
     $usergroups = og_get_groups_by_user();
-    
+
     $query = db_select('node', 'n')
       ->extend('PagerDefault')
       ->fields('n', array('nid'))
       ->condition('n.status', 1);
+
+    if($inactive) {
+      $exclude_query = new EntityFieldQuery();
+      $exclude_query->entityCondition('entity_type', 'node')
+          ->entityCondition('bundle', 'ed_cluster')
+          ->fieldCondition('ed_field_group_state', 'value', 1);
+      $exclude_result = $exclude_query->execute();
+      $excluded = array_keys($exclude_result['node']);
+      if ( $excluded ) {
+        $query->condition('n.nid', $excluded, 'NOT IN');
+      }
+    }
+
     if($usergroups){
       $query->condition('n.nid', $usergroups['node'], 'not in');
     }
-    
-    $query->condition('n.type', 'ed_cluster');    
+    $query->condition('n.type', 'ed_cluster');
     if($order == 'title'){
       $query->orderBy('TRIM(title)', 'ASC');
     }else{ 
       $query->orderBy('created', $order);
     }
     $query->limit(ed_get_grid_paging_nr());
+
 
     $nids = $query->execute()->fetchCol();
     

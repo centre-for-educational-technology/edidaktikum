@@ -491,7 +491,7 @@ function edidaktikum_form_alter(&$form, $form_state, $form_id) {
     }
   }
 
-  $form['#attached']['js'] = array(drupal_get_path('module', 'edidaktikum') . '/edidaktikum.js',);
+//  $form['#attached']['js'][] = drupal_get_path('module', 'edidaktikum') . '/edidaktikum.js';
   $form['#attached']['css'] = array(drupal_get_path('module', 'edidaktikum') . '/edidaktikum.css',);
 
   // Alter node delete form and add own redirect handler logic
