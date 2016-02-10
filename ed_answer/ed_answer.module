@@ -141,7 +141,7 @@ function ed_answer_form_alter(&$form, &$form_state, $form_id){
       $test[] = taxonomy_term_load($term['#options']['entity']->tid);
     }
     $term_nr = 0;
-    $form['#attached']['js'] = array(drupal_get_path('module', 'ed_answer') . '/ed_answer_js.js',);
+    $form['#attached']['js'][] = drupal_get_path('module', 'ed_answer') . '/ed_answer_js.js';
     $form['ed_answer_task_cat'] = array(
       '#tree' => TRUE,
       '#type' => 'fieldset',
