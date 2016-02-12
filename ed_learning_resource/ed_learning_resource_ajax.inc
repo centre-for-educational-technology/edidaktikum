@@ -12,7 +12,7 @@ function ed_learning_resource_dynamic_sections($form, &$form_state, $no_js_use =
 
   drupal_set_title(t('Learning Resources'));
 
-  $form['#attached']['css'] = array(drupal_get_path('module', 'ed_learning_resource') . '/ajax.css',);
+  $form['#attached']['css'][] = drupal_get_path('module', 'ed_learning_resource') . '/ajax.css';
   //$form['#attached']['js'] = array(drupal_get_path('module', 'ed_learning_resource') . '/ajax.js',);
 
   $form['content_sort_select'] = array(

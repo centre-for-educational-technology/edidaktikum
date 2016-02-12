@@ -1,0 +1,11 @@
+name = eDidaktikum Qualifications portfolio
+description = eDidaktikum Qualifications portfolio.
+package = eDidaktikum
+core = 7.x
+
+dependencies[] = edidaktikum
+dependencies[] = entityreference
+dependencies[] = entityreference_dragdrop
+dependencies[] = views
+dependencies[] = ctools
+

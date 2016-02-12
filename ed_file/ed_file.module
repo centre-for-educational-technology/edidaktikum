@@ -253,7 +253,7 @@ function ed_file_get_icon_class($mimetype) {
 /**
  * All files.
  */
-function ed_file_get_all_files_and_folders($header) {
+function ed_file_get_all_files_and_folders($header, $no_limit=false) {
 
   $query_parameters = drupal_get_query_parameters();
   $folder_id = null;
@@ -262,15 +262,25 @@ function ed_file_get_all_files_and_folders($header) {
   } 
 
   global $user;
-  $query = db_select('node', 'n')
-    ->fields('n', array('nid'))
-    ->condition('n.type', array('ed_file', 'ed_file_folder'), 'in')
-    ->condition('n.uid', $user->uid)
-    ->addTag('node_access')
-    ->range()
-    ->extend('TableSort')
-    ->extend('PagerDefault')->limit(10);  
-  //->orderBy('n.created', 'DESC');
+  if($no_limit) {
+    $query = db_select('node', 'n')
+        ->fields('n', array('nid'))
+        ->condition('n.type', array('ed_file', 'ed_file_folder'), 'in')
+        ->condition('n.uid', $user->uid)
+        ->addTag('node_access')
+        ->range()
+        ->extend('TableSort');
+  }else{
+    $query = db_select('node', 'n')
+        ->fields('n', array('nid'))
+        ->condition('n.type', array('ed_file', 'ed_file_folder'), 'in')
+        ->condition('n.uid', $user->uid)
+        ->addTag('node_access')
+        ->range()
+        ->extend('TableSort')
+        ->extend('PagerDefault')->limit(10);
+    //->orderBy('n.created', 'DESC');
+  }
 
   $query->leftJoin('field_data_ed_file_folder_ref', 'folder', 'n.nid = folder.entity_id');
   $query->condition('folder.ed_file_folder_ref_target_id', $folder_id);

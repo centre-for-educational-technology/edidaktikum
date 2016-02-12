@@ -491,8 +491,8 @@ function ed_task_form_alter(&$form, &$form_state, $form_id) {
       drupal_set_title(t('Create Task'));
     }
 
-    $form['#attached']['js'] = array(drupal_get_path('module', 'ed_task') . '/ed_task_js.js',);
-    $form['#attached']['css'] = array(drupal_get_path('module', 'ed_task') . '/ed_task_css.css',);
+    $form['#attached']['js'][] = drupal_get_path('module', 'ed_task') . '/ed_task_js.js';
+    $form['#attached']['css'][] = drupal_get_path('module', 'ed_task') . '/ed_task_css.css';
   }
 }
 

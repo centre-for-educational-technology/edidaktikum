@@ -1,0 +1,337 @@
+<?php
+
+/**
+ * @file
+ * ed_q_portfolio.install
+ */
+
+/**
+ * Implements hook_install().
+ */
+function ed_q_portfolio_install() {
+  ed_create_qualification_voc();
+  ed_q_portfolio_create_ed_q_portfolio_node_type();
+  ed_q_portfolio_node_add_field_content();
+  ed_q_portfolio_node_create_field_level();
+  ed_q_portfolio_node_add_field_level();
+  ed_q_portfolio_create_field_competence_desc();
+  ed_q_portfolio_node_add_field_competence_desc();
+
+  ed_q_portfolio_set_permissions();
+
+  //Disable comments
+  variable_set('ed-q-portfolio', COMMENT_NODE_CLOSED);
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function ed_q_portfolio_uninstall() {
+  ed_qualification_voc_delete_voc();
+  ed_q_portfolio_delete_ed_q_portfolio_nodes();
+  ed_q_portfolio_delete_ed_q_portfolio_node_type();
+  field_delete_field('ed_q_portfolio_field_level');
+  field_delete_field('ed_q_portfolio_competence_desc');
+  //delete set variables
+  variable_del('ed-q-portfolio');
+}
+
+function ed_create_qualification_voc() {
+  $vocabulary = new stdClass();
+  $vocabulary->name = 'Qualifications';
+  $vocabulary->description = t('');
+  $vocabulary->machine_name = 'ed_qualification_voc';
+  taxonomy_vocabulary_save($vocabulary);
+
+  $terms = array(
+      0 => array(
+          'title' => 'Tase 1',
+          'description' => '',
+          'weight' => 0,
+      ),
+      1 => array(
+          'title' => 'Tase 2',
+          'description' => '',
+          'weight' => 1,
+      ),
+      2 => array(
+          'title' => 'Tase 3',
+          'description' => '',
+          'weight' => 2,
+      ),
+  );
+
+  foreach($terms as $term) {
+    _ed_qualification_voc_save_term($vocabulary->vid, $term);
+  }
+
+}
+
+function _ed_qualification_voc_save_term($vid, $one) {
+  $term = new stdClass();
+  $term->name = $one['title'];
+  $term->description = $one['description'];
+  $term->format = 'plain_text';
+  $term->vid = $vid;
+  $term->weight = $one['weight'];
+  $term->parent = isset($one['parent']) ? $one['parent'] : 0;
+  taxonomy_term_save($term);
+  if (isset($one['terms']) && is_array($one['terms']) && sizeof($one['terms']) > 0) {
+    foreach($one['terms'] as $one) {
+      $one['parent'] =  $term->tid;
+      _ed_qualification_voc_save_term($vid, $one);
+    }
+  }
+}
+
+
+function ed_qualification_voc_delete_voc(){
+  $vocabulary = taxonomy_vocabulary_machine_name_load('ed_qualification_voc');
+  if (!empty($vocabulary)) {
+    taxonomy_vocabulary_delete($vocabulary->vid);
+  }
+}
+
+/**
+ * Creates ed_q_portfolio node type.
+ */
+function ed_q_portfolio_create_ed_q_portfolio_node_type() {
+  if (!in_array('ed_q_portfolio', node_type_get_names())) {
+    $type = array(
+      'type' => 'ed_q_portfolio',
+      'name' => t('Qualification Portfolio'),
+      'base' => 'node_content',
+      'custom' => FALSE,
+      'modified' => FALSE,
+      'locked' => TRUE,
+      'has_title' => TRUE,
+      'title_label' => t('Title'),
+      'module' => 'ed_file',
+    );
+    $type = node_type_set_defaults($type);
+    node_type_save($type);
+    variable_set('comment_ed_q_portfolio', COMMENT_NODE_OPEN);
+  }
+}
+
+/**
+ *  Create field Description
+ */
+
+function ed_q_portfolio_node_add_field_content() {
+  $field_name = 'ed_field_content';
+  $field = field_info_field($field_name);
+  if (!empty($field) && !field_info_instance('node', $field_name, 'ed_q_portfolio')) {
+    $instance = array(
+        'field_name' => $field_name,
+        'entity_type' => 'node',
+        'bundle' => 'ed_q_portfolio',
+        'label' => t('Description'),
+        'description' => '',
+        'settings' => array(
+            'text_processing' => TRUE,
+        ),
+        'widget' => array(
+            'settings' => array(
+                'rows' => 20,
+            ),
+        ),
+        'required' => FALSE,
+        'display' => array(
+            'default' => array(
+                'label' => 'hidden',
+                'type' => 'text_default',
+            ),
+        ),
+    );
+    field_create_instance($instance);
+  }
+}
+
+/**
+ *  Create field Level - Tase
+ */
+
+function ed_q_portfolio_node_create_field_level() {
+
+  $field = array(
+      'field_name' => 'ed_q_portfolio_field_level',
+      'type' => 'list_integer',
+      'cardinality' => 1,
+      'foreign keys' => array(),
+      'indexes' => array(
+          'value' => array(
+              0 => 'value',
+          ),
+      ),
+      'module' => 'list',
+      'settings' => array(
+          'allowed_values_function' => '_ed_q_portfolio_field_level_list',
+      ),
+  );
+
+  field_create_field($field);
+}
+
+
+function ed_q_portfolio_node_add_field_level() {
+  $field_name = 'ed_q_portfolio_field_level';
+  $field = field_info_field($field_name);
+  if (!empty($field) && !field_info_instance('node', $field_name, 'ed_q_portfolio')) {
+    $instance = array(
+        'field_name' => $field_name,
+        'entity_type' => 'node',
+        'label' => 'Tase',
+        'bundle' => 'ed_q_portfolio',
+        'required' => true,
+        'widget' => array(
+            'type' => 'options_select',
+            'module' => 'options',
+        ),
+        'display' => array(
+            'default' => array('type' => 'hidden'),
+            'teaser' => array('type' => 'hidden')
+        )
+    );
+
+    field_create_instance($instance);
+  }
+}
+
+
+/**
+ * Creates portfolio competence description
+ */
+function ed_q_portfolio_create_field_competence_desc(){
+  $field_name = 'ed_q_portfolio_competence_desc';
+  if(!field_info_field($field_name)) {
+    $field = array(
+        'field_name' => $field_name,
+        'type' => 'ed_q_portfolio_competence_desc',
+        'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+    );
+    field_create_field($field);
+  }
+}
+
+function ed_q_portfolio_node_add_field_competence_desc() {
+  $field_name = 'ed_q_portfolio_competence_desc';
+  $field = field_info_field($field_name);
+  if (!empty($field) && !field_info_instance('node', $field_name, 'ed_q_portfolio')) {
+    $instance = array(
+        'field_name' => $field_name,
+        'entity_type' => 'node',
+        'bundle' => 'ed_q_portfolio',
+        'label' => t('Competence description'),
+        'widget' => array(
+            'type' => 'default'
+        ),
+        'required' => false,
+//        'display' => array(
+//            'default' => array(
+//                'label' => 'hidden',
+//            ),
+//            'full' => array(
+//                'label' => 'hidden',
+//            ),
+//            'teaser' => array(
+//                'label' => 'hidden',
+//            ),
+//        )
+    );
+    field_create_instance($instance);
+  }
+//
+  // Drop all primary keys.
+  db_drop_primary_key('field_data_ed_q_portfolio_competence_desc');
+// Add primary keys.
+  db_add_primary_key('field_data_ed_q_portfolio_competence_desc', array('entity_type', 'deleted', 'entity_id', 'language', 'delta', 'ed_q_portfolio_competence_desc_tid'));
+}
+
+
+
+/**
+ * Implements hook_field_schema().
+ */
+function ed_q_portfolio_field_schema($field) {
+  $schema = array(
+      'columns' => array(
+          'tid' => array(
+              'type' => 'int',
+              'unsigned' => TRUE,
+              'length' => 10,
+              'not null' => TRUE,
+          ),
+          'desc' => array(
+              'type' => 'varchar',
+              'length' => 2000,
+              'not null' => FALSE,
+          ),
+          'fid' => array(
+              'type' => 'int',
+              'unsigned' => TRUE,
+              'length' => 10,
+              'not null' => FALSE,
+          ),
+      ),
+
+//      'indexes' => array(
+//          'tid' => array('tid'),
+//      ),
+
+  );
+//  $entity_type = 'place';
+//  $bundles = field_info_bundles('node');
+//  if (!empty($bundles['place'])) {
+//    $schema['foreign keys']['place'] = array(
+//        'table' => 'place',
+//        'columns' => array('place_id' => 'nid')
+//    );
+//  }
+
+  return $schema;
+
+}
+
+
+
+
+/**
+ * Sets permissions for ed_q_portfolio.
+ */
+function ed_q_portfolio_set_permissions() {
+  $permissions = array(
+    'create ed_q_portfolio content' => TRUE,
+    'edit own ed_q_portfolio content' => TRUE,
+    'delete own ed_q_portfolio content' => TRUE,
+  );
+  user_role_change_permissions(DRUPAL_AUTHENTICATED_RID, $permissions);
+}
+
+
+
+/**
+ * Deletes all ed_q_portfolio nodes.
+ */
+function ed_q_portfolio_delete_ed_q_portfolio_nodes() {
+  $nids = array();
+  $query = db_select('node', 'n')
+    ->fields('n', array('nid'))
+    ->condition('n.type', 'ed_q_portfolio');
+  $nids = $query->execute()->fetchCol();
+  if (!empty($nids)) {
+    node_delete_multiple($nids);
+  }
+}
+
+/**
+ * Deletes ed_q_portfolio node type.
+ */
+function ed_q_portfolio_delete_ed_q_portfolio_node_type() {
+  if (array_key_exists('ed_q_portfolio', node_type_get_names())) {
+    node_type_delete('ed_q_portfolio');
+    node_types_rebuild();
+    variable_del('comment_ed_q_portfolio');
+  }
+}
+
