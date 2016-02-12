@@ -137,32 +137,34 @@ function ed_user_extra_node_insert($node){
 
     }else{
       $groups = og_get_entity_groups('node', $node->nid);
-      foreach($groups['node'] as $group){
-        $members = og_get_group_members_properties(node_load($group), array(), 'members__1', 'node');
-        $memberobjects = user_load_multiple($members);
-        $recipients = array();
-        foreach($memberobjects as $memberobject){
-          if(isset($memberobject->ed_notification_content_types[LANGUAGE_NONE]) && is_array($memberobject->ed_notification_content_types[LANGUAGE_NONE])){
+      if(!empty($groups)) {
+        foreach ($groups['node'] as $group) {
+          $members = og_get_group_members_properties(node_load($group), array(), 'members__1', 'node');
+          $memberobjects = user_load_multiple($members);
+          $recipients = array();
+          foreach ($memberobjects as $memberobject) {
+            if (isset($memberobject->ed_notification_content_types[LANGUAGE_NONE]) && is_array($memberobject->ed_notification_content_types[LANGUAGE_NONE])) {
 
 
-            $vals = array_map(function($elem){
-              return $elem['value'];
-            }, $memberobject->ed_notification_content_types[LANGUAGE_NONE]);
-            if(in_array(ed_user_extra_node_type_to_notification_type($node->type), $vals) && $node->uid != $memberobject->uid){
-              array_push($recipients, $memberobject);
+              $vals = array_map(function ($elem) {
+                return $elem['value'];
+              }, $memberobject->ed_notification_content_types[LANGUAGE_NONE]);
+              if (in_array(ed_user_extra_node_type_to_notification_type($node->type), $vals) && $node->uid != $memberobject->uid) {
+                array_push($recipients, $memberobject);
+              }
             }
           }
-        }
 
-        if(!empty($recipients)){
-          foreach ($recipients as $recipient) {
-            $language = user_preferred_language($recipient);
-            $params = array(
-              'fullname' => $creator_fullname,
-              'contentname' => $node->title,
-              'contenturl' => url('node/' . $node->nid, array('absolute' => TRUE)),
-            );
-            drupal_mail('ed_user_extra', 'content_created', $recipient->mail, $language, $params, EDIDAKTIKUM_NO_REPLY_EMAIL, TRUE);
+          if (!empty($recipients)) {
+            foreach ($recipients as $recipient) {
+              $language = user_preferred_language($recipient);
+              $params = array(
+                  'fullname' => $creator_fullname,
+                  'contentname' => $node->title,
+                  'contenturl' => url('node/' . $node->nid, array('absolute' => TRUE)),
+              );
+              drupal_mail('ed_user_extra', 'content_created', $recipient->mail, $language, $params, EDIDAKTIKUM_NO_REPLY_EMAIL, TRUE);
+            }
           }
         }
       }

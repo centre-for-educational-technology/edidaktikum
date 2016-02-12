@@ -144,15 +144,54 @@ function ed_q_portfolio_callback($ajax, $node, $tid) {
 
 
     $val = db_select('field_data_ed_q_portfolio_competence_desc', 'f')
-        ->fields('f', array('ed_q_portfolio_competence_desc_desc'))
+        ->fields('f', array('ed_q_portfolio_competence_desc_desc', 'ed_q_portfolio_competence_desc_fid'))
         ->condition('entity_id', $node->nid)
         ->condition('ed_q_portfolio_competence_desc_tid', $tid)
         ->execute()
-        ->fetchField();
+        ->fetchAll();
+
+
+    $header = array(
+        array(
+            'data' => '',
+        ),
+        array(
+            'data' => t('Title'),
+            'field' => 'n.title',
+            'sort' => 'asc',
+        ),
+        array(
+            'data' => t('Type'),
+        ),
+        array(
+            'data' => t('Changed'),
+            'field' => 'n.changed',
+            'sort' => 'desc',
+        ),
+        array(
+            'data' => '',
+        ),
+    );
+
+    $files = ed_file_get_all_files_and_folders($header, true);
+
+
+
+    $ed_files = array();
+
+    foreach ($files as $file) {
+
+      if($file->type == 'ed_file'){
+        $ed_files[$file->nid] = t($file->title);
+      }
+    }
+
 
     $form_state = array(
         'ajax' => TRUE,
-        'text' => $val,
+        'text' => $val[0]->ed_q_portfolio_competence_desc_desc,
+        'ed_file_list' => $ed_files,
+        'ed_file_chosen' => $val[0]->ed_q_portfolio_competence_desc_fid,
         'title' => t('Enter Competence Description'),
         'node' => $node,
     );
@@ -237,11 +276,22 @@ function ed_q_portfolio_form($form, $form_state) {
           : '',
   );
 
+  $form['competence_ed_file'] = array(
+      "#type" => "select",
+      "#title" => t("Evidence"),
+      '#default_value' => (isset($form_state['ed_file_chosen']))
+          ? $form_state['ed_file_chosen']
+          : '',
+      '#empty_option' => '--Choose a file--',
+      "#options" => $form_state['ed_file_list'],
+      "#description" => t("Choose from your files"),
+  );
 
-  $form['competence_file'] = array(
+
+  $form['competence_new_ed_file'] = array(
       '#type' => 'managed_file',
       '#title' => t('Evidence'),
-      '#description' => t('The uploaded image will be displayed on this page using the image style choosen below.'),
+      '#description' => t('Upload a new file'),
       '#upload_location' => 'private://ed_file_uploads',
   );
 
@@ -333,70 +383,74 @@ function ed_q_portfolio_form_submit(&$form, &$form_state) {
 
   $tid = $form_state['build_info']['args'][1];
   $desc = $form_state['values']['competence_desc'];
-  $fid = $form_state['values']['competence_file'];
+
+  if(isset($form_state['values']['competence_new_ed_file']) && ($form_state['values']['competence_new_ed_file'])>0) {
+    $fid = $form_state['values']['competence_new_ed_file'];
 
 
-  $file = file_load($fid);
-
-  dpm($file);
-
-  //Create new ed_file type node
-
-  $ed_file_node = new stdClass();  // Create a new node object
-  $ed_file_node->type = 'ed_file';  // Content type
-  $ed_file_node->language = LANGUAGE_NONE;  // Or e.g. 'en' if locale is enabled
-  node_object_prepare($ed_file_node);  //Set some default values
-
-  $ed_file_node->title = preg_replace('/\\.[^.\\s]{3,4}$/', '', $file->filename);
-
-  $ed_file_node->status = 1;   // (1 or 0): published or unpublished
-  $ed_file_node->promote = 1;  // (1 or 0): promoted to front page or not
-  $ed_file_node->sticky = 0;  // (1 or 0): sticky at top of lists or not
-  $ed_file_node->comment = 1;  // 2 = comments open, 1 = comments closed, 0 = comments hidden
-// Add author of the node
-  $ed_file_node->uid = 1;
-
-
-//  //Set file field
-//  $ed_file_node->ed_file_field_file_upload[LANGUAGE_NONE][0] = (array) $file;
-
-//
-//  $ed_file_node->ed_file_field_file_upload[LANGUAGE_NONE][0] = array(
-//      'fid' => $file->fid,
-//    //'alt' => $node->title,
-//    //'title' => $node->title,
-//      'uid' => '1',
-//      'filename' => $file->filename,
-//      'uri' => $file->uri,
-//      'filemime' => $file->filemime,
-//      'filesize'=> $file->filesize,
-//      'status' => '1',
-//  );
-
-
-  $ed_file_node->ed_file_field_file_upload[LANGUAGE_NONE][] = array(
-      'fid' => $file->fid,
-      'filename' => $file->filename,
-      'filemime' => $file->filemime,
-      'uid' => 1,
-      'uri' => $file->uri,
-      'status' => 1,
-      'timestamp' => $file->timestamp,
-      'display' => 1
-  );
-
-
-  $path = 'content/'.$file->filename.'-' . date('YmdHis');
-  $ed_file_node->path = array('alias' => $path);
+    $file = file_load($fid);
 
 
 
-// Save the node
-  node_save($ed_file_node);
+    //Create new ed_file type node
+
+    $ed_file_node = new stdClass();  // Create a new node object
+    $ed_file_node->type = 'ed_file';  // Content type
+    $ed_file_node->language = LANGUAGE_NONE;  // Or e.g. 'en' if locale is enabled
+    node_object_prepare($ed_file_node);  //Set some default values
+
+    $ed_file_node->title = preg_replace('/\\.[^.\\s]{3,4}$/', '', $file->filename);
+
+    $ed_file_node->status = 1;   // (1 or 0): published or unpublished
+    $ed_file_node->promote = 1;  // (1 or 0): promoted to front page or not
+    $ed_file_node->sticky = 0;  // (1 or 0): sticky at top of lists or not
+    $ed_file_node->comment = 1;  // 2 = comments open, 1 = comments closed, 0 = comments hidden
+  // Add author of the node
+    $ed_file_node->uid = 1;
+
+
+  //  //Set file field
+  //  $ed_file_node->ed_file_field_file_upload[LANGUAGE_NONE][0] = (array) $file;
+
+  //
+  //  $ed_file_node->ed_file_field_file_upload[LANGUAGE_NONE][0] = array(
+  //      'fid' => $file->fid,
+  //    //'alt' => $node->title,
+  //    //'title' => $node->title,
+  //      'uid' => '1',
+  //      'filename' => $file->filename,
+  //      'uri' => $file->uri,
+  //      'filemime' => $file->filemime,
+  //      'filesize'=> $file->filesize,
+  //      'status' => '1',
+  //  );
+
+
+    $ed_file_node->ed_file_field_file_upload[LANGUAGE_NONE][] = array(
+          'fid' => $file->fid,
+          'filename' => $file->filename,
+          'filemime' => $file->filemime,
+          'uid' => 1,
+          'uri' => $file->uri,
+          'status' => 1,
+          'timestamp' => $file->timestamp,
+          'display' => 1
+    );
+
+
+    $path = 'content/'.$file->filename.'-' . date('YmdHis');
+    $ed_file_node->path = array('alias' => $path);
 
 
 
+  // Save the node
+    node_save($ed_file_node);
 
+
+    $ed_fid = $ed_file_node->nid;
+  }else if(isset($form_state['values']['competence_ed_file']) && ($form_state['values']['competence_ed_file'])>0 && !($form_state['values']['competence_new_ed_file'])>0){
+    $ed_fid = $form_state['values']['competence_ed_file'];
+  };
 
 
 
@@ -418,6 +472,7 @@ function ed_q_portfolio_form_submit(&$form, &$form_state) {
       $wrapper->ed_q_portfolio_competence_desc[$position]->set(array(
           'tid' => $tid,
           'desc' => $desc,
+          'fid' => $ed_fid,
       ));
     } else {
 //      $node->ed_q_portfolio_competence_desc[LANGUAGE_NONE][count($node->ed_q_portfolio_competence_desc[LANGUAGE_NONE])] = array(
@@ -428,6 +483,7 @@ function ed_q_portfolio_form_submit(&$form, &$form_state) {
       $wrapper->ed_q_portfolio_competence_desc[count($competences)]->set(array(
           'tid' => $tid,
           'desc' => $desc,
+          'fid' => $ed_fid,
       ));
     }
 
@@ -440,6 +496,7 @@ function ed_q_portfolio_form_submit(&$form, &$form_state) {
     $wrapper->ed_q_portfolio_competence_desc[0]->set(array(
         'tid' => $tid,
         'desc' => $desc,
+        'fid' => $ed_fid,
     ));
   }
 
