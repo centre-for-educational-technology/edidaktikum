@@ -385,6 +385,7 @@ function ed_q_portfolio_form_submit(&$form, &$form_state) {
   $desc = $form_state['values']['competence_desc'];
 
   if(isset($form_state['values']['competence_new_ed_file']) && ($form_state['values']['competence_new_ed_file'])>0) {
+    //Uploaded file has priority over file list
     $fid = $form_state['values']['competence_new_ed_file'];
 
 
@@ -522,7 +523,30 @@ function ed_q_portfolio_form_submit(&$form, &$form_state) {
 
   // Tell the browser to replace the old link with the new one.
 
-  $form_state['ajax_commands'][] = ajax_command_replace('#'.$tid, '<div class="competence-desc" id="'.$tid.'">'.$desc.'</div>');
+  //$form_state['ajax_commands'][] = ajax_command_replace('#'.$tid, '<div class="competence-desc" id="'.$tid.'">'.$desc.'</div>');
+
+  $markup = '<div class="competence-desc" id="'.$tid.'">'.$desc;
+
+  if(isset($ed_fid)) {
+
+    $wrapper = entity_metadata_wrapper('node', $ed_fid);
+    $node_file = $wrapper->ed_file_field_file_upload->value();
+
+    $filename = $node_file['filename'];
+    $uri = $node_file['uri'];
+    $mime = check_plain($node_file['filemime']);
+    $icon_url = file_icon_url(file_load($node_file['fid']));
+
+    $markup .= '<br><img alt="" class="file-icon" src="' . $icon_url . '" title="' . $mime . '" /> '.l($filename, file_create_url($uri)).'</div>';
+    $markup .= '</div>';
+
+  }else{
+    $markup = '<div class="competence-desc" id="'.$tid.'">'.$desc;
+    $markup .= '</div>';
+  }
+  $form_state['ajax_commands'][] = ajax_command_replace('#'.$tid, $markup);
+
+
 }
 
 function _wrapper_debug($w) {
@@ -896,7 +920,7 @@ function ed_q_portfolio_vocabulary_tree($vid, $nid, $tid) {
 
   //Get descriptions
   $descriptions = db_select('field_data_ed_q_portfolio_competence_desc', 'f')
-      ->fields('f', array('ed_q_portfolio_competence_desc_tid', 'ed_q_portfolio_competence_desc_desc'))
+      ->fields('f', array('ed_q_portfolio_competence_desc_tid', 'ed_q_portfolio_competence_desc_desc', 'ed_q_portfolio_competence_desc_fid'))
       ->condition('entity_id', $nid)
 //          ->condition('ed_q_portfolio_competence_desc_tid', $tid)
       ->execute()
@@ -913,9 +937,30 @@ function ed_q_portfolio_vocabulary_tree($vid, $nid, $tid) {
     //Description
     foreach ($tree as $term) {
       $term_description = "";
+      $mime = null;
+      $icon_url = null;
+      $filename = null;
+      $uri = null;
       foreach($descriptions as $description) {
+
+
         if ($description->ed_q_portfolio_competence_desc_tid == $term->tid){
+
+          if($description->ed_q_portfolio_competence_desc_fid) {
+
+
+            $wrapper = entity_metadata_wrapper('node', $description->ed_q_portfolio_competence_desc_fid);
+            $node_file = $wrapper->ed_file_field_file_upload->value();
+
+            $filename = $node_file['filename'];
+            $uri = $node_file['uri'];
+            $mime = check_plain($node_file['filemime']);
+            $icon_url = file_icon_url(file_load($node_file['fid']));
+
+          }
+
           $term_description = $description->ed_q_portfolio_competence_desc_desc;
+
           break;
         }
       }
@@ -936,7 +981,7 @@ function ed_q_portfolio_vocabulary_tree($vid, $nid, $tid) {
       if (($term->depth == $depth) && ($num_at_depth > 0)) {
         $markup .= "</li>\n<li class=\"term open\">";
       }
-      $markup .= ed_q_portfolio_build_term($term->name, $nid, $term->tid, $term_description);
+      $markup .= ed_q_portfolio_build_term($term->name, $nid, $term->tid, $term_description, $icon_url, $mime, $filename, $uri);
       $num_at_depth++;
     }
     $markup .= "</li>\n</ul>\n</div>\n";
@@ -948,9 +993,13 @@ function ed_q_portfolio_vocabulary_tree($vid, $nid, $tid) {
 }
 
 
-function ed_q_portfolio_build_term($name, $nid, $tid, $term_description) {
+function ed_q_portfolio_build_term($name, $nid, $tid, $term_description, $icon_url, $mime, $filename, $uri) {
 //  $count = db_query("SELECT COUNT(nid) FROM {taxonomy_index} WHERE tid IN (:tids) ", array(':tids' => implode(',', $tids)))->fetchField();
-  $markup = '<div class="competence">'.l($name, 'ed_q_portfolio/nojs/'.$nid.'/'.$tid, array('attributes' => (array('class' => array('termtext accordion-section-title', 'ctools-use-modal'), 'data-tid' => $tid)))).' <i class="fa fa-chevron-up"></i></div><div class="competence-desc" id="'.$tid.'">'.$term_description.'</div>';
+  $markup = '<div class="competence">'.l($name, 'ed_q_portfolio/nojs/'.$nid.'/'.$tid, array('attributes' => (array('class' => array('termtext accordion-section-title', 'ctools-use-modal'), 'data-tid' => $tid)))).
+      ' <i class="fa fa-chevron-up"></i></div><div class="competence-desc" id="'.$tid.'">'.$term_description;
+  if($icon_url && $mime && $filename){
+    $markup .= '<br><img alt="" class="file-icon" src="' . $icon_url . '" title="' . $mime . '" /> '.l($filename, file_create_url($uri)).'</div>';
+  }
 
 //  $markup = "<span>" . $name . "<span>";
   return $markup;
