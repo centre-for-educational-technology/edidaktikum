@@ -17,6 +17,18 @@ function ed_q_portfolio_install() {
   ed_q_portfolio_create_field_competence_desc();
   ed_q_portfolio_node_add_field_competence_desc();
 
+//  ed_q_portfolio_node_create_field_cv_upload();
+//  ed_q_portfolio_node_create_field_statement_upload();
+//  ed_q_portfolio_node_add_field_cv_upload();
+//  ed_q_portfolio_node_add_field_statement_upload();
+
+
+  ed_q_portfolio_node_create_field_cv();
+  ed_q_portfolio_node_add_field_cv();
+
+  ed_q_portfolio_node_create_field_statement();
+  ed_q_portfolio_node_add_field_statement();
+
   ed_q_portfolio_set_permissions();
 
   //Disable comments
@@ -32,6 +44,13 @@ function ed_q_portfolio_uninstall() {
   ed_q_portfolio_delete_ed_q_portfolio_node_type();
   field_delete_field('ed_q_portfolio_field_level');
   field_delete_field('ed_q_portfolio_competence_desc');
+
+
+//  field_delete_field('ed_q_portfolio_cv_upload');
+//  field_delete_field('ed_q_portfolio_statement_upload');
+
+  field_delete_field('ed_q_portfolio_field_cv');
+  field_delete_field('ed_q_portfolio_field_statement');
   //delete set variables
   variable_del('ed-q-portfolio');
 }
@@ -181,7 +200,7 @@ function ed_q_portfolio_node_add_field_level() {
     $instance = array(
         'field_name' => $field_name,
         'entity_type' => 'node',
-        'label' => 'Tase',
+        'label' => t('Level'),
         'bundle' => 'ed_q_portfolio',
         'required' => true,
         'widget' => array(
@@ -293,7 +312,199 @@ function ed_q_portfolio_field_schema($field) {
 
 }
 
+//
+///**
+// * Creates cv file upload field if not exists.
+// */
+//function ed_q_portfolio_node_create_field_cv_upload() {
+//  $field_name = 'ed_q_portfolio_cv_upload';
+//  if (!field_info_field($field_name)) {
+//    $field = array(
+//        'field_name' => $field_name,
+//        'type' => 'file',
+//        'entity_types' => array('node'),
+//        'cardinality' => 1,
+//        'locked' => FALSE,
+//        'settings' => array(
+//            'uri_scheme' => 'public',
+//        ),
+//    );
+//    $field = field_create_field($field);
+//  }
+//}
+//
+//
+///**
+// * Creates statement file upload field if not exists.
+// */
+//function ed_q_portfolio_node_create_field_statement_upload() {
+//  $field_name = 'ed_q_portfolio_statement_upload';
+//  if (!field_info_field($field_name)) {
+//    $field = array(
+//        'field_name' => $field_name,
+//        'type' => 'file',
+//        'entity_types' => array('node'),
+//        'cardinality' => 1,
+//        'locked' => FALSE,
+//        'settings' => array(
+//            'uri_scheme' => 'public',
+//        ),
+//    );
+//    $field = field_create_field($field);
+//  }
+//}
+//
+//
+///**
+// * Adds cv file upload field to ed_q_portfolio node type.
+// */
+//function ed_q_portfolio_node_add_field_cv_upload() {
+//  $field_name = 'ed_q_portfolio_cv_upload';
+//  $field = field_info_field($field_name);
+//  if (!empty($field) && !field_info_instance('node', $field_name, 'ed_q_portfolio')) {
+//    $instance = array(
+//        'field_name' => $field_name,
+//        'entity_type' => 'node',
+//        'bundle' => 'ed_q_portfolio',
+//        'label' => t('Upload your CV file'),
+//        'description' => '',
+//        'settings' => array(
+//            'file_extensions' => 'txt doc docx xls xlsx ppt pptx pdf png jpg rar zip',
+//            'file_directory' => 'ed_file_uploads',
+//        ),
+//        'required' => FALSE,
+//    );
+//    field_create_instance($instance);
+//  }
+//}
+//
+//
+///**
+// * Adds statement file upload field to ed_q_portfolio node type.
+// */
+//function ed_q_portfolio_node_add_field_statement_upload() {
+//  $field_name = 'ed_q_portfolio_statement_upload';
+//  $field = field_info_field($field_name);
+//  if (!empty($field) && !field_info_instance('node', $field_name, 'ed_q_portfolio')) {
+//    $instance = array(
+//        'field_name' => $field_name,
+//        'entity_type' => 'node',
+//        'bundle' => 'ed_q_portfolio',
+//        'label' => t('Upload your statement file'),
+//        'description' => '',
+//        'settings' => array(
+//            'file_extensions' => 'txt doc docx xls xlsx ppt pptx pdf png jpg rar zip',
+//            'file_directory' => 'ed_file_uploads',
+//        ),
+//        'required' => FALSE,
+//    );
+//    field_create_instance($instance);
+//  }
+//}
 
+
+
+
+/**
+ *  Create field CV
+ */
+
+function ed_q_portfolio_node_create_field_cv() {
+
+  $field = array(
+      'field_name' => 'ed_q_portfolio_field_cv',
+      'type' => 'list_integer',
+      'cardinality' => 1,
+      'foreign keys' => array(),
+      'indexes' => array(
+          'value' => array(
+              0 => 'value',
+          ),
+      ),
+      'module' => 'list',
+      'settings' => array(
+          'allowed_values_function' => '_ed_q_portfolio_get_ed_files_list',
+      ),
+  );
+
+  field_create_field($field);
+}
+
+
+function ed_q_portfolio_node_add_field_cv() {
+  $field_name = 'ed_q_portfolio_field_cv';
+  $field = field_info_field($field_name);
+  if (!empty($field) && !field_info_instance('node', $field_name, 'ed_q_portfolio')) {
+    $instance = array(
+        'field_name' => $field_name,
+        'entity_type' => 'node',
+        'label' => t('Choose a CV file'),
+        'bundle' => 'ed_q_portfolio',
+        'required' => FALSE,
+        'widget' => array(
+            'type' => 'options_select',
+            'module' => 'options',
+        ),
+        'display' => array(
+            'default' => array('type' => 'hidden'),
+            'teaser' => array('type' => 'hidden')
+        )
+    );
+
+    field_create_instance($instance);
+  }
+}
+
+
+/**
+ *  Create field statement
+ */
+
+function ed_q_portfolio_node_create_field_statement() {
+
+  $field = array(
+      'field_name' => 'ed_q_portfolio_field_statement',
+      'type' => 'list_integer',
+      'cardinality' => 1,
+      'foreign keys' => array(),
+      'indexes' => array(
+          'value' => array(
+              0 => 'value',
+          ),
+      ),
+      'module' => 'list',
+      'settings' => array(
+          'allowed_values_function' => '_ed_q_portfolio_get_ed_files_list',
+      ),
+  );
+
+  field_create_field($field);
+}
+
+
+function ed_q_portfolio_node_add_field_statement() {
+  $field_name = 'ed_q_portfolio_field_statement';
+  $field = field_info_field($field_name);
+  if (!empty($field) && !field_info_instance('node', $field_name, 'ed_q_portfolio')) {
+    $instance = array(
+        'field_name' => $field_name,
+        'entity_type' => 'node',
+        'label' => t('Choose a statement file'),
+        'bundle' => 'ed_q_portfolio',
+        'required' => FALSE,
+        'widget' => array(
+            'type' => 'options_select',
+            'module' => 'options',
+        ),
+        'display' => array(
+            'default' => array('type' => 'hidden'),
+            'teaser' => array('type' => 'hidden')
+        )
+    );
+
+    field_create_instance($instance);
+  }
+}
 
 
 /**

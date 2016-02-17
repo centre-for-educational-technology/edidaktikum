@@ -26,8 +26,133 @@ function ed_q_portfolio_menu() {
       'type' => MENU_CALLBACK,
   );
 
+  $items['node/%node/cv'] = array(
+      'title' => t('Your CV and statement'),
+      'weight' => 2,
+      'page callback' => 'ed_q_portfolio_cv',
+      'type' => MENU_LOCAL_TASK,
+      'page arguments' => array(1),
+      'access callback' => 'ed_q_portfolio_cv_access',
+      'access arguments' => array(1),
+  );
+
 
   return $items;
+}
+
+
+function ed_q_portfolio_cv_access($node){
+  if($node->type != 'ed_q_portfolio'){
+    return false;
+  }else{
+    return true;
+  }
+}
+
+
+function ed_q_portfolio_cv($node){
+  $content = array();
+
+  $content['container'] = array(
+      '#type' => 'container',
+      '#attributes' => array(),
+      '#prefix' => '<div class="competency-profile-container">',
+      '#suffix' => '</div>',
+  );
+
+
+  $content['container']['cv']['name'] = array(
+      '#type' => 'markup',
+      '#markup' => '<i class="fa fa-user"></i> '.t('Your CV'),
+      '#prefix' => '<h1>',
+      '#suffix' => '</h1>'
+  );
+
+
+  if(!empty($node->ed_q_portfolio_field_cv[LANGUAGE_NONE][0])) {
+
+    $wrapper = entity_metadata_wrapper('node', $node->ed_q_portfolio_field_cv[LANGUAGE_NONE][0]['value']);
+    $file_node_file = $wrapper->ed_file_field_file_upload->value();
+    $filename = $file_node_file['filename'];
+    $uri = $file_node_file['uri'];
+    $mime = check_plain($file_node_file['filemime']);
+    $icon_url = file_icon_url(file_load($file_node_file['fid']));
+
+
+
+    $content['container']['cv']['content'] = array(
+        '#type' => 'markup',
+        '#markup' => '<br><h2>' . t('Attached file:') .' '. '<img alt="" class="file-icon" src="' . $icon_url . '" title="' . $mime . '" /> ' . l($filename, file_create_url($uri)).'</h2></div>',
+
+    );
+
+
+
+
+  }else{
+
+    $content['container']['cv']['content'] = array(
+        '#type' => 'markup',
+        '#markup' => t("No CV attached"),
+
+    );
+
+  }
+
+  $content['container']['statement']['name'] = array(
+      '#type' => 'markup',
+      '#markup' => '<i class="fa fa-file-text-o"></i> '.t('Your statament file'),
+      '#prefix' => '<h1>',
+      '#suffix' => '</h1>'
+  );
+
+
+  if(!empty($node->ed_q_portfolio_field_statement[LANGUAGE_NONE][0])) {
+
+    $wrapper = entity_metadata_wrapper('node', $node->ed_q_portfolio_field_statement[LANGUAGE_NONE][0]['value']);
+    $file_node_file = $wrapper->ed_file_field_file_upload->value();
+    $filename = $file_node_file['filename'];
+    $uri = $file_node_file['uri'];
+    $mime = check_plain($file_node_file['filemime']);
+    $icon_url = file_icon_url(file_load($file_node_file['fid']));
+
+
+
+    $content['container']['statement']['content'] = array(
+        '#type' => 'markup',
+        '#markup' => '<br><h2>' . t('Attached file:') .' '. '<img alt="" class="file-icon" src="' . $icon_url . '" title="' . $mime . '" /> ' . l($filename, file_create_url($uri)).'</h2></div></div>',
+
+    );
+
+
+
+
+  }else{
+
+    $content['container']['statement']['content'] = array(
+        '#type' => 'markup',
+        '#markup' => t("No statement file attached"),
+
+    );
+
+  }
+
+
+  $content['container']['add'] = array(
+      '#type' => 'markup',
+      '#markup' => '<i class="fa fa-pencil"></i> ' . l(t('Edit or add CV and statement'), 'node/' . $node->nid . '/edit'),
+      '#prefix' => '<h3>',
+      '#suffix' => '</h3>'
+
+  );
+
+
+
+
+
+
+
+  return $content;
 }
 
 
@@ -151,47 +276,17 @@ function ed_q_portfolio_callback($ajax, $node, $tid) {
         ->fetchAll();
 
 
-    $header = array(
-        array(
-            'data' => '',
-        ),
-        array(
-            'data' => t('Title'),
-            'field' => 'n.title',
-            'sort' => 'asc',
-        ),
-        array(
-            'data' => t('Type'),
-        ),
-        array(
-            'data' => t('Changed'),
-            'field' => 'n.changed',
-            'sort' => 'desc',
-        ),
-        array(
-            'data' => '',
-        ),
-    );
-
-    $files = ed_file_get_all_files_and_folders($header, true);
 
 
+    $ed_files = _ed_q_portfolio_get_ed_files_list();
 
-    $ed_files = array();
-
-    foreach ($files as $file) {
-
-      if($file->type == 'ed_file'){
-        $ed_files[$file->nid] = t($file->title);
-      }
-    }
 
 
     $form_state = array(
         'ajax' => TRUE,
-        'text' => $val[0]->ed_q_portfolio_competence_desc_desc,
+        'text' => !empty($val[0]->ed_q_portfolio_competence_desc_desc) ? $val[0]->ed_q_portfolio_competence_desc_desc : null,
         'ed_file_list' => $ed_files,
-        'ed_file_chosen' => $val[0]->ed_q_portfolio_competence_desc_fid,
+        'ed_file_chosen' => !empty($val[0]->ed_q_portfolio_competence_desc_fid) ? $val[0]->ed_q_portfolio_competence_desc_fid : null,
         'title' => t('Enter Competence Description'),
         'node' => $node,
     );
@@ -531,13 +626,14 @@ function ed_q_portfolio_form_submit(&$form, &$form_state) {
 
     $wrapper = entity_metadata_wrapper('node', $ed_fid);
     $node_file = $wrapper->ed_file_field_file_upload->value();
-
     $filename = $node_file['filename'];
     $uri = $node_file['uri'];
     $mime = check_plain($node_file['filemime']);
     $icon_url = file_icon_url(file_load($node_file['fid']));
 
-    $markup .= '<br><img alt="" class="file-icon" src="' . $icon_url . '" title="' . $mime . '" /> '.l($filename, file_create_url($uri)).'</div>';
+
+
+    $markup .= '<br>'.t('Attached file:').' '.'<img alt="" class="file-icon" src="' . $icon_url . '" title="' . $mime . '" /> '.l($filename, file_create_url($uri)).' <i class="fa fa-pencil"></i> '.l(t('Edit'), 'node/' . $ed_fid . '/edit').'</div>';
     $markup .= '</div>';
 
   }else{
@@ -719,6 +815,50 @@ function _ed_q_portfolio_field_level_list(){
 }
 
 /*
+ * Get list options of ed_file files
+ */
+function _ed_q_portfolio_get_ed_files_list(){
+  $header = array(
+      array(
+          'data' => '',
+      ),
+      array(
+          'data' => t('Title'),
+          'field' => 'n.title',
+          'sort' => 'asc',
+      ),
+      array(
+          'data' => t('Type'),
+      ),
+      array(
+          'data' => t('Changed'),
+          'field' => 'n.changed',
+          'sort' => 'desc',
+      ),
+      array(
+          'data' => '',
+      ),
+  );
+
+  $files = ed_file_get_all_files_and_folders($header, true);
+
+
+
+  $ed_files = array();
+
+  foreach ($files as $file) {
+
+    if($file->type == 'ed_file'){
+      $ed_files[$file->nid] = t($file->title);
+    }
+  }
+
+  return $ed_files;
+}
+
+
+
+/*
  * Implements hook_form_alter()
  */
 
@@ -726,7 +866,17 @@ function ed_q_portfolio_form_alter(&$form, &$form_state, $form_id) {
 
   if ('ed_q_portfolio_node_form' == $form_id) {
     $form['ed_q_portfolio_competence_desc']['#access'] = 0;
-//    $form['additional_settings']['#access'] = FALSE;
+
+    //Hide unnecessary options
+    $form['revision_information']['#access'] = FALSE;
+    $form['#after_build'][] = 'custom_after_build';
+    $form['comment_settings']['#access'] = FALSE;
+    $form['author']['#access'] = FALSE;
+    $form['translations']['#access'] = FALSE;
+    $form['metatags']['#access'] = FALSE;
+    $form['options']['#type'] = 'list';
+    $form['options']['promote']['#access'] = FALSE;
+    $form['options']['sticky']['#access'] = FALSE;
 
 //    dpm(taxonomy_vocabulary_machine_name_load('ed_competence_voc'));
 
@@ -748,10 +898,38 @@ function ed_q_portfolio_form_alter(&$form, &$form_state, $form_id) {
 //    }
 //    dpm($options);
 
+
+//    $form['submit_draft'] = array(
+//        '#type' => 'submit',
+//        '#value' => t('Save as Draft'),
+//        '#weight' => 100,
+//    );
+
+    $add_file_url = l(t('file'), 'node/add/ed-file');
+
+    $form['add-new-container'] = array(
+        '#type' => 'container',
+        '#attributes' => array(
+            'class' => array('ed-add-new-node', 'ed-add-new-ed-file', 'ed-add-new-ed-folder'),
+        ),
+        '#weight' => $form['ed_q_portfolio_field_statement']['#weight']+1,
+    );
+
+    $form['add-new-container']['add-new'] = array(
+        '#type' => 'markup',
+        '#markup' => t('Upload a new CV or statement !file', array('!file' => $add_file_url)),
+
+    );
   }
 
 
 
+}
+
+function custom_after_build($form, &$form_state) {
+  $form['path']['#access'] = FALSE;
+  $form['menu']['#access'] = FALSE;
+  return ($form);
 }
 
 /**
@@ -941,6 +1119,7 @@ function ed_q_portfolio_vocabulary_tree($vid, $nid, $tid) {
       $icon_url = null;
       $filename = null;
       $uri = null;
+      $file_node_id = null;
       foreach($descriptions as $description) {
 
 
@@ -950,12 +1129,12 @@ function ed_q_portfolio_vocabulary_tree($vid, $nid, $tid) {
 
 
             $wrapper = entity_metadata_wrapper('node', $description->ed_q_portfolio_competence_desc_fid);
-            $node_file = $wrapper->ed_file_field_file_upload->value();
-
-            $filename = $node_file['filename'];
-            $uri = $node_file['uri'];
-            $mime = check_plain($node_file['filemime']);
-            $icon_url = file_icon_url(file_load($node_file['fid']));
+            $file_node_id = $wrapper->nid->value();
+            $file_node_file = $wrapper->ed_file_field_file_upload->value();
+            $filename = $file_node_file['filename'];
+            $uri = $file_node_file['uri'];
+            $mime = check_plain($file_node_file['filemime']);
+            $icon_url = file_icon_url(file_load($file_node_file['fid']));
 
           }
 
@@ -981,7 +1160,7 @@ function ed_q_portfolio_vocabulary_tree($vid, $nid, $tid) {
       if (($term->depth == $depth) && ($num_at_depth > 0)) {
         $markup .= "</li>\n<li class=\"term open\">";
       }
-      $markup .= ed_q_portfolio_build_term($term->name, $nid, $term->tid, $term_description, $icon_url, $mime, $filename, $uri);
+      $markup .= ed_q_portfolio_build_term($term->name, $nid, $term->tid, $term_description, $icon_url, $mime, $filename, $uri, $file_node_id);
       $num_at_depth++;
     }
     $markup .= "</li>\n</ul>\n</div>\n";
@@ -993,12 +1172,12 @@ function ed_q_portfolio_vocabulary_tree($vid, $nid, $tid) {
 }
 
 
-function ed_q_portfolio_build_term($name, $nid, $tid, $term_description, $icon_url, $mime, $filename, $uri) {
+function ed_q_portfolio_build_term($name, $nid, $tid, $term_description, $icon_url, $mime, $filename, $uri, $file_node_id) {
 //  $count = db_query("SELECT COUNT(nid) FROM {taxonomy_index} WHERE tid IN (:tids) ", array(':tids' => implode(',', $tids)))->fetchField();
   $markup = '<div class="competence">'.l($name, 'ed_q_portfolio/nojs/'.$nid.'/'.$tid, array('attributes' => (array('class' => array('termtext accordion-section-title', 'ctools-use-modal'), 'data-tid' => $tid)))).
       ' <i class="fa fa-chevron-up"></i></div><div class="competence-desc" id="'.$tid.'">'.$term_description;
   if($icon_url && $mime && $filename){
-    $markup .= '<br><img alt="" class="file-icon" src="' . $icon_url . '" title="' . $mime . '" /> '.l($filename, file_create_url($uri)).'</div>';
+    $markup .= '<br>'.t('Attached file:').' '.'<img alt="" class="file-icon" src="' . $icon_url . '" title="' . $mime . '" /> '.l($filename, file_create_url($uri)).' <i class="fa fa-pencil"></i> '.l(t('Edit'), 'node/' . $file_node_id . '/edit').'</div>';
   }
 
 //  $markup = "<span>" . $name . "<span>";

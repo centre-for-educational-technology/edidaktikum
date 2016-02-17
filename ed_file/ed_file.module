@@ -291,6 +291,37 @@ function ed_file_get_all_files_and_folders($header, $no_limit=false) {
   return $nids;
 }
 
+
+/**
+ * Implements hook_node_delete().
+ */
+function ed_file_node_delete($node) {
+  //Delete association with ed_q_portfolio
+
+  if ('ed_file' == $node->type) {
+    db_update('field_data_ed_q_portfolio_competence_desc')
+        ->fields(array('ed_q_portfolio_competence_desc_fid' => null))
+        ->condition('ed_q_portfolio_competence_desc_fid', $node->nid, '=')
+        ->execute();
+  }
+
+  $query = new EntityFieldQuery();
+
+  $entities = $query->entityCondition('entity_type', 'node')
+      ->entityCondition('bundle', 'ed_q_portfolio')
+      ->fieldCondition('ed_q_portfolio_field_cv','value', $node->nid, '=')
+      ->execute();
+
+  foreach ($entities as $q_node){
+    dpm($q_node);
+    $wrapper = entity_metadata_wrapper('node', $q_node->nid);
+    $wrapper->ed_q_portfolio_field_cv->set(NULL);
+  }
+
+
+
+}
+
 /**
  * Implements hook_form_alter().
  */
