@@ -1110,7 +1110,7 @@ function ed_q_portfolio_vocabulary_tree($vid, $nid, $tid) {
 
   if(!empty($tree)) {
 
-    $markup = "<div class=\"accordion\"><ul class=\"termlist\">\n<li class=\"term open\">";
+    $markup = "<div class=\"accordion\"><ol class=\"termlist\">\n<li class=\"term open title\">";
 
     //Description
     foreach ($tree as $term) {
@@ -1158,15 +1158,20 @@ function ed_q_portfolio_vocabulary_tree($vid, $nid, $tid) {
         $depth = $term->depth;
       }
       if (($term->depth == $depth) && ($num_at_depth > 0)) {
-        $markup .= "</li>\n<li class=\"term open\">";
+        $markup .= "</li>\n<li class=\"term open title\">";
       }
-      $markup .= ed_q_portfolio_build_term($term->name, $nid, $term->tid, $term_description, $icon_url, $mime, $filename, $uri, $file_node_id);
+
+      if($depth>0) {
+        $markup .= ed_q_portfolio_build_term($term->name, $nid, $term->tid, $term_description, $icon_url, $mime, $filename, $uri, $file_node_id);
+      }else{
+        $markup .= ed_q_portfolio_build_term_section_title($term->name, $term->tid);
+      }
       $num_at_depth++;
     }
-    $markup .= "</li>\n</ul>\n</div>\n";
+    $markup .= "</li>\n</ol>\n</div>\n";
 
   }else{
-    $markup = "No taxonomy terms for this level added.";
+    $markup = t("No taxonomy terms for this level added.");
   }
   return $markup;
 }
@@ -1179,6 +1184,17 @@ function ed_q_portfolio_build_term($name, $nid, $tid, $term_description, $icon_u
   if($icon_url && $mime && $filename){
     $markup .= '<br>'.t('Attached file:').' '.'<img alt="" class="file-icon" src="' . $icon_url . '" title="' . $mime . '" /> '.l($filename, file_create_url($uri)).' <i class="fa fa-pencil"></i> '.l(t('Edit'), 'node/' . $file_node_id . '/edit').'</div>';
   }
+
+//  $markup = "<span>" . $name . "<span>";
+  return $markup;
+}
+
+
+function ed_q_portfolio_build_term_section_title($name, $tid) {
+//  $count = db_query("SELECT COUNT(nid) FROM {taxonomy_index} WHERE tid IN (:tids) ", array(':tids' => implode(',', $tids)))->fetchField();
+  $markup = '<h2 class="competence section-title">'.t($name).
+      ' <i class="fa fa-chevron-up"></i></h2><div class="competence-desc" id="'.$tid.'">';
+
 
 //  $markup = "<span>" . $name . "<span>";
   return $markup;

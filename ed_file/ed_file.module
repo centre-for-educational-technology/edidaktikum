@@ -305,6 +305,8 @@ function ed_file_node_delete($node) {
         ->execute();
   }
 
+
+  //Clear association with ed_q_portfolio_field_cv
   $query = new EntityFieldQuery();
 
   $entities = $query->entityCondition('entity_type', 'node')
@@ -312,10 +314,41 @@ function ed_file_node_delete($node) {
       ->fieldCondition('ed_q_portfolio_field_cv','value', $node->nid, '=')
       ->execute();
 
-  foreach ($entities as $q_node){
-    dpm($q_node);
-    $wrapper = entity_metadata_wrapper('node', $q_node->nid);
-    $wrapper->ed_q_portfolio_field_cv->set(NULL);
+  if(!empty($entities)) {
+
+    foreach ($entities as $q_nodes) {
+
+      foreach ($q_nodes as $q_node) {
+
+
+        $wrapper = entity_metadata_wrapper('node', $q_node->nid);
+        $wrapper->ed_q_portfolio_field_cv->set(NULL);
+        $wrapper->save();
+      }
+
+    }
+  }
+
+
+  //Clear association with ed_q_portfolio_field_statement
+  $query = new EntityFieldQuery();
+  $entities = $query->entityCondition('entity_type', 'node')
+      ->entityCondition('bundle', 'ed_q_portfolio')
+      ->fieldCondition('ed_q_portfolio_field_statement','value', $node->nid, '=')
+      ->execute();
+
+  if(!empty($entities)) {
+    foreach ($entities as $q_nodes) {
+
+      foreach ($q_nodes as $q_node) {
+
+
+        $wrapper = entity_metadata_wrapper('node', $q_node->nid);
+        $wrapper->ed_q_portfolio_field_statement->set(NULL);
+        $wrapper->save();
+      }
+
+    }
   }
 
 
