@@ -29,6 +29,9 @@ function ed_q_portfolio_install() {
   ed_q_portfolio_node_create_field_statement();
   ed_q_portfolio_node_add_field_statement();
 
+  ed_q_portfolio_node_create_field_status();
+  ed_q_portfolio_node_add_field_status();
+
   ed_q_portfolio_set_permissions();
 
   //Disable comments
@@ -51,6 +54,8 @@ function ed_q_portfolio_uninstall() {
 
   field_delete_field('ed_q_portfolio_field_cv');
   field_delete_field('ed_q_portfolio_field_statement');
+
+  field_delete_field('ed_q_portfolio_field_status');
   //delete set variables
   variable_del('ed-q-portfolio');
 }
@@ -502,6 +507,45 @@ function ed_q_portfolio_node_add_field_statement() {
         )
     );
 
+    field_create_instance($instance);
+  }
+}
+
+
+
+/**
+ *  Create field status
+ */
+function ed_q_portfolio_node_create_field_status() {
+  $field_name = 'ed_q_portfolio_field_status';
+  if (!field_info_field($field_name)) {
+    $field = array(
+        'field_name' => $field_name,
+        'type' => 'list_integer',
+        'entity_types' => array('node'),
+        'cardinality' => 1,
+        'locked' => FALSE,
+        'settings' => array(
+            'allowed_values_function' => '_ed_q_portfolio_status_list',
+        ),
+    );
+    $field = field_create_field($field);
+  }
+}
+
+
+function ed_q_portfolio_node_add_field_status() {
+  $field_name = 'ed_q_portfolio_field_status';
+  $field = field_info_field($field_name);
+  if (!empty($field) && !field_info_instance('node', $field_name, 'ed_q_portfolio')) {
+    $instance = array(
+        'field_name' => $field_name,
+        'entity_type' => 'node',
+        'bundle' => 'ed_q_portfolio',
+        'label' => t('Portfolio status'),
+        'description' => '',
+        'required' => FALSE,
+    );
     field_create_instance($instance);
   }
 }
