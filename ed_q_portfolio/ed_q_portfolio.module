@@ -27,7 +27,7 @@ function ed_q_portfolio_menu() {
   );
 
   $items['node/%node/cv'] = array(
-      'title' => t('Your CV and statement'),
+      'title' => t('Portfolio CV and statement'),
       'weight' => 2,
       'page callback' => 'ed_q_portfolio_cv',
       'type' => MENU_LOCAL_TASK,
@@ -146,9 +146,9 @@ function ed_q_portfolio_cv($node){
   }
 
   $is_author = null;
-  global $user;
+  $current_user = ed_q_portfolio_get_current_user();
 
-  if($node->uid == $user->uid){
+  if($node->uid == $current_user->uid){
     $is_author = TRUE;
   }else{
     $is_author = FALSE;
@@ -448,7 +448,7 @@ function ed_q_portfolio_status_callback($ajax, $node) {
 
     $form_state = array(
         'ajax' => TRUE,
-        'title' => t('Enter Competence Description'),
+        'title' => t('Set Portfolio Status'),
         'node' => $node,
         'q_portfolio_status_selected' => !empty($q_portfolio_status_selected)? $q_portfolio_status_selected :null,
     );
@@ -527,7 +527,8 @@ function ed_q_portfolio_status_form($form, $form_state) {
 
   $form['q_portfolio_status'] = array(
       '#type' => 'radios',
-      '#title' => t('Set portfolio status'),
+      '#title' => t('This portfolio status is:'),
+      '#description' => t('Mark your decision about this portfolio.'),
       '#options' => _ed_q_portfolio_status_list(),
       '#default_value' => (isset($form_state['q_portfolio_status_selected']))
           ? $form_state['q_portfolio_status_selected']
@@ -1237,10 +1238,18 @@ function ed_q_portfolio_field_extra_fields(){
   return $extra;
 }
 
+function ed_q_portfolio_get_current_user() {
+  global $user;
+  return $user;
+}
+
 /**
  * Implements hook_node_view().
  */
 function ed_q_portfolio_node_view($node, $view_mode, $langcode) {
+
+  $current_user = ed_q_portfolio_get_current_user();
+
   if ('ed_q_portfolio' == $node->type) {
 
     hide($node->content['ed_q_portfolio_competence_desc']);
@@ -1278,6 +1287,39 @@ function ed_q_portfolio_node_view($node, $view_mode, $langcode) {
     );
     // Add the settings array defined above to Drupal 7's JS settings:
     drupal_add_js($modal_style, 'setting');
+
+
+
+
+    // Create our own javascript that will be used to theme a modal.
+    $modal_style_status = array(
+        'status-modal-style' => array(
+            'modalSize' => array(
+                'type' => 'scale',
+                'width' => 0.4,
+                'height' => 0.35,
+                'addWidth' => 10,
+                'addHeight' => 10,
+                'contentRight' => 0,
+                'contentBottom' => 0,
+            ),
+            'modalOptions' => array(
+                'opacity' => .6,
+                'background-color' => '#000',
+            ),
+            'animation' => 'fadeIn',
+          // Customize the AJAX throbber like so:
+          // This function assumes the images are inside the module directory's "images"
+          // directory:
+          // ctools_image_path($image, $module = 'ctools', $dir = 'images')
+//            'throbber' => theme('image', array('path' => ctools_image_path('ajax-loader.gif', 'happy'), 'alt' => t('Loading...'), 'title' => t('Loading'))),
+//            'closeImage' => theme('image', array('path' => ctools_image_path('modal-close.png', 'happy'), 'alt' => t('Close window'), 'title' => t('Close window'))),
+        ),
+    );
+    // Add the settings array defined above to Drupal 7's JS settings:
+    drupal_add_js($modal_style_status, 'setting');
+
+    ctools_modal_add_js();
     if (in_array($view_mode, array('full'))) {
       $field_level = $node->ed_q_portfolio_field_level;
 
@@ -1286,9 +1328,9 @@ function ed_q_portfolio_node_view($node, $view_mode, $langcode) {
 
 
       $is_author = null;
-      global $user;
 
-      if($node->uid == $user->uid){
+
+      if($node->uid == $current_user->uid){
         $is_author = TRUE;
       }else{
         $is_author = FALSE;
@@ -1393,7 +1435,7 @@ function ed_q_portfolio_node_view($node, $view_mode, $langcode) {
       if($is_assessor) {
 
         $node->content['info']['status']['set'] = array(
-            '#markup' => l("Set portfolio status", 'qualification_portfolio/status/nojs/' . $node->nid, array('attributes' => array('class' => 'ctools-use-modal'))),
+            '#markup' => l("Set portfolio status", 'qualification_portfolio/status/nojs/' . $node->nid, array('attributes' => (array('class' => array('ctools-use-modal', 'ctools-modal-status-modal-style'))))),
 //            '#prefix' => '<div id="q_portfolio_status">',
 //            '#suffix' => '</div>',
         );
