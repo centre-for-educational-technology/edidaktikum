@@ -18,19 +18,21 @@ function ed_q_portfolio_install() {
   ed_q_portfolio_node_add_field_competence_desc();
 
 //  ed_q_portfolio_node_create_field_cv_upload();
-//  ed_q_portfolio_node_create_field_statement_upload();
+//  ed_q_portfolio_node_create_field_application_upload();
 //  ed_q_portfolio_node_add_field_cv_upload();
-//  ed_q_portfolio_node_add_field_statement_upload();
+//  ed_q_portfolio_node_add_field_application_upload();
 
 
   ed_q_portfolio_node_create_field_cv();
   ed_q_portfolio_node_add_field_cv();
 
-  ed_q_portfolio_node_create_field_statement();
-  ed_q_portfolio_node_add_field_statement();
+  ed_q_portfolio_node_create_field_application();
+  ed_q_portfolio_node_add_field_application();
 
   ed_q_portfolio_node_create_field_status();
   ed_q_portfolio_node_add_field_status();
+
+  ed_q_portfolio_create_og_group();
 
   ed_q_portfolio_set_permissions();
 
@@ -50,10 +52,10 @@ function ed_q_portfolio_uninstall() {
 
 
 //  field_delete_field('ed_q_portfolio_cv_upload');
-//  field_delete_field('ed_q_portfolio_statement_upload');
+//  field_delete_field('ed_q_portfolio_application_upload');
 
   field_delete_field('ed_q_portfolio_field_cv');
-  field_delete_field('ed_q_portfolio_field_statement');
+  field_delete_field('ed_q_portfolio_field_application');
 
   field_delete_field('ed_q_portfolio_field_status');
   //delete set variables
@@ -340,10 +342,10 @@ function ed_q_portfolio_field_schema($field) {
 //
 //
 ///**
-// * Creates statement file upload field if not exists.
+// * Creates application file upload field if not exists.
 // */
-//function ed_q_portfolio_node_create_field_statement_upload() {
-//  $field_name = 'ed_q_portfolio_statement_upload';
+//function ed_q_portfolio_node_create_field_application_upload() {
+//  $field_name = 'ed_q_portfolio_application_upload';
 //  if (!field_info_field($field_name)) {
 //    $field = array(
 //        'field_name' => $field_name,
@@ -385,17 +387,17 @@ function ed_q_portfolio_field_schema($field) {
 //
 //
 ///**
-// * Adds statement file upload field to ed_q_portfolio node type.
+// * Adds application file upload field to ed_q_portfolio node type.
 // */
-//function ed_q_portfolio_node_add_field_statement_upload() {
-//  $field_name = 'ed_q_portfolio_statement_upload';
+//function ed_q_portfolio_node_add_field_application_upload() {
+//  $field_name = 'ed_q_portfolio_application_upload';
 //  $field = field_info_field($field_name);
 //  if (!empty($field) && !field_info_instance('node', $field_name, 'ed_q_portfolio')) {
 //    $instance = array(
 //        'field_name' => $field_name,
 //        'entity_type' => 'node',
 //        'bundle' => 'ed_q_portfolio',
-//        'label' => t('Upload your statement file'),
+//        'label' => t('Upload your application file'),
 //        'description' => '',
 //        'settings' => array(
 //            'file_extensions' => 'txt doc docx xls xlsx ppt pptx pdf png jpg rar zip',
@@ -462,13 +464,13 @@ function ed_q_portfolio_node_add_field_cv() {
 
 
 /**
- *  Create field statement
+ *  Create field application
  */
 
-function ed_q_portfolio_node_create_field_statement() {
+function ed_q_portfolio_node_create_field_application() {
 
   $field = array(
-      'field_name' => 'ed_q_portfolio_field_statement',
+      'field_name' => 'ed_q_portfolio_field_application',
       'type' => 'list_integer',
       'cardinality' => 1,
       'foreign keys' => array(),
@@ -487,14 +489,14 @@ function ed_q_portfolio_node_create_field_statement() {
 }
 
 
-function ed_q_portfolio_node_add_field_statement() {
-  $field_name = 'ed_q_portfolio_field_statement';
+function ed_q_portfolio_node_add_field_application() {
+  $field_name = 'ed_q_portfolio_field_application';
   $field = field_info_field($field_name);
   if (!empty($field) && !field_info_instance('node', $field_name, 'ed_q_portfolio')) {
     $instance = array(
         'field_name' => $field_name,
         'entity_type' => 'node',
-        'label' => t('Choose a statement file'),
+        'label' => t('Choose an application file'),
         'bundle' => 'ed_q_portfolio',
         'required' => FALSE,
         'widget' => array(
@@ -550,6 +552,35 @@ function ed_q_portfolio_node_add_field_status() {
   }
 }
 
+
+/**
+ * Create group Hindajad
+ */
+
+function ed_q_portfolio_create_og_group()
+{
+  $node = new stdClass();
+  $node->type = 'ed_cluster';
+  $node->title = 'Hindajad';
+  $node->uid = 1;
+  $node->name = 'admin';
+  $node->comment = 1;
+  $node->promote = 1;
+  $node->ed_field_excerpt[LANGUAGE_NONE][0]['value'] = 'Group of Qualification portfolio assessors';
+  $node->ed_field_excerpt[LANGUAGE_NONE][0]['safe_value'] = 'Group of Qualification portfolio assessors';
+
+  //Organic groups fields
+  $node->og_description = 'Group of Qualification portfolio assessors';
+  $node->og_register = 0;
+  $node->og_directory = 0;
+  $node->og_private = 1;
+  $node->og_selective = 3;
+
+  //create the node
+  $node = node_submit($node);
+  node_save($node);
+
+}
 
 /**
  * Sets permissions for ed_q_portfolio.

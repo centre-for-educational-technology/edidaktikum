@@ -27,7 +27,7 @@ function ed_q_portfolio_menu() {
   );
 
   $items['node/%node/cv'] = array(
-      'title' => t('Portfolio CV and statement'),
+      'title' => t('Portfolio CV and application'),
       'weight' => 2,
       'page callback' => 'ed_q_portfolio_cv',
       'type' => MENU_LOCAL_TASK,
@@ -107,17 +107,17 @@ function ed_q_portfolio_cv($node){
 
   }
 
-  $content['container']['statement']['name'] = array(
+  $content['container']['application']['name'] = array(
       '#type' => 'markup',
-      '#markup' => '<i class="fa fa-file-text-o"></i> '.t('Statament file'),
+      '#markup' => '<i class="fa fa-file-text-o"></i> '.t('Application file'),
       '#prefix' => '<h1>',
       '#suffix' => '</h1>'
   );
 
 
-  if(!empty($node->ed_q_portfolio_field_statement[LANGUAGE_NONE][0])) {
+  if(!empty($node->ed_q_portfolio_field_application[LANGUAGE_NONE][0])) {
 
-    $wrapper = entity_metadata_wrapper('node', $node->ed_q_portfolio_field_statement[LANGUAGE_NONE][0]['value']);
+    $wrapper = entity_metadata_wrapper('node', $node->ed_q_portfolio_field_application[LANGUAGE_NONE][0]['value']);
     $file_node_file = $wrapper->ed_file_field_file_upload->value();
     $filename = $file_node_file['filename'];
     $uri = $file_node_file['uri'];
@@ -126,7 +126,7 @@ function ed_q_portfolio_cv($node){
 
 
 
-    $content['container']['statement']['content'] = array(
+    $content['container']['application']['content'] = array(
         '#type' => 'markup',
         '#markup' => '<br><h2>' . t('Attached file:') .' '. '<img alt="" class="file-icon" src="' . $icon_url . '" title="' . $mime . '" /> ' . l($filename, file_create_url($uri)).'</h2></div></div>',
 
@@ -137,9 +137,9 @@ function ed_q_portfolio_cv($node){
 
   }else{
 
-    $content['container']['statement']['content'] = array(
+    $content['container']['application']['content'] = array(
         '#type' => 'markup',
-        '#markup' => t("No statement file attached"),
+        '#markup' => t("No application file attached"),
 
     );
 
@@ -158,7 +158,7 @@ function ed_q_portfolio_cv($node){
 
     $content['container']['add'] = array(
         '#type' => 'markup',
-        '#markup' => '<i class="fa fa-pencil"></i> ' . l(t('Edit or add CV and statement'), 'node/' . $node->nid . '/edit'),
+        '#markup' => '<i class="fa fa-pencil"></i> ' . l(t('Edit or add CV and application'), 'node/' . $node->nid . '/edit'),
         '#prefix' => '<h3>',
         '#suffix' => '</h3>'
 
@@ -702,6 +702,8 @@ function ed_q_portfolio_form_submit(&$form, &$form_state) {
     $ed_fid = $ed_file_node->nid;
   }else if(isset($form_state['values']['competence_ed_file']) && ($form_state['values']['competence_ed_file'])>0 && !($form_state['values']['competence_new_ed_file'])>0){
     $ed_fid = $form_state['values']['competence_ed_file'];
+  }else{
+    $ed_fid = null;
   };
 
 
@@ -719,7 +721,7 @@ function ed_q_portfolio_form_submit(&$form, &$form_state) {
     }
 
     //Update existing competence
-    if ( isset($position) ) {
+    if ( isset($position)) {
 //      $node->ed_q_portfolio_competence_desc[LANGUAGE_NONE][$position]['desc'] = $form_state['values']['competence_desc'];
       $wrapper->ed_q_portfolio_competence_desc[$position]->set(array(
           'tid' => $tid,
@@ -1066,6 +1068,7 @@ function ed_q_portfolio_form_alter(&$form, &$form_state, $form_id) {
   if ('ed_q_portfolio_node_form' == $form_id) {
     $form['ed_q_portfolio_competence_desc']['#access'] = 0;
     $form['ed_q_portfolio_field_status']['#access'] = 0;
+    $form['options']['status']['#default_value'] = 0;
 
     //Hide unnecessary options
     $form['revision_information']['#access'] = FALSE;
@@ -1112,12 +1115,12 @@ function ed_q_portfolio_form_alter(&$form, &$form_state, $form_id) {
         '#attributes' => array(
             'class' => array('ed-add-new-node', 'ed-add-new-ed-file', 'ed-add-new-ed-folder'),
         ),
-        '#weight' => $form['ed_q_portfolio_field_statement']['#weight']+1,
+        '#weight' => $form['ed_q_portfolio_field_application']['#weight']+1,
     );
 
     $form['add-new-container']['add-new'] = array(
         '#type' => 'markup',
-        '#markup' => t('Upload a new CV or statement !file', array('!file' => $add_file_url)),
+        '#markup' => t('Upload a new CV or application !file', array('!file' => $add_file_url)),
 
     );
   }
