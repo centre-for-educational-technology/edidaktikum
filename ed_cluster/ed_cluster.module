@@ -70,6 +70,15 @@ function ed_cluster_menu() {
     'type' => MENU_LOCAL_TASK,
     'weight' => 50,
   );
+  $items['node/%node/q_portfolio'] = array(
+      'title' => t('Qualification Portfolio'),
+      'page callback' => 'ed_listing_from_group',
+      'access callback' => 'ed_group_assessors_ed_q_portfolio_listing_access',
+      'page arguments' => array('node', 1, 'ed_q_portfolio'),
+      'access arguments' => array('node', 1, 'ed_q_portfolio'),
+      'type' => MENU_LOCAL_TASK,
+      'weight' => 3,
+  );
   $items['node/%node/news'] = array(
     'title' => t('News'),
     'page callback' => 'ed_listing_from_group',    
@@ -1021,6 +1030,23 @@ function ed_group_content_listing_access($filler, $gnode, $type){
   return $is_group;
 }
 
+/*
+ * Check if this is group Hindajad and enable Qualifications Portfolio tab
+ */
+function ed_group_assessors_ed_q_portfolio_listing_access($filler, $gnode, $type){
+  $is_group = _ed_is_nid_group($gnode->nid);
+
+  if($gnode->type=='ed_subgroup'&&$type=='ed_subgroup'){
+    return false;
+  }
+
+  if(!$gnode->name=='Hindajad'){
+    $is_group = false;
+  }
+
+  return $is_group;
+}
+
 function ed_listing_from_group($filler, $gnode, $type){  
   menu_tree_set_path('main-menu', 'clusters');
 
@@ -1045,10 +1071,12 @@ function ed_listing_from_group($filler, $gnode, $type){
         'class' => array('ed-add-new-node', 'ed-add-new-'.$type_dashed),
       ),
     );
-    $content['add-new-container']['add-new-link'] = array(
-      '#type' => 'markup',
-      '#markup' => l(t('Add new'), 'node/add/'.$type_dashed, array('query' => array('og_group_ref' => $gnode->nid, 'destination' => $destination))),
-    );
+    if($type != 'ed_q_portfolio') {
+      $content['add-new-container']['add-new-link'] = array(
+          '#type' => 'markup',
+          '#markup' => l(t('Add new'), 'node/add/' . $type_dashed, array('query' => array('og_group_ref' => $gnode->nid, 'destination' => $destination))),
+      );
+    }
   }
 
   // This override will display both ed_blog and ed_answer
@@ -1057,7 +1085,7 @@ function ed_listing_from_group($filler, $gnode, $type){
     $type = array($type);
     $type[] = 'ed_answer';
   }
-  $nosorting = array('ed_news', 'ed_event', 'ed_forum', 'ed_blog', 'ed_answer');
+  $nosorting = array('ed_news', 'ed_event', 'ed_forum', 'ed_blog', 'ed_answer', 'ed_q_portfolio');
   if(is_array($type)){
     $content_nids = _ed_get_group_content_by_type($gnode->nid, $type);
   }else{
@@ -1182,54 +1210,54 @@ function ed_cluster_node_view($node, $view_mode, $langcode){
 
                 $node->content['ed_cluster_content'][$type][$last_node_single->nid] = $tere;
 
-
-                if($tere['#bundle']=='ed_q_portfolio'){
-
-                  $ed_q_portfolio_node = $tere['#node'];
-
-                  $statuses_list = _ed_q_portfolio_status_list();
-
-                  if(!empty($ed_q_portfolio_node->ed_q_portfolio_field_status)) {
-                    $node->content['ed_cluster_content'][$type][$last_node_single->nid]['status']=array(
-                        '#type' => 'markup',
-                        '#prefix' => '<div class="description">',
-                        '#markup' =>  $statuses_list[$ed_q_portfolio_node->ed_q_portfolio_field_status[LANGUAGE_NONE][0]['value']],
-                        '#suffix' => '</div>',
-                    );
-                  }else{
-                    $node->content['ed_cluster_content'][$type][$last_node_single->nid]['status']=array(
-                        '#type' => 'markup',
-                        '#prefix' => '<div class="description">',
-                        '#markup' =>  t('Published, not reviewed'),
-                        '#suffix' => '</div>',
-                    );
-                  }
-
-
-                  if(!empty($ed_q_portfolio_node->ed_field_to_group_member)) {
-                    $assessor_user = user_load($ed_q_portfolio_node->ed_field_to_group_member[LANGUAGE_NONE][0]['target_id']);
-                    $wrapper = entity_metadata_wrapper('user', $assessor_user);
-
-
-
-                    $node->content['ed_cluster_content'][$type][$last_node_single->nid]['assessor']=array(
-                        '#type' => 'markup',
-                        '#prefix' => '<div class="description">',
-                        '#markup' =>  t('Assigned to ').l($wrapper->ed_field_full_name ->value(), '/user/'.$wrapper->uid->value()),
-                        '#suffix' => '</div>',
-                    );
-                  }else{
-                    $node->content['ed_cluster_content'][$type][$last_node_single->nid]['assessor']=array(
-                        '#type' => 'markup',
-                        '#prefix' => '<div class="description">',
-                        '#markup' =>  t('Not assigned ').l('Assign an assessor', '/node/'.$ed_q_portfolio_node->nid),
-                        '#suffix' => '</div>',
-                    );
-                  }
-
-
-
-                }
+// If ed_q_portfolio does not use teaser
+//                if($tere['#bundle']=='ed_q_portfolio'){
+//
+//                  $ed_q_portfolio_node = $tere['#node'];
+//
+//                  $statuses_list = _ed_q_portfolio_status_list();
+//
+//                  if(!empty($ed_q_portfolio_node->ed_q_portfolio_field_status)) {
+//                    $node->content['ed_cluster_content'][$type][$last_node_single->nid]['status']=array(
+//                        '#type' => 'markup',
+//                        '#prefix' => '<div class="description">',
+//                        '#markup' =>  $statuses_list[$ed_q_portfolio_node->ed_q_portfolio_field_status[LANGUAGE_NONE][0]['value']],
+//                        '#suffix' => '</div>',
+//                    );
+//                  }else{
+//                    $node->content['ed_cluster_content'][$type][$last_node_single->nid]['status']=array(
+//                        '#type' => 'markup',
+//                        '#prefix' => '<div class="description">',
+//                        '#markup' =>  t('Published, not reviewed'),
+//                        '#suffix' => '</div>',
+//                    );
+//                  }
+//
+//
+//                  if(!empty($ed_q_portfolio_node->ed_field_to_group_member)) {
+//                    $assessor_user = user_load($ed_q_portfolio_node->ed_field_to_group_member[LANGUAGE_NONE][0]['target_id']);
+//                    $wrapper = entity_metadata_wrapper('user', $assessor_user);
+//
+//
+//
+//                    $node->content['ed_cluster_content'][$type][$last_node_single->nid]['assessor']=array(
+//                        '#type' => 'markup',
+//                        '#prefix' => '<div class="description">',
+//                        '#markup' =>  t('Assigned to ').l($wrapper->ed_field_full_name ->value(), '/user/'.$wrapper->uid->value()),
+//                        '#suffix' => '</div>',
+//                    );
+//                  }else{
+//                    $node->content['ed_cluster_content'][$type][$last_node_single->nid]['assessor']=array(
+//                        '#type' => 'markup',
+//                        '#prefix' => '<div class="description">',
+//                        '#markup' =>  t('Not assigned ').l('Assign an assessor', '/node/'.$ed_q_portfolio_node->nid),
+//                        '#suffix' => '</div>',
+//                    );
+//                  }
+//
+//
+//
+//                }
 
               }
           }
