@@ -771,6 +771,19 @@ function ed_q_portfolio_assessor_form_submit(&$form, &$form_state)
 
   $wrapper->save();
 
+
+
+  $q_portfolio_status = 0;
+
+  $wrapper = entity_metadata_wrapper('node', $node->nid);
+
+
+  $wrapper->ed_q_portfolio_field_status->set($q_portfolio_status);
+
+  $wrapper->save();
+
+
+
   // Tell the browser to close the modal.
   $form_state['ajax_commands'][] = ctools_modal_command_dismiss();
 
@@ -778,6 +791,10 @@ function ed_q_portfolio_assessor_form_submit(&$form, &$form_state)
   $assessor_list = _ed_q_portfolio_assessor_list();
 
   $form_state['ajax_commands'][] = ajax_command_replace('#q-portfolio-assessor', '<p id="q-portfolio-assessor">'.$assessor_list[$q_portfolio_assessor].'</p>');
+
+
+  $statuses_list = _ed_q_portfolio_status_list();
+  $form_state['ajax_commands'][] = ajax_command_replace('#q-portfolio-status', '<p id="q-portfolio-status">'.$statuses_list[$q_portfolio_status].'</p>');
 
 
 
@@ -1244,11 +1261,11 @@ function ed_q_portfolio_node_view($node, $view_mode, $langcode) {
   $current_user = ed_q_portfolio_get_current_user();
 
   if ('ed_q_portfolio' == $node->type) {
-
     hide($node->content['ed_q_portfolio_competence_desc']);
     hide($node->content['ed_q_portfolio_field_status']);
     hide($node->content['ed_field_to_group_member']);
     hide($node->content['og_group_ref']);
+    $node->content['ed_field_content']['#object']->picture['#access']=false;
 
 
     // Load the modal library and add the modal javascript.
