@@ -1549,7 +1549,7 @@ function ed_q_portfolio_node_view($node, $view_mode, $langcode) {
         $wrapper = entity_metadata_wrapper('user', $assessor_user);
         $assessor = '<div class="assigned"><i class="fa fa-check"></i> '.t('Assigned to ').l($wrapper->ed_field_full_name ->value(), '/user/'.$wrapper->uid->value()).'</div>';
       }else{
-        $assessor = '<div class="not-assigned"><i class="fa fa-times"></i> '.t('Not assigned ').l('Assign an assessor', '/node/'.$node->nid).'</div>>';
+        $assessor = '<div class="not-assigned"><i class="fa fa-times"></i> '.t('Not assigned ').l('Assign an assessor', 'node/'.$node->nid).'</div>';
       }
 
 
