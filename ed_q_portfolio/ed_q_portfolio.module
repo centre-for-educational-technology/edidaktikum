@@ -204,14 +204,26 @@ function ed_q_portfolio_callback($ajax, $node, $tid) {
     //Get a list of user ed files
     $ed_files = _ed_q_portfolio_get_ed_files_list();
 
+    //Get selected files
+    $ed_files_chosen = array();
+
+    if (!empty($val[0]->ed_q_portfolio_competence_desc_fid)){
+      $attached_ed_files = json_decode($val[0]->ed_q_portfolio_competence_desc_fid);
+
+      foreach ($attached_ed_files as $key => $value){
+        array_push($ed_files_chosen, $value);
+      }
+
+
+    }
 
 
     $form_state = array(
         'ajax' => TRUE,
         'text' => !empty($val[0]->ed_q_portfolio_competence_desc_desc) ? $val[0]->ed_q_portfolio_competence_desc_desc : null,
         'ed_file_list' => $ed_files,
-        'ed_file_chosen' => !empty($val[0]->ed_q_portfolio_competence_desc_fid) ? $val[0]->ed_q_portfolio_competence_desc_fid : null,
-        'title' => t('Enter Competence Description'),
+        'ed_files_chosen' => !empty($ed_files_chosen) ? $ed_files_chosen : null,
+        'title' => '<h3>'.t('Enter Competence Description').'</h3>',
         'node' => $node,
     );
 
@@ -263,13 +275,14 @@ function ed_q_portfolio_form($form, $form_state) {
 
   $form['competence_ed_file'] = array(
       "#type" => "select",
+      '#multiple' => TRUE,
       "#title" => t("Evidence"),
-      '#default_value' => (isset($form_state['ed_file_chosen']))
-          ? $form_state['ed_file_chosen']
+      '#default_value' => (isset($form_state['ed_files_chosen']))
+          ? $form_state['ed_files_chosen']
           : '',
       '#empty_option' => '--Choose a file--',
       "#options" => $form_state['ed_file_list'],
-      "#description" => t("Choose from your files"),
+      "#description" => t("Choose from your files OR"),
   );
 
 
@@ -283,6 +296,8 @@ function ed_q_portfolio_form($form, $form_state) {
   $form['submit'] = array(
       '#type' => 'submit',
       '#value' => t('Submit'),
+//      '#prefix' => '<div class="modal-footer">',
+//      '#suffix' => '</div>',
   );
 
 
@@ -370,7 +385,7 @@ function ed_q_portfolio_assessor_callback($ajax, $node) {
 
     $form_state = array(
         'ajax' => TRUE,
-        'title' => t('Assign an assessor for this portfolio'),
+        'title' => '<h3>'.t('Assign assessors for this portfolio').'</h3>',
         'node' => $node,
         'q_portfolio_accessor_selected' => !empty($q_portfolio_accessor_selected)? $q_portfolio_accessor_selected :null,
     );
@@ -484,6 +499,9 @@ function ed_q_portfolio_assessor_form($form, $form_state) {
  * Drupal form submit handler.
  */
 function ed_q_portfolio_form_submit(&$form, &$form_state) {
+
+
+
 
 //  // Generate the new link using the submitted text value.
 //  $link = ed_q_portfolio_make_link($form_state['build_info']['args'][0]);
@@ -613,9 +631,9 @@ function ed_q_portfolio_form_submit(&$form, &$form_state) {
     node_save($ed_file_node);
 
 
-    $ed_fid = $ed_file_node->nid;
+    $ed_fid = drupal_json_encode($ed_file_node->nid);
   }else if(isset($form_state['values']['competence_ed_file']) && ($form_state['values']['competence_ed_file'])>0 && !($form_state['values']['competence_new_ed_file'])>0){
-    $ed_fid = $form_state['values']['competence_ed_file'];
+    $ed_fid = drupal_json_encode($form_state['values']['competence_ed_file']);
   }else{
     $ed_fid = null;
   };
@@ -696,17 +714,23 @@ function ed_q_portfolio_form_submit(&$form, &$form_state) {
 
   if(isset($ed_fid)) {
 
-    $wrapper = entity_metadata_wrapper('node', $ed_fid);
-    $node_file = $wrapper->ed_file_field_file_upload->value();
-    $filename = $node_file['filename'];
-    $uri = $node_file['uri'];
-    $mime = check_plain($node_file['filemime']);
-    $icon_url = file_icon_url(file_load($node_file['fid']));
+    $attached_ed_files = json_decode($ed_fid);
+
+    foreach ($attached_ed_files as $attached_ed_file){
+      $wrapper = entity_metadata_wrapper('node', $attached_ed_file);
+      $node_file = $wrapper->ed_file_field_file_upload->value();
+      $filename = $node_file['filename'];
+      $uri = $node_file['uri'];
+      $mime = check_plain($node_file['filemime']);
+      $icon_url = file_icon_url(file_load($node_file['fid']));
 
 
 
-    $markup .= '<br>'.t('Attached file:').' '.'<img alt="" class="file-icon" src="' . $icon_url . '" title="' . $mime . '" /> '.l($filename, file_create_url($uri)).' <i class="fa fa-pencil"></i> '.l(t('Edit'), 'node/' . $ed_fid . '/edit').'</div>';
-    $markup .= '</div>';
+      $markup .= '<div>'.t('Attached file:').' '.'<img alt="" class="file-icon" src="' . $icon_url . '" title="' . $mime . '" /> '.l($filename, file_create_url($uri)).' <i class="fa fa-pencil"></i> '.l(t('Edit'), 'node/' . $ed_fid . '/edit').'</div></div>';
+      $markup .= '</div>';
+    }
+
+
 
   }else{
     $markup = '<div class="competence-desc" id="'.$tid.'">'.$desc;
@@ -1278,7 +1302,7 @@ function ed_q_portfolio_node_view($node, $view_mode, $langcode) {
             'modalSize' => array(
                 'type' => 'scale',
                 'width' => 0.75,
-                'height' => 0.7,
+                'height' => 0.75,
                 'addWidth' => 10,
                 'addHeight' => 10,
                 'contentRight' => 0,
@@ -1455,7 +1479,7 @@ function ed_q_portfolio_node_view($node, $view_mode, $langcode) {
 
 
       $node->content['info']['assessor']['title'] = array(
-          '#markup' => '<i class="fa fa-user"></i> '.t("Portfolio assessor"),
+          '#markup' => '<i class="fa fa-user"></i> '.t("Portfolio assessors"),
           '#prefix' => '<h3>',
           '#suffix' => '</h3>'
       );
@@ -1472,7 +1496,7 @@ function ed_q_portfolio_node_view($node, $view_mode, $langcode) {
 
       }else {
         $node->content['info']['assessor']['value'] = array(
-            '#markup' => t('No assessor assigned currently'),
+            '#markup' => t('No assessors assigned currently'),
             '#prefix' => '<p id="q-portfolio-assessor">',
             '#suffix' => '</p>'
         );
@@ -1480,7 +1504,7 @@ function ed_q_portfolio_node_view($node, $view_mode, $langcode) {
 
       if($is_assessor){
         $node->content['info']['assessor']['set'] = array(
-            '#markup' => l("Assign an assessor", 'qualification_portfolio/assessor/nojs/' . $node->nid, array('attributes' => (array('class' => array('ctools-use-modal', 'ctools-modal-status-modal-style'))))),
+            '#markup' => l("Assign assessors", 'qualification_portfolio/assessor/nojs/' . $node->nid, array('attributes' => (array('class' => array('ctools-use-modal', 'ctools-modal-status-modal-style'))))),
         );
 
       }
@@ -1615,11 +1639,13 @@ function ed_q_portfolio_vocabulary_tree($vid, $nid, $tid, $is_author) {
     //Description
     foreach ($tree as $term) {
       $term_description = "";
+
       $mime = null;
       $icon_url = null;
       $filename = null;
       $uri = null;
       $file_node_id = null;
+      $attached_files_markup = null;
       foreach($descriptions as $description) {
 
 
@@ -1627,14 +1653,25 @@ function ed_q_portfolio_vocabulary_tree($vid, $nid, $tid, $is_author) {
 
           if($description->ed_q_portfolio_competence_desc_fid) {
 
+            $attached_ed_files = drupal_json_decode($description->ed_q_portfolio_competence_desc_fid);
 
-            $wrapper = entity_metadata_wrapper('node', $description->ed_q_portfolio_competence_desc_fid);
-            $file_node_id = $wrapper->nid->value();
-            $file_node_file = $wrapper->ed_file_field_file_upload->value();
-            $filename = $file_node_file['filename'];
-            $uri = $file_node_file['uri'];
-            $mime = check_plain($file_node_file['filemime']);
-            $icon_url = file_icon_url(file_load($file_node_file['fid']));
+            foreach ($attached_ed_files as $attached_ed_file){
+
+              $wrapper = entity_metadata_wrapper('node', $attached_ed_file);
+              $file_node_id = $wrapper->nid->value();
+              $file_node_file = $wrapper->ed_file_field_file_upload->value();
+              $filename = $file_node_file['filename'];
+              $uri = $file_node_file['uri'];
+              $mime = check_plain($file_node_file['filemime']);
+              $icon_url = file_icon_url(file_load($file_node_file['fid']));
+
+
+              $attached_files_markup .= '<br>'.t('Attached file:').' '.'<img alt="" class="file-icon" src="' . $icon_url . '" title="' . $mime . '" /> '.l($filename, file_create_url($uri)).' <i class="fa fa-pencil"></i> '.l(t('Edit'), 'node/' . $file_node_id . '/edit');
+            }
+
+
+
+
 
           }
 
@@ -1664,9 +1701,9 @@ function ed_q_portfolio_vocabulary_tree($vid, $nid, $tid, $is_author) {
       if($depth>0) {
         if($is_author) {
 
-          $markup .= ed_q_portfolio_build_term($term->name, $nid, $term->tid, $term_description, $icon_url, $mime, $filename, $uri, $file_node_id);
+          $markup .= ed_q_portfolio_build_term($term->name, $nid, $term->tid, $term_description, $attached_files_markup);
         }else{
-          $markup .= ed_q_portfolio_build_term_no_link($term->name, $nid, $term->tid, $term_description, $icon_url, $mime, $filename, $uri, $file_node_id);
+          $markup .= ed_q_portfolio_build_term_no_link($term->name, $nid, $term->tid, $term_description, $attached_files_markup);
         }
       }else{
         $markup .= ed_q_portfolio_build_term_section_title($term->name, $term->tid);
@@ -1682,13 +1719,13 @@ function ed_q_portfolio_vocabulary_tree($vid, $nid, $tid, $is_author) {
 }
 
 
-function ed_q_portfolio_build_term($name, $nid, $tid, $term_description, $icon_url, $mime, $filename, $uri, $file_node_id) {
+function ed_q_portfolio_build_term($name, $nid, $tid, $term_description, $attached_files_markup) {
 //  $count = db_query("SELECT COUNT(nid) FROM {taxonomy_index} WHERE tid IN (:tids) ", array(':tids' => implode(',', $tids)))->fetchField();
 
   $markup = '<div class="competence">'.l($name, 'qualification_portfolio/nojs/'.$nid.'/'.$tid, array('attributes' => (array('class' => array('termtext accordion-section-title', 'ctools-use-modal', 'ctools-modal-competence-modal-style'), 'data-tid' => $tid)))).
       ' <i class="fa fa-chevron-up"></i></div><div class="competence-desc" id="'.$tid.'">'.$term_description;
-  if($icon_url && $mime && $filename){
-    $markup .= '<br>'.t('Attached file:').' '.'<img alt="" class="file-icon" src="' . $icon_url . '" title="' . $mime . '" /> '.l($filename, file_create_url($uri)).' <i class="fa fa-pencil"></i> '.l(t('Edit'), 'node/' . $file_node_id . '/edit').'</div>';
+  if($attached_files_markup){
+    $markup .= $attached_files_markup.'</div>';
   }
 
 //  $markup = "<span>" . $name . "<span>";
@@ -1696,13 +1733,13 @@ function ed_q_portfolio_build_term($name, $nid, $tid, $term_description, $icon_u
 }
 
 
-function ed_q_portfolio_build_term_no_link($name, $nid, $tid, $term_description, $icon_url, $mime, $filename, $uri, $file_node_id) {
+function ed_q_portfolio_build_term_no_link($name, $nid, $tid, $term_description, $attached_files_markup) {
 //  $count = db_query("SELECT COUNT(nid) FROM {taxonomy_index} WHERE tid IN (:tids) ", array(':tids' => implode(',', $tids)))->fetchField();
 
   $markup = '<div class="competence highlight">'.t($name).
       ' <i class="fa fa-chevron-up"></i></div><div class="competence-desc" id="'.$tid.'">'.$term_description;
-  if($icon_url && $mime && $filename){
-    $markup .= '<br>'.t('Attached file:').' '.'<img alt="" class="file-icon" src="' . $icon_url . '" title="' . $mime . '" /> '.l($filename, file_create_url($uri)).'</div>';
+  if($attached_files_markup){
+    $markup .= $attached_files_markup.'</div>';
   }
 
 //  $markup = "<span>" . $name . "<span>";
