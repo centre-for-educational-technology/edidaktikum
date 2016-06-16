@@ -322,6 +322,7 @@ function ed_q_portfolio_status_callback($ajax, $node) {
     ctools_include('modal');
 
 
+
     $wrapper = entity_metadata_wrapper('node', $node->nid);
 
 
@@ -331,7 +332,7 @@ function ed_q_portfolio_status_callback($ajax, $node) {
 
     $form_state = array(
         'ajax' => TRUE,
-        'title' => t('Set Portfolio Status'),
+        'title' => '<h3>'.t('Set Portfolio Status').'</h3>',
         'node' => $node,
         'q_portfolio_status_selected' => !empty($q_portfolio_status_selected)? $q_portfolio_status_selected :null,
     );
@@ -341,7 +342,6 @@ function ed_q_portfolio_status_callback($ajax, $node) {
     form_load_include($form_state, 'inc', 'node', 'node.pages');
 
 
-//    $value = $node->ed_q_portfolio_competence_desc[$node->language][0]['value'];
 
     // Use ctools to generate ajax instructions for the browser to create
     // a form in a modal popup.
@@ -377,9 +377,13 @@ function ed_q_portfolio_assessor_callback($ajax, $node) {
 
 
 
-    $q_portfolio_accessor_selected = $wrapper->ed_field_to_group_member->value();
+    $q_portfolio_accessors_selected = $wrapper->ed_field_to_group_member->value();
 
-    $q_portfolio_accessor_selected = $q_portfolio_accessor_selected[0]->uid;
+    $q_portfolio_accessor_selected_list = array();
+
+    foreach ($q_portfolio_accessors_selected as $q_portfolio_accessor_selected){
+      array_push($q_portfolio_accessor_selected_list, $q_portfolio_accessor_selected->uid);
+    }
 
 
 
@@ -387,7 +391,7 @@ function ed_q_portfolio_assessor_callback($ajax, $node) {
         'ajax' => TRUE,
         'title' => '<h3>'.t('Assign assessors for this portfolio').'</h3>',
         'node' => $node,
-        'q_portfolio_accessor_selected' => !empty($q_portfolio_accessor_selected)? $q_portfolio_accessor_selected :null,
+        'q_portfolio_accessor_selected' => !empty($q_portfolio_accessor_selected_list)? $q_portfolio_accessor_selected_list :null,
     );
 
     $form_state['build_info']['args'] = array($node);
@@ -395,7 +399,6 @@ function ed_q_portfolio_assessor_callback($ajax, $node) {
     form_load_include($form_state, 'inc', 'node', 'node.pages');
 
 
-//    $value = $node->ed_q_portfolio_competence_desc[$node->language][0]['value'];
 
     // Use ctools to generate ajax instructions for the browser to create
     // a form in a modal popup.
@@ -456,8 +459,9 @@ function ed_q_portfolio_assessor_form($form, $form_state) {
 
   $form['q_portfolio_assessor'] = array(
       '#type' => 'select',
-      '#title' => t('Assign an assessor:'),
+      '#title' => t('Assign assessors:'),
       '#description' => t('Users of the group Hindajad'),
+      '#multiple' => TRUE,
       '#options' => _ed_q_portfolio_assessor_list(),
       '#default_value' => (isset($form_state['q_portfolio_accessor_selected']))
           ? $form_state['q_portfolio_accessor_selected']
@@ -473,13 +477,6 @@ function ed_q_portfolio_assessor_form($form, $form_state) {
 
   return $form;
 }
-
-
-
-
-
-
-
 
 
 
@@ -501,63 +498,7 @@ function ed_q_portfolio_assessor_form($form, $form_state) {
 function ed_q_portfolio_form_submit(&$form, &$form_state) {
 
 
-
-
-//  // Generate the new link using the submitted text value.
-//  $link = ed_q_portfolio_make_link($form_state['build_info']['args'][0]);
-//
-//
-//
-////  $link = ed_q_portfolio_make_link($form_state['values']['new_link_text']);
-//
-//
   $node = $form_state['build_info']['args'][0]; // 1 is node id we want to load
-
-
-//  $file = $form_state['values']['competence_file'];
-//  // We are done with the file, remove it from storage.
-//  unset($form_state['values']['competence_file']);
-//  // Make the storage of the file permanent.
-//  $file->status = FILE_STATUS_PERMANENT;
-//  // Save file status.
-//  file_save($file);
-//  // Set a response to the user.
-//  drupal_set_message(t('The form has been submitted and the image has been saved, filename: @filename.', array('@filename' => $file->filename)));
-//
-////
-//// Change field value
-//  $node->ed_q_portfolio_competence_desc[$node->language][0]['value'] = 'glebcom';
-//
-//  dpm($node->ed_q_portfolio_competence_desc);
-//
-//
-//// Get the numeric id of your field by passing field name
-//  $info = field_info_field('ed_q_portfolio_competence_desc');
-//  $fields = array($info['id']);
-//
-//// Execute the storage function
-//  field_sql_storage_field_storage_write('node', $node, 'update', $fields);
-//
-//// Clear field cache
-//  cache_clear_all("field:node:$node->nid", 'cache_field');
-//
-
-  /*
-  $nid = db_insert('field_data_ed_q_portfolio_competence_desc')
-      ->fields(array(
-          'entity_type' => 'node',
-          'bundle' => 'ed_q_portfolio',
-          'deleted' => 0,
-          'entity_id' => $node->nid,
-          'revision_id' => $node->nid,
-          'language' => LANGUAGE_NONE,
-          'delta' => 0,
-          'ed_q_portfolio_competence_desc_tid' => $form_state['build_info']['args'][1],
-          'ed_q_portfolio_competence_desc_desc' => $form_state['values']['competence_desc'],
-      ))
-      ->execute();
-  */
-
 
 
   $wrapper = entity_metadata_wrapper('node', $node);
@@ -593,23 +534,7 @@ function ed_q_portfolio_form_submit(&$form, &$form_state) {
     $ed_file_node->uid = 1;
 
 
-    //  //Set file field
-    //  $ed_file_node->ed_file_field_file_upload[LANGUAGE_NONE][0] = (array) $file;
-
-    //
-    //  $ed_file_node->ed_file_field_file_upload[LANGUAGE_NONE][0] = array(
-    //      'fid' => $file->fid,
-    //    //'alt' => $node->title,
-    //    //'title' => $node->title,
-    //      'uid' => '1',
-    //      'filename' => $file->filename,
-    //      'uri' => $file->uri,
-    //      'filemime' => $file->filemime,
-    //      'filesize'=> $file->filesize,
-    //      'status' => '1',
-    //  );
-
-
+    // Set file field
     $ed_file_node->ed_file_field_file_upload[LANGUAGE_NONE][] = array(
         'fid' => $file->fid,
         'filename' => $file->filename,
@@ -706,9 +631,7 @@ function ed_q_portfolio_form_submit(&$form, &$form_state) {
   // Tell the browser to close the modal.
   $form_state['ajax_commands'][] = ctools_modal_command_dismiss();
 
-  // Tell the browser to replace the old link with the new one.
 
-  //$form_state['ajax_commands'][] = ajax_command_replace('#'.$tid, '<div class="competence-desc" id="'.$tid.'">'.$desc.'</div>');
 
   $markup = '<div class="competence-desc" id="'.$tid.'">'.$desc;
 
@@ -780,15 +703,18 @@ function ed_q_portfolio_assessor_form_submit(&$form, &$form_state)
 
   $node = $form_state['build_info']['args'][0]; // 1 is node id we want to load
 
-  $q_portfolio_assessor = $form_state['values']['q_portfolio_assessor'];
+  $q_portfolio_assessors = $form_state['values']['q_portfolio_assessor'];
 
+//  dpm($q_portfolio_assessors);
+
+  $q_portfolio_assessor_reference = array();
+
+  foreach ($q_portfolio_assessors as $q_portfolio_assessor){
+    array_push($q_portfolio_assessor_reference, array('target_id'=>$q_portfolio_assessor));
+  }
 
   $wrapper = entity_metadata_wrapper('node', $node->nid);
 
-
-  $q_portfolio_assessor_reference[] = array (
-      'target_id'=> $q_portfolio_assessor,
-  );
 
 
   $wrapper->ed_field_to_group_member->set($q_portfolio_assessor_reference);
@@ -814,7 +740,15 @@ function ed_q_portfolio_assessor_form_submit(&$form, &$form_state)
 
   $assessor_list = _ed_q_portfolio_assessor_list();
 
-  $form_state['ajax_commands'][] = ajax_command_replace('#q-portfolio-assessor', '<p id="q-portfolio-assessor">'.$assessor_list[$q_portfolio_assessor].'</p>');
+  $assessors_markup = '';
+
+  foreach ($q_portfolio_assessors as $q_portfolio_assessor){
+    $assessors_markup .= '<p id="q-portfolio-assessor">'.$assessor_list[$q_portfolio_assessor].'</p>';
+
+  }
+
+
+  $form_state['ajax_commands'][] = ajax_command_html('#q-portfolio-assessor', $assessors_markup);
 
 
   $statuses_list = _ed_q_portfolio_status_list();
@@ -886,13 +820,7 @@ function ed_q_portfolio_field_widget_info() {
  * Implements hook_field_widget_form().
  */
 function ed_q_portfolio_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
-//  switch ($instance['widget']['type']) {
-//    case 'ed_q_portfolio_competence_desc_widget' :
-//      $element['competence_desc'] = array(
-//          '#type' => 'fieldset',
-//          '#title' => $element['#title'],
-//          '#tree' => TRUE,
-//      );
+
   $element['tid'] = array(
       '#type' => 'textfield',
       '#title' => t('Taxonomy id'),
@@ -999,8 +927,6 @@ function _ed_q_portfolio_status_list(){
   $options = array(
       '0' => t('Under review'),
       '1' => t('Accepted'),
-      '2' => t('Rejected'),
-
   );
   return $options;
 }
@@ -1112,32 +1038,7 @@ function ed_q_portfolio_form_alter(&$form, &$form_state, $form_id) {
     $form['options']['promote']['#access'] = FALSE;
     $form['options']['sticky']['#access'] = FALSE;
 
-//    dpm(taxonomy_vocabulary_machine_name_load('ed_competence_voc'));
 
-//    dpm(_ed_bookmark_type_list());
-//
-//    $vocab = taxonomy_vocabulary_machine_name_load('ed_competence_voc');
-//    $vid = $vocab->vid;
-//    $query = db_select('taxonomy_term_data', 't');
-//    $query->join('taxonomy_term_hierarchy', 'n', 'n.tid = t.tid');
-//    $results = $query
-//        ->fields('t', array('tid', 'name'))
-//        ->condition("n.parent", 0)
-//        ->condition("t.vid", $vid)
-//        ->execute();
-//
-//    $options = array();
-//    foreach($results as $term) {
-//      $options[$term->tid] = t($term->name);
-//    }
-//    dpm($options);
-
-
-//    $form['submit_draft'] = array(
-//        '#type' => 'submit',
-//        '#value' => t('Save as Draft'),
-//        '#weight' => 100,
-//    );
 
     $add_file_url = l(t('file'), 'node/add/ed-file');
 
@@ -1391,6 +1292,12 @@ function ed_q_portfolio_node_view($node, $view_mode, $langcode) {
           '#suffix' => '</div>'
       );
 
+      $node->content['info']['title'] = array(
+          '#markup' => '<i class="fa fa-info"></i> '.t("Portfolio details"),
+          '#prefix' => '<h3 class="q-portfolio-info">',
+          '#suffix' => '</h3>'
+      );
+
       $node->content['info']['author'] = array(
           '#markup' => t("Portfolio author:").' '.$user_name,
           '#prefix' => '<p>',
@@ -1479,7 +1386,7 @@ function ed_q_portfolio_node_view($node, $view_mode, $langcode) {
 
 
       $node->content['info']['assessor']['title'] = array(
-          '#markup' => '<i class="fa fa-user"></i> '.t("Portfolio assessors"),
+          '#markup' => '<i class="fa fa-users"></i> '.t("Portfolio assessors"),
           '#prefix' => '<h3>',
           '#suffix' => '</h3>'
       );
@@ -1488,11 +1395,20 @@ function ed_q_portfolio_node_view($node, $view_mode, $langcode) {
 
         $assessor_list = _ed_q_portfolio_assessor_list();
 
-        $node->content['info']['assessor']['value'] = array(
-            '#markup' => $assessor_list[$node->ed_field_to_group_member[LANGUAGE_NONE][0]['target_id']],
-            '#prefix' => '<p id="q-portfolio-assessor">',
-            '#suffix' => '</p>'
-        );
+        $assessors = $node->ed_field_to_group_member[LANGUAGE_NONE];
+
+        $assessors_markup = array();
+
+        foreach ($assessors as $assessor){
+          array_push($assessors_markup, array(
+              '#markup' => $assessor_list[$assessor['target_id']],
+              '#prefix' => '<p id="q-portfolio-assessor">',
+              '#suffix' => '</p>'
+          ));
+
+        }
+
+        $node->content['info']['assessor']['value'] = $assessors_markup;
 
       }else {
         $node->content['info']['assessor']['value'] = array(
@@ -1541,31 +1457,6 @@ function ed_q_portfolio_node_view($node, $view_mode, $langcode) {
       drupal_add_js(drupal_get_path('module', 'ed_q_portfolio') . '/js/ed_q_portfolio.js', 'file');
 
 
-//      drupal_add_css(drupal_get_path('module', 'ed_q_portfolio') . '/js/custom.css', 'file');
-
-
-      //$name = $term->name;
-
-
-
-
-//      $field_end = $node->ed_event_field_end[LANGUAGE_NONE][0];
-//      $node->content['start-end-dates'] = array(
-//          '#type' => 'container',
-//          '#attributes' => array(
-//              'class' => array('submitted'),
-//          ),
-//          '#weight' => -1,
-//      );
-//      $node->content['start-end-dates']['start'] = array(
-//          '#type' => 'markup',
-//          '#markup' => vsprintf("%s - %s", array(
-//              format_date($field_start['value'], 'short', '', $field_start['timezone']),
-//              format_date($field_end['value'], 'short', '', $field_end['timezone']),
-//          )),
-//          '#prefix' => '<span>',
-//          '#suffix' => '</span>',
-//      );
     }
   }
 
@@ -1586,11 +1477,23 @@ function ed_q_portfolio_node_view($node, $view_mode, $langcode) {
 
 
       if(!empty($node->ed_field_to_group_member)) {
-        $assessor_user = user_load($node->ed_field_to_group_member[LANGUAGE_NONE][0]['target_id']);
-        $wrapper = entity_metadata_wrapper('user', $assessor_user);
-        $assessor = '<div class="assigned"><i class="fa fa-check"></i> '.t('Assigned to ').l($wrapper->ed_field_full_name ->value(), '/user/'.$wrapper->uid->value()).'</div>';
+        $assessor = '';
+
+        $portfolio_assessors = $node->ed_field_to_group_member[LANGUAGE_NONE];
+
+        foreach ($portfolio_assessors as $portfolio_assessor){
+          $assessor_user = user_load($portfolio_assessor['target_id']);
+
+
+          $wrapper = entity_metadata_wrapper('user', $assessor_user);
+
+          $assessor .= '<div class="assigned"><i class="fa fa-check"></i> '.t('Assigned to ').l($wrapper->ed_field_full_name->value(), '/user/'.$wrapper->uid->value()).'</div>';
+        }
+
+
+
       }else{
-        $assessor = '<div class="not-assigned"><i class="fa fa-times"></i> '.t('Not assigned ').l('Assign an assessor', 'node/'.$node->nid).'</div>';
+        $assessor = '<div class="not-assigned"><i class="fa fa-times"></i> '.t('Not assigned ').l('Assign assessors', 'node/'.$node->nid).'</div>';
       }
 
 
@@ -1720,7 +1623,7 @@ function ed_q_portfolio_vocabulary_tree($vid, $nid, $tid, $is_author) {
 
 
 function ed_q_portfolio_build_term($name, $nid, $tid, $term_description, $attached_files_markup) {
-//  $count = db_query("SELECT COUNT(nid) FROM {taxonomy_index} WHERE tid IN (:tids) ", array(':tids' => implode(',', $tids)))->fetchField();
+
 
   $markup = '<div class="competence">'.l($name, 'qualification_portfolio/nojs/'.$nid.'/'.$tid, array('attributes' => (array('class' => array('termtext accordion-section-title', 'ctools-use-modal', 'ctools-modal-competence-modal-style'), 'data-tid' => $tid)))).
       ' <i class="fa fa-chevron-up"></i></div><div class="competence-desc" id="'.$tid.'">'.$term_description;
@@ -1728,13 +1631,12 @@ function ed_q_portfolio_build_term($name, $nid, $tid, $term_description, $attach
     $markup .= $attached_files_markup.'</div>';
   }
 
-//  $markup = "<span>" . $name . "<span>";
   return $markup;
 }
 
 
 function ed_q_portfolio_build_term_no_link($name, $nid, $tid, $term_description, $attached_files_markup) {
-//  $count = db_query("SELECT COUNT(nid) FROM {taxonomy_index} WHERE tid IN (:tids) ", array(':tids' => implode(',', $tids)))->fetchField();
+
 
   $markup = '<div class="competence highlight">'.t($name).
       ' <i class="fa fa-chevron-up"></i></div><div class="competence-desc" id="'.$tid.'">'.$term_description;
@@ -1742,18 +1644,16 @@ function ed_q_portfolio_build_term_no_link($name, $nid, $tid, $term_description,
     $markup .= $attached_files_markup.'</div>';
   }
 
-//  $markup = "<span>" . $name . "<span>";
   return $markup;
 }
 
 
 function ed_q_portfolio_build_term_section_title($name, $tid) {
-//  $count = db_query("SELECT COUNT(nid) FROM {taxonomy_index} WHERE tid IN (:tids) ", array(':tids' => implode(',', $tids)))->fetchField();
+
   $markup = '<h2 class="competence section-title">'.t($name).
       ' <i class="fa fa-chevron-up"></i></h2><div class="competence-desc" id="'.$tid.'">';
 
 
-//  $markup = "<span>" . $name . "<span>";
   return $markup;
 }
 
