@@ -81,8 +81,8 @@ function ed_q_portfolio_cv($node){
   $content['container']['cv']['name'] = array(
       '#type' => 'markup',
       '#markup' => '<i class="fa fa-user"></i> '.t('CV'),
-      '#prefix' => '<h2>',
-      '#suffix' => '</h2>'
+      '#prefix' => '<label>',
+      '#suffix' => '</label>'
   );
 
 
@@ -119,8 +119,8 @@ function ed_q_portfolio_cv($node){
   $content['container']['application']['name'] = array(
       '#type' => 'markup',
       '#markup' => '<i class="fa fa-file-text-o"></i> '.t('Application file'),
-      '#prefix' => '<h2>',
-      '#suffix' => '</h2>'
+      '#prefix' => '<label>',
+      '#suffix' => '</label>'
   );
 
 
@@ -148,7 +148,7 @@ function ed_q_portfolio_cv($node){
 
     $content['container']['application']['content'] = array(
         '#type' => 'markup',
-        '#markup' => t("No application file attached"),
+        '#markup' => '<p>' . t("No application file attached").'</p>',
 
     );
 
@@ -168,8 +168,8 @@ function ed_q_portfolio_cv($node){
     $content['container']['add'] = array(
         '#type' => 'markup',
         '#markup' => '<i class="fa fa-pencil"></i> ' . l(t('Edit or add CV and application'), 'node/' . $node->nid . '/edit'),
-        '#prefix' => '<h3>',
-        '#suffix' => '</h3>'
+        '#prefix' => '<p>',
+        '#suffix' => '</p>'
 
     );
   }
