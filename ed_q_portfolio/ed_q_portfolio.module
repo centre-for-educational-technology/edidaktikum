@@ -81,8 +81,8 @@ function ed_q_portfolio_cv($node){
   $content['container']['cv']['name'] = array(
       '#type' => 'markup',
       '#markup' => '<i class="fa fa-user"></i> '.t('CV'),
-      '#prefix' => '<h1>',
-      '#suffix' => '</h1>'
+      '#prefix' => '<h2>',
+      '#suffix' => '</h2>'
   );
 
 
@@ -99,7 +99,7 @@ function ed_q_portfolio_cv($node){
 
     $content['container']['cv']['content'] = array(
         '#type' => 'markup',
-        '#markup' => '<br><h2>' . t('Attached file:') .' '. '<img alt="" class="file-icon" src="' . $icon_url . '" title="' . $mime . '" /> ' . l($filename, file_create_url($uri)).'</h2></div>',
+        '#markup' => '<p>' . t('Attached file:') .' '. '<img alt="" class="file-icon" src="' . $icon_url . '" title="' . $mime . '" /> ' . l($filename, file_create_url($uri)).'</p></div>',
 
     );
 
@@ -119,8 +119,8 @@ function ed_q_portfolio_cv($node){
   $content['container']['application']['name'] = array(
       '#type' => 'markup',
       '#markup' => '<i class="fa fa-file-text-o"></i> '.t('Application file'),
-      '#prefix' => '<h1>',
-      '#suffix' => '</h1>'
+      '#prefix' => '<h2>',
+      '#suffix' => '</h2>'
   );
 
 
@@ -1754,4 +1754,3 @@ function ed_q_portfolio_node_presave($node){
 //    }
 //  }
 //}
-
