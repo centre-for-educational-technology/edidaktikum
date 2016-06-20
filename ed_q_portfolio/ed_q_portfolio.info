@@ -8,4 +8,8 @@ dependencies[] = entityreference
 dependencies[] = entityreference_dragdrop
 dependencies[] = views
 dependencies[] = ctools
+dependencies[] = ed_file
+dependencies[] = og
+dependencies[] = og_access
+dependencies[] = og_ui
 
