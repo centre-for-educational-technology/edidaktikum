@@ -556,9 +556,11 @@ function ed_q_portfolio_form_submit(&$form, &$form_state) {
     node_save($ed_file_node);
 
 
-    $ed_fid = drupal_json_encode($ed_file_node->nid);
+    $ed_fid = drupal_json_encode(array($ed_file_node->nid => $ed_file_node->nid));
+
   }else if(isset($form_state['values']['competence_ed_file']) && ($form_state['values']['competence_ed_file'])>0 && !($form_state['values']['competence_new_ed_file'])>0){
     $ed_fid = drupal_json_encode($form_state['values']['competence_ed_file']);
+
   }else{
     $ed_fid = null;
   };
