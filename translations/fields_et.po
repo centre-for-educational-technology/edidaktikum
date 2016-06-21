@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2015-06-11 16:07+0300\n"
-"PO-Revision-Date: 2015-06-11 16:07+0300\n"
+"POT-Creation-Date: 2016-06-21 10:46+0300\n"
+"PO-Revision-Date: 2016-06-21 10:46+0300\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "MIME-Version: 1.0\n"
@@ -16,11 +16,6 @@ msgstr ""
 #: field:ed_field_private_comment:#allowed_values:1
 msgctxt "ed_field_private_comment:#allowed_values:1"
 msgid "1"
-msgstr ""
-
-#: field:ed_field_content:ed_cluster:label
-msgctxt "ed_field_content:ed_cluster:label"
-msgid "Content"
 msgstr ""
 
 #: field:ed_answer_status:#field:label
@@ -38,29 +33,9 @@ msgctxt "group_group:ed_subgroup:description"
 msgid "Determine if this is an OG group."
 msgstr ""
 
-#: field:ed_field_excerpt:ed_subgroup:label
-msgctxt "ed_field_excerpt:ed_subgroup:label"
-msgid "Excerpt"
-msgstr ""
-
 #: field:ed_field_category:ed_subgroup:label
 msgctxt "ed_field_category:ed_subgroup:label"
 msgid "Categories"
-msgstr ""
-
-#: field:group_access:ed_subgroup:label
-msgctxt "group_access:ed_subgroup:label"
-msgid "Group visibility"
-msgstr ""
-
-#: field:ed_field_featured_image:ed_subgroup:label
-msgctxt "ed_field_featured_image:ed_subgroup:label"
-msgid "Featured image"
-msgstr ""
-
-#: field:ed_field_content:ed_subgroup:label
-msgctxt "ed_field_content:ed_subgroup:label"
-msgid "Content"
 msgstr ""
 
 #: field:comment_body:comment_node_ed_subgroup:label
@@ -96,6 +71,31 @@ msgstr ""
 #: field:ed_competence_color_field:ed_competence_voc:description
 msgctxt "ed_competence_color_field:ed_competence_voc:description"
 msgid "Color that fills progress bars"
+msgstr ""
+
+#: field:comment_body:comment_node_ed_collection:label
+msgctxt "comment_body:comment_node_ed_collection:label"
+msgid "Comment"
+msgstr ""
+
+#: field:comment_body:comment_node_ed_q_portfolio:label
+msgctxt "comment_body:comment_node_ed_q_portfolio:label"
+msgid "Comment"
+msgstr ""
+
+#: field:ed_q_portfolio_competence_desc:ed_q_portfolio:label
+msgctxt "ed_q_portfolio_competence_desc:ed_q_portfolio:label"
+msgid "Competence description"
+msgstr ""
+
+#: field:ed_field_to_group_member:ed_q_portfolio:label
+msgctxt "ed_field_to_group_member:ed_q_portfolio:label"
+msgid "Specify user"
+msgstr ""
+
+#: field:og_group_ref:ed_q_portfolio:label
+msgctxt "og_group_ref:ed_q_portfolio:label"
+msgid "Group"
 msgstr ""
 
 #: field:comment_body:comment_node_page:label
@@ -692,6 +692,11 @@ msgstr "Märksõnad"
 msgctxt "ed_field_to_group_member:ed_forum:label"
 msgid "Specify user"
 msgstr "Määra kasutaja"
+
+#: field:ed_field_content:ed_cluster:label
+msgctxt "ed_field_content:ed_cluster:label"
+msgid "Content"
+msgstr "Sisu"
 
 #: field:ed_field_to_group_member:ed_learning_resource:label
 msgctxt "ed_field_to_group_member:ed_learning_resource:label"
@@ -1984,6 +1989,26 @@ msgctxt "group_group:ed_subgroup:label"
 msgid "Group"
 msgstr "Grupp"
 
+#: field:ed_field_excerpt:ed_subgroup:label
+msgctxt "ed_field_excerpt:ed_subgroup:label"
+msgid "Excerpt"
+msgstr "Lühikirjeldus"
+
+#: field:group_access:ed_subgroup:label
+msgctxt "group_access:ed_subgroup:label"
+msgid "Group visibility"
+msgstr "Grupi nähtavus"
+
+#: field:ed_field_featured_image:ed_subgroup:label
+msgctxt "ed_field_featured_image:ed_subgroup:label"
+msgid "Featured image"
+msgstr "Kaanepilt"
+
+#: field:ed_field_content:ed_subgroup:label
+msgctxt "ed_field_content:ed_subgroup:label"
+msgid "Content"
+msgstr "Content"
+
 #: field:ed_notification_content_types:#field:label
 msgctxt "ed_notification_content_types:#field:label"
 msgid "Receive notifications for the following"
@@ -2048,4 +2073,64 @@ msgstr "E-posti peale saadetavad teated uuendustest"
 msgctxt "ed_notification_content_types:user:description"
 msgid "Select the checkboxes you want to receive notifications from"
 msgstr "Vali, milliste muudatuste kohta soovid teavitust"
+
+#: field:ed_field_excerpt:ed_collection:label
+msgctxt "ed_field_excerpt:ed_collection:label"
+msgid "Excerpt"
+msgstr "Lühikirjeldus"
+
+#: field:ed_field_featured_image:ed_collection:label
+msgctxt "ed_field_featured_image:ed_collection:label"
+msgid "Featured image"
+msgstr "Kaanepilt"
+
+#: field:ed_field_cover_image:ed_collection:label
+msgctxt "ed_field_cover_image:ed_collection:label"
+msgid "Cover image"
+msgstr "Taustapilt"
+
+#: field:ed_collection_field_items:ed_collection:label
+msgctxt "ed_collection_field_items:ed_collection:label"
+msgid "Collection items"
+msgstr "Kollektsiooni materjalid"
+
+#: field:ed_field_group_state:#allowed_values:0
+msgctxt "ed_field_group_state:#allowed_values:0"
+msgid "Inactive - new members cannot join"
+msgstr "Mitteaktiivne - uued liikmed ei saa ühineda"
+
+#: field:ed_field_group_state:#allowed_values:1
+msgctxt "ed_field_group_state:#allowed_values:1"
+msgid "Active - new members can join"
+msgstr "Aktiivne - grupiga liitumine lubatud"
+
+#: field:ed_field_group_state:ed_cluster:label
+msgctxt "ed_field_group_state:ed_cluster:label"
+msgid "Group state"
+msgstr "Grupi staatus"
+
+#: field:ed_field_content:ed_q_portfolio:label
+msgctxt "ed_field_content:ed_q_portfolio:label"
+msgid "Description"
+msgstr "Kirjeldus"
+
+#: field:ed_q_portfolio_field_level:ed_q_portfolio:label
+msgctxt "ed_q_portfolio_field_level:ed_q_portfolio:label"
+msgid "Level"
+msgstr "Tase"
+
+#: field:ed_q_portfolio_field_cv:ed_q_portfolio:label
+msgctxt "ed_q_portfolio_field_cv:ed_q_portfolio:label"
+msgid "Choose a CV file"
+msgstr "Vali CV-fail"
+
+#: field:ed_q_portfolio_field_application:ed_q_portfolio:label
+msgctxt "ed_q_portfolio_field_application:ed_q_portfolio:label"
+msgid "Choose an application file"
+msgstr "Vali avalduse fail"
+
+#: field:ed_q_portfolio_field_status:ed_q_portfolio:label
+msgctxt "ed_q_portfolio_field_status:ed_q_portfolio:label"
+msgid "Portfolio status"
+msgstr "Portfoolio staatus"
 
