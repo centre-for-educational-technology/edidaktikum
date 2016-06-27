@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2015-06-11 16:06+0300\n"
-"PO-Revision-Date: 2015-06-11 16:06+0300\n"
+"POT-Creation-Date: 2016-06-21 10:45+0300\n"
+"PO-Revision-Date: 2016-06-21 10:45+0300\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "MIME-Version: 1.0\n"
@@ -5143,10 +5143,6 @@ msgid "The date the referenced node was last updated."
 msgstr ""
 
 #: /et/admin/modules
-msgid "Attached files"
-msgstr ""
-
-#: /et/admin/modules
 msgid "A list of files attached to the node."
 msgstr ""
 
@@ -6252,10 +6248,6 @@ msgstr ""
 
 #: /et/node/add/ed-learning-resource
 msgid "ref_to_task"
-msgstr ""
-
-#: /et/node/add/ed-learning-resource
-msgid "Group visibility"
 msgstr ""
 
 #: /et/node/add/ed-learning-resource
@@ -11599,10 +11591,6 @@ msgid "Please fill in additional information to complete your registration."
 msgstr ""
 
 #: /et/hybridauth/window/Facebook?destination=user&destination_error=user
-msgid "Submit"
-msgstr ""
-
-#: /et/hybridauth/window/Facebook?destination=user&destination_error=user
 msgid "You need to verify your e-mail address - !email."
 msgstr ""
 
@@ -12010,10 +11998,6 @@ msgstr ""
 
 #: /et/admin/structure/pages/nojs/operation/node_view/handlers/node_view_panel_ed_cluster/content?destination=node/478
 msgid "Substitutions"
-msgstr ""
-
-#: /et/admin/structure/pages/nojs/operation/node_view/handlers/node_view_panel_ed_cluster/content?destination=node/478
-msgid "Loading..."
 msgstr ""
 
 #: /et/admin/structure/pages/nojs/operation/node_view/handlers/node_view_panel_ed_cluster/content?destination=node/478
@@ -12524,7 +12508,7 @@ msgstr ""
 msgid "Using defaults"
 msgstr ""
 
-#: sites/all/modules/edidaktikum/ed_dashboard/js/ed_dashboard_discover.js
+#: sites/all/modules/edidaktikum/ed_dashboard/js/ed_dashboard_discover.js; sites/all/modules/edidaktikum/ed_collection/js/remove_from_collection.js
 msgid "Are you sure?"
 msgstr ""
 
@@ -14835,18 +14819,8 @@ msgstr ""
 msgid "Alamgrupid"
 msgstr ""
 
-#: /et/clusters
-msgid "Private Group"
-msgstr ""
-
 #: /et/content/edidaktikumi-koolitus
 msgid "Ülesanded"
-msgstr ""
-
-#: /et/node/3092
-msgid ""
-"@type <b>@title</b> has been created, but not published. At the "
-"moment, only you can see it."
 msgstr ""
 
 #: /et/node/add/ed-answer?field_ref_to_task=2652
@@ -14919,10 +14893,6 @@ msgstr ""
 
 #: /et/admin/people
 msgid "create ed_subgroup content"
-msgstr ""
-
-#: /et/ed-delete/0%3D66/jukule%20post
-msgid "Continue to group page: "
 msgstr ""
 
 #: /et/dashboard/tasks
@@ -15082,10 +15052,6 @@ msgstr ""
 msgid "Show competency profile"
 msgstr ""
 
-#: /et/content/villu-jaanisoo
-msgid "Network"
-msgstr ""
-
 #: /et/admin_menu/flush-cache?token=QSjK_-CltjtlwFSjAkH78kDjGI-lpG5hADNLp8ctFDs&destination=node/5097
 msgid "Competency profile"
 msgstr ""
@@ -15226,6 +15192,4818 @@ msgstr ""
 
 #: /et/admin/modules
 msgid "QTools"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid ""
+"<a href=\"/et/content/r%C3%B5%C3%B5m-praktika-1415\">RÕÕM praktika "
+"14/15</a>, hybridauth_Facebook_100000641514735..."
+msgstr ""
+
+#: /et/node/add/ed-collection
+msgid "User: role"
+msgstr ""
+
+#: /et/node/add/ed-collection
+msgid "Control access by role."
+msgstr ""
+
+#: /et/content/tervisek%C3%A4itumine-ja-t%C3%B5endusp%C3%B5hine-%C3%B5petus
+msgid "eDidaktikum add node to collection"
+msgstr ""
+
+#: /et/content/tervisek%C3%A4itumine-ja-t%C3%B5endusp%C3%B5hine-%C3%B5petus
+msgid "Provides adding to collection functionality"
+msgstr ""
+
+#: /et/admin/people
+msgid "delete any ed_collection content"
+msgstr ""
+
+#: /et/admin/people
+msgid "edit any ed_collection content"
+msgstr ""
+
+#: /et/admin/people
+msgid "delete own ed_collection content"
+msgstr ""
+
+#: /et/admin/people
+msgid "edit own ed_collection content"
+msgstr ""
+
+#: /et/admin/people
+msgid "create ed_collection content"
+msgstr ""
+
+#: /et/node/6847/competency-profile
+msgid "#"
+msgstr ""
+
+#: /et/node/6847/competency-profile
+msgid "Competence Piece"
+msgstr ""
+
+#: /et/node/6847/competency-profile
+msgid ""
+"Õpetab, lähtudes õppija eripärast, seatud eesmärkidest ja "
+"ainetevahelisest lõimingust"
+msgstr ""
+
+#: /en/node/add/ed-file?og_group_ref=4639&destination=node/4639/file
+msgid "New Content - eDidaktikum"
+msgstr ""
+
+#: /en/node/add/ed-file?og_group_ref=4639&destination=node/4639/file
+msgid "@fullname created new content: @contentname."
+msgstr ""
+
+#: /en/node/add/ed-file?og_group_ref=4639&destination=node/4639/file
+msgid "View content: @contenturl"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid ""
+"<a href=\"/et/content/haridustehnoloogia-keskus\">Haridustehnoloogia "
+"keskus</a>"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid "<a href=\"/et/content/mari-grupp\">Mari grupp</a>, tammets"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=7010
+msgid ""
+"analüüsib ja tõlgendab nii enda kui ka teiste uurijate "
+"uurimistulemusi ning rakendab neid õpetamise parendamisel ja enese "
+"arendamisel"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=7010
+msgid ""
+"<a "
+"href=\"/et/competence/anal%C3%BC%C3%BCsib-ja-t%C3%B5lgendab-nii-enda-kui-ka-teiste-uurijate-uurimistulemusi-ning-rakendab-neid\">analüüsib "
+"ja tõlgendab nii enda kui ka teiste uurijate uurimistulemusi ning "
+"rakendab neid õpetamise parendamisel ja enese arendamisel</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=6993
+msgid ""
+"Kavandab muudatusi õpetamis- ja kasvatusprotsessis, määratleb oma "
+"koolitusvajaduse ja koostab enesearenduskava, arvestades ka kooli "
+"arenguvajadusi ja riiklikke haridusprioriteete"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=6993
+msgid ""
+"<a "
+"href=\"/et/competence/kavandab-muudatusi-%C3%B5petamis-ja-kasvatusprotsessis-m%C3%A4%C3%A4ratleb-oma-koolitusvajaduse-ja\">Kavandab "
+"muudatusi õpetamis- ja kasvatusprotsessis, määratleb oma "
+"koolitusvajaduse ja koostab enesearenduskava, arvestades ka kooli "
+"arenguvajadusi ja riiklikke haridusprioriteete</a><br />"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid "<a href=\"/et/content/testgrupp\">Testgrupp</a>"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid ""
+"<a "
+"href=\"/et/content/kat-7018-%C3%B5petaja-koolis-ja-%C3%BChiskonnas\">KAT "
+"7018 Õpetaja koolis ja ühiskonnas</a>"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=7010
+msgid "New answer - eDidaktikum"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=7010
+msgid "@answererfullname has answered your task @taskurl"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=7010
+msgid "Answer can be found at @answerurl"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=7147
+msgid "Valmidus meeskonnatööks ja edasiseks professionaalseks arenguks"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=7147
+msgid ""
+"<a "
+"href=\"/et/competence/valmidus-meeskonnat%C3%B6%C3%B6ks-ja-edasiseks-professionaalseks-arenguks\">Valmidus "
+"meeskonnatööks ja edasiseks professionaalseks arenguks</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=7252
+msgid ""
+"Oskus kasutada erineva ettevalmistuse, taseme ja vajadustega "
+"õppijatele sobivaid õppe- ja hindamismeetodeid"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=7252
+msgid ""
+"<a "
+"href=\"/et/competence/oskus-kasutada-erineva-ettevalmistuse-taseme-ja-vajadustega-%C3%B5ppijatele-sobivaid-%C3%B5ppe-ja\">Oskus "
+"kasutada erineva ettevalmistuse, taseme ja vajadustega õppijatele "
+"sobivaid õppe- ja hindamismeetodeid</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=7252
+msgid ""
+"Suutlikkus märgata arenguhälbeid, sotsiaalseid hälbeid ja "
+"väärkohtlemist ning neile adekvaatselt reageerida"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=7252
+msgid ""
+"<a "
+"href=\"/et/competence/suutlikkus-m%C3%A4rgata-arenguh%C3%A4lbeid-sotsiaalseid-h%C3%A4lbeid-ja-v%C3%A4%C3%A4rkohtlemist-ning-neile\">Suutlikkus "
+"märgata arenguhälbeid, sotsiaalseid hälbeid ja väärkohtlemist "
+"ning neile adekvaatselt reageerida</a><br />"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid ""
+"<a "
+"href=\"/et/content/r%C3%B5%C3%B5m-%C3%B5ppimise-toetamine-ii-ja-%C3%B5petajaks-kujunemine-ii\">RÕÕM "
+"Õppimise toetamine II ja Õpetajaks kujunemine II</a>"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid ""
+"<a href=\"/et/content/areng-ja-%C3%B5ppimine-2015\">Areng ja õppimine "
+"2015</a>"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid ""
+"<a href=\"/et/content/areng-ja-%C3%B5ppimine-2015-noored-kooli\">Areng "
+"ja õppimine 2015 (Noored Kooli)</a>"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid ""
+"<a "
+"href=\"/et/content/%C3%B5pi-ja-k%C3%A4itumisraskustega-%C3%B5pilane-ainetunnis\">Õpi- "
+"ja käitumisraskustega õpilane ainetunnis</a>"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid ""
+"<a href=\"/et/content/ifi7084-haridustehnoloogia-koolis\">IFI7084 "
+"Haridustehnoloogia koolis</a>"
+msgstr ""
+
+#: /et/user/2810/hybridauth/delete/736
+msgid ""
+"This identity was used to create your account. Please choose another "
+"identity to replace it."
+msgstr ""
+
+#: /et/admin/config/administration/admin_menu
+msgid "Adjust top margin"
+msgstr ""
+
+#: /et/admin/config/administration/admin_menu
+msgid ""
+"Shifts the site output down by approximately 20 pixels from the top of "
+"the viewport. If disabled, absolute- or fixed-positioned page elements "
+"may be covered by the administration menu."
+msgstr ""
+
+#: /et/admin/config/administration/admin_menu
+msgid "Keep menu at top of page"
+msgstr ""
+
+#: /et/admin/config/administration/admin_menu
+msgid ""
+"Displays the administration menu always at the top of the browser "
+"viewport (even when scrolling the page)."
+msgstr ""
+
+#: /et/admin/config/administration/admin_menu
+msgid ""
+"In some browsers, this setting may result in a malformed page, an "
+"invisible cursor, non-selectable elements in forms, or other issues."
+msgstr ""
+
+#: /et/admin/config/administration/admin_menu
+msgid "Plugins"
+msgstr ""
+
+#: /et/admin/config/administration/admin_menu
+msgid "Enabled components"
+msgstr ""
+
+#: /et/admin/config/administration/admin_menu
+msgid "Icon menu"
+msgstr ""
+
+#: /et/admin/config/administration/admin_menu
+msgid "Search bar"
+msgstr ""
+
+#: /et/admin/config/administration/admin_menu
+msgid "User counts"
+msgstr ""
+
+#: /et/admin/config/administration/admin_menu
+msgid "Account links"
+msgstr ""
+
+#: /et/admin/config/administration/admin_menu
+msgid "System tweaks"
+msgstr ""
+
+#: /et/admin/config/administration/admin_menu
+msgid ""
+"Collapse module groups on the <a href=\"!modules-url\">%modules</a> "
+"page"
+msgstr ""
+
+#: /et/admin/config/administration/admin_menu
+msgid ""
+"Collapse module groups on the <a "
+"href=\"@permissions-url\">%permissions</a> page"
+msgstr ""
+
+#: /et/admin/config/administration/admin_menu
+msgid "Move local tasks into menu"
+msgstr ""
+
+#: /et/admin/config/administration/admin_menu
+msgid ""
+"Moves the tabs on all pages into the administration menu. Only "
+"possible for themes using the CSS classes <code>tabs primary</code> "
+"and <code>tabs secondary</code>."
+msgstr ""
+
+#: /et/admin/config/administration/admin_menu
+msgid "Cache menu in client-side browser"
+msgstr ""
+
+#: /et/admin/config/administration/admin_menu
+msgid "Developer modules to keep enabled"
+msgstr ""
+
+#: /et/admin/config/administration/admin_menu
+msgid ""
+"The selected modules will not be disabled when the link "
+"%disable-developer-modules below the icon in the menu is invoked."
+msgstr ""
+
+#: /et/admin/config/administration/admin_menu
+msgid ""
+"The administration menu module provides a dropdown menu arranged for "
+"one- or two-click access to most administrative tasks and other common "
+"destinations (to users with the proper permissions). Use the settings "
+"below to customize the appearance of the menu."
+msgstr ""
+
+#: /et/admin/config/administration/admin_menu
+msgid "@count-anon / @count-auth"
+msgstr ""
+
+#: /et/admin/config/administration/admin_menu
+msgid "Current anonymous / authenticated users"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid ""
+"<a href=\"/et/content/areng-ja-%C3%B5ppimine-2015\">Areng ja õppimine "
+"2015</a>, roosalu@tlu.ee"
+msgstr ""
+
+#: /et/node/8129/competency-profile
+msgid ""
+"Analüüsib ja üldistab sihtgrupi õpivajadusi, juhindudes valdkonna "
+"arengust ja koolitusvajaduse analüüsi teoreetilistest alustest"
+msgstr ""
+
+#: /et/node/8129/competency-profile
+msgid ""
+"Kogub õppijatelt, kaaskoolitajatelt ja teistelt sidusgruppide "
+"liikmetelt arvamusi õppeprotsessi kohta, valides selleks sobivaimad "
+"meetodeid"
+msgstr ""
+
+#: /et/node/8129/competency-profile
+msgid ""
+"Analüüsib õpitulemusi ja edasist koolitusvajadust, kasutades "
+"asjakohaseid analüüsi meetodeid ja otsides lisateavet probleemide ja "
+"nende põhjuste paremaks mõistmiseks"
+msgstr ""
+
+#: /et/node/8129/competency-profile
+msgid ""
+"Koostab ülevaate koolituse tulemustest, (hinnangutest, edasistest "
+"tegevustest jm asjassepuutuvast) ja teavitab sellest huvitatud "
+"osapooli, valides ise teavitamise meetodid"
+msgstr ""
+
+#: /et/node/8129/competency-profile
+msgid ""
+"Koostab õppekavu, lähtudes sihtgrupi õpivajaduste analüüsist ja "
+"kavandab ressursid selle elluviimiseks"
+msgstr ""
+
+#: /et/node/8129/competency-profile
+msgid ""
+"Valmistab ette konkreetse koolituse/tunni sisu ja metoodika, lähtudes "
+"sihtgrupi ja õpperühma vajadustest ja õppekavas fikseeritud "
+"õpitulemustest. Loob koolituse sisu ja uuendab/kaasajastab seda "
+"pidevalt"
+msgstr ""
+
+#: /et/node/8129/competency-profile
+msgid ""
+"Koostab uusi, sh interaktiivseid õppematerjale ja/või kohandab vanu, "
+"lähtudes oma teema käsitlemise loogikast; arvestab konkreetse "
+"sihtgrupi eripära ja õppijatelt tagasisidestuse käigus saadud "
+"arvamusi ning õpikeskkonna võimalusi"
+msgstr ""
+
+#: /et/node/8129/competency-profile
+msgid ""
+"Näeb õppijat kui subjekti ja toetab teda individuaalsete "
+"õpieesmärkide määratlemisel, tuginedes valdkonnapõhistele "
+"teadmistele ja õppijalt saadud infole, seades esiplaanile õppijate "
+"põhjendatud huvid"
+msgstr ""
+
+#: /et/node/8129/competency-profile
+msgid ""
+"<p>Kujundab motiveeriva õpikeskkonna, juhindudes õpimotivatsiooni "
+"kujunemise seaduspärasustest ja tehes õppijatega koostööd, "
+"arvestades nende individuaalseid vajadusi. Kujundab õppimist "
+"soodustava vaimse ja sotsiaalse keskkonna ka siis, kui füüsiline "
+"keskkond seda ei soodusta, rakendades oma loovust ja pikaajalist "
+"kogemust.</p>"
+msgstr ""
+
+#: /et/node/8129/competency-profile
+msgid ""
+"Kujundab motiveeriva õpikeskkonna, juhindudes õpimotivatsiooni "
+"kujunemise seaduspärasustest ja tehes õppijatega koostööd, "
+"arvestades nende individuaalseid vajadusi. Kujundab õppimist "
+"soodustava vaimse ja sotsiaalse keskkonna ka siis, kui füüsiline..."
+msgstr ""
+
+#: /et/node/8129/competency-profile
+msgid ""
+"Juhib õppeprotsessi, pidades silmas õppekavast tulenevaid ja "
+"õppijate individuaalseid õpieesmärke. Viib põhjendatud vajaduse "
+"korral sisse muudatusi õppe etappide järjestuses ja töövormides, "
+"kaasates õpperühma ja arvestades iga üksiku õppija vajadusi"
+msgstr ""
+
+#: /et/node/8129/competency-profile
+msgid ""
+"<p>Käsitleb õpperühma kui subjekti, märgates ja suunates "
+"grupiprotsesse; kasutab õpieesmärkide saavutamiseks ka "
+"iseregulatsiooni õpperühmas, andes sellele õigusi ja volitusi oma "
+"vajaduste ja soovide teostamiseks. Algatab ja juhib tegevusi vastupanu "
+"ületamiseks õpperühmas, kui see peaks tekkima, kasutades "
+"konfliktolukordi õppimise allikana.</p>"
+msgstr ""
+
+#: /et/node/8129/competency-profile
+msgid ""
+"Käsitleb õpperühma kui subjekti, märgates ja suunates "
+"grupiprotsesse; kasutab õpieesmärkide saavutamiseks ka "
+"iseregulatsiooni õpperühmas, andes sellele õigusi ja volitusi oma "
+"vajaduste ja soovide teostamiseks. Algatab ja juhib tegevusi vastupanu "
+"ületamise"
+msgstr ""
+
+#: /et/node/8129/competency-profile
+msgid ""
+"Toetab õppijate isiksuslikku arengut, respekteerides individuaalseid "
+"vajadusi ja andes toetavat tagasisidet. Suunab positiivsete hoiakute "
+"kujunemist enesearengule, julgustades katsetama ja käsitlema "
+"ebaõnnestumisi õppimise väärtuslike allikatena"
+msgstr ""
+
+#: /et/node/8129/competency-profile
+msgid ""
+"Hindab õpperühma tegevust grupi- ja õppijate isiksusliku arengu "
+"aspektist, valides selleks sobivaimad meetodid"
+msgstr ""
+
+#: /et/node/8129/competency-profile
+msgid ""
+"Koostab hindamisjuhendeid ja valib sobivaid hindamismeetodeid, võttes "
+"arvesse uusimate teadusuuringute tulemusi ja parimat praktikat"
+msgstr ""
+
+#: /et/node/8129/competency-profile
+msgid ""
+"Reflekteerides hindab enda tegevust õpi-, grupi- ja isiksuslike "
+"protsesside juhtimisel, selgitab enesearengu vajadused ning kavandab "
+"tegevused nende realiseerimiseks, kasutades eneseanalüüsi vahendeid, "
+"õpitulemuste analüüsi ja saadud hinnanguid"
+msgstr ""
+
+#: /et/node/8129/competency-profile
+msgid ""
+"Osaleb arendus-, loome- ja/või teadustegevuses, kogudes ja "
+"analüüsides vajalikku informatsiooni"
+msgstr ""
+
+#: /et/node/8129/competency-profile
+msgid ""
+"Osaleb aktiivselt teadus- ja/või erialakonverentsidel Eestis, "
+"esinedes ettekandega või modereerides, valmistab ette ning levitab "
+"oma ettekandeid"
+msgstr ""
+
+#: /et/node/8129/competency-profile
+msgid ""
+"Võtab eksperdina osa avalikest diskussioonidest (piirkondlik tase, "
+"erialaliidud, katusorganisatsioonid vm), tehes ettepanekuid "
+"täiendusteks ja/või muudatusteks täiskasvanuharidust ja "
+"–koolitust ja/või elukestvat õpet reguleerivatesse dokumentidesse"
+msgstr ""
+
+#: /et/node/8129/competency-profile
+msgid ""
+"Osaleb koolitusasutusevahelistes töögruppides ja/või "
+"koostöövõrgustikes, jagades kolleegidele oma arvamusi ja "
+"ettepanekuid ja/või juhendades eksperdina nende tegevust"
+msgstr ""
+
+#: /et/node/8129/competency-profile
+msgid ""
+"Juhendab ja nõustab madalama kutsetasemega või kutseta koolitajaid, "
+"jagades neile vajalikku informatsiooni ja osaledes õppejõuna "
+"koolitajate koolitamisel"
+msgstr ""
+
+#: /et/node/8129/competency-profile
+msgid ""
+"Uuendab õppemeetodeid ja ajakohastab vajadusel õppe sisu, lähtudes "
+"valdkonna arengust ja uusimast erialakirjandusest"
+msgstr ""
+
+#: /et/node/8129/competency-profile
+msgid ""
+"Tegeleb eneserefleksiooniga, arvestab oma füüsilise, vaimse ja "
+"emotsionaalse seisundiga, võttes kasutusele abinõud tasakaalu "
+"saavutamiseks ja säilitamiseks"
+msgstr ""
+
+#: /et/node/8129/competency-profile
+msgid ""
+"On kursis uuemate suundadega oma erialal ja täiendab end andragoogika "
+"valdkonnas, omandades täiskasvanute koolitaja 7. tasemele vastavad "
+"kompetentsid"
+msgstr ""
+
+#: /et/node/8129/competency-profile
+msgid ""
+"Arendab edukaks tegutsemiseks vajalikke võimeid ja isiksuseomadusi, "
+"väärtustades pidevat enesearengut"
+msgstr ""
+
+#: /et/node/7859/competency-profile
+msgid ""
+"panustab õpetajakutse, oma kooli ja kogukonna toimimisse, "
+"elujõulisusse ja uuendusprotsessi"
+msgstr ""
+
+#: /et/node/7859/competency-profile
+msgid ""
+"annab õppijatele mitmekülgset tagasisidet nii kujundava kui "
+"kokkuvõtva hindamise vormis, lähtudes seejuures nii pädevus- kui "
+"tehnilistest standarditest ning kasutades  hindamistulemusi sisendina "
+"õppeprotsessi parendamisel"
+msgstr ""
+
+#: /et/node/7859/competency-profile
+msgid ""
+"on eeskujuks digitehnoloogia ja teabe kasutamisega seotud etiketi "
+"järgimisel ja edendavad vastutustundlikku suhtlust digikeskkonnas"
+msgstr ""
+
+#: /et/node/7859/competency-profile
+msgid ""
+"soovitab, edendab ja õpetab digitaalse teabe ja tehnoloogia "
+"turvalist, seaduslikku ja eetilist kasutamist, sh autoriõiguste ja "
+"intellektuaalse omandi põhimõtete ning asjakohast allikatele "
+"viitamistjärgimist"
+msgstr ""
+
+#: /et/node/7859/competency-profile
+msgid ""
+"on teadmusloomes eeskujuks õpilastele ja kolleegidele, õppides koos "
+"nendega erinevates füüsilistes ja virtuaalsetes keskkondades"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=6871
+msgid ""
+"Reflekteerib oma õpetamist ning ainealast pädevust, kogub "
+"tagasisidet õppijate õpitegevuste ning -tulemuste kohta"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=6871
+msgid ""
+"<a "
+"href=\"/et/competence/reflekteerib-oma-%C3%B5petamist-ning-ainealast-p%C3%A4devust-kogub-tagasisidet-%C3%B5ppijate\">Reflekteerib "
+"oma õpetamist ning ainealast pädevust, kogub tagasisidet õppijate "
+"õpitegevuste ning -tulemuste kohta</a><br />"
+msgstr ""
+
+#: sites/all/modules/hybridauth/js/hybridauth.onclick.js
+msgid "Contacting @title..."
+msgstr ""
+
+#: /et/content/protsessip%C3%B5hise-projekt%C3%B5ppe-meetodid-k%C3%A4sit%C3%B6%C3%B6-kodunduse-ja-tehnoloogia%C3%B5petuse-tundides
+msgid "HybridAuth widget - Title"
+msgstr ""
+
+#: /et/content/protsessip%C3%B5hise-projekt%C3%B5ppe-meetodid-k%C3%A4sit%C3%B6%C3%B6-kodunduse-ja-tehnoloogia%C3%B5petuse-tundides
+msgid "Title of the HybridAuth login widget."
+msgstr ""
+
+#: /et/content/protsessip%C3%B5hise-projekt%C3%B5ppe-meetodid-k%C3%A4sit%C3%B6%C3%B6-kodunduse-ja-tehnoloogia%C3%B5petuse-tundides
+msgid "HybridAuth widget - Link text"
+msgstr ""
+
+#: /et/content/protsessip%C3%B5hise-projekt%C3%B5ppe-meetodid-k%C3%A4sit%C3%B6%C3%B6-kodunduse-ja-tehnoloogia%C3%B5petuse-tundides
+msgid "Text of the link of the HybridAuth login widget."
+msgstr ""
+
+#: /et/content/protsessip%C3%B5hise-projekt%C3%B5ppe-meetodid-k%C3%A4sit%C3%B6%C3%B6-kodunduse-ja-tehnoloogia%C3%B5petuse-tundides
+msgid "HybridAuth widget - Link or icon title"
+msgstr ""
+
+#: /et/content/protsessip%C3%B5hise-projekt%C3%B5ppe-meetodid-k%C3%A4sit%C3%B6%C3%B6-kodunduse-ja-tehnoloogia%C3%B5petuse-tundides
+msgid "Title of the link or icon of the HybridAuth login widget."
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=8054
+msgid "Töökava koostamine"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=8054
+msgid ""
+"<a href=\"/et/kategooriad/t%C3%B6%C3%B6kava-koostamine-0\">Töökava "
+"koostamine</a><br />"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid "<a href=\"/et/content/eka-k%C3%B57109\">EKA KÕ7109</a>"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid ""
+"<a "
+"href=\"/et/content/edidaktikumi-koolitus-161015-tl%C3%BCs\">eDidaktikumi "
+"koolitus 16.10.15 TLÜs</a>"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid ""
+"<a "
+"href=\"/et/content/kutse%C3%B5ppedidaktika\">Kutseõppedidaktika</a>"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid "<a href=\"/et/content/grupp-2-parem\">Grupp 2 Parem</a>"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=8897
+msgid "Õppija arengu toetamine"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=8897
+msgid ""
+"<a href=\"/et/kategooriad/%C3%B5ppija-arengu-toetamine\">Õppija "
+"arengu toetamine</a><br />"
+msgstr ""
+
+#: /et/admin/config/edidaktikum/draft-collections
+msgid "Publish"
+msgstr ""
+
+#: /et/admin/config/edidaktikum/draft-collections
+msgid "Checked nodes have been published."
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=8055
+msgid "Tunnikava koostamine"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=8055
+msgid ""
+"<a href=\"/et/kategooriad/tunnikava-koostamine\">Tunnikava "
+"koostamine</a><br />"
+msgstr ""
+
+#: /et/admin/config/media/image-styles
+msgid ""
+"Image styles commonly provide thumbnail sizes by scaling and cropping "
+"images, but can also add various effects before an image is displayed. "
+"When an image is displayed with a style, a new file is created and the "
+"original image is left unchanged."
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid "General settings"
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid "Tracking scope"
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid "Domains"
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid "What are you tracking?"
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid "A single domain (default)"
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid "Domain: @domain"
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid "Examples: @domains"
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid "List of top-level domains"
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid ""
+"If you selected \"Multiple top-level domains\" above, enter all "
+"related top-level domains. Add one domain per line. By default, the "
+"data in your reports only includes the path and name of the page, and "
+"not the domain name. For more information see section <em>Show "
+"separate domain names</em> in <a href=\"@url\">Tracking Multiple "
+"Domains</a>."
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid "Every page except the listed pages"
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid "The listed pages only"
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid ""
+"Specify pages by using their paths. Enter one path per line. The '*' "
+"character is a wildcard. Example paths are %blog for the blog page and "
+"%blog-wildcard for every personal blog. %front is the front page."
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid "Add tracking to specific pages"
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid "Add tracking for specific roles"
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid "Add to the selected roles only"
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid "Add to every role except the selected ones"
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid ""
+"If none of the roles are selected, all users will be tracked. If a "
+"user has any of the roles checked, that user will be tracked (or "
+"excluded, depending on the setting above)."
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid "Allow users to customize tracking on their account page"
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid "No customization allowed"
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid "Tracking on by default, users with %permission permission can opt out"
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid "Tracking off by default, users with %permission permission can opt in"
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid "Links and downloads"
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid "Track clicks on outbound links"
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid "Track clicks on mailto links"
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid "Track downloads (clicks on file links) for the following extensions"
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid "List of download file extensions"
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid ""
+"A file extension list separated by the | character that will be "
+"tracked as download when clicked. Regular expressions are supported. "
+"For example: !extensions"
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid "Messages"
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid "Track messages of type"
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid ""
+"This will track the selected message types shown to users. Tracking of "
+"form validation errors may help you identifying usability issues in "
+"your site. For each visit (user session), a maximum of approximately "
+"500 combined GATC requests (both events and page views) can be "
+"tracked. Every message is tracked as one individual event. Note that - "
+"as the number of events in a session approaches the limit - additional "
+"events might not be tracked. Messages from excluded pages cannot "
+"tracked."
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid "Search and Advertising"
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid "Track internal search"
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid ""
+"If checked, internal search keywords are tracked. You must configure "
+"your Google account to use the internal query parameter "
+"<strong>search</strong>. For more information see <a "
+"href=\"@url\">Setting Up Site Search for a Profile</a>."
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid "Track AdSense ads"
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid ""
+"If checked, your AdSense ads will be tracked in your Google Analytics "
+"account."
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid "Track DoubleClick data"
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid ""
+"If checked, the alternative Google <a "
+"href=\"@doubleclick\">DoubleClick data tracking</a> is used to enable "
+"AdWords remarketing features. If you choose this option you will need "
+"to <a href=\"@privacy\">update your privacy policy</a>."
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid "Privacy"
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid "Anonymize visitors IP address"
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid ""
+"Tell Google Analytics to anonymize the information sent by the tracker "
+"objects by removing the last octet of the IP address prior to its "
+"storage. Note that this will slightly reduce the accuracy of "
+"geographic reporting. In some countries it is not allowed to collect "
+"personally identifying information for privacy reasons and this "
+"setting may help you to comply with the local laws."
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid ""
+"If enabled and your server receives the <a "
+"href=\"@donottrack\">Do-Not-Track</a> header from the client browser, "
+"the Google Analytics module will not embed any tracking code into your "
+"site. Compliance with Do Not Track could be purely voluntary, enforced "
+"by industry self-regulation, or mandated by state or federal law. "
+"Please accept your visitors privacy. If they have opt-out from "
+"tracking and advertising, you should accept their personal decision. "
+"This feature is currently limited to logged in users and disabled page "
+"caching."
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid ""
+"You can add Google Analytics <a "
+"href=\"@custom_var_documentation\">Custom Variables</a> here. These "
+"will be added to every page that Google Analytics tracking code "
+"appears on. Google Analytics will only accept custom variables if the "
+"<em>name</em> and <em>value</em> combined are less than 128 bytes "
+"after URL encoding. Keep the names as short as possible and expect "
+"long values to get trimmed. You may use tokens in custom variable "
+"names and values. Global and user tokens are always available; on node "
+"pages, node tokens are also available."
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid "Custom variables"
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid "Slot number"
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid "Custom variable slot #@slot"
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid "The custom variable name."
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid "Custom variable name #@slot"
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid "The custom variable value."
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid "Custom variable value #@slot"
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid "The scope for the custom variable."
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid ""
+"You can supplement Google Analytics' basic IP address tracking of "
+"visitors by segmenting users based on custom variables. Section 7 of "
+"the <a href=\"@ga_tos\">Google Analytics terms of service</a> requires "
+"that You will not (and will not allow any third party to) use the "
+"Service to track, collect or upload any data that personally "
+"identifies an individual (such as a name, email address or billing "
+"information), or other data which can be reasonably linked to such "
+"information by Google. You will have and abide by an appropriate "
+"Privacy Policy and will comply with all applicable laws and "
+"regulations relating to the collection of information from Visitors. "
+"You must post a Privacy Policy and that Privacy Policy must provide "
+"notice of Your use of cookies that are used to collect traffic data, "
+"and You must not circumvent any privacy features (e.g., an opt-out) "
+"that are part of the Service."
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid "Locally cache tracking code file"
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid ""
+"If checked, the tracking code file is retrieved from Google Analytics "
+"and cached locally. It is updated daily from Google's servers to "
+"ensure updates to tracking code are reflected in the local copy. Do "
+"not activate this until after Google Analytics has confirmed that site "
+"tracking is working!"
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid "Custom JavaScript code"
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid ""
+"You can add custom Google Analytics <a href=\"@snippets\">code "
+"snippets</a> here. These will be added every time tracking is in "
+"effect. Before you add your custom code, you should read the <a "
+"href=\"@ga_concepts_overview\">Google Analytics Tracking Code - "
+"Functional Overview</a> and the <a href=\"@ga_js_api\">Google "
+"Analytics Tracking API</a> documentation. <strong>Do not include the "
+"&lt;script&gt; tags</strong>, and always end your code with a "
+"semicolon (;)."
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid "Code snippet (before)"
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid ""
+"Code in this textarea will be added <strong>before</strong> "
+"_gaq.push(['_trackPageview'])."
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid "Code snippet (after)"
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid ""
+"Code in this textarea will be added <strong>after</strong> "
+"_gaq.push(['_trackPageview']). This is useful if you'd like to track a "
+"site in two accounts."
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid "JavaScript scope"
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid ""
+"Google recommends adding the external JavaScript files to the header "
+"for performance reasons. If <em>Multiple top-level domains</em> has "
+"been selected, this setting will be forced to header."
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid ""
+"<a href=\"@ga_url\">Google Analytics</a> is a free (registration "
+"required) website traffic and marketing effectiveness service."
+msgstr ""
+
+#: /et/admin/config/system/googleanalytics
+msgid "Slot"
+msgstr ""
+
+#: /et/admin/config/system/statistics
+msgid "Use Ajax to increment the counter"
+msgstr ""
+
+#: /et/admin/config/system/statistics
+msgid ""
+"Perform the count asynchronously after page load rather than during "
+"page generation."
+msgstr ""
+
+#: /et/content/tegin-uue-%C3%B5ppem%C3%A4ngu
+msgid "New Reply - eDidaktikum"
+msgstr ""
+
+#: /et/content/tegin-uue-%C3%B5ppem%C3%A4ngu
+msgid "@commentatorfullname answered in Discussion board @contentname."
+msgstr ""
+
+#: /et/content/tegin-uue-%C3%B5ppem%C3%A4ngu
+msgid "View Discussion Board: @contenturl"
+msgstr ""
+
+#: /et/node/9534/competency-profile
+msgid ""
+"Rakendab koostöös teiste spetsialistidega vajadusel individuaalset "
+"õppekava, käitumise tugikava ja/või arenduskava"
+msgstr ""
+
+#: /et/user/login?destination=node/6891%23comment-form
+msgid "Zocial"
+msgstr ""
+
+#: /et/node/9346
+msgid "HTML Purifier"
+msgstr ""
+
+#: /et/node/9346
+msgid ""
+"Removes malicious HTML code and ensures that the output is standards "
+"compliant. <strong>Warning:</strong> For performance reasons, please "
+"ensure that there are no highly dynamic filters before HTML Purifier. "
+msgstr ""
+
+#: /et/node/9346
+msgid "HTML Purifier (advanced)"
+msgstr ""
+
+#: /et/node/9346
+msgid ""
+"<em>This version has advanced configuration options, do not enable "
+"both at the same time.</em>"
+msgstr ""
+
+#: /et/node/9346
+msgid "Rich text editor settings"
+msgstr ""
+
+#: /et/node/9346
+msgid "HTML tags will be transformed to conform to HTML standards."
+msgstr ""
+
+#: /et/node/9346
+msgid "CKEditor"
+msgstr ""
+
+#: /et/node/9346
+msgid "Configure the rich text editor."
+msgstr ""
+
+#: /et/node/9346
+msgid "HTML Purifier settings"
+msgstr ""
+
+#: /et/node/9346
+msgid ""
+"Configure overall settings for the HTML Purifier filters, including "
+"how they are cached."
+msgstr ""
+
+#: /et/node/9346
+msgid "ckeditor"
+msgstr ""
+
+#: /et/node/9346
+msgid "htmlpurifier"
+msgstr ""
+
+#: sites/all/modules/ckeditor/includes/ckeditor.utils.js; sites/all/modules/ckeditor_1/includes/ckeditor.utils.js
+msgid "Content can only be inserted into CKEditor in the WYSIWYG mode."
+msgstr ""
+
+#: /et/ckeditor/xss
+msgid "XSS Filter"
+msgstr ""
+
+#: /et/ckeditor/xss
+msgid "XSS Filter."
+msgstr ""
+
+#: /et/admin/config
+msgid "HTML Purifier library location"
+msgstr ""
+
+#: /et/admin/config
+msgid ""
+"The HTML Purifier library currently lives in\n"
+"        <code>@oldpath</code>, but should actually be placed in the "
+"shared\n"
+"        libraries API at <code>@newpath</code>.  You should move the "
+"folder\n"
+"        such that <code>@somefile</code> exists (you will need to "
+"create an\n"
+"        <code>htmlpurifier</code> folder to hold the "
+"<code>library</code>\n"
+"        folder).  For future updates, you can simply replace the\n"
+"        htmlpurifier folder with the htmlpurifier-x.y.z folder that "
+"a\n"
+"        new HTML Purifier tarball unzips to (you'll be reminded in "
+"an\n"
+"        update notification)."
+msgstr ""
+
+#: /et/admin/reports/status
+msgid "HTML Purifier Library"
+msgstr ""
+
+#: /et/admin/people
+msgid "Administer CKEditor access"
+msgstr ""
+
+#: /et/admin/people
+msgid "Allow users to change CKEditor settings."
+msgstr ""
+
+#: /et/admin/people
+msgid "Customize CKEditor appearance"
+msgstr ""
+
+#: /et/admin/people
+msgid "Allow users to customize CKEditor appearance."
+msgstr ""
+
+#: /et/admin/people
+msgid "administer ckeditor"
+msgstr ""
+
+#: /et/admin/people
+msgid "customize ckeditor"
+msgstr ""
+
+#: /et/user/3330/edit
+msgid "Default state"
+msgstr ""
+
+#: /et/user/3330/edit
+msgid ""
+"Should rich text editing be enabled or disabled by default in textarea "
+"fields? If disabled, the rich text editor may still be enabled by "
+"using toggle."
+msgstr ""
+
+#: /et/user/3330/edit
+msgid "Show the disable/enable rich text editor toggle"
+msgstr ""
+
+#: /et/user/3330/edit
+msgid ""
+"Whether or not to show the disable/enable rich text editor toggle "
+"below the textarea."
+msgstr ""
+
+#: /et/user/3330/edit
+msgid "Editor width"
+msgstr ""
+
+#: /et/user/3330/edit
+msgid "Editor interface width in pixels or percent."
+msgstr ""
+
+#: /et/user/3330/edit
+msgid "Examples"
+msgstr ""
+
+#: /et/user/3330/edit
+msgid "or"
+msgstr ""
+
+#: /et/user/3330/edit
+msgid "The language for the CKEditor interface."
+msgstr ""
+
+#: /et/user/3330/edit
+msgid "Auto-detect language"
+msgstr ""
+
+#: /et/user/3330/edit
+msgid "Automatically detect the user language."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor
+msgid "Input format"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor
+msgid "addon page"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor
+msgid "Table Resize plugin. See !link for more details."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor
+msgid "Auto Grow plugin. See !link for more details."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor
+msgid "Stylesheet Parser plugin. See !link for more details."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor
+msgid ""
+"Plugin for inserting Code Snippets. See !link for more details. See "
+"!help for additional instructions."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor
+msgid ""
+"Plugin for inserting Mathematical Formula (MathJax). See !link for "
+"more details. See !help for additional instructions."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor
+msgid "Plugin for inserting images from Drupal media module"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor
+msgid "Plugin for inserting files from IMCE without image dialog"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor
+msgid "Plugin for inserting Drupal embeded media"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor
+msgid "Plugin to count symbols, symbols without blanks and words"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor
+msgid "Plugin for inserting Drupal teaser and page breaks."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor
+msgid "clone"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor
+msgid "Create a new profile"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor
+msgid "CKEditor Global Profile"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor
+msgid "What You See Is What You Get"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor
+msgid "WYSIWYG"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor
+msgid ""
+"The CKEditor module allows Drupal to replace textarea fields with "
+"CKEditor. CKEditor is an online rich text editor that can be embedded "
+"inside web pages. It is a !wysiwyg editor which means that the text "
+"edited in it looks as similar as possible to the results end users "
+"will see after the document gets published. It brings to the Web "
+"popular editing features found in desktop word processors such as "
+"Microsoft Word and OpenOffice.org Writer. CKEditor is truly "
+"lightweight and does not require any kind of installation on the "
+"client computer."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor
+msgid "CKEditor website"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor
+msgid "CKEditor for Drupal 7 Documentation"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor
+msgid "User's Guide"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor
+msgid "Useful links: !ckeditorlink | !devguidelink | !userguidelink."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor
+msgid ""
+"Profiles are linked with input format types. A CKEditor profile "
+"defines which buttons are available in the editor, how the editor is "
+"displayed, and a few other editor functions. The Global Profile stores "
+"some general information about CKEditor."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/editg
+msgid "Edit the CKEditor Global profile"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/editg
+msgid "Update the global profile"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/editg
+msgid "Skin"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/editg
+msgid "Choose a CKEditor skin."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/editg
+msgid "Path to CKEditor"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/editg
+msgid "ckeditor.com"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/editg
+msgid ""
+"The path to CKEditor (the WYSIWYG rich text editor downloaded from "
+"!ckeditorcom). Provide a path relative to the document root, unless "
+"CKEditor is located on an external URL. In such case enter the full "
+"URL to a folder with CKEditor.<br />The simplest way to have the "
+"editor running is to use CDN, to use it set: !cdn"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/editg
+msgid ""
+"Available placeholders:!b &ndash; path of the Drupal installation "
+"(!base) !m &ndash; path where the CKEditor module is stored "
+"(!module).!l &ndash; path to the libraries directory (!library)."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/editg
+msgid "Current path: !path"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/editg
+msgid "CKEditor is loaded from URL. Local path is not available."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/editg
+msgid "Local path to CKEditor"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/editg
+msgid ""
+"The path to the local directory (on the server) that points to the "
+"path defined above. Enter either an absolute server path or a path "
+"relative to the !indexphp file. If left empty, the CKEditor module "
+"will try to find the right path."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/editg
+msgid "Path to the CKEditor plugins directory"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/editg
+msgid "Path to the CKEditor plugins directory relative to the document root."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/editg
+msgid ""
+"Available placeholders:!b &ndash; path of the Drupal installation "
+"(!base) !m &ndash; the base URL path where the CKEditor module is "
+"stored (!module).!l &ndash; the base URL path to the libraries "
+"directory (!library)"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/editg
+msgid "Local path to the CKEditor plugins directory"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/editg
+msgid "Path to CKFinder"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/editg
+msgid "ckfinder.com"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/editg
+msgid ""
+"The path to CKFinder (AJAX based file manager downloaded from "
+"!ckfindercom) relative to the document root."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/editg
+msgid ""
+"Available placeholders:!b &ndash; path of the Drupal installation "
+"(!base) !m &ndash; path where the CKEditor module is stored "
+"(!module).!l &ndash; path to the libraries directory (!library)"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/editg
+msgid "Local path to CKFinder"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/editg
+msgid "Enable access to files located in the private folder"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/editg
+msgid ""
+"<strong>Use this option with care.</strong> If checked, CKEditor will "
+"allow anyone knowing the URL to view a file located inside of the "
+"private path (!private_path), but only if there is no information "
+"about the file in the Drupal database. If the path below is specified, "
+"anyone will have access only to that location."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/editg
+msgid "Location of files uploaded with CKEditor to the private folder"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/editg
+msgid ""
+"The path relative to the location of the private directory where "
+"CKEditor should store uploaded files."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/editg
+msgid "Available wildcard characters:!u &ndash; User ID.!n &ndash; Username"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/editg
+msgid "System path to the private folder is: !system_path."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/editg
+msgid "Aggregate <code>ckeditor.js</code>"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/editg
+msgid ""
+"When enabled, <code>ckeditor.js</code> will be aggregated if "
+"JavaScript aggregation is enabled. <strong>Not recommended</strong>."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/editg
+msgid "Use toolbar Drag&Drop feature"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/editg
+msgid ""
+"When enabled, the toolbar can be built by using the drag-and-drop "
+"feature. Otherwise you will need to enter the toolbar configuration "
+"manually to the text box."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/editg
+msgid ""
+"The Global Profile allows you to define settings that are common for "
+"all profiles. Values defined in other profiles will be appended to the "
+"global configuration. This way you can avoid repeating some of the "
+"settings that are usually the same for each profile."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "Edit the CKEditor profile"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "Profile name"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid ""
+"Enter a name for this profile. This name is only visible within the "
+"CKEditor administration page."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "Choose the text formats where you want to load CKEditor."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "Security"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid ""
+"The CKEditor security system protects you from executing malicious "
+"code that is already in your database. In plain textareas database "
+"content is harmless because it is not executed, but the CKEditor "
+"WYSIWYG editor interprets HTML like a web browser and thus the content "
+"needs to be filtered before it is loaded."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "Security filters"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid ""
+"Below is a list of security filters along with their status for each "
+"text format.<br /><br />The following statuses are available: "
+"!img_enabled - the filter is configured for a given text format and "
+"will be run on the content during the filtering process. !img_disabled "
+"- the filter is disabled for a given text format and will not be run "
+"on the content during the filtering process.<br /><br />In order to "
+"modify the security filters settings for each of the text formats, you "
+"need to visit the text format configuration sections as listed below: "
+"!elem_format_config"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "!title <a href=\"!link\" target=\"_blank\">project page</a>"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "<i>Not installed</i>"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "@data"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "!data"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "!title"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "Security settings"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "Always run security filters for CKEditor."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "Run security filters only when CKEditor is set to start automatically."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid ""
+"There are two ways of starting CKEditor: automatically and manually "
+"(via toggle). If you decide to apply security filters only when "
+"CKEditor starts automatically, you will not be protected when toggling "
+"manually from plain textarea to CKEditor. Choose this option only if "
+"you can detect various attacks (mainly XSS) by yourself just by "
+"looking at the HTML code."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "CKEditor default"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "Select manually"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "Load sample toolbar: !toolbars"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "Current toolbar"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "Currently used buttons"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "Insert Code Snippet"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "DrupalBreak"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "Insert Mathematical Formulas"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "MediaEmbed"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "Available buttons"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "All available buttons"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "Toolbar state on startup"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "Expanded"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "Collapsed"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "The toolbar will start in an expanded or collapsed state."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "Default editor state"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid ""
+"Default editor state. If disabled, the rich text editor may still be "
+"enabled by using toggle."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "User interface color"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "Choose the plugins that you want to enable in CKEditor."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "Editor interface width in pixels or percent. Examples: 400, 100%."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "The language for the CKEditor user interface."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "Language direction"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "Get from current locale (default)"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "Left-To-Right"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "Right-To-Left"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid ""
+"Choose the language direction used in the editing area. Even when "
+"CKEditor automatically detects the user language and adjusts its user "
+"interface, the editing area is not automatically changed into the LTR "
+"or RTL mode. To be able to type LTR (like English) and RTL (like "
+"Arabic, Hebrew, Persian) content at the same time, please make sure "
+"that the <strong>!bidiltr</strong> and <strong>!bidirtl</strong> "
+"buttons are enabled in the toolbar."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "Advanced content filter"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "this blog post"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid ""
+"Configure input data filtering in CKEditor. See !link for more "
+"information about ACF."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid ""
+"<strong>Example:</strong> if only Bold and Link buttons are enabled, "
+"only !strong and !a tags will be allowed. Any !b tags will "
+"automatically be converted into !strong. The !img tag will not be "
+"allowed, unless the Image button is added to the toolbar."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid ""
+"<strong>Warning:</strong> CKEditor will not use the set of tags "
+"associated with text format. Only the buttons enabled in the toolbar "
+"and optional plugins will determine which tags/attributes/styles are "
+"handled by CKEditor. Enabling ACF in CKEditor does not affect "
+"server-side filtering done by Drupal in any way."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid ""
+"CKEditor will only allow tags/attributes/styles provided by CKEditor "
+"features. Disallowed content will be removed directly by CKEditor. "
+"When configured properly, it helps to ensure a true WYSIWYG "
+"experience."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid ""
+"CKEditor will not filter any tags and as a result, the user will be "
+"able to insert any content into the editor. The content will only be "
+"filtered by server-side filters associated with input formats."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "Extra allowed content"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "CKEditor documentation"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid ""
+"Set additional allowed content rules for CKEditor. Separate rules with "
+"a semicolon. See !docs for more information."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "<strong>Example:</strong> !rules"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "Enter mode"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid ""
+"Set which tag should be used by CKEditor when the <em>Enter</em> key "
+"is pressed."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "Shift+Enter mode"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid ""
+"Set which tag should be used by CKEditor when the <em>Shift+Enter</em> "
+"key combination is pressed."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "Font formats"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid ""
+"Semicolon-separated list of HTML font formats. Allowed values are: "
+"!allowed_values"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "Use custom formatting options"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "Custom formatting options"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "Indent the element contents."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "Break line before the opening tag."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "Break line after the opening tag."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "Break line before the closing tag."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "Break line after the closing tag."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "Indent the <code>&lt;pre&gt;</code> element contents."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid ""
+"Defines the CSS to be used in the editor area.!title_theme_css &ndash; "
+"load the !style_css file from the current site theme.!title_define_css "
+"&ndash; enter the CSS file path below.!title_ckeditor_default &ndash; "
+"use the default editor CSS."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "CSS file path"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid ""
+"Enter the path to the CSS file (Example: !example1) or a list of CSS "
+"files separated with a comma (Example: !example2). Make sure you "
+"select the !title_define_css option above."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid ""
+"Available placeholders:!h &ndash; host name (!host).!t &ndash; path to "
+"theme (!theme)."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "Predefined styles"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "Use theme ckeditor.styles.js"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "Define path to ckeditor.styles.js"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid ""
+"Define the location of the !ckeditor_styles_js_file file. It is used "
+"by the <strong>Style</strong> drop-down list available in the default "
+"toolbar. Copy the !ckeditor_styles_js_path file into your theme "
+"directory (!theme) and adjust it to your needs."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "Predefined styles path"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid ""
+"Enter the path to a file with predefined styles (Example: !example1). "
+"Make sure you select the !style_define_path option above."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid ""
+"Available placeholders:!h &ndash; host name (!host).!t &ndash; path to "
+"theme (!theme).!m &ndash; path to the CKEditor module (!module)."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "File browser settings"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "IMCE"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "elFinder"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "CKFinder"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid ""
+"Set the file browser settings. A file browser will allow you to browse "
+"the files stored on the server and embed them as links, images, or "
+"Flash movies. CKEditor is compatible with such Drupal modules as !imce "
+"or !elfinder. CKEditor can be also integrated with !ckfinder, an "
+"advanced Ajax file manager."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "Same as in the Link dialog window"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "File browser type (Link dialog window)"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "Select the file browser that you would like to use to upload files."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "File browser type (Image dialog window)"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "Select the file browser that you would like to use to upload images."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "File browser type (Flash dialog window)"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid ""
+"Select the file browser that you would like to use to upload Flash "
+"movies."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid ""
+"Setting a relative path to uploaded files was disabled because private "
+"downloads are enabled and thus this path is calculated automatically. "
+"To change the location of uploaded files in the private file system, "
+"edit the <strong>!url</strong>."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "Force pasting as plain text"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid ""
+"If enabled, HTML content will be automatically changed to plain text "
+"when pasting."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "HTML Entities"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "Convert all applicable characters to HTML entities."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "Spellchecker"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid ""
+"If enabled, turns on SCAYT (Spell Check As You Type) automatically "
+"after loading the editor."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "Load !ckeditor_config_js from the theme path"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid ""
+"When enabled, the editor will try to load the !ckeditor_config_js file "
+"from the theme directory."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "Custom JavaScript configuration"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid ""
+"In order to change CKEditor configuration globally, you should modify "
+"the !ckeditor_config configuration file. Sometimes it is required to "
+"change the CKEditor configuration for a single profile only. Use this "
+"box to define settings that are unique for this profile. Available "
+"options are listed in the !docs. Add the following code snippet to "
+"change the fonts available in the CKEditor <strong>Font</strong> and "
+"<strong>Size</strong> drop-down lists: "
+"<pre>@code</pre><strong>Warning</strong>: If you make a mistake here, "
+"CKEditor may not load correctly."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid ""
+"CKEditor is highly configurable. The most commonly used features are "
+"listed below. You can also adjust CKEditor to your needs by changing "
+"the !ckeditor_module_config configuration file."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/skinframe?token=ZzoNSrU0jvOqX8-mqyC6KhPJ_ef3xk06hnMuy7BZNZ4&skin=moono&uicolor=D3D3D3
+msgid "Change skin of CKEditor"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/skinframe?token=ZzoNSrU0jvOqX8-mqyC6KhPJ_ef3xk06hnMuy7BZNZ4&skin=moono&uicolor=D3D3D3
+msgid "Configure skin for CKEditor."
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "Color module: top"
+msgstr ""
+
+#: /et/admin/config/content/ckeditor/edit/Advanced
+msgid "Color module: bottom"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid ""
+"<a href=\"/et/content/ht-praktikaproovigrupp\">HT "
+"Praktika_proovigrupp</a>"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=10011
+msgid ""
+"Valmidus suunata õppijaid osalema ühisseisukohtade kujundamises ning "
+"esindama ennast, õppeasutust ja õpilaskonda"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=10011
+msgid ""
+"<a "
+"href=\"/et/competence/valmidus-suunata-%C3%B5ppijaid-osalema-%C3%BChisseisukohtade-kujundamises-ning-esindama-ennast\">Valmidus "
+"suunata õppijaid osalema ühisseisukohtade kujundamises ning esindama "
+"ennast, õppeasutust ja õpilaskonda</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=10011
+msgid ""
+"<a "
+"href=\"/et/competence/%C3%B5petab-l%C3%A4htudes-%C3%B5ppija-erip%C3%A4rast-seatud-eesm%C3%A4rkidest-ja-ainetevahelisest-l%C3%B5imingust\">Õpetab, "
+"lähtudes õppija eripärast, seatud eesmärkidest ja ainetevahelisest "
+"lõimingust</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=10011
+msgid ""
+"Arendab õppijate õpi- ja sotsiaalseid oskusi, kasutades "
+"rühmapõhiseid ja individuaalseid õppevorme"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=10011
+msgid ""
+"<a "
+"href=\"/et/competence/arendab-%C3%B5ppijate-%C3%B5pi-ja-sotsiaalseid-oskusi-kasutades-r%C3%BChmap%C3%B5hiseid-ja-individuaalseid\">Arendab "
+"õppijate õpi- ja sotsiaalseid oskusi, kasutades rühmapõhiseid ja "
+"individuaalseid õppevorme</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=10011
+msgid ""
+"Arvestab neid ainevaldkondlike, üldpedagoogiliste ja kasvatuslike "
+"eesmärkide seadmisel, toetudes õppekavale"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=10011
+msgid ""
+"<a "
+"href=\"/et/competence/arvestab-neid-ainevaldkondlike-%C3%BCldpedagoogiliste-ja-kasvatuslike-eesm%C3%A4rkide-seadmisel\">Arvestab "
+"neid ainevaldkondlike, üldpedagoogiliste ja kasvatuslike eesmärkide "
+"seadmisel, toetudes õppekavale</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=10011
+msgid ""
+"Informeerib osapooli õpieesmärkidest, sisust, õppekorraldusest, "
+"hindamismudelitest, huvitegevuse võimalustest, kasutades tõhusalt "
+"erinevaid infokanaleid (nt koosolek, e-suhtlus, individuaalne vestlus)"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=10011
+msgid ""
+"<a "
+"href=\"/et/competence/informeerib-osapooli-%C3%B5pieesm%C3%A4rkidest-sisust-%C3%B5ppekorraldusest-hindamismudelitest\">Informeerib "
+"osapooli õpieesmärkidest, sisust, õppekorraldusest, "
+"hindamismudelitest, huvitegevuse võimalustest, kasutades tõhusalt "
+"erinevaid infokanaleid (nt koosolek, e-suhtlus, individuaalne "
+"vestlus)</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=10011
+msgid ""
+"Kaasab õppijaid, lapsevanemaid, kolleege ja tugispetsialiste "
+"õpitegevuste kavandamisse"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=10011
+msgid ""
+"<a "
+"href=\"/et/competence/kaasab-%C3%B5ppijaid-lapsevanemaid-kolleege-ja-tugispetsialiste-%C3%B5pitegevuste-kavandamisse\">Kaasab "
+"õppijaid, lapsevanemaid, kolleege ja tugispetsialiste õpitegevuste "
+"kavandamisse</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=10011
+msgid "Kavandab koostöös kolleegidega ainetevahelise lõimingu"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=10011
+msgid ""
+"<a "
+"href=\"/et/competence/kavandab-koost%C3%B6%C3%B6s-kolleegidega-ainetevahelise-l%C3%B5imingu\">Kavandab "
+"koostöös kolleegidega ainetevahelise lõimingu</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=10011
+msgid ""
+"Jälgib, hindab ja väärtustab oma füüsilist, vaimset ja "
+"emotsionaalset tervist, tegutseb nende tasakaalus hoidmise nimel, "
+"optimeerides iseenda aja- ning energiakulu"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=10011
+msgid ""
+"<a "
+"href=\"/et/competence/j%C3%A4lgib-hindab-ja-v%C3%A4%C3%A4rtustab-oma-f%C3%BC%C3%BCsilist-vaimset-ja-emotsionaalset-tervist-tegutseb\">Jälgib, "
+"hindab ja väärtustab oma füüsilist, vaimset ja emotsionaalset "
+"tervist, tegutseb nende tasakaalus hoidmise nimel, optimeerides "
+"iseenda aja- ning energiakulu</a><br />"
+msgstr ""
+
+#: misc/drupal.js
+msgid "CustomMessage: !customMessage"
+msgstr ""
+
+#: /et/admin/modules
+msgid "Introduction"
+msgstr ""
+
+#: /et/admin/modules
+msgid "Administration panel"
+msgstr ""
+
+#: /et/admin/modules
+msgid "Content Authoring"
+msgstr ""
+
+#: /et/admin/modules
+msgid ""
+"CKEditor profiles can be configured in the !adminpath section. "
+"Profiles determine which options are available to users based on the "
+"input format system."
+msgstr ""
+
+#: /et/admin/modules
+msgid "filters"
+msgstr ""
+
+#: /et/admin/modules
+msgid ""
+"For the Rich Text Editing to work you also need to configure your "
+"!filterlink for the users that may access Rich Text Editing. Either "
+"grant those users <strong>Full HTML</strong> access or use the "
+"following list of tags in the HTML filter:"
+msgstr ""
+
+#: /et/admin/modules
+msgid "README.txt"
+msgstr ""
+
+#: /et/admin/modules
+msgid ""
+"<strong>Note:</strong> be careful when granting users access to create "
+"tags like %iframe.<br />If you are going to use CKEditor with the "
+"<strong>Filtered HTML</strong> input format, please read the \"Setting "
+"up filters\" section in the !readme file."
+msgstr ""
+
+#: /et/admin/modules
+msgid "Line break converter"
+msgstr ""
+
+#: /et/admin/modules
+msgid ""
+"To have better control over line breaks, you should disable the "
+"<strong>%settingname</strong> setting in the chosen Text format "
+"(recommended)."
+msgstr ""
+
+#: /et/admin/modules
+msgid "API documentation"
+msgstr ""
+
+#: /et/admin/modules
+msgid ""
+"All configuration options described in the !apidocs that cannot be "
+"easily changed in the administration area can be set in the "
+"<strong>Advanced Options</strong> section in the CKEditor profile."
+msgstr ""
+
+#: /et/admin/modules
+msgid "Troubleshooting"
+msgstr ""
+
+#: /et/admin/modules
+msgid "the list of common problems"
+msgstr ""
+
+#: /et/admin/modules
+msgid "Take a look at !listlink when installing CKEditor."
+msgstr ""
+
+#: /et/admin/modules
+msgid "official project page"
+msgstr ""
+
+#: /et/admin/modules
+msgid ""
+"If you are looking for more information, have any trouble with the "
+"configuration, or found an issue with the CKEditor module, please "
+"visit the !officiallink."
+msgstr ""
+
+#: /et/admin/modules
+msgid "here"
+msgstr ""
+
+#: /et/admin/modules
+msgid ""
+"More information about how to customize CKEditor for your theme can be "
+"found !herelink."
+msgstr ""
+
+#: /et/admin/modules
+msgid "Plugins: Code Snippet and MathJax"
+msgstr ""
+
+#: /et/admin/modules
+msgid ""
+"Code Snippet and MathJax are special plugins for CKEditor that are "
+"using external JavaScript libraries to style content inside editing "
+"area. The result that is returned by CKEditor is just an HTML tag that "
+"needs to again processed by a filter (either server side or client "
+"side) in order to display it properly to the user."
+msgstr ""
+
+#: /et/admin/modules
+msgid "MathJax (Mathematical Formulas)"
+msgstr ""
+
+#: /et/admin/modules
+msgid ""
+"With mathjax plugin, CKEditor produces LaTeX code surrounded by !code. "
+"In order to have it properly rendered on your site you might need to "
+"add !mathjax on your website, the simplest way to do this is to add "
+"this to your theme: !script"
+msgstr ""
+
+#: /et/admin/modules
+msgid "Code Snippet"
+msgstr ""
+
+#: /et/admin/modules
+msgid ""
+"With codesnippet plugin, CKEditor produces code snippets surrounded by "
+"!code. <strong>Note:</strong> You might need to add !highlight on your "
+"website so that the displayed code was rendered nicely as in CKEditor. "
+"The simplest way to do this is to add this to your theme: !script"
+msgstr ""
+
+#: /et/admin/modules
+msgid "Uploading images and files"
+msgstr ""
+
+#: /et/admin/modules
+msgid "There are three ways for uploading files:"
+msgstr ""
+
+#: /et/admin/modules
+msgid "By using !ckfinder (commercial), an advanced Ajax file manager."
+msgstr ""
+
+#: /et/admin/modules
+msgid "By using a dedicated module like !imcelink."
+msgstr ""
+
+#: /et/admin/modules
+msgid "By using the core upload module."
+msgstr ""
+
+#: /et/admin/modules
+msgid ""
+"Enables CKEditor (WYSIWYG HTML editor) for use instead of plain text "
+"fields."
+msgstr ""
+
+#: /et/admin/modules
+msgid ""
+"Filter that removes malicious HTML and ensures standards compliant "
+"output."
+msgstr ""
+
+#: /et/admin/modules
+msgid "Kollektsioonid"
+msgstr ""
+
+#: misc/ajax.js
+msgid "The response failed verification so will not be processed."
+msgstr ""
+
+#: misc/ajax.js
+msgid "The callback URL is not local and not trusted: !url"
+msgstr ""
+
+#: /et/admin/modules/list/confirm
+msgid ""
+"Cache table for the HTML Purifier module just like cache_filter, "
+"except that\n"
+"cached text is stored permanently until flushed or manually "
+"invalidated.\n"
+"This helps prevent recurrent cache slams on pages with lots of "
+"segments of HTML."
+msgstr ""
+
+#: /et/admin/modules
+msgid ""
+"The HTML Purifier Drupal module provides a text filter that removes\n"
+"malicious HTML and ensures standards compliant output.  You can "
+"modify\n"
+"text formats at <a href=\"@formats\">the format configurations "
+"page</a>."
+msgstr ""
+
+#: /et/admin/config/content/htmlpurifier
+msgid ""
+"<p>This page contains global settings for all HTML Purifier enabled "
+"filters.  If you are looking for specific filter configuration "
+"options, check <a href=\"@format\">the format configurations page</a> "
+"and select the specific format you would like to configure.</p>"
+msgstr ""
+
+#: /et/admin/config/content/htmlpurifier
+msgid "Clear cache (Warning: Can result in performance degradation)"
+msgstr ""
+
+#: /et/search/node/%C3%B5pikeskkond%20ja%20selle%20kujundamine
+msgid "Microsoft Office document icon"
+msgstr ""
+
+#: /et/search/node/%C3%B5pikeskkond%20ja%20selle%20kujundamine
+msgid "Office spreadsheet icon"
+msgstr ""
+
+#: /et/search/node/%C3%B5pikeskkond%20ja%20selle%20kujundamine
+msgid "Office presentation icon"
+msgstr ""
+
+#: /et/search/node/%C3%B5pikeskkond%20ja%20selle%20kujundamine
+msgid "PDF icon"
+msgstr ""
+
+#: /et/search/node/%C3%B5pikeskkond%20ja%20selle%20kujundamine
+msgid "Movie icon"
+msgstr ""
+
+#: /et/search/node/%C3%B5pikeskkond%20ja%20selle%20kujundamine
+msgid "Audio icon"
+msgstr ""
+
+#: /et/search/node/%C3%B5pikeskkond%20ja%20selle%20kujundamine
+msgid "Image icon"
+msgstr ""
+
+#: /et/search/node/%C3%B5pikeskkond%20ja%20selle%20kujundamine
+msgid "Package icon"
+msgstr ""
+
+#: /et/search/node/%C3%B5pikeskkond%20ja%20selle%20kujundamine
+msgid "HTML icon"
+msgstr ""
+
+#: /et/search/node/%C3%B5pikeskkond%20ja%20selle%20kujundamine
+msgid "Plain text icon"
+msgstr ""
+
+#: /et/search/node/%C3%B5pikeskkond%20ja%20selle%20kujundamine
+msgid "Binary Data"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=10275
+msgid "Märkab kolleegi edusamme ja tunnustab teda"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=10275
+msgid ""
+"<a "
+"href=\"/et/competence/m%C3%A4rkab-kolleegi-edusamme-ja-tunnustab-teda\">Märkab "
+"kolleegi edusamme ja tunnustab teda</a><br />"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid "<a href=\"/et/content/testgrupp-0\">Testgrupp</a>"
+msgstr ""
+
+#: /et/admin/config/content/honeypot
+msgid "Honeypot Configuration"
+msgstr ""
+
+#: /et/admin/config/content/honeypot
+msgid "Protect all forms with Honeypot"
+msgstr ""
+
+#: /et/admin/config/content/honeypot
+msgid ""
+"Enable Honeypot protection for ALL forms on this site (it is best to "
+"only enable Honeypot for the forms you need below)."
+msgstr ""
+
+#: /et/admin/config/content/honeypot
+msgid ""
+"<strong>Page caching will be disabled on any page where a form is "
+"present if the Honeypot time limit is not set to 0.</strong>"
+msgstr ""
+
+#: /et/admin/config/content/honeypot
+msgid "Log blocked form submissions"
+msgstr ""
+
+#: /et/admin/config/content/honeypot
+msgid "Log submissions that are blocked due to Honeypot protection."
+msgstr ""
+
+#: /et/admin/config/content/honeypot
+msgid "Honeypot element name"
+msgstr ""
+
+#: /et/admin/config/content/honeypot
+msgid ""
+"The name of the Honeypot form field. It's usually most effective to "
+"use a generic name like email, homepage, or name, but this should be "
+"changed if it interferes with fields that are already in your forms. "
+"Must not contain spaces or special characters."
+msgstr ""
+
+#: /et/admin/config/content/honeypot
+msgid "Honeypot time limit"
+msgstr ""
+
+#: /et/admin/config/content/honeypot
+msgid ""
+"Minimum time required before form should be considered entered by a "
+"human instead of a bot. Set to 0 to disable."
+msgstr ""
+
+#: /et/admin/config/content/honeypot
+msgid "seconds"
+msgstr ""
+
+#: /et/admin/config/content/honeypot
+msgid ""
+"<strong>Page caching will be disabled if there is a form protected by "
+"time limit on the page.</strong>"
+msgstr ""
+
+#: /et/admin/config/content/honeypot
+msgid "Honeypot Enabled Forms"
+msgstr ""
+
+#: /et/admin/config/content/honeypot
+msgid ""
+"Check the boxes next to individual forms on which you'd like Honeypot "
+"protection enabled."
+msgstr ""
+
+#: /et/admin/config/content/honeypot
+msgid "General Forms"
+msgstr ""
+
+#: /et/admin/config/content/honeypot
+msgid "User Registration form"
+msgstr ""
+
+#: /et/admin/config/content/honeypot
+msgid "User Password Reset form"
+msgstr ""
+
+#: /et/admin/config/content/honeypot
+msgid "Node Forms"
+msgstr ""
+
+#: /et/admin/config/content/honeypot
+msgid "@name node form"
+msgstr ""
+
+#: /et/admin/config/content/honeypot
+msgid "Comment Forms"
+msgstr ""
+
+#: /et/admin/config/content/honeypot
+msgid "@name comment form"
+msgstr ""
+
+#: /et/admin/reports/dblog
+msgid ""
+"Source image at %source_image_path not found while trying to generate "
+"derivative image at %derivative_path."
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=10134
+msgid "Töökavast lähtuvalt koostab tunnikava(d)"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=10134
+msgid ""
+"<a "
+"href=\"/et/competence/t%C3%B6%C3%B6kavast-l%C3%A4htuvalt-koostab-tunnikavad\">Töökavast "
+"lähtuvalt koostab tunnikava(d)</a><br />"
+msgstr ""
+
+#: /et/node/10911
+msgid ""
+"It is recommended to not edit the !ckeditor_config_file "
+"(!ckeditor_config_path) configuration file that is distributed with "
+"CKEditor, because you may overwrite it accidentally when you update "
+"the editor."
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=10702
+msgid ""
+"<a "
+"href=\"/et/competence/annab-%C3%B5ppijatele-mitmek%C3%BClgset-tagasisidet-nii-kujundava-kui-kokkuv%C3%B5tva-hindamise-vormis\">annab "
+"õppijatele mitmekülgset tagasisidet nii kujundava kui kokkuvõtva "
+"hindamise vormis, lähtudes seejuures nii pädevus- kui tehnilistest "
+"standarditest ning kasutades  hindamistulemusi sisendina "
+"õppeprotsessi parendamisel</a><br />"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid ""
+"<a "
+"href=\"/et/content/%C3%B5pikeskkond-ja-selle-kujundamine-2015-ts%C3%BCkli%C3%B5pe\">Õpikeskkond "
+"ja selle kujundamine 2015 (tsükliõpe)</a>"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=7985
+msgid ""
+"Vaatleb kolleegi õpetamistegevust; jälgib, analüüsib ja "
+"tagasisidestab..."
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=7985
+msgid ""
+"<a "
+"href=\"/et/competence/vaatleb-kolleegi-%C3%B5petamistegevust-j%C3%A4lgib-anal%C3%BC%C3%BCsib-ja-tagasisidestab\">Vaatleb "
+"kolleegi õpetamistegevust; jälgib, analüüsib ja "
+"tagasisidestab...</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=7977
+msgid ""
+"Koostab hindamismudeleid/ -kriteeriume ja hindab õppijaid nende "
+"alusel"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=7977
+msgid ""
+"<a "
+"href=\"/et/competence/koostab-hindamismudeleid-kriteeriume-ja-hindab-%C3%B5ppijaid-nende-alusel\">Koostab "
+"hindamismudeleid/ -kriteeriume ja hindab õppijaid nende alusel</a><br "
+"/>"
+msgstr ""
+
+#: /et/dashboard
+msgid "Kollektsioon"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid ""
+"<a href=\"/et/content/kav7004-mentorlus-kutsekoolis-20152016\">KAV7004 "
+"Mentorlus kutsekoolis 2015/2016</a>"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid ""
+"<a "
+"href=\"/et/content/kav6024-hindamine-kutse%C3%B5ppes-20152016\">KAV6024 "
+"Hindamine kutseõppes 2015/2016</a>"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid ""
+"<a "
+"href=\"/et/content/kav7035-%C3%B5ppekava-koostamine-ja-arendamine-kutsehariduses20152016\">KAV7035 "
+"Õppekava koostamine ja arendamine kutsehariduses_2015/2016</a>"
+msgstr ""
+
+#: /et/node/7087/competency-profile
+msgid ""
+"arvestab õppijate individuaalsete eripäradega, kasutades "
+"õppijakeskseid meetodeid ning pakkudes võrdset ligipääsu "
+"sobivatele digivahenditele;"
+msgstr ""
+
+#: /et/node/7087/competency-profile
+msgid ""
+"edendab kultuuritaju ja globaalset teadlikkust, suheldes "
+"digikeskkonnas kolleegide ja õppijatega teistest kultuuridest"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=11234
+msgid ""
+"selgitab välja õppija ja/või õppegrupi arenguvajadused, lähtudes "
+"õppija eripärast, kaasates õppijaid ja kolleege; selgitab välja "
+"õppija ja/või õppegrupi õpivajadused, arvestades varasemat õpi- "
+"ja töökogemust, sh üldoskusi, kaasates õppijaid ja kolleege..."
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=11234
+msgid ""
+"<a "
+"href=\"/et/competence/selgitab-v%C3%A4lja-%C3%B5ppija-jav%C3%B5i-%C3%B5ppegrupi-arenguvajadused-l%C3%A4htudes-%C3%B5ppija-erip%C3%A4rast-kaasates\">selgitab "
+"välja õppija ja/või õppegrupi arenguvajadused, lähtudes õppija "
+"eripärast, kaasates õppijaid ja kolleege; selgitab välja õppija "
+"ja/või õppegrupi õpivajadused, arvestades varasemat õpi- ja "
+"töökogemust, sh üldoskusi, kaasates õppijaid ja kolleege...</a><br "
+"/>"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=11234
+msgid ""
+"kogub sobivate meetoditega andmeid õppijate arengu ja motivatsiooni "
+"kohta; märkab õppija erisusi ja hariduslike erivajaduste korral "
+"koostab individuaalse õppekava koostöös õppija ja "
+"tugispetsialistidega; rakendab individuaalset õppekava lähtuvalt "
+"õppija.."
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=11234
+msgid ""
+"<a "
+"href=\"/et/competence/kogub-sobivate-meetoditega-andmeid-%C3%B5ppijate-arengu-ja-motivatsiooni-kohta-m%C3%A4rkab-%C3%B5ppija\">kogub "
+"sobivate meetoditega andmeid õppijate arengu ja motivatsiooni kohta; "
+"märkab õppija erisusi ja hariduslike erivajaduste korral koostab "
+"individuaalse õppekava koostöös õppija ja tugispetsialistidega; "
+"rakendab individuaalset õppekava lähtuvalt õppija..</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=11234
+msgid ""
+"reflekteerib oma tööd, tuues välja õnnestumised ja "
+"arenguvajadused; küsib oma tööle regulaarselt tagasisidet "
+"õppijatelt, kolleegidelt, juhtidelt; analüüsib oma tegevust, "
+"toetudes refleksioonile ja tagasisidele; seab endale konkreetseid "
+"arengueesmärke..."
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=11234
+msgid ""
+"<a "
+"href=\"/et/competence/reflekteerib-oma-t%C3%B6%C3%B6d-tuues-v%C3%A4lja-%C3%B5nnestumised-ja-arenguvajadused-k%C3%BCsib-oma-t%C3%B6%C3%B6le\">reflekteerib "
+"oma tööd, tuues välja õnnestumised ja arenguvajadused; küsib oma "
+"tööle regulaarselt tagasisidet õppijatelt, kolleegidelt, juhtidelt; "
+"analüüsib oma tegevust, toetudes refleksioonile ja tagasisidele; "
+"seab endale konkreetseid arengueesmärke...</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=11234
+msgid ""
+"koostab digitaalse arengumapi õpetajatöö ning eri-ja kutsealase "
+"tegevuse ja arengu kohta; täiendab arengumappi regulaarselt;"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=11234
+msgid ""
+"<a "
+"href=\"/et/competence/koostab-digitaalse-arengumapi-%C3%B5petajat%C3%B6%C3%B6-ning-eri-ja-kutsealase-tegevuse-ja-arengu-kohta\">koostab "
+"digitaalse arengumapi õpetajatöö ning eri-ja kutsealase tegevuse ja "
+"arengu kohta; täiendab arengumappi regulaarselt;</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=11234
+msgid ""
+"hoiab end järjepidevalt kursis eri-ja kutseala arengutega ja parimate "
+"praktikatega, kasutades neid oma töös ja jagades neid kolleegidega; "
+"arendab oma erialaseid teadmisi nt erialakonverentsidel, messidel, "
+"infopäevadel, erialase kirjanduse kaudu..."
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=11234
+msgid ""
+"<a "
+"href=\"/et/competence/hoiab-end-j%C3%A4rjepidevalt-kursis-eri-ja-kutseala-arengutega-ja-parimate-praktikatega\">hoiab "
+"end järjepidevalt kursis eri-ja kutseala arengutega ja parimate "
+"praktikatega, kasutades neid oma töös ja jagades neid kolleegidega; "
+"arendab oma erialaseid teadmisi nt erialakonverentsidel, messidel, "
+"infopäevadel, erialase kirjanduse kaudu...</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=11234
+msgid ""
+"õpib kolleegide parimatest praktikatest; jagab ja arutab kolleegidega "
+"erialaseid ja õpetajatöö kogemusi; nõustab kolleege tööalaselt."
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=11234
+msgid ""
+"<a "
+"href=\"/et/competence/%C3%B5pib-kolleegide-parimatest-praktikatest-jagab-ja-arutab-kolleegidega-erialaseid-ja\">õpib "
+"kolleegide parimatest praktikatest; jagab ja arutab kolleegidega "
+"erialaseid ja õpetajatöö kogemusi; nõustab kolleege "
+"tööalaselt.</a><br />"
+msgstr ""
+
+#: /et/clusters
+msgid "Mitteaktiivsed grupid"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid ""
+"<a "
+"href=\"/et/content/kutsepedagoogiline-praktika-i-magistri%C3%B5pe\">Kutsepedagoogiline "
+"praktika I (magistriõpe)</a>"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid ""
+"<a "
+"href=\"/et/content/kutsepedagoogiline-eelpraktika\">Kutsepedagoogiline "
+"eelpraktika</a>"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=11457
+msgid "Vaimne heaolu"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=11457
+msgid "<a href=\"/et/kategooriad/vaimne-heaolu\">Vaimne heaolu</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=11456
+msgid "Klassi/rühma juhtimine"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=11456
+msgid ""
+"<a href=\"/et/kategooriad/klassir%C3%BChma-juhtimine\">Klassi/rühma "
+"juhtimine</a><br />"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid "<a href=\"/et/content/aino-proov\">aino proov</a>, AiNo1saar"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=4153
+msgid ""
+"Mõtestab ja analüüsib oma rolli õpetajana ning õpetajatöö "
+"põhiväärtusi; reflekteerib oma erialast pädevust, kogub "
+"tagasisidet õppijate õpitegevuste ning -tulemuste kohta ja neist "
+"lähtuvalt määratleb enesearendusvajaduse; analüüsile toetudes "
+"kavandab..."
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=4153
+msgid ""
+"<a "
+"href=\"/et/competence/m%C3%B5testab-ja-anal%C3%BC%C3%BCsib-oma-rolli-%C3%B5petajana-ning-%C3%B5petajat%C3%B6%C3%B6-p%C3%B5hiv%C3%A4%C3%A4rtusi-reflekteerib-oma\">Mõtestab "
+"ja analüüsib oma rolli õpetajana ning õpetajatöö "
+"põhiväärtusi; reflekteerib oma erialast pädevust, kogub "
+"tagasisidet õppijate õpitegevuste ning -tulemuste kohta ja neist "
+"lähtuvalt määratleb enesearendusvajaduse; analüüsile toetudes "
+"kavandab...</a><br />"
+msgstr ""
+
+#: /et/node/11620/edit
+msgid ""
+"Märkab grupi arengufaase ja tegutseb neile vastavalt; tunneb ära "
+"konflikti, reageerib vastavalt olukorrale ning kaasab konflikti "
+"lahendamisel õppijaid, lapsevanemaid, kolleege ja tugispetsialiste"
+msgstr ""
+
+#: /et/node/11620/edit
+msgid ""
+"<a "
+"href=\"/et/competence/m%C3%A4rkab-grupi-arengufaase-ja-tegutseb-neile-vastavalt-tunneb-%C3%A4ra-konflikti-reageerib\">Märkab "
+"grupi arengufaase ja tegutseb neile vastavalt; tunneb ära konflikti, "
+"reageerib vastavalt olukorrale ning kaasab konflikti lahendamisel "
+"õppijaid, lapsevanemaid, kolleege ja tugispetsialiste</a><br />"
+msgstr ""
+
+#: /et/node/11620/edit
+msgid ""
+"Rakendab süsteemselt erinevaid õppimist toetavaid tagasisidestamise "
+"ja hindamise viise õpiprotsessi ja õppija arengu kohta, lähtudes "
+"õppija eripärast ja õppekavast; toetab ennastjuhtiva õppija "
+"kujunemist, suunates õppijat õpieesmärkide seadmisele..."
+msgstr ""
+
+#: /et/node/11620/edit
+msgid ""
+"<a "
+"href=\"/et/competence/rakendab-s%C3%BCsteemselt-erinevaid-%C3%B5ppimist-toetavaid-tagasisidestamise-ja-hindamise-viise\">Rakendab "
+"süsteemselt erinevaid õppimist toetavaid tagasisidestamise ja "
+"hindamise viise õpiprotsessi ja õppija arengu kohta, lähtudes "
+"õppija eripärast ja õppekavast; toetab ennastjuhtiva õppija "
+"kujunemist, suunates õppijat õpieesmärkide seadmisele...</a><br />"
+msgstr ""
+
+#: /et/node/11620/edit
+msgid ""
+"Analüüsib õpiprotsessi ja määratleb probleemid; kavandab ja viib "
+"ellu tegevused probleemide lahendamiseks; analüüsib ja tõlgendab "
+"tulemusi, kasutades sobivaid uurimuslikke meetodeid"
+msgstr ""
+
+#: /et/node/11620/edit
+msgid ""
+"<a "
+"href=\"/et/competence/anal%C3%BC%C3%BCsib-%C3%B5piprotsessi-ja-m%C3%A4%C3%A4ratleb-probleemid-kavandab-ja-viib-ellu-tegevused\">Analüüsib "
+"õpiprotsessi ja määratleb probleemid; kavandab ja viib ellu "
+"tegevused probleemide lahendamiseks; analüüsib ja tõlgendab "
+"tulemusi, kasutades sobivaid uurimuslikke meetodeid</a><br />"
+msgstr ""
+
+#: /et/node/11620/edit
+msgid ""
+"Otsib probleemide tekkimisel vajadusel abi kolleegidelt, mentorilt, "
+"organisatsiooni juhtkonnalt, tugispetsialistilt jt; märkab kolleegi "
+"edusamme ja tunnustab teda"
+msgstr ""
+
+#: /et/node/11620/edit
+msgid ""
+"<a "
+"href=\"/et/competence/otsib-probleemide-tekkimisel-vajadusel-abi-kolleegidelt-mentorilt-organisatsiooni-0\">Otsib "
+"probleemide tekkimisel vajadusel abi kolleegidelt, mentorilt, "
+"organisatsiooni juhtkonnalt, tugispetsialistilt jt; märkab kolleegi "
+"edusamme ja tunnustab teda</a><br />"
+msgstr ""
+
+#: /et/node/6218/edit
+msgid ""
+"<a "
+"href=\"/et/competence/arvestab-%C3%B5ppijate-individuaalsete-erip%C3%A4radega-kasutades-%C3%B5ppijakeskseid-meetodeid-ning\">arvestab "
+"õppijate individuaalsete eripäradega, kasutades õppijakeskseid "
+"meetodeid ning pakkudes võrdset ligipääsu sobivatele "
+"digivahenditele;</a><br />"
+msgstr ""
+
+#: /et/node/6218/edit
+msgid ""
+"<a "
+"href=\"/et/competence/teadmusloomes-eeskujuks-%C3%B5pilastele-ja-kolleegidele-%C3%B5ppides-koos-nendega-erinevates\">on "
+"teadmusloomes eeskujuks õpilastele ja kolleegidele, õppides koos "
+"nendega erinevates füüsilistes ja virtuaalsetes keskkondades</a><br "
+"/>"
+msgstr ""
+
+#: /et/node/6218/edit
+msgid ""
+"edendab ja toetab loovat ning innovaatilist mõtlemist ja leidlikkust, "
+"olles õppijatele eeskujuks"
+msgstr ""
+
+#: /et/node/6218/edit
+msgid ""
+"<a "
+"href=\"/et/competence/edendab-ja-toetab-loovat-ning-innovaatilist-m%C3%B5tlemist-ja-leidlikkust-olles-%C3%B5ppijatele\">edendab "
+"ja toetab loovat ning innovaatilist mõtlemist ja leidlikkust, olles "
+"õppijatele eeskujuks</a><br />"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid ""
+"<a "
+"href=\"/et/content/seksuaalkasvatus-ja-hivaids-ennetus-tst6018lt\">Seksuaalkasvatus "
+"ja HIV/AIDS ennetus TST6018.LT </a>"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid ""
+"<a "
+"href=\"/et/content/eelkoolipedagoogika-ja-m%C3%A4ng\">Eelkoolipedagoogika "
+"ja mäng</a>"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid ""
+"<a "
+"href=\"/et/content/ikt-p%C3%B5hised-%C3%B5ppem%C3%A4ngud-2016\">IKT-põhised "
+"õppemängud 2016</a>"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid "<a href=\"/et/content/tiiu-katsegrupp\">Tiiu katsegrupp</a>"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid ""
+"<a href=\"/et/content/edidaktikumi-koolitus-hari\">eDidaktikumi "
+"koolitus HARI</a>"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid "<a href=\"/et/content/test-6\">Test</a>"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid ""
+"<a "
+"href=\"/et/content/kak6011-uurimist%C3%B6%C3%B6-alused-ja-meetodid-kaug%C3%B5pe\">KAK6011 "
+"Uurimistöö alused ja meetodid (kaugõpe)</a>"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid ""
+"<a "
+"href=\"/et/content/kak6011-uurimist%C3%B6%C3%B6-alused-ja-meetodid-p%C3%A4eva%C3%B5pe\">KAK6011 "
+"Uurimistöö alused ja meetodid (päevaõpe)</a>"
+msgstr ""
+
+#: /et/node/4914/edit
+msgid ""
+"Kaasab õppijaid, lapsevanemaid, kolleege, tugispetsialiste ja "
+"kogukonna liikmeid õpitegevusse, tagasisidestamisse ja hindamisse, "
+"kasutades erinevaid meetodeid; kavandab ja viib läbi lapsevanemate "
+"koosolekuid, soodustab lapsevanemate õppimist üksteiselt"
+msgstr ""
+
+#: /et/node/4914/edit
+msgid ""
+"<a "
+"href=\"/et/competence/kaasab-%C3%B5ppijaid-lapsevanemaid-kolleege-tugispetsialiste-ja-kogukonna-liikmeid\">Kaasab "
+"õppijaid, lapsevanemaid, kolleege, tugispetsialiste ja kogukonna "
+"liikmeid õpitegevusse, tagasisidestamisse ja hindamisse, kasutades "
+"erinevaid meetodeid; kavandab ja viib läbi lapsevanemate koosolekuid, "
+"soodustab lapsevanemate õppimist üksteiselt</a><br />"
+msgstr ""
+
+#: /et/node/4914/edit
+msgid ""
+"Toetab õppijat üld- ja valdkondlike oskuste arendamisel ja "
+"omandamisel"
+msgstr ""
+
+#: /et/node/4914/edit
+msgid ""
+"<a "
+"href=\"/et/competence/toetab-%C3%B5ppijat-%C3%BCld-ja-valdkondlike-oskuste-arendamisel-ja-omandamisel\">Toetab "
+"õppijat üld- ja valdkondlike oskuste arendamisel ja "
+"omandamisel</a><br />"
+msgstr ""
+
+#: /et/node/6122/edit
+msgid ""
+"Koostab õpetaja töökava, arvestades õppekava ning "
+"valdkondadevahelist lõimingut; lähtuvalt eesmärkidest valib "
+"õpetamiseks ja õppimiseks sobivad meetodid ning tagasisidestamise "
+"viisid; koostab koostöös teiste spetsialistidega vajadusel "
+"individuaalse..."
+msgstr ""
+
+#: /et/node/6122/edit
+msgid ""
+"<a "
+"href=\"/et/competence/koostab-%C3%B5petaja-t%C3%B6%C3%B6kava-arvestades-%C3%B5ppekava-ning-valdkondadevahelist-l%C3%B5imingut-l%C3%A4htuvalt\">Koostab "
+"õpetaja töökava, arvestades õppekava ning valdkondadevahelist "
+"lõimingut; lähtuvalt eesmärkidest valib õpetamiseks ja õppimiseks "
+"sobivad meetodid ning tagasisidestamise viisid; koostab koostöös "
+"teiste spetsialistidega vajadusel individuaalse...</a><br />"
+msgstr ""
+
+#: /et/node/6122/edit
+msgid ""
+"Valib lähtuvalt õppe-eesmärkidest ning õppija arengutasemest "
+"sobiva õpivara ja -vahendid"
+msgstr ""
+
+#: /et/node/6122/edit
+msgid ""
+"<a "
+"href=\"/et/competence/valib-l%C3%A4htuvalt-%C3%B5ppe-eesm%C3%A4rkidest-ning-%C3%B5ppija-arengutasemest-sobiva-%C3%B5pivara-ja-vahendid\">Valib "
+"lähtuvalt õppe-eesmärkidest ning õppija arengutasemest sobiva "
+"õpivara ja -vahendid</a><br />"
+msgstr ""
+
+#: /et/node/6122/edit
+msgid ""
+"<a "
+"href=\"/et/competence/soovitab-edendab-ja-%C3%B5petab-digitaalse-teabe-ja-tehnoloogia-turvalist-seaduslikku-ja\">soovitab, "
+"edendab ja õpetab digitaalse teabe ja tehnoloogia turvalist, "
+"seaduslikku ja eetilist kasutamist, sh autoriõiguste ja "
+"intellektuaalse omandi põhimõtete ning asjakohast allikatele "
+"viitamistjärgimist</a><br />"
+msgstr ""
+
+#: /et/admin/structure/taxonomy/csv_export
+msgid "Term names"
+msgstr ""
+
+#: /et/admin/structure/taxonomy/csv_export
+msgid "Hierarchical tree structure"
+msgstr ""
+
+#: /et/admin/structure/taxonomy/csv_export
+msgid "« , » (Comma)"
+msgstr ""
+
+#: /et/admin/structure/taxonomy/csv_export
+msgid "« ; » (Semicolon)"
+msgstr ""
+
+#: /et/admin/structure/taxonomy/csv_export
+msgid "«   » (Tabulation)"
+msgstr ""
+
+#: /et/admin/structure/taxonomy/csv_export
+msgid "« | » (Pipe)"
+msgstr ""
+
+#: /et/admin/structure/taxonomy/csv_export
+msgid "«   » (Space)"
+msgstr ""
+
+#: /et/admin/structure/taxonomy/csv_export
+msgid "« ¤ » (Currency sign)"
+msgstr ""
+
+#: /et/admin/structure/taxonomy/csv_export
+msgid "Custom delimiter"
+msgstr ""
+
+#: /et/admin/structure/taxonomy/csv_export
+msgid "« \" » (Quotation mark)"
+msgstr ""
+
+#: /et/admin/structure/taxonomy/csv_export
+msgid "« ' » (Quote)"
+msgstr ""
+
+#: /et/admin/structure/taxonomy/csv_export
+msgid "Custom enclosure"
+msgstr ""
+
+#: /et/admin/structure/taxonomy/csv_export
+msgid "Unix / Linux"
+msgstr ""
+
+#: /et/admin/structure/taxonomy/csv_export
+msgid "Apple Mac"
+msgstr ""
+
+#: /et/admin/structure/taxonomy/csv_export
+msgid "Microsoft DOS"
+msgstr ""
+
+#: /et/admin/structure/taxonomy/csv_export
+msgid "Alphabetic order"
+msgstr ""
+
+#: /et/admin/structure/taxonomy/csv_export
+msgid "Internal order (tid)"
+msgstr ""
+
+#: /et/admin/structure/taxonomy/csv_export
+msgid "1. What do you want to export?"
+msgstr ""
+
+#: /et/admin/structure/taxonomy/csv_export
+msgid ""
+"See <a href=\"!more_help_link\">advanced help</a> for informations "
+"about formats."
+msgstr ""
+
+#: /et/admin/structure/taxonomy/csv_export
+msgid "In all cases, you will be notified if a duplicate is found."
+msgstr ""
+
+#: /et/admin/structure/taxonomy/csv_export
+msgid "Vocabularies to export"
+msgstr ""
+
+#: /et/admin/structure/taxonomy/csv_export
+msgid "All vocabularies"
+msgstr ""
+
+#: /et/admin/structure/taxonomy/csv_export
+msgid "The vocabularies you want to export."
+msgstr ""
+
+#: /et/admin/structure/taxonomy/csv_export
+msgid "2. How do you want to format your CSV file?"
+msgstr ""
+
+#: /et/admin/structure/taxonomy/csv_export
+msgid "CSV value delimiter"
+msgstr ""
+
+#: /et/admin/structure/taxonomy/csv_export
+msgid "Choose the delimiter to use in the CSV file."
+msgstr ""
+
+#: /et/admin/structure/taxonomy/csv_export
+msgid "Specify your custom delimiter."
+msgstr ""
+
+#: /et/admin/structure/taxonomy/csv_export
+msgid "CSV value enclosure"
+msgstr ""
+
+#: /et/admin/structure/taxonomy/csv_export
+msgid ""
+"Choose the enclosure used in the CSV file you want to export. Warning: "
+"enclosure should not be used in term definitions, specially in "
+"descriptions. Furthermore, an enclosure is needed if a field contains "
+"a line ending character. Export process will stop in case of problem."
+msgstr ""
+
+#: /et/admin/structure/taxonomy/csv_export
+msgid "Specify your custom enclosure."
+msgstr ""
+
+#: /et/admin/structure/taxonomy/csv_export
+msgid "Line ending"
+msgstr ""
+
+#: /et/admin/structure/taxonomy/csv_export
+msgid "Choose the end of line to use."
+msgstr ""
+
+#: /et/admin/structure/taxonomy/csv_export
+msgid "3. Advanced and specific options"
+msgstr ""
+
+#: /et/admin/structure/taxonomy/csv_export
+msgid "Terms order"
+msgstr ""
+
+#: /et/admin/structure/taxonomy/csv_export
+msgid "Choose order of exported terms."
+msgstr ""
+
+#: /et/admin/structure/taxonomy/csv_export
+msgid "Specific options are shown only if suitable."
+msgstr ""
+
+#: /et/admin/structure/taxonomy/csv_export
+msgid "Show duplicate terms after export"
+msgstr ""
+
+#: /et/admin/structure/taxonomy/csv_export
+msgid ""
+"Use this form to export a taxonomy, a structure or a list of terms to "
+"a simple <a href=\"!link\" title=\"Wikipedia definition\">CSV</a> "
+"file."
+msgstr ""
+
+#: /et/admin/structure/taxonomy/csv_export
+msgid ""
+"Set vocabulary to export in first tab, format to use in second tab and "
+"order of terms in third tab."
+msgstr ""
+
+#: /et/admin/structure/taxonomy/csv_export
+msgid "Exporting !total_terms terms to CSV file..."
+msgstr ""
+
+#: /et/admin/structure/taxonomy/csv_export
+msgid "Starting downloading of datas..."
+msgstr ""
+
+#: /et/admin/structure/taxonomy/csv_export
+msgid "Wait some seconds for pre-processing..."
+msgstr ""
+
+#: /et/admin/structure/taxonomy/csv_export
+msgid "An error occurred during the export."
+msgstr ""
+
+#: /et/batch?id=3877&op=do
+msgid "Term !term_number of !total_terms processed: %term"
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "Import process is stopped."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "This line won't be processed."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "Line is processed."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "ERROR"
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid ""
+"Wrong code. Module is not installed correctly. Please reinstall module "
+"from a fresh release or submit an issue."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid ""
+"Unreferenced code. Please reinstall module from a fresh release or "
+"submit an issue."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "Error in options."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "Unknown import format. Change \"Source content\" option."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "Unknown export format. Change \"Export format\" option."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid ""
+"You choose to import a taxonomy by a file, but you don't set its name "
+"or its size is greater than the server's limit."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "Size of your file is null."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "Unable to write to file."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid ""
+"Current line is multiline or contains delimiter, enclosure or "
+"unprotected line ending. Change the content of the term, or set "
+"appropriate format settings in second tab."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid ""
+"Your file can't be converted to utf-8. Please install iconv, GNU "
+"recode or mbstring for PHP or convert your file to utf-8 and disable "
+"'Enable utf-8 conversion' option."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid ""
+"Despite your option, your file is not recognize as an UTF-8 encoded "
+"one. Convert it before submit it."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "Vocabulary doesn't exist."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "Field doesn't exist in this vocabulary."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "A parent tid is given, but it hasn't been imported in a previous line."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "An error occurs during translation of term."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid ""
+"You cannot import translated terms into a vocabulary without language "
+"or with a fixed language."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "No term to export."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid ""
+"No line to import. Please first check your file and file uploading, "
+"else reinstall module from a fresh release or submit an issue."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid ""
+"No term to import. Please first check your file and file uploading, "
+"else reinstall module from a fresh release or submit an issue."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid ""
+"Problem when caching imported term. Please first check your file and "
+"file uploading, else reinstall module from a fresh release or submit "
+"an issue."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "WARNING"
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "Unable to import a field term."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "Unmanaged option."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid ""
+"Number of terms is invalid. Check if all your terms are attached to an "
+"existing vocabulary. The module exports only good terms and skips the "
+"others automatically."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid ""
+"Impossible to get parent of first item, because previous line has less "
+"parent(s). You may add one or more parents to current line or change "
+"lines order."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "Line contains empty items."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "Line contains duplicate items."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid ""
+"Line contains an empty term. Only items before this one have been "
+"imported."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid ""
+"Line contains items matching term name. A term can't be synonym, "
+"related, parent or child of itself."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "Line contains too many items."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "Line contains a translation for an empty description."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid ""
+"Vocabulary doesn't exist. When you duplicate or import into an "
+"existing vocabulary, option 'vocabulary_id' should contains true "
+"vocabulary id."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "Weight in second column is not an allowed number."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "One or more items are not numbers."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "A term cannot be a parent of itself."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "A term has no semantic field parent."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid ""
+"Term name or id is longer than 255 characters. Check field and "
+"delimiter."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "Unable to make a reference to term \"0\"."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "Unknown predicate."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "No subject."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "No predicate."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "No object."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "No name."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "More than three items."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "Unmanaged predicate."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid ""
+"Each semantic field should be imported as \"vocabulary\" or "
+"\"root_term\"."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid ""
+"No first column term to import. Empty first column is allowed only "
+"with structure or multiple terms import."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "No item in second or third column."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "Some items aren't present."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "Term without name. Name is the only needed field."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "No first or second column. They are required."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "No line to import."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "No item to import."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "Nothing to import."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "Empty line."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "Warnings have been reported on this line."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "Notice"
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid ""
+"Too many items. Second and next columns will be ignored, as import "
+"choice is to ignore them."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "Line contains empty items. They are ignored."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "To change vocabulary of a term is not recommended."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid ""
+"Line contains items matching first column term. A term can't be "
+"related to itself and a synonym may be different to it."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "Duplicates will be ignored."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "Unable to load the file attached to the term."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "Line contains empty items. They will be ignored."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "Line contains duplicate items or repeated soft tabs."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "Duplicates or repeated soft tabs will be ignored."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "Duplicates are allowed."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid ""
+"Line contains items matching term name. A term can't be related, "
+"parent, child or synonym to itself."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "Line contains duplicate synonyms."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "Line contains duplicate parents."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "Line contains duplicate children."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "Line contains duplicate related terms."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid ""
+"Too many items. Third and next columns will be ignored, as a term gets "
+"only one description and one weight."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "Too many items. Fifth and next columns will be ignored."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "No first column, but line can be processed."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "No parent, so it is a root term."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "Term has been already imported in a previous line."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "A semantic field cannot be related to terms."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid ""
+"A term has many parents and one is a semantic field, what is "
+"impossible."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "A root term has a parent."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "A term cannot be related to a semantic field"
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "A semantic field cannot be a term synonym."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "A term can have only one semantic field."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid ""
+"Too many items on the line for the selected format. These items will "
+"be ignored."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "Some items are empty. Previous items will be used."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "Line doesn't contain all needed items."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid ""
+"Be careful. This line has only one term and import choice is to "
+"replace existing items. So these items will be removed."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "No error in options."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "New vocabulary has been created."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "A vocabulary has been duplicated."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid ""
+"Line contains empty vocabulary for related terms. They will be created "
+"in vocabulary of main term."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "Vocabulary checked."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "Use of a previous line term."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "No term to process."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "Saved new term."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "Updated term."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "Removed existing term."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "Updated new term."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "Unchanged term."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "Command line."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "Comment line."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "Items of the line have been successfully imported."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "Debug."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "No message."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid ""
+"No error, warnings or notices have been reported during export process "
+"of !total_terms terms."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid ""
+"Notices have been reported during export process (bad formatted or "
+"empty terms). !total_terms terms processed. First notice occurred on "
+"term !worst_count (!worst_name) [!worst_msg]."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid ""
+"Warnings have been reported during export process (bad formatted "
+"terms). !total_terms terms processed. First term skipped is term "
+"!worst_count (!worst_name) [!worst_msg]."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid ""
+"Errors have been reported during export process. Process failed at "
+"term !worst_count (!worst_name) of a total of !total_terms "
+"[!worst_msg]."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid ""
+"!term_count / !total_terms terms of chosen vocabularies have been "
+"exported to file !file (!filesize KB) with the format \"!format\". "
+"Click on link to view it or right click to download it."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid ""
+"!count duplicate term names have been found in all vocabularies. Error "
+"can occur when you will import this list, except if you choose "
+"\"fields and links\" export format or import option \"ignore existing "
+"items\"."
+msgstr ""
+
+#: /et/batch?id=3877&op=finished
+msgid "List of duplicated term names:"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=11811
+msgid "Tunneb ära haridusliku erivajaduse"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=11811
+msgid ""
+"<a "
+"href=\"/et/competence/tunneb-%C3%A4ra-haridusliku-erivajaduse\">Tunneb "
+"ära haridusliku erivajaduse</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=11751
+msgid ""
+"Kasutab füüsilist õpikeskkonda, tagades selle turvalisuse ja "
+"kujundades seda, lähtudes õppijate vajadustest ja õpieesmärkidest "
+"ning tervisekaitsenõuetest; teab, kelle poole pöörduda probleemide "
+"ilmnemisel; tegutseb esmaabi vajavas situatsioonis sobival..."
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=11751
+msgid ""
+"<a "
+"href=\"/et/competence/kasutab-f%C3%BC%C3%BCsilist-%C3%B5pikeskkonda-tagades-selle-turvalisuse-ja-kujundades-seda-l%C3%A4htudes\">Kasutab "
+"füüsilist õpikeskkonda, tagades selle turvalisuse ja kujundades "
+"seda, lähtudes õppijate vajadustest ja õpieesmärkidest ning "
+"tervisekaitsenõuetest; teab, kelle poole pöörduda probleemide "
+"ilmnemisel; tegutseb esmaabi vajavas situatsioonis sobival...</a><br "
+"/>"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid ""
+"<a "
+"href=\"/et/content/%C3%B5pingud-ja-karj%C3%A4%C3%A4riv%C3%B5imalused-haridusvaldkonnas\">Õpingud "
+"ja karjäärivõimalused haridusvaldkonnas</a>"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=11977
+msgid ""
+"Loob vaimselt ja emotsionaalselt turvalise, arengut ja loovust toetava "
+"koostöise ning üksteist arvestava õpikeskkonna, lähtudes erinevate "
+"õppijate vajadustest ja õpieesmärkidest ning järgides inimõigusi, "
+"Eesti põhiseadust, laste õigusi ja organisatsiooni"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=11977
+msgid ""
+"<a "
+"href=\"/et/competence/loob-vaimselt-ja-emotsionaalselt-turvalise-arengut-ja-loovust-toetava-koost%C3%B6ise-ning\">Loob "
+"vaimselt ja emotsionaalselt turvalise, arengut ja loovust toetava "
+"koostöise ning üksteist arvestava õpikeskkonna, lähtudes erinevate "
+"õppijate vajadustest ja õpieesmärkidest ning järgides inimõigusi, "
+"Eesti põhiseadust, laste õigusi ja organisatsiooni</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=11977
+msgid "Kasutab olukorrale sobivaid suhtlusviise, on hea kuulaja"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=11977
+msgid ""
+"<a "
+"href=\"/et/competence/kasutab-olukorrale-sobivaid-suhtlusviise-hea-kuulaja\">Kasutab "
+"olukorrale sobivaid suhtlusviise, on hea kuulaja</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12055
+msgid ""
+"Oskus juhtida õppe- ja kasvatustööd, sealhulgas heterogeenses "
+"rühmas, ning nõustada õppijaid ja nende lähedasi"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12055
+msgid ""
+"<a "
+"href=\"/et/competence/oskus-juhtida-%C3%B5ppe-ja-kasvatust%C3%B6%C3%B6d-sealhulgas-heterogeenses-r%C3%BChmas-ning-n%C3%B5ustada-%C3%B5ppijaid\">Oskus "
+"juhtida õppe- ja kasvatustööd, sealhulgas heterogeenses rühmas, "
+"ning nõustada õppijaid ja nende lähedasi</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12055
+msgid ""
+"Toetab õppijat õpioskuste arendamisel ja ainealaste teadmiste "
+"omandamisel"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12055
+msgid ""
+"<a "
+"href=\"/et/competence/toetab-%C3%B5ppijat-%C3%B5pioskuste-arendamisel-ja-ainealaste-teadmiste-omandamisel\">Toetab "
+"õppijat õpioskuste arendamisel ja ainealaste teadmiste "
+"omandamisel</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12055
+msgid ""
+"Kasutab olemasolevat füüsilist õpikeskkonda, tagades selle "
+"turvalisuse ja kujundades seda lähtuvalt tervisekaitsenõuetest, "
+"õppijate vajadustest ja õpieesmärkidest;"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12055
+msgid ""
+"<a "
+"href=\"/et/competence/kasutab-olemasolevat-f%C3%BC%C3%BCsilist-%C3%B5pikeskkonda-tagades-selle-turvalisuse-ja-kujundades-seda\">Kasutab "
+"olemasolevat füüsilist õpikeskkonda, tagades selle turvalisuse ja "
+"kujundades seda lähtuvalt tervisekaitsenõuetest, õppijate "
+"vajadustest ja õpieesmärkidest;</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12055
+msgid ""
+"Osaleb meeskonnatöös organisatsiooni õpikeskkonna kujundamisel "
+"teab, kelle poole pöörduda probleemide ilmnemisel;"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12055
+msgid ""
+"<a "
+"href=\"/et/competence/osaleb-meeskonnat%C3%B6%C3%B6s-organisatsiooni-%C3%B5pikeskkonna-kujundamisel-teab-kelle-poole-p%C3%B6%C3%B6rduda\">Osaleb "
+"meeskonnatöös organisatsiooni õpikeskkonna kujundamisel teab, kelle "
+"poole pöörduda probleemide ilmnemisel;</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12055
+msgid "Tegutseb esmaabi vajavas situatsioonis sobival viisil;"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12055
+msgid ""
+"<a "
+"href=\"/et/competence/tegutseb-esmaabi-vajavas-situatsioonis-sobival-viisil\">Tegutseb "
+"esmaabi vajavas situatsioonis sobival viisil;</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12055
+msgid ""
+"Lahendab distsipliiniprobleeme, kaasates vajadusel kolleege, "
+"tugispetsialiste ja lapsevanemaid"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12055
+msgid ""
+"<a "
+"href=\"/et/competence/lahendab-distsipliiniprobleeme-kaasates-vajadusel-kolleege-tugispetsialiste-ja\">Lahendab "
+"distsipliiniprobleeme, kaasates vajadusel kolleege, tugispetsialiste "
+"ja lapsevanemaid</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12055
+msgid "Juhib grupi arengut, arvestades grupi arengufaase..."
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12055
+msgid ""
+"<a "
+"href=\"/et/competence/juhib-grupi-arengut-arvestades-grupi-arengufaase-0\">Juhib "
+"grupi arengut, arvestades grupi arengufaase...</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12055
+msgid ""
+"Märkab konflikti tekkimise võimalust ja tegutseb vastavalt "
+"olukorrale, tunneb ära konflikti, leiab tõhusaid lahendusi ning "
+"vajadusel kaasab konflikti lahendamisse kolleege, õppijaid, "
+"lapsevanemaid ja tugispetsialiste"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12055
+msgid ""
+"<a "
+"href=\"/et/competence/m%C3%A4rkab-konflikti-tekkimise-v%C3%B5imalust-ja-tegutseb-vastavalt-olukorrale-tunneb-%C3%A4ra\">Märkab "
+"konflikti tekkimise võimalust ja tegutseb vastavalt olukorrale, "
+"tunneb ära konflikti, leiab tõhusaid lahendusi ning vajadusel kaasab "
+"konflikti lahendamisse kolleege, õppijaid, lapsevanemaid ja "
+"tugispetsialiste</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12055
+msgid "Kavandab ja viib läbi lapsevanemate koosolekuid"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12055
+msgid ""
+"<a "
+"href=\"/et/competence/kavandab-ja-viib-l%C3%A4bi-lapsevanemate-koosolekuid\">Kavandab "
+"ja viib läbi lapsevanemate koosolekuid</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12055
+msgid "Teavitab õppijaid ja lapsevanemaid hindamismudelitest"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12055
+msgid ""
+"<a "
+"href=\"/et/competence/teavitab-%C3%B5ppijaid-ja-lapsevanemaid-hindamismudelitest\">Teavitab "
+"õppijaid ja lapsevanemaid hindamismudelitest</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12055
+msgid ""
+"Otsib probleemide tekkimisel vajadusel abi kolleegidelt, mentorilt, "
+"organisatsiooni juhtkonnalt, tugispetsialistilt jt"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12055
+msgid ""
+"<a "
+"href=\"/et/competence/otsib-probleemide-tekkimisel-vajadusel-abi-kolleegidelt-mentorilt-organisatsiooni\">Otsib "
+"probleemide tekkimisel vajadusel abi kolleegidelt, mentorilt, "
+"organisatsiooni juhtkonnalt, tugispetsialistilt jt</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=11812
+msgid "Selgitab välja rühma ja õppija ainealase taseme"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=11812
+msgid ""
+"<a "
+"href=\"/et/competence/selgitab-v%C3%A4lja-r%C3%BChma-ja-%C3%B5ppija-ainealase-taseme\">Selgitab "
+"välja rühma ja õppija ainealase taseme</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=11812
+msgid "Omab ülevaadet erivajadustega õppija toetamise protsessist"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=11812
+msgid ""
+"<a "
+"href=\"/et/competence/omab-%C3%BClevaadet-erivajadustega-%C3%B5ppija-toetamise-protsessist\">Omab "
+"ülevaadet erivajadustega õppija toetamise protsessist</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=11105
+msgid ""
+"kavandab õppetegevust lähtuvalt õppekavast ja sellega seonduvatest "
+"dokumentidest, iseseisva töö, praktika ja teooria osakaalust; "
+"kaasates kolleege kohandab või koostab nõuetekohase rakenduskava, "
+"arvestades sihtrühma ja lõimingu aspekte; juhib ..."
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=11105
+msgid ""
+"<a "
+"href=\"/et/competence/kavandab-%C3%B5ppetegevust-l%C3%A4htuvalt-%C3%B5ppekavast-ja-sellega-seonduvatest-dokumentidest-0\">kavandab "
+"õppetegevust lähtuvalt õppekavast ja sellega seonduvatest "
+"dokumentidest, iseseisva töö, praktika ja teooria osakaalust; "
+"kaasates kolleege kohandab või koostab nõuetekohase rakenduskava, "
+"arvestades sihtrühma ja lõimingu aspekte; juhib ...</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=11105
+msgid ""
+"reflekteerib oma tööd, tuues välja õnnestumised ja "
+"arenguvajadused, kasutades erinevaid refleksioonimeetodeid; "
+"reflekteerib oma tööd regulaarselt koos õppijate, kolleegide, "
+"juhiga; analüüsib järjepidevalt oma tegevust, lähtuvalt õpetajale "
+"kehtestatud..."
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=11105
+msgid ""
+"<a "
+"href=\"/et/competence/reflekteerib-oma-t%C3%B6%C3%B6d-tuues-v%C3%A4lja-%C3%B5nnestumised-ja-arenguvajadused-kasutades-erinevaid\">reflekteerib "
+"oma tööd, tuues välja õnnestumised ja arenguvajadused, kasutades "
+"erinevaid refleksioonimeetodeid; reflekteerib oma tööd regulaarselt "
+"koos õppijate, kolleegide, juhiga; analüüsib järjepidevalt oma "
+"tegevust, lähtuvalt õpetajale kehtestatud...</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=11105
+msgid ""
+"juhib õppekava koostamise töörühma koolis, arvestades sihtrühma "
+"ja eriala arengut ning kaasates kolleege, tööandjate esindajaid jt "
+"sotsiaalseid partnereid; nõustab ja toetab kolleege regulaarselt ja "
+"eesmärgipäraselt õppekava rakenduskavade koostamisel;"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=11105
+msgid ""
+"<a "
+"href=\"/et/competence/juhib-%C3%B5ppekava-koostamise-t%C3%B6%C3%B6r%C3%BChma-koolis-arvestades-sihtr%C3%BChma-ja-eriala-arengut-ning\">juhib "
+"õppekava koostamise töörühma koolis, arvestades sihtrühma ja "
+"eriala arengut ning kaasates kolleege, tööandjate esindajaid jt "
+"sotsiaalseid partnereid; nõustab ja toetab kolleege regulaarselt ja "
+"eesmärgipäraselt õppekava rakenduskavade koostamisel;</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12255
+msgid "Arengu keskkond"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12255
+msgid "<a href=\"/et/kategooriad/arengu-keskkond\">Arengu keskkond</a><br />"
+msgstr ""
+
+#: /et/admin/modules
+msgid "eDidaktikum Qualifications portfolio."
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=3476
+msgid ""
+"Selgitab välja õppija arengutaseme, lähtudes üld- ja "
+"valdkondlikest oskustest ning arvestab neid õppetegevuse eesmärkide "
+"seadmisel, toetudes õppekavale; märkab ja kirjeldab õppija "
+"erivajadusi ning teeb ettepanekuid tugispetsialisti poole "
+"pöördumiseks..."
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=3476
+msgid ""
+"<a "
+"href=\"/et/competence/selgitab-v%C3%A4lja-%C3%B5ppija-arengutaseme-l%C3%A4htudes-%C3%BCld-ja-valdkondlikest-oskustest-ning-arvestab\">Selgitab "
+"välja õppija arengutaseme, lähtudes üld- ja valdkondlikest "
+"oskustest ning arvestab neid õppetegevuse eesmärkide seadmisel, "
+"toetudes õppekavale; märkab ja kirjeldab õppija erivajadusi ning "
+"teeb ettepanekuid tugispetsialisti poole pöördumiseks...</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=3476
+msgid ""
+"Kaasab õppijaid, lapsevanemaid, kolleege ja tugispetsialiste "
+"õppetegevuste eesmärkide, sisu, korralduse kavandamisse ning "
+"tagasisidestamisse; teavitab osapooli, kasutades tõhusalt erinevaid "
+"infokanaleid (nt koosolek, e- suhtlus, individuaalne vestlus)"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=3476
+msgid ""
+"<a "
+"href=\"/et/competence/kaasab-%C3%B5ppijaid-lapsevanemaid-kolleege-ja-tugispetsialiste-%C3%B5ppetegevuste-eesm%C3%A4rkide-sisu\">Kaasab "
+"õppijaid, lapsevanemaid, kolleege ja tugispetsialiste õppetegevuste "
+"eesmärkide, sisu, korralduse kavandamisse ning tagasisidestamisse; "
+"teavitab osapooli, kasutades tõhusalt erinevaid infokanaleid (nt "
+"koosolek, e- suhtlus, individuaalne vestlus)</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=3476
+msgid ""
+"Loob vaimselt ja emotsionaalselt turvalise, heaolu, arengut ja loovust "
+"toetava koostöise ning üksteist arvestava õpikeskkonna, lähtudes "
+"õppijate vajadustest ja õpieesmärkidest ning järgides inimõigusi, "
+"Eesti põhiseadust, laste õigusi ja organisatsiooni..."
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=3476
+msgid ""
+"<a "
+"href=\"/et/competence/loob-vaimselt-ja-emotsionaalselt-turvalise-heaolu-arengut-ja-loovust-toetava-koost%C3%B6ise\">Loob "
+"vaimselt ja emotsionaalselt turvalise, heaolu, arengut ja loovust "
+"toetava koostöise ning üksteist arvestava õpikeskkonna, lähtudes "
+"õppijate vajadustest ja õpieesmärkidest ning järgides inimõigusi, "
+"Eesti põhiseadust, laste õigusi ja organisatsiooni...</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=3476
+msgid ""
+"Järgib organisatsioonis kokkulepitud väärtusi ja reegleid; töötab "
+"koostöös õppijatega välja rühma reeglid, rakendab neid "
+"järjekindlalt igapäevatöös ja tutvustab neid lapsevanematele; "
+"osaleb organisatsiooni õpikeskkonna arendamises, tehes koostööd..."
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=3476
+msgid ""
+"<a "
+"href=\"/et/competence/j%C3%A4rgib-organisatsioonis-kokkulepitud-v%C3%A4%C3%A4rtusi-ja-reegleid-t%C3%B6%C3%B6tab-koost%C3%B6%C3%B6s-%C3%B5ppijatega\">Järgib "
+"organisatsioonis kokkulepitud väärtusi ja reegleid; töötab "
+"koostöös õppijatega välja rühma reeglid, rakendab neid "
+"järjekindlalt igapäevatöös ja tutvustab neid lapsevanematele; "
+"osaleb organisatsiooni õpikeskkonna arendamises, tehes "
+"koostööd...</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=3476
+msgid ""
+"Kogub kvalitatiivsete ja kvantitatiivsete meetoditega andmeid "
+"õppijate arengu ja motivatsiooni kohta; analüüsib õppijate "
+"arengut; märkab õppijate erinevusi ja erivajadusi (nt õpistiilid, "
+"andekus, kultuurilised eripärad) ning kaasab õppija arengu ..."
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=3476
+msgid ""
+"<a "
+"href=\"/et/competence/kogub-kvalitatiivsete-ja-kvantitatiivsete-meetoditega-andmeid-%C3%B5ppijate-arengu-ja-0\">Kogub "
+"kvalitatiivsete ja kvantitatiivsete meetoditega andmeid õppijate "
+"arengu ja motivatsiooni kohta; analüüsib õppijate arengut; märkab "
+"õppijate erinevusi ja erivajadusi (nt õpistiilid, andekus, "
+"kultuurilised eripärad) ning kaasab õppija arengu ...</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=3476
+msgid ""
+"kavandab täienduskoolituse lähtuvalt koolituskavast ja õppijate "
+"eripärast, valides täienduskoolituse läbiviimiseks asja- ja "
+"ajakohased õppematerjalid ning tagades nende õigeaegse olemasolu ja "
+"kavandades koolituskavast lähtuvalt õpikeskkonna ning..."
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=3476
+msgid ""
+"<a "
+"href=\"/et/competence/kavandab-t%C3%A4ienduskoolituse-l%C3%A4htuvalt-koolituskavast-ja-%C3%B5ppijate-erip%C3%A4rast-valides\">kavandab "
+"täienduskoolituse lähtuvalt koolituskavast ja õppijate eripärast, "
+"valides täienduskoolituse läbiviimiseks asja- ja ajakohased "
+"õppematerjalid ning tagades nende õigeaegse olemasolu ja kavandades "
+"koolituskavast lähtuvalt õpikeskkonna ning...</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=3476
+msgid ""
+"kogub tagasisidet õppijatelt täienduskoolituse kavas ettenähtud "
+"meetodil; tagasisidest lähtuvalt teeb muudatusi oma koolituste "
+"läbiviimise protsessis; analüüsib täienduskoolituse tulemuslikkust "
+"enda professionaalse arengu toetamiseks."
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=3476
+msgid ""
+"<a "
+"href=\"/et/competence/kogub-tagasisidet-%C3%B5ppijatelt-t%C3%A4ienduskoolituse-kavas-etten%C3%A4htud-meetodil-tagasisidest\">kogub "
+"tagasisidet õppijatelt täienduskoolituse kavas ettenähtud meetodil; "
+"tagasisidest lähtuvalt teeb muudatusi oma koolituste läbiviimise "
+"protsessis; analüüsib täienduskoolituse tulemuslikkust enda "
+"professionaalse arengu toetamiseks.</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=11627
+msgid ""
+"<a "
+"href=\"/et/competence/panustab-%C3%B5petajakutse-oma-kooli-ja-kogukonna-toimimisse-eluj%C3%B5ulisusse-ja-uuendusprotsessi\">panustab "
+"õpetajakutse, oma kooli ja kogukonna toimimisse, elujõulisusse ja "
+"uuendusprotsessi</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=11108
+msgid ""
+"planeerib õppetunni, lähtudes õppekavast ja tunni ülesehituse "
+"loogikast; püstitab tunni eesmärgi lähtuvalt õppekava ja mooduli "
+"õpiväljunditest, arvestades võtmepädevusi ja eriala- ning "
+"üldõpingute lõimingut; valib õpiväljunditest, sihtrühmast..."
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=11108
+msgid ""
+"<a "
+"href=\"/et/competence/planeerib-%C3%B5ppetunni-l%C3%A4htudes-%C3%B5ppekavast-ja-tunni-%C3%BClesehituse-loogikast-p%C3%BCstitab-tunni-0\">planeerib "
+"õppetunni, lähtudes õppekavast ja tunni ülesehituse loogikast; "
+"püstitab tunni eesmärgi lähtuvalt õppekava ja mooduli "
+"õpiväljunditest, arvestades võtmepädevusi ja eriala- ning "
+"üldõpingute lõimingut; valib õpiväljunditest, "
+"sihtrühmast...</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=11108
+msgid ""
+"õpib kolleegide parimatest praktikatest; jagab ja arutab kolleegidega "
+"erialaseid ja õpetajatöö kogemusi; nõustab kolleege tööalaselt; "
+"koolitab kolleege, lähtudes nende koolitusvajadustest."
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=11108
+msgid ""
+"<a "
+"href=\"/et/competence/%C3%B5pib-kolleegide-parimatest-praktikatest-jagab-ja-arutab-kolleegidega-erialaseid-ja-0\">õpib "
+"kolleegide parimatest praktikatest; jagab ja arutab kolleegidega "
+"erialaseid ja õpetajatöö kogemusi; nõustab kolleege tööalaselt; "
+"koolitab kolleege, lähtudes nende koolitusvajadustest.</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=11632
+msgid ""
+"Oskus kujundada inimvõimete ja -toimingute kohast - ergonoomilist "
+"õpikeskkonda"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=11632
+msgid ""
+"<a "
+"href=\"/et/competence/oskus-kujundada-inimv%C3%B5imete-ja-toimingute-kohast-ergonoomilist-%C3%B5pikeskkonda\">Oskus "
+"kujundada inimvõimete ja -toimingute kohast - ergonoomilist "
+"õpikeskkonda</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=11753
+msgid ""
+"selgitab kolleege kaasates välja täienduskoolitusel osalejate "
+"koolitusvajadused, lähtudes õppijate/õppegrupi eripärast, "
+"arvestades varasemat õpi- ja töökogemust, sh üldoskusi;"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=11753
+msgid ""
+"<a "
+"href=\"/et/competence/selgitab-kolleege-kaasates-v%C3%A4lja-t%C3%A4ienduskoolitusel-osalejate-koolitusvajadused-l%C3%A4htudes\">selgitab "
+"kolleege kaasates välja täienduskoolitusel osalejate "
+"koolitusvajadused, lähtudes õppijate/õppegrupi eripärast, "
+"arvestades varasemat õpi- ja töökogemust, sh üldoskusi;</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=11753
+msgid ""
+"viib täienduskoolituse läbi, lähtudes kavandatust ning õpi- või "
+"töökeskkonna eripärast, ohutusnõuetest ja õppijate/ sihtrühma "
+"eripärast; juhib õppeprotsessi, tehes sellesse vastavalt õppijate "
+"edasijõudmisele vajalikke muudatusi; jälgib grupiprotsesside..."
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=11753
+msgid ""
+"<a "
+"href=\"/et/competence/viib-t%C3%A4ienduskoolituse-l%C3%A4bi-l%C3%A4htudes-kavandatust-ning-%C3%B5pi-v%C3%B5i-t%C3%B6%C3%B6keskkonna-erip%C3%A4rast\">viib "
+"täienduskoolituse läbi, lähtudes kavandatust ning õpi- või "
+"töökeskkonna eripärast, ohutusnõuetest ja õppijate/ sihtrühma "
+"eripärast; juhib õppeprotsessi, tehes sellesse vastavalt õppijate "
+"edasijõudmisele vajalikke muudatusi; jälgib "
+"grupiprotsesside...</a><br />"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid ""
+"<a "
+"href=\"/et/content/digitaalne-kirjaoskus-haapsalu-kolled%C5%BE\">Digitaalne "
+"kirjaoskus (Haapsalu Kolledž)</a>"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=13320
+msgid "õpihaldussüsteemid"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=13320
+msgid ""
+"<a "
+"href=\"/et/kategooriad/%C3%B5pihalduss%C3%BCsteemid\">õpihaldussüsteemid</a><br "
+"/>"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=13320
+msgid ""
+"planeerib koostöös kolleegidega oma tegevused õppeaastaks, "
+"arvestades tööülesandeid ja organisatsiooni tööplaani/tegevuskava "
+"ning kaasates kolleege; teeb ettepanekuid organisatsiooni tööplaani "
+"täiendamiseks;"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=13320
+msgid ""
+"<a "
+"href=\"/et/competence/planeerib-koost%C3%B6%C3%B6s-kolleegidega-oma-tegevused-%C3%B5ppeaastaks-arvestades-t%C3%B6%C3%B6%C3%BClesandeid-ja-0\">planeerib "
+"koostöös kolleegidega oma tegevused õppeaastaks, arvestades "
+"tööülesandeid ja organisatsiooni tööplaani/tegevuskava ning "
+"kaasates kolleege; teeb ettepanekuid organisatsiooni tööplaani "
+"täiendamiseks;</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=13320
+msgid ""
+"<a "
+"href=\"/et/competence/edendab-kultuuritaju-ja-globaalset-teadlikkust-suheldes-digikeskkonnas-kolleegide-ja\">edendab "
+"kultuuritaju ja globaalset teadlikkust, suheldes digikeskkonnas "
+"kolleegide ja õppijatega teistest kultuuridest</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=13320
+msgid ""
+"<a "
+"href=\"/et/competence/eeskujuks-digitehnoloogia-ja-teabe-kasutamisega-seotud-etiketi-j%C3%A4rgimisel-ja-edendavad\">on "
+"eeskujuks digitehnoloogia ja teabe kasutamisega seotud etiketi "
+"järgimisel ja edendavad vastutustundlikku suhtlust "
+"digikeskkonnas</a><br />"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid ""
+"<a href=\"/et/content/f%C3%BC%C3%BCsika-didaktika-i\">Füüsika "
+"didaktika I</a>"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid ""
+"<a "
+"href=\"/et/content/animatsiooni-loomine-ja-kasutamine-lasteaia-%C3%B5ppeprotsessis\">Animatsiooni "
+"loomine ja kasutamine lasteaia õppeprotsessis</a>"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid ""
+"<a "
+"href=\"/et/content/animatsiooni-loomine-ja-kasutamine-lasteaia-%C3%B5ppeprotsessis-kaug%C3%B5pe\">Animatsiooni "
+"loomine ja kasutamine lasteaia õppeprotsessis - Kaugõpe</a>"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid ""
+"<a "
+"href=\"/et/content/kogemus%C3%B5pe-avatud-%C3%B5ppekeskkonnas\">Kogemusõpe "
+"avatud õppekeskkonnas</a>"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12074
+msgid ""
+"planeerib koostöös kolleegidega oma tegevused õppeaastaks, "
+"arvestades tööülesandeid ja organisatsiooni tööplaani/tegevuskava "
+"ning kaasates kolleege;"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12074
+msgid ""
+"<a "
+"href=\"/et/competence/planeerib-koost%C3%B6%C3%B6s-kolleegidega-oma-tegevused-%C3%B5ppeaastaks-arvestades-t%C3%B6%C3%B6%C3%BClesandeid-ja\">planeerib "
+"koostöös kolleegidega oma tegevused õppeaastaks, arvestades "
+"tööülesandeid ja organisatsiooni tööplaani/tegevuskava ning "
+"kaasates kolleege;</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12074
+msgid ""
+"kavandab õppetegevust lähtuvalt õppekavast ja sellega seonduvatest "
+"dokumentidest, iseseisva töö, praktika ja teooria osakaalust; "
+"kohandab või koostab koostöös kolleegidega nõuetekohase "
+"rakenduskava, arvestades sihtrühma ja lõimingu aspekte..."
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12074
+msgid ""
+"<a "
+"href=\"/et/competence/kavandab-%C3%B5ppetegevust-l%C3%A4htuvalt-%C3%B5ppekavast-ja-sellega-seonduvatest-dokumentidest\">kavandab "
+"õppetegevust lähtuvalt õppekavast ja sellega seonduvatest "
+"dokumentidest, iseseisva töö, praktika ja teooria osakaalust; "
+"kohandab või koostab koostöös kolleegidega nõuetekohase "
+"rakenduskava, arvestades sihtrühma ja lõimingu aspekte...</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12074
+msgid ""
+"planeerib õppetunni, lähtudes õppekavast ja tunni ülesehituse "
+"loogikast; püstitab tunni eesmärgi lähtuvalt õppekava ja mooduli "
+"õpiväljunditest, arvestades võtmepädevusi ja eriala- ning "
+"üldõpingute lõimingut; valib õpiväljunditest, sihtrühmast ja ..."
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12074
+msgid ""
+"<a "
+"href=\"/et/competence/planeerib-%C3%B5ppetunni-l%C3%A4htudes-%C3%B5ppekavast-ja-tunni-%C3%BClesehituse-loogikast-p%C3%BCstitab-tunni\">planeerib "
+"õppetunni, lähtudes õppekavast ja tunni ülesehituse loogikast; "
+"püstitab tunni eesmärgi lähtuvalt õppekava ja mooduli "
+"õpiväljunditest, arvestades võtmepädevusi ja eriala- ning "
+"üldõpingute lõimingut; valib õpiväljunditest, sihtrühmast ja "
+"...</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12074
+msgid ""
+"kujundab õppimist ja õppija arengut soodustava vaimselt, "
+"sotsiaalselt ja füüsiliselt turvalise õpikeskkonna vastavalt "
+"õpiväljunditele, arvestades õppija eripära; tegutseb ohu ja "
+"esmaabi vajaduse korral vastavalt organisatsioonis kehtestatud "
+"nõuetele..."
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12074
+msgid ""
+"<a "
+"href=\"/et/competence/kujundab-%C3%B5ppimist-ja-%C3%B5ppija-arengut-soodustava-vaimselt-sotsiaalselt-ja-f%C3%BC%C3%BCsiliselt\">kujundab "
+"õppimist ja õppija arengut soodustava vaimselt, sotsiaalselt ja "
+"füüsiliselt turvalise õpikeskkonna vastavalt õpiväljunditele, "
+"arvestades õppija eripära; tegutseb ohu ja esmaabi vajaduse korral "
+"vastavalt organisatsioonis kehtestatud nõuetele...</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12074
+msgid ""
+"arvestab oma tegevuses grupi mõju iga liikme õpimotivatsioonile, "
+"õppimise tulemuslikkusele ja üldinimlike väärtuste ning hoiakute "
+"kujunemisele; toetab oma tegevuse ja isikliku eeskujuga "
+"väärtushoiakute kujunemist; rakendab konflikti lahendamise "
+"võtteid..."
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12074
+msgid ""
+"<a "
+"href=\"/et/competence/arvestab-oma-tegevuses-grupi-m%C3%B5ju-iga-liikme-%C3%B5pimotivatsioonile-%C3%B5ppimise-tulemuslikkusele\">arvestab "
+"oma tegevuses grupi mõju iga liikme õpimotivatsioonile, õppimise "
+"tulemuslikkusele ja üldinimlike väärtuste ning hoiakute "
+"kujunemisele; toetab oma tegevuse ja isikliku eeskujuga "
+"väärtushoiakute kujunemist; rakendab konflikti lahendamise "
+"võtteid...</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12074
+msgid ""
+"järgib töötervishoiu ja tööohutuse nõudeid; osaleb "
+"riskianalüüsi ja tööohutuse juhendite koostamisel."
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12074
+msgid ""
+"<a "
+"href=\"/et/competence/j%C3%A4rgib-t%C3%B6%C3%B6tervishoiu-ja-t%C3%B6%C3%B6ohutuse-n%C3%B5udeid-osaleb-riskianal%C3%BC%C3%BCsi-ja-t%C3%B6%C3%B6ohutuse-juhendite\">järgib "
+"töötervishoiu ja tööohutuse nõudeid; osaleb riskianalüüsi ja "
+"tööohutuse juhendite koostamisel.</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12074
+msgid ""
+"teavitab õppijaid õppe eesmärkidest, oodatavatest "
+"õpiväljunditest, õppesisust ja hindamisest lähtuvalt õppekavast;"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12074
+msgid ""
+"<a "
+"href=\"/et/competence/teavitab-%C3%B5ppijaid-%C3%B5ppe-eesm%C3%A4rkidest-oodatavatest-%C3%B5piv%C3%A4ljunditest-%C3%B5ppesisust-ja\">teavitab "
+"õppijaid õppe eesmärkidest, oodatavatest õpiväljunditest, "
+"õppesisust ja hindamisest lähtuvalt õppekavast;</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12074
+msgid ""
+"selgitab õppijatele hindamise põhimõtteid lähtuvalt "
+"õppekorralduslikest dokumentidest ja rakenduskavast; annab "
+"õppijatele õpiväljundite saavutamise kohta motiveerivat ja arengut "
+"toetavat tagasisidet kogu õppeprotsessi vältel, arvestades..."
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12074
+msgid ""
+"<a "
+"href=\"/et/competence/selgitab-%C3%B5ppijatele-hindamise-p%C3%B5him%C3%B5tteid-l%C3%A4htuvalt-%C3%B5ppekorralduslikest-dokumentidest-ja\">selgitab "
+"õppijatele hindamise põhimõtteid lähtuvalt õppekorralduslikest "
+"dokumentidest ja rakenduskavast; annab õppijatele õpiväljundite "
+"saavutamise kohta motiveerivat ja arengut toetavat tagasisidet kogu "
+"õppeprotsessi vältel, arvestades...</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12074
+msgid ""
+"informeerib osapooli õpieesmärkidest, õppe sisust, "
+"õppekorraldusest, hindamisest, huvitegevuse võimalustest, "
+"tugiteenustest, praktikakorraldusest jne, kasutades erinevaid "
+"infokanaleid (nt koosolek, e-suhtlus, individuaalne vestlus); kaasab "
+"õppijaid..."
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12074
+msgid ""
+"<a "
+"href=\"/et/competence/informeerib-osapooli-%C3%B5pieesm%C3%A4rkidest-%C3%B5ppe-sisust-%C3%B5ppekorraldusest-hindamisest\">informeerib "
+"osapooli õpieesmärkidest, õppe sisust, õppekorraldusest, "
+"hindamisest, huvitegevuse võimalustest, tugiteenustest, "
+"praktikakorraldusest jne, kasutades erinevaid infokanaleid (nt "
+"koosolek, e-suhtlus, individuaalne vestlus); kaasab "
+"õppijaid...</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12074
+msgid ""
+"osaleb uute õppekavade väljatöötamise töörühmas ja/või koostab "
+"nõuetekohase rakenduskava, arvestades sihtrühma ja eriala arengut; "
+"teeb ettepanekuid töörühma juhile õppe- ja/või rakenduskava "
+"muutmiseks, arvestades sihtrühma ja eriala arengut;"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12074
+msgid ""
+"<a "
+"href=\"/et/competence/osaleb-uute-%C3%B5ppekavade-v%C3%A4ljat%C3%B6%C3%B6tamise-t%C3%B6%C3%B6r%C3%BChmas-jav%C3%B5i-koostab-n%C3%B5uetekohase-rakenduskava\">osaleb "
+"uute õppekavade väljatöötamise töörühmas ja/või koostab "
+"nõuetekohase rakenduskava, arvestades sihtrühma ja eriala arengut; "
+"teeb ettepanekuid töörühma juhile õppe- ja/või rakenduskava "
+"muutmiseks, arvestades sihtrühma ja eriala arengut;</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12074
+msgid ""
+"osaleb erialaste võistluste ja konkursside korraldamisel, võtab "
+"vastutuse osade töölõikude eest; valmistab õppija võistlustel "
+"osalemiseks ette, lähtudes võistlusjuhendist ja õppija eripärast;"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12074
+msgid ""
+"<a "
+"href=\"/et/competence/osaleb-erialaste-v%C3%B5istluste-ja-konkursside-korraldamisel-v%C3%B5tab-vastutuse-osade-t%C3%B6%C3%B6l%C3%B5ikude\">osaleb "
+"erialaste võistluste ja konkursside korraldamisel, võtab vastutuse "
+"osade töölõikude eest; valmistab õppija võistlustel osalemiseks "
+"ette, lähtudes võistlusjuhendist ja õppija eripärast;</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12074
+msgid ""
+"kohandab õppevara vastavalt sihtrühmale ja eriala arengutele; "
+"märkab õpivara puudusi vastavalt eriala arengule ja tehnoloogia "
+"uuendustele; teeb ettepanekuid töörühma juhile õppevara "
+"uuendamiseks;"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12074
+msgid ""
+"<a "
+"href=\"/et/competence/kohandab-%C3%B5ppevara-vastavalt-sihtr%C3%BChmale-ja-eriala-arengutele-m%C3%A4rkab-%C3%B5pivara-puudusi\">kohandab "
+"õppevara vastavalt sihtrühmale ja eriala arengutele; märkab "
+"õpivara puudusi vastavalt eriala arengule ja tehnoloogia uuendustele; "
+"teeb ettepanekuid töörühma juhile õppevara uuendamiseks;</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12074
+msgid ""
+"osaleb erialaõppe arendus- ja /või projektimeeskonna töös, täidab "
+"talle antud ülesandeid; vastutab tulemuse saavutamise eest; juhib "
+"õpilastega seotud projekte erialaõppe arendamise eesmärgil;"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12074
+msgid ""
+"<a "
+"href=\"/et/competence/osaleb-eriala%C3%B5ppe-arendus-ja-v%C3%B5i-projektimeeskonna-t%C3%B6%C3%B6s-t%C3%A4idab-talle-antud-%C3%BClesandeid\">osaleb "
+"erialaõppe arendus- ja /või projektimeeskonna töös, täidab talle "
+"antud ülesandeid; vastutab tulemuse saavutamise eest; juhib "
+"õpilastega seotud projekte erialaõppe arendamise eesmärgil;</a><br "
+"/>"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12074
+msgid ""
+"kasutab kaasaegseid tehnoloogiaid õppetegevuse läbiviimisel; "
+"tutvustab uusi erialaseid tehnoloogiaid ja teeb ettepanekuid nende "
+"kasutuselevõtuks erialaõppes;"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12074
+msgid ""
+"<a "
+"href=\"/et/competence/kasutab-kaasaegseid-tehnoloogiaid-%C3%B5ppetegevuse-l%C3%A4biviimisel-tutvustab-uusi-erialaseid\">kasutab "
+"kaasaegseid tehnoloogiaid õppetegevuse läbiviimisel; tutvustab uusi "
+"erialaseid tehnoloogiaid ja teeb ettepanekuid nende kasutuselevõtuks "
+"erialaõppes;</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12074
+msgid ""
+"osaleb õppekavarühma sisehindamise või akrediteerimise või teiste "
+"kvaliteedijuhtimise protsessides ja kooli arendustegevustes, täites "
+"oma pädevuse piires sellega seotud ülesandeid; teeb ettepanekuid "
+"õppekavarühma arendamiseks lähtuvalt kooli arengukava..."
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12074
+msgid ""
+"<a "
+"href=\"/et/competence/osaleb-%C3%B5ppekavar%C3%BChma-sisehindamise-v%C3%B5i-akrediteerimise-v%C3%B5i-teiste-kvaliteedijuhtimise\">osaleb "
+"õppekavarühma sisehindamise või akrediteerimise või teiste "
+"kvaliteedijuhtimise protsessides ja kooli arendustegevustes, täites "
+"oma pädevuse piires sellega seotud ülesandeid; teeb ettepanekuid "
+"õppekavarühma arendamiseks lähtuvalt kooli arengukava...</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12074
+msgid ""
+"osaleb erialastes võrgustikes lähtuvalt õppekavarühma "
+"arengueesmärkidest; annab koostöövõrgustikes sisendit ja "
+"tagasisidet oma pädevuse piires;"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12074
+msgid ""
+"<a "
+"href=\"/et/competence/osaleb-erialastes-v%C3%B5rgustikes-l%C3%A4htuvalt-%C3%B5ppekavar%C3%BChma-arengueesm%C3%A4rkidest-annab\">osaleb "
+"erialastes võrgustikes lähtuvalt õppekavarühma "
+"arengueesmärkidest; annab koostöövõrgustikes sisendit ja "
+"tagasisidet oma pädevuse piires;</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12074
+msgid ""
+"hoiab end järjepidevalt kursis eri-ja kutseala arengutega ja parimate "
+"praktikatega, kasutades neid oma töös ja jagades neid kolleegidega; "
+"arendab oma erialaseid kompetentse."
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12074
+msgid ""
+"<a "
+"href=\"/et/competence/hoiab-end-j%C3%A4rjepidevalt-kursis-eri-ja-kutseala-arengutega-ja-parimate-praktikatega-0\">hoiab "
+"end järjepidevalt kursis eri-ja kutseala arengutega ja parimate "
+"praktikatega, kasutades neid oma töös ja jagades neid kolleegidega; "
+"arendab oma erialaseid kompetentse.</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12074
+msgid ""
+"osaleb organisatsiooni kultuuri kujundamise protsessis, kandes "
+"organisatsiooni väärtusi ja andes neid edasi õppijatele ning "
+"koostööpartneritele; teeb konstruktiivseid ettepanekuid "
+"organisatsiooni kultuuri arendamiseks."
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12074
+msgid ""
+"<a "
+"href=\"/et/competence/osaleb-organisatsiooni-kultuuri-kujundamise-protsessis-kandes-organisatsiooni-v%C3%A4%C3%A4rtusi-ja\">osaleb "
+"organisatsiooni kultuuri kujundamise protsessis, kandes "
+"organisatsiooni väärtusi ja andes neid edasi õppijatele ning "
+"koostööpartneritele; teeb konstruktiivseid ettepanekuid "
+"organisatsiooni kultuuri arendamiseks.</a><br />"
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12074
+msgid ""
+"avalikkuse teavitamiseks korraldab meeskonnas eriala ja kutset "
+"tutvustavaid üritusi (koolisisesed kutsevõistlused, õpitoad jne); "
+"levitab teavet oma kutseala kutseõppe võimaluste kohta; "
+"populariseerib oma eriala ja kutseharidust, tutvustades oma eriala..."
+msgstr ""
+
+#: /et/node/add/ed-answer?field_ref_to_task=12074
+msgid ""
+"<a "
+"href=\"/et/competence/avalikkuse-teavitamiseks-korraldab-meeskonnas-eriala-ja-kutset-tutvustavaid-%C3%BCritusi\">avalikkuse "
+"teavitamiseks korraldab meeskonnas eriala ja kutset tutvustavaid "
+"üritusi (koolisisesed kutsevõistlused, õpitoad jne); levitab teavet "
+"oma kutseala kutseõppe võimaluste kohta; populariseerib oma eriala "
+"ja kutseharidust, tutvustades oma eriala...</a><br />"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid "<a href=\"/et/content/areng-ja-%C3%B5ppimine-2015\"></a>"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid ""
+"<a "
+"href=\"/et/content/%C3%B5pi-ja-k%C3%A4itumisraskustega-%C3%B5pilane-ainetunnis\"></a>"
+msgstr ""
+
+#: /et/user/4901/edit?pass-reset-token=CxhDxLsC92mjm231c3iQ1vvJUbXDQJBvOLzqmDH0Hx0
+msgid "Africa/Juba"
+msgstr ""
+
+#: /et/user/4901/edit?pass-reset-token=CxhDxLsC92mjm231c3iQ1vvJUbXDQJBvOLzqmDH0Hx0
+msgid "America/Creston"
+msgstr ""
+
+#: /et/user/4901/edit?pass-reset-token=CxhDxLsC92mjm231c3iQ1vvJUbXDQJBvOLzqmDH0Hx0
+msgid "America/Fort Nelson"
+msgstr ""
+
+#: /et/user/4901/edit?pass-reset-token=CxhDxLsC92mjm231c3iQ1vvJUbXDQJBvOLzqmDH0Hx0
+msgid "Antarctica/Troll"
+msgstr ""
+
+#: /et/user/4901/edit?pass-reset-token=CxhDxLsC92mjm231c3iQ1vvJUbXDQJBvOLzqmDH0Hx0
+msgid "Asia/Chita"
+msgstr ""
+
+#: /et/user/4901/edit?pass-reset-token=CxhDxLsC92mjm231c3iQ1vvJUbXDQJBvOLzqmDH0Hx0
+msgid "Asia/Hebron"
+msgstr ""
+
+#: /et/user/4901/edit?pass-reset-token=CxhDxLsC92mjm231c3iQ1vvJUbXDQJBvOLzqmDH0Hx0
+msgid "Asia/Khandyga"
+msgstr ""
+
+#: /et/user/4901/edit?pass-reset-token=CxhDxLsC92mjm231c3iQ1vvJUbXDQJBvOLzqmDH0Hx0
+msgid "Asia/Srednekolymsk"
+msgstr ""
+
+#: /et/user/4901/edit?pass-reset-token=CxhDxLsC92mjm231c3iQ1vvJUbXDQJBvOLzqmDH0Hx0
+msgid "Asia/Ust-Nera"
+msgstr ""
+
+#: /et/user/4901/edit?pass-reset-token=CxhDxLsC92mjm231c3iQ1vvJUbXDQJBvOLzqmDH0Hx0
+msgid "Europe/Busingen"
+msgstr ""
+
+#: /et/user/4901/edit?pass-reset-token=CxhDxLsC92mjm231c3iQ1vvJUbXDQJBvOLzqmDH0Hx0
+msgid "Pacific/Bougainville"
+msgstr ""
+
+#: /et/dashboard/tasks
+msgid ""
+"<a "
+"href=\"/et/content/bakalaureuseeksam-kutsepedagoogika\">Bakalaureuseeksam "
+"(Kutsepedagoogika)</a>"
+msgstr ""
+
+#: /et/user/4636/edit?pass-reset-token=xAMyuzQmvY2pJvRAlb80MNnlmK2qiKbgM3xCj_EnB38
+msgid "Asia/Barnaul"
+msgstr ""
+
+#: /et/user/4636/edit?pass-reset-token=xAMyuzQmvY2pJvRAlb80MNnlmK2qiKbgM3xCj_EnB38
+msgid "Asia/Tomsk"
+msgstr ""
+
+#: /et/user/4636/edit?pass-reset-token=xAMyuzQmvY2pJvRAlb80MNnlmK2qiKbgM3xCj_EnB38
+msgid "Europe/Astrakhan"
+msgstr ""
+
+#: /et/user/4636/edit?pass-reset-token=xAMyuzQmvY2pJvRAlb80MNnlmK2qiKbgM3xCj_EnB38
+msgid "Europe/Kirov"
+msgstr ""
+
+#: /et/user/4636/edit?pass-reset-token=xAMyuzQmvY2pJvRAlb80MNnlmK2qiKbgM3xCj_EnB38
+msgid "Europe/Ulyanovsk"
+msgstr ""
+
+#: /et/content/what-if-school-tomorrow-already-here
+msgid "Competence description"
+msgstr ""
+
+#: /et/content/what-if-school-tomorrow-already-here
+msgid "This field stores competence description"
+msgstr ""
+
+#: /et/content/what-if-school-tomorrow-already-here
+msgid "tid"
+msgstr ""
+
+#: /et/comment/3432
+msgid "Level"
+msgstr ""
+
+#: /et/node/15492/edit
+msgid "Õpetaja kutsestandard, tase 6"
+msgstr ""
+
+#: /et/node/15492/edit
+msgid "Kutseõpetaja, tase 7"
+msgstr ""
+
+#: /et/node/15492/edit
+msgid "Kutseõpetaja, tase 6"
+msgstr ""
+
+#: /et/node/15492/edit
+msgid "Täiskasvanute koolitaja, tase 7"
+msgstr ""
+
+#: /et/node/15492/edit
+msgid "Digipädevused"
+msgstr ""
+
+#: /et/node/15492/edit
+msgid "Taxonomy id"
+msgstr ""
+
+#: /et/node/15492/edit
+msgid "Competence desc"
+msgstr ""
+
+#: /et/node/15492/edit
+msgid "Test test"
+msgstr ""
+
+#: /et/node/add/ed-q-portfolio
+msgid "User icon default"
+msgstr ""
+
+#: /et/node/add/ed-q-portfolio
+msgid "123123"
+msgstr ""
+
+#: /et/node/15502
+msgid "Õppeprotsessi ettevalmistamine"
+msgstr ""
+
+#: /et/node/15502
+msgid "Õppeprotsessi läbiviimine"
+msgstr ""
+
+#: /et/node/15502
+msgid "Õppeprotsessi ja õpitulemuste analüüs ning hindamine"
+msgstr ""
+
+#: /et/node/15502
+msgid "Professionaalne eneseareng"
+msgstr ""
+
+#: /et/node/15502/cv
+msgid "CV"
+msgstr ""
+
+#: /et/node/15502
+msgid "You are logged in as an assessor."
+msgstr ""
+
+#: /et/qualification_portfolio/assessor/ajax/15502
+msgid "Admin Administrator"
+msgstr ""
+
+#: /et/qualification_portfolio/assessor/ajax/15502
+msgid "Priit Tammets"
+msgstr ""
+
+#: /et/qualification_portfolio/status/ajax/15502
+msgid "Set Portfolio Status"
 msgstr ""
 
 #: ; misc/drupal.js
@@ -16512,14 +21290,14 @@ msgstr "rohkem infot"
 msgid "PHP register globals"
 msgstr "PHP globaalsete muutujate lubamine"
 
-#: ; sites/all/modules/hybridauth/js/hybridauth.admin.js
+#: ; sites/all/modules/hybridauth/js/hybridauth.admin.js; modules/filter/filter.admin.js
 msgid "Disabled"
 msgstr "Keelatud"
 
 msgid "PHP extensions"
 msgstr "PHP laiendused"
 
-#: ; sites/all/modules/hybridauth/js/hybridauth.admin.js
+#: ; sites/all/modules/hybridauth/js/hybridauth.admin.js; modules/filter/filter.admin.js
 msgid "Enabled"
 msgstr "Lubatud"
 
@@ -18647,6 +23425,10 @@ msgstr "Väli"
 msgid "The configuration options have been saved."
 msgstr "Seadistusvalikud on salvestatud."
 
+#: /et/admin/modules
+msgid "Attached files"
+msgstr "Lisatud failid"
+
 msgid "Keywords"
 msgstr "Võtmesõnad"
 
@@ -19545,6 +24327,10 @@ msgstr "Kokkuvõte"
 #: ed_cluster/ed_cluster.install:115 ed_event/ed_event.install:256,,,  ed_file/ed_file.install:362
 msgid "Categories"
 msgstr "Kategooriad"
+
+#: /et/node/add/ed-learning-resource
+msgid "Group visibility"
+msgstr "Grupi nähtavus"
 
 #: ed_cluster/ed_cluster.install:27 ed_event/ed_event.install:234,,,  ed_news/ed_news.install:164 ed_portfolio/ed_portfolio.install:116
 msgid "Featured image"
@@ -33085,6 +37871,14 @@ msgstr "Määra kasutaja"
 msgid "Shared with me"
 msgstr "Minuga jagatud"
 
+#: /et/hybridauth/window/Facebook?destination=user&destination_error=user
+msgid "Submit"
+msgstr "Salvesta"
+
+#: /et/admin/structure/pages/nojs/operation/node_view/handlers/node_view_panel_ed_cluster/content?destination=node/478
+msgid "Loading..."
+msgstr "Laeb..."
+
 #: /et/dashboard/shared
 msgid "!user shared @node_type_name !node @time"
 msgstr "!user jagas @node_type_name !node @time"
@@ -33225,6 +38019,10 @@ msgstr "Kõik grupid"
 msgid "Leave"
 msgstr "Lahku"
 
+#: /et/clusters
+msgid "Private Group"
+msgstr "Privaatne grupp"
+
 #: /et/node/2772/tasks
 msgid "Not Answered"
 msgstr "Vastamata"
@@ -33233,6 +38031,14 @@ msgstr "Vastamata"
 msgid "Answered, Unchecked"
 msgstr "Vastatud, kontrollimata"
 
+#: /et/node/3092
+msgid ""
+"@type <b>@title</b> has been created, but not published. At the "
+"moment, only you can see it."
+msgstr ""
+"@type <b>@title</b> on loodud kuid mitte avalikustatud. Hetkel näed "
+"seda vaid Sina."
+
 #: /et/node/705/tasks
 msgid "Answered, Accepted"
 msgstr "Vastatud, kinnitatud"
@@ -33240,6 +38046,10 @@ msgstr "Vastatud, kinnitatud"
 #: /et/node/705/tasks
 msgid "Answered, Rejected"
 msgstr "Vastatud, tagasi lükatud"
+
+#: /et/ed-delete/0%3D66/jukule%20post
+msgid "Continue to group page: "
+msgstr "Liigu tagasi grupi lehele:"
 
 #: /et/content/keelelabori-projekti-tekstikeskne-keele%C3%B5petus-materjalid
 msgid "Illustration"
@@ -33269,6 +38079,10 @@ msgstr "Liikmed (@count)"
 msgid "Receive notifications for the following"
 msgstr "E-posti peale saadetavad teated uuendustest"
 
+#: /et/content/villu-jaanisoo
+msgid "Network"
+msgstr "Võrgustik"
+
 #: /et/node/4518/task-manager
 msgid "All tasks"
 msgstr "Kõik ülesanded"
@@ -33280,4 +38094,212 @@ msgstr "Vali kuvatav ülesanne"
 #: /et/node/4518/task-manager
 msgid "Choose a task"
 msgstr "Vali ülesanne"
+
+#: /et/node/6802
+msgid "Collection items"
+msgstr "Kollektsiooni materjalid"
+
+#: /et/node/6802
+msgid "Collections"
+msgstr "Kollektsioonid"
+
+#: /
+msgid "eDidaktikum Draft Collections"
+msgstr "Mustandi staatuses kollektsioonid"
+
+#: /
+msgid "Publish Draft Collections"
+msgstr "Avalda mustandi staatuses kollektsioonid"
+
+#: /et/collections
+msgid "Add new collection"
+msgstr "Lisa uus kollektsioon"
+
+#: /et/node/add/ed-collection
+msgid "Create Collection"
+msgstr "Lisa kollektsioon"
+
+#: /et/content/tervisek%C3%A4itumine-ja-t%C3%B5endusp%C3%B5hine-%C3%B5petus
+msgid "Add to collection"
+msgstr "Lisa kollektsiooni"
+
+#: /et/content/tervisek%C3%A4itumine-ja-t%C3%B5endusp%C3%B5hine-%C3%B5petus
+msgid "Close"
+msgstr "Sulge"
+
+#: /et/content/sotsiaalsete-oskuste-didaktika-moodul
+msgid "Add node to collection"
+msgstr "Kollektsioonid"
+
+#: /et/dashboard
+msgid "Collection"
+msgstr "Kollektsioon"
+
+#: /et/node/6847/competency-profile
+msgid "Evidence"
+msgstr "Tõendusmaterjal"
+
+#: /et/content/matemaatika
+msgid "Remove from Collection"
+msgstr "Eemalda kollektsioonist"
+
+#: /et/node/6982/subgroups
+msgid "Add new subgroup"
+msgstr "Lisa uus alamgrupp"
+
+#: /et/user
+msgid "Notifications"
+msgstr "Teatete tellimine"
+
+#: /et/admin/config/edidaktikum/draft-collections
+msgid "Choose Collections to be published"
+msgstr "Vali avalikustamisele minevad kollektsioonid"
+
+#: /et/content/%C3%B5pikeskkond-ja-selle-kujundamine-2015-ts%C3%BCkli%C3%B5pe
+msgid "Group state"
+msgstr "Grupi staatus"
+
+#: /et/content/%C3%B5pikeskkond-ja-selle-kujundamine-2015-ts%C3%BCkli%C3%B5pe
+msgid "Inactive Groups"
+msgstr "Mitteaktiivsed grupid"
+
+#: /et/node/9346
+msgid "Switch to plain text editor"
+msgstr "Lülita sisse lihtteksti redaktor"
+
+#: /et/node/9346
+msgid "Switch to rich text editor"
+msgstr "Lülita lihtteksti redaktor välja"
+
+#: /et/comment/3432
+msgid "Choose a CV file"
+msgstr "Vali CV-fail"
+
+#: /et/comment/3432
+msgid "Choose an application file"
+msgstr "Vali avalduse fail"
+
+#: /et/comment/3432
+msgid "Portfolio status"
+msgstr "Portfoolio staatus"
+
+#: /et/node/15492/edit
+msgid "Under review"
+msgstr "Üle vaatamisel"
+
+#: /et/node/15492/edit
+msgid "Upload a new CV or application !file"
+msgstr "Lae üles uus CV või avalduse !file"
+
+#: /et/node/15492/edit
+msgid "Portfolio CV and application"
+msgstr "CV ja avaldus"
+
+#: /et/node/4108/forum
+msgid "Qualification Portfolio"
+msgstr "Kutseomistamise portfoolio"
+
+#: /et/node/15502
+msgid "Portfolio details"
+msgstr "Portfoolio andmed"
+
+#: /et/node/15502
+msgid "Portfolio author:"
+msgstr "Portfoolio autor:"
+
+#: /et/node/15502
+msgid "Last modified:"
+msgstr "Viimati muudetud:"
+
+#: /et/node/15502
+msgid "Portfolio created:"
+msgstr "Portfoolio loodud:"
+
+#: /et/node/15502
+msgid "Not Published"
+msgstr "Avaldamata"
+
+#: /et/node/15502
+msgid "Portfolio assessors"
+msgstr "Portfoolio hindajad"
+
+#: /et/node/15502
+msgid "No assessors assigned currently"
+msgstr "Hindajaid ei ole määratud"
+
+#: /et/node/15502/cv
+msgid "Attached file:"
+msgstr "Lisatud fail:"
+
+#: /et/node/15502/cv
+msgid "Application file"
+msgstr "Avaldus"
+
+#: /et/node/15502/cv
+msgid "Edit or add CV and application"
+msgstr "Muuda või lisa CV ja avaldus"
+
+#: /et/qualification_portfolio/ajax/15502/10713
+msgid "Enter Competence Description"
+msgstr "Lisa pädevuse kirjeldus"
+
+#: /et/qualification_portfolio/ajax/15502/10713
+msgid "Reflection"
+msgstr "Reflektsioon"
+
+#: /et/qualification_portfolio/ajax/15502/10713
+msgid "Choose from your files OR"
+msgstr "Vali oma failidest VÕI"
+
+#: /et/qualification_portfolio/ajax/15502/10713
+msgid "Upload a new file"
+msgstr "Lae üles uus fail"
+
+#: /et/node/15502
+msgid "Published, not reviewed"
+msgstr "Avaldatud, üle vaatamata"
+
+#: /et/content/hindajad
+msgid "Qualification portfolios"
+msgstr "Kutseomistamise portfooliod"
+
+#: /et/content/hindajad
+msgid "Not assigned "
+msgstr "Hindajad puuduvad"
+
+#: /et/content/hindajad
+msgid " by "
+msgstr " autor"
+
+#: /et/content/hindajad
+msgid " published on "
+msgstr " avaldatud"
+
+#: /et/node/15502
+msgid "Set portfolio status"
+msgstr "Määra portfoolio staatus"
+
+#: /et/node/15502
+msgid "Assign assessors"
+msgstr "Määra hindajad"
+
+#: /et/qualification_portfolio/assessor/ajax/15502
+msgid "Assign assessors for this portfolio"
+msgstr "Hindajate määramine"
+
+#: /et/qualification_portfolio/assessor/ajax/15502
+msgid "Assign assessors:"
+msgstr "Määra hindaja"
+
+#: /et/qualification_portfolio/assessor/ajax/15502
+msgid "Users of the group Hindajad"
+msgstr "Kasutajad grupist Hindajad"
+
+#: /et/qualification_portfolio/status/ajax/15502
+msgid "This portfolio status is:"
+msgstr "Selle portfoolio staatus on:"
+
+#: /et/qualification_portfolio/status/ajax/15502
+msgid "Mark your decision about this portfolio."
+msgstr "Märgi otsus portfoolio kohta."
 
