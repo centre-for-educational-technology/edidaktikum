@@ -41,7 +41,7 @@ function ed_q_portfolio_install() {
   ed_q_portfolio_add_og_audience();
 
   //Disable comments
-  variable_set('ed-q-portfolio', COMMENT_NODE_CLOSED);
+  variable_set('comment_ed_q_portfolio', COMMENT_NODE_CLOSED);
 }
 
 function ed_q_portfolio_add_og_audience(){
