@@ -1152,16 +1152,6 @@ function ed_q_portfolio_get_user_portfolios() {
 
 
 /**
- * Implements hook_node_load().
- */
-function ed_q_portfolio_node_load($nodes, $types) {
-  foreach ($nodes as $node) {
-    $node->comment = COMMENT_NODE_CLOSED; // to close comments
-  }
-}
-
-
-/**
  * Implements hook_field_extra_fields().
  */
 function ed_q_portfolio_field_extra_fields(){
