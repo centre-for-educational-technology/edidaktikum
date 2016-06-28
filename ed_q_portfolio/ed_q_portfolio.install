@@ -663,3 +663,77 @@ function ed_q_portfolio_delete_ed_q_portfolio_node_type() {
   }
 }
 
+
+/**
+ * Enable comments for nodes with certain types.
+ */
+function ed_q_portfolio_update_7152(&$sandbox) {
+
+  $node_types = array('ed_answer', 'ed_portfolio', 'ed_blog', 'ed_learning_resource', 'ed_forum', 'ed_bookmark');
+
+
+  foreach ($node_types as $node_type) {
+    // Allowing comments on any new ed_blog nodes by default
+    variable_set('comment_' . $node_type, COMMENT_NODE_OPEN);
+  }
+
+    // Initialize batch
+    if (!isset($sandbox['max'])) {
+      $count_query = db_select('node', 'n')
+          ->condition('n.type', $node_types, 'IN');
+      $count_query->addExpression('COUNT(n.nid)', 'count');
+      $sandbox['max'] = $count_query->execute()->fetchField();
+      $sandbox['progress'] = 0;
+      $sandbox['nodes_updated_count'] = 0;
+    }
+
+
+    if ($sandbox['max'] > 0) {
+    $limit = 10;
+
+
+    // Retrieve the next group of nids.
+    $nids = db_select('node', 'n')
+        ->condition('n.type', $node_types, 'IN')
+        ->condition('n.comment', COMMENT_NODE_CLOSED, '=')
+        ->fields('n', array('nid'))
+        ->orderBy('n.nid')
+        ->range($sandbox['progress'], $limit)
+        ->execute()
+        ->fetchCol();
+
+
+
+    if (!empty($nids)) {
+      $nodes = node_load_multiple($nids, NULL, TRUE);
+
+      foreach ($nodes as $node) {
+        if($node->comment == 1){
+          $node->comment = COMMENT_NODE_OPEN;
+          node_save($node);
+          $sandbox['nodes_updated_count']++;
+        }
+
+
+      }
+    }
+
+
+
+      $sandbox['progress'] += $limit;
+      $sandbox['#finished'] = $sandbox['progress'] / $sandbox['max'];
+    }
+    else {
+      $sandbox['#finished'] = 1;
+    }
+
+
+    if ($sandbox['#finished'] >= 1) {
+//      return format_plural($sandbox['max'], '1 node updated', '@count nodes updated');
+      return t('Updated @count nodes.', array('@count' => $sandbox['nodes_updated_count']));
+    }
+
+
+  
+}
+
