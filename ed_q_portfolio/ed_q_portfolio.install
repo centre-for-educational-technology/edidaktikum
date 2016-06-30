@@ -667,7 +667,7 @@ function ed_q_portfolio_delete_ed_q_portfolio_node_type() {
 /**
  * Enable comments for nodes with certain types.
  */
-function ed_q_portfolio_update_7101(&$sandbox) {
+function ed_q_portfolio_update_7102(&$sandbox) {
 
   $node_types = array('ed_answer', 'ed_portfolio', 'ed_blog', 'ed_learning_resource', 'ed_forum', 'ed_bookmark');
 
@@ -708,13 +708,9 @@ function ed_q_portfolio_update_7101(&$sandbox) {
       $nodes = node_load_multiple($nids, NULL, TRUE);
 
       foreach ($nodes as $node) {
-        if($node->comment == 1){
-          $node->comment = COMMENT_NODE_OPEN;
-          node_save($node);
-          $sandbox['nodes_updated_count']++;
-        }
-
-
+        $node->comment = COMMENT_NODE_OPEN;
+        node_save($node);
+        $sandbox['nodes_updated_count']++;
       }
     }
 
