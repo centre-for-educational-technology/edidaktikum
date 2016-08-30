@@ -1036,7 +1036,6 @@ function ed_group_content_listing_access($filler, $gnode, $type){
 function ed_group_assessors_ed_q_portfolio_listing_access($filler, $gnode, $type){
   $is_group = _ed_is_nid_group($gnode->nid);
 
-
   if($gnode->type=='ed_subgroup'&&$type=='ed_subgroup'){
     return false;
   }
@@ -1045,7 +1044,7 @@ function ed_group_assessors_ed_q_portfolio_listing_access($filler, $gnode, $type
     $is_group = false;
   }
 
-  return false;
+  return $is_group;
 }
 
 function ed_listing_from_group($filler, $gnode, $type){  
