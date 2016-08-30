@@ -1040,7 +1040,7 @@ function ed_group_assessors_ed_q_portfolio_listing_access($filler, $gnode, $type
     return false;
   }
 
-  if(!($gnode->title=='Hindajad')){
+  if(!($gnode->title=='Hindajad' || $gnode->title=='Kutseomistamise portfoolio')){
     $is_group = false;
   }
 
