@@ -13,6 +13,10 @@ function ed_user_extra_enable() {
     $instance['bundle'] = 'user';
     field_create_instance($instance);
   }
+
+
+  //Add study group field
+  ed_user_extra_node_add_field_study_group();
 }
 
 function _ed_user_extra_installed_fields(){
@@ -153,6 +157,11 @@ function ed_user_extra_uninstall(){
   foreach(array_keys(_ed_user_extra_installed_instances()) as $instance) {
     field_delete_instance($instance);
   }
+
+
+  //Delete Study groups field
+  field_delete_field('ed_field_study_group');
+  field_delete_instance('ed_field_study_group');
 }
 
 
@@ -280,4 +289,58 @@ function _ed_user_extra_notification_options_list(){
   );
   
   return $options;
+}
+
+
+
+/**
+ * Adds study group field to ed_user_extra module
+ */
+function ed_user_extra_node_add_field_study_group() {
+
+  if(!field_info_field('ed_field_study_group')){
+    $field = array(
+        'field_name' => 'ed_field_study_group',
+        'label' => t('Study Group'),
+        'type' => 'list_text',
+        'cardinality' => 1,
+        'foreign keys' => array(),
+        'module' => 'list',
+        'settings' => array(
+            'allowed_values' => _ed_user_extra_study_groups_options_list(),
+        ),
+    );
+    field_create_field($field);
+  }
+
+  if(!field_info_instance('user', 'ed_field_study_group', 'user')){
+    $instance = array(
+        'field_name' => 'ed_field_study_group',
+        'label' => t('Study Group'),
+        'description' => t('Select what group do you belong to'),
+        'required' => false,
+        'entity_type' => 'user',
+        'bundle' => 'user',
+        'display' => array(
+            'default' => array(
+                'label' => 'above',
+                'type' => 'list_default',
+                'module' => 'list',
+            ),
+        ),
+        'widget' => array(
+            'type' => 'options_select',
+        ),
+    );
+    field_create_instance($instance);
+  }
+}
+
+/**
+ * Add ed_field_study_group field to ed_user_extra
+ */
+function ed_user_extra_update_7102(&$sandbox) {
+  ed_user_extra_node_add_field_study_group();
+
+
 }
