@@ -33,6 +33,16 @@ function ed_user_extra_menu() {
     'type' => MENU_LOCAL_TASK,
   );
 
+
+  $items['user/%user/study_groups'] = array(
+      'title' => t('Study Groups'),
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('ed_user_study_groups_page', 1),
+      'access callback' => 'user_edit_access',
+      'access arguments' => array(1),
+      'type' => MENU_LOCAL_TASK,
+  );
+
   return $items;
 
 }
@@ -75,10 +85,61 @@ function ed_user_notifications_page($form, &$form_state, $user) {
 }
 
 
+function ed_user_study_groups_page($form, &$form_state, $user) {
+
+  // During initial form build, add the entity to the form state for use during
+  // form building and processing. During a rebuild, use what is in the form
+  // state.
+  if (!isset($form_state['user'])) {
+    $form_state['user'] = $user;
+  }
+  else {
+    $user = $form_state['user'];
+  }
+
+  field_attach_form('user', $user, $form, $form_state, NULL, array(
+      'field_name' => 'ed_field_study_group',
+  ));
+
+  $form['actions'] = array('#type' => 'actions');
+  $form['actions']['submit'] = array(
+      '#type' => 'submit',
+      '#value' => t('Save'),
+  );
+
+  //Set form entity
+  $form['#entity'] = $user;
+
+
+  //Form submission handler
+  $form['#submit'][] = 'ed_user_study_groups_page_submit';
+
+  return $form;
+
+}
+
+
 /**
  * Submit function for Receive notifications page form.
  */
 function ed_user_notifications_page_submit($form, &$form_state) {
+
+  $user = $form_state['user'];
+
+  entity_form_submit_build_entity('user', $user, $form, $form_state);
+
+  $edit = array_intersect_key((array) $user, $form_state['values']);
+  user_save($user, $edit);
+
+  drupal_set_message(t('The changes have been saved.'));
+
+}
+
+
+/**
+ * Submit function for Study Groups page form
+ */
+function ed_user_study_groups_page_submit($form, &$form_state) {
 
   $user = $form_state['user'];
 
@@ -102,7 +163,8 @@ function ed_user_extra_form_alter(&$form, &$form_state, $form_id){
     $form['field_pref_lang']['#access'] = FALSE;
 
     $form['ed_notification_content_types']['#access'] = FALSE;
-  }else if ($form_id=='ed_user_notifications_page'){
+    $form['ed_field_study_group']['#access'] = FALSE;
+  }else if ($form_id=='ed_user_notifications_page' || $form_id=='ed_user_study_groups_page'){
     if (isset($form['#metatags'])){
       unset($form['#metatags']);
 
@@ -324,6 +386,32 @@ function ed_user_extra_node_type_to_notification_type($nodetype){
       break;
   }
   return $type;
+}
+
+
+/**
+ * Study groups field options
+ */
+function _ed_user_extra_study_groups_options_list(){
+  $options = array(
+      'kukkm'  => t('KUKKM - Käsitöö ja kodunduse õpetaja'),
+      'tskom'  => t('TSKOM - kehakultuuri õpetaja'),
+      'kakpm'  => t('KAKPM - kutseõpetaja'),
+      'kamom'  => t('KAMOM - mitme aine õpetaja'),
+      'mlglm'  => t('MLGLM - gümnaasiumi loodusteaduslike ainete õpetaja'),
+      'mlmom'  => t('MLMOM - matemaatikaõpetaja'),
+      'kukam'  => t('KUKAM - kunstiõpetaja'),
+      'aiaom'  => t('AIAOM - ajaloo ja ühiskonnaõpetuse õpetaja'),
+      'ekeom' => t('EKEOM - eesti keele ja kirjanduse õpetaja'),
+      'grvom_i' => t('GRVOM - I - võõrkeele õpetaja (inglise keel)'),
+      'grvom_s' => t('GRVOM - S - võõrkeele õpetaja (saksa keel)'),
+      'grvom_p' => t('GRVOM - P - võõrkeele õpetaja (prantsuse keel)'),
+      'skvom' => t('SKVOM - vene keele ja kirjanduse õpetaja'),
+      'kumum' => t('KUMUM - muusikaõpetaja KUMUM'),
+      'emtaom' => t('EMTAOM - EMTA muusikaõpetaja'),
+  );
+
+  return $options;
 }
 
 
