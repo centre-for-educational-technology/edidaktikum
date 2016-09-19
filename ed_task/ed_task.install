@@ -243,3 +243,23 @@ function ed_task_update_7107(&$sandbox) {
   ed_task_node_add_field_study_group();
 
 }
+
+/**
+ * Add kutom value to ed_task_field_study_group field
+ */
+function ed_task_update_7108(&$sandbox) {
+
+  // Get the field info
+  $info = field_info_field('ed_task_field_study_group');
+
+  // Get a reference to the values
+  $values = &$info['settings']['allowed_values'];
+
+  // Manipulate the values
+  $values['kutom'] = 'KUTOM - töö- ja tehnoloogiaõpetuse õpetaja';
+
+  // Save the field
+  field_update_field($info);
+
+}
+
