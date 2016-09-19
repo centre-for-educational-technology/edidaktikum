@@ -344,3 +344,25 @@ function ed_user_extra_update_7102(&$sandbox) {
 
 
 }
+
+
+/**
+ * Add kutom value to ed_field_study_group field
+ */
+function ed_user_extra_update_7103(&$sandbox) {
+  // Get the field info
+  $info = field_info_field('ed_field_study_group');
+
+  // Get a reference to the values
+  $values = &$info['settings']['allowed_values'];
+
+  // Manipulate the values
+  $values['kutom'] = 'KUTOM - töö- ja tehnoloogiaõpetuse õpetaja';
+
+  // Save the field
+  field_update_field($info);
+
+
+}
+
+

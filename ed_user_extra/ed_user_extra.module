@@ -408,6 +408,7 @@ function _ed_user_extra_study_groups_options_list(){
       'skvom' => t('SKVOM - vene keele ja kirjanduse õpetaja'),
       'kumum' => t('KUMUM - muusikaõpetaja KUMUM'),
       'emtaom' => t('EMTAOM - EMTA muusikaõpetaja'),
+      'kutom' => t('KUTOM - töö- ja tehnoloogiaõpetuse õpetaja'),
   );
 
   return $options;
