@@ -503,6 +503,34 @@ function ed_task_listing_for_students($test, $node){
   
   $header = array(t('Task'), t('Due Date'), t('Status'));
   global $user;
+
+
+  //Get user study group field
+  $wrapper = entity_metadata_wrapper('user', $user->uid);
+  $user_study_group = $wrapper->ed_field_study_group->value();
+
+  //Check if these tasks belong to this user study group
+  foreach ($tasknodes as $key => $tasknode){
+
+    $wrapper = entity_metadata_wrapper('node', $tasknode);
+    $task_study_groups = $wrapper->ed_task_field_study_group->raw();
+    if(isset($task_study_groups) && is_array($task_study_groups)){
+      foreach ($task_study_groups as $task_study_group){
+
+        if(isset($user_study_group)){
+
+          if($user_study_group != $task_study_group){
+
+            unset($tasknode[$key]);
+          }
+        }else{
+          unset($tasknode[$key]);
+        }
+
+      }
+    }
+  }
+
   
   foreach($tasknodes as $tasknode){
     $titlelink = l($tasknode->title, 'node/'.$tasknode->nid);
@@ -1637,6 +1665,38 @@ function ed_task_manager($test, $node){
           }
           
         } else {
+
+
+//          //Check if it is a study group case
+//          $wrapper = entity_metadata_wrapper('node', $node_single->nid);
+//          $task_study_groups = $wrapper->ed_task_field_study_group->raw();
+//
+//          if(isset($task_study_groups) && is_array($task_study_groups)){
+//
+//
+//            //Get user study group field
+//            $wrapper = entity_metadata_wrapper('user', $member->uid);
+//            $user_study_group = $wrapper->ed_field_study_group->value();
+//
+//
+//
+//            foreach ($task_study_groups as $task_study_group){
+//
+//              if(isset($user_study_group)){
+//
+//                if($user_study_group != $task_study_group){
+//
+//                  $tmp_data['class'] = 'na';
+//                  $tmp_data['title'] = t('Not applicable');
+//                }
+//              }else{
+//                $tmp_data['class'] = 'na';
+//                $tmp_data['title'] = t('Not applicable');
+//              }
+//
+//            }
+//          }
+
           $tmp_data['class'] = 'unanswered';
           $tmp_data['title'] = t('Not answered');
           if (!empty($node_single->{ED_FIELD_TO_GROUP_MEMBER}[LANGUAGE_NONE])) {

@@ -346,3 +346,22 @@ function ed_answer_update_7111(&$sandbox){
   
 }
 
+
+/**
+ * Add na value to ed_answer_status field
+ */
+//function ed_task_update_7135(&$sandbox) {
+//
+//  // Get the field info
+//  $info = field_info_field('ed_answer_status');
+//
+//  // Get a reference to the values
+//  $values = &$info['settings']['allowed_values'];
+//
+//  // Manipulate the values
+//  $values['na'] = 'Not Applicable';
+//
+//  // Save the field
+//  field_update_field($info);
+//
+//}
