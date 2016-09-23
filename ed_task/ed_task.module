@@ -330,10 +330,42 @@ function ed_task_node_view($node, $view_mode, $langcode) {
   switch($node->type) {
     case 'ed_task':
 
-      // Only apply in case of full view
-      if ('full' != $view_mode) break;
+      // Only apply in case of full and teaser view
+      if ('full' != $view_mode && 'teaser' != $view_mode) break;
 
       $acc = $GLOBALS['user'];
+
+
+      //Teaser when task has study group defined - look ed_cluster.module
+      if ($view_mode == 'teaser'){
+
+
+//        if(!empty($node->ed_task_field_study_group)) {
+//
+//          $task_study_groups = $node->ed_task_field_study_group[LANGUAGE_NONE];
+//
+//          $wrapper = entity_metadata_wrapper('user', $acc->uid);
+//          $user_study_group = $wrapper->ed_field_study_group->value();
+//
+//          foreach ($task_study_groups as $task_study_group){
+//
+//
+//            if(isset($user_study_group)){
+//
+//              if($user_study_group != $task_study_group['value']){
+//
+//                $node->content['#access'] = false;
+//              }
+//            }else{
+//              $node->content['#access'] = false;
+//            }
+//
+//        }
+//      }
+
+      break;
+
+      }
 
       // Show owner answer info
       if ($node->uid === $acc->uid) {
