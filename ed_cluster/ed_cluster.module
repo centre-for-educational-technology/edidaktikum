@@ -499,9 +499,8 @@ function ed_task_listing_for_students($test, $node){
   $content = array();
   drupal_add_css(drupal_get_path('module', 'ed_cluster').'/task_manager.css');
   $tasknids = _ed_get_group_tasks_for_group_task_page($node->nid);
-  $tasknodes = node_load_multiple($tasknids);
-  
-  $header = array(t('Task'), t('Due Date'), t('Status'));
+
+
   global $user;
 
 
@@ -510,9 +509,9 @@ function ed_task_listing_for_students($test, $node){
   $user_study_group = $wrapper->ed_field_study_group->value();
 
   //Check if these tasks belong to this user study group
-  foreach ($tasknodes as $key => $tasknode){
+  foreach ($tasknids as $key => $tasknid){
 
-    $wrapper = entity_metadata_wrapper('node', $tasknode);
+    $wrapper = entity_metadata_wrapper('node', $tasknid);
     $task_study_groups = $wrapper->ed_task_field_study_group->raw();
     if(isset($task_study_groups) && is_array($task_study_groups)){
       foreach ($task_study_groups as $task_study_group){
@@ -521,15 +520,23 @@ function ed_task_listing_for_students($test, $node){
 
           if($user_study_group != $task_study_group){
 
-            unset($tasknode[$key]);
+            unset($tasknids[$key]);
           }
         }else{
-          unset($tasknode[$key]);
+          unset($tasknids[$key]);
         }
 
       }
     }
   }
+
+
+
+
+  $tasknodes = node_load_multiple($tasknids);
+  
+  $header = array(t('Task'), t('Due Date'), t('Status'));
+
 
   
   foreach($tasknodes as $tasknode){
@@ -1206,37 +1213,80 @@ function ed_cluster_node_view($node, $view_mode, $langcode){
         // Check if current user is a member of the group
         $is_group_member = og_is_member('node', $node->nid);
 
-        foreach($types_unique as $type){
+        foreach($types_unique as $type) {
           $show_link = true;
-          if($type!='ed_answer' && $type!='ed_subgroup'){
-            if($type=='ed_task' ){
+          if ($type != 'ed_answer' && $type != 'ed_subgroup') {
+            if ($type == 'ed_task') {
               if (!ed_task_manager_access('node', $node)) {
                 $show_link = false;
               }
-            }          
-            
+            }
+
             $type_nodes_count = _ed_get_group_content_by_type_count($node->nid, $type);
-            
-            $headingmarkup =  _ed_cluster_plural_title_for_group_node_type($type) . ' ('.t('Total') . ': ' . $type_nodes_count . ')';
+
+            $headingmarkup = _ed_cluster_plural_title_for_group_node_type($type) . ' (' . t('Total') . ': ' . $type_nodes_count . ')';
             if ($show_link) {
               $headingmarkup = l($headingmarkup, _ed_cluster_destination_for_group_node_type($node, $type));
             }
-            
+
             $node->content['ed_cluster_content'][$type]['heading'] = array(
-              '#type' => 'markup',
-              '#prefix' => '<h2 class="' . $type. '">',
-              '#markup' => $headingmarkup,
-              '#suffix' => '</h2>',
+                '#type' => 'markup',
+                '#prefix' => '<h2 class="' . $type . '">',
+                '#markup' => $headingmarkup,
+                '#suffix' => '</h2>',
             );
             // Add new link is only shown to group members
             //if ($is_group_member) {
             //  $node->content['ed_cluster_content'][$type]['heading']['#markup'] .= '<em class="ed-og-add-new">'.l(t('Add new'), 'node/add/'.str_replace('_', '-',$type), $options).'</em>';
             //}
             $last_nodes = _ed_get_last_content_by_type($type, $content);
-            foreach($last_nodes as $last_node_single){
-                $tere = node_view($last_node_single, 'teaser');
+            foreach ($last_nodes as $key => $last_node_single) {
+              $tere = node_view($last_node_single, 'teaser');
 
-                $node->content['ed_cluster_content'][$type][$last_node_single->nid] = $tere;
+              $node->content['ed_cluster_content'][$type][$last_node_single->nid] = $tere;
+
+
+              //Teaser when task has study group defined
+              if ($tere['#bundle'] == 'ed_task') {
+
+                $ed_task_node = $tere['#node'];
+
+
+                if (!empty($ed_task_node->ed_task_field_study_group)) {
+
+                  $task_study_groups = $ed_task_node->ed_task_field_study_group[LANGUAGE_NONE];
+
+                  //Get user study group field
+                  global $user;
+                  $wrapper = entity_metadata_wrapper('user', $user->uid);
+                  $user_study_group = $wrapper->ed_field_study_group->value();
+
+                  foreach ($task_study_groups as $task_study_group) {
+
+
+                    if (isset($user_study_group)) {
+
+                      if ($user_study_group != $task_study_group['value']) {
+
+                        unset($node->content['ed_cluster_content'][$type][$last_node_single->nid]);
+                        unset($last_nodes[$key]);
+
+                        $destination = _ed_cluster_destination_for_group_node_type($node, 'ed_task');
+
+                        $node->content['ed_cluster_content'][$type]['heading']['#markup'] = l(_ed_cluster_plural_title_for_group_node_type($type) . ' (' . t('Total') . ': ' . count($last_nodes) . ')', $destination);
+                      }
+                    } else {
+                      unset($node->content['ed_cluster_content'][$type][$last_node_single->nid]);
+                      unset($last_nodes[$key]);
+
+                      $destination = _ed_cluster_destination_for_group_node_type($node, 'ed_task');
+
+                      $node->content['ed_cluster_content'][$type]['heading']['#markup'] = l(_ed_cluster_plural_title_for_group_node_type($type) . ' (' . t('Total') . ': ' . count($last_nodes) . ')', $destination);
+                    }
+
+
+                  }
+                }
 
 // If ed_q_portfolio does not use teaser
 //                if($tere['#bundle']=='ed_q_portfolio'){
@@ -1288,6 +1338,7 @@ function ed_cluster_node_view($node, $view_mode, $langcode){
 //                }
 
               }
+            }
           }
         }
       } else if ('dashboard' == $view_mode) {
