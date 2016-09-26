@@ -145,6 +145,32 @@ function ed_task_listing_page() {
     }
 
     $togroups = _ed_get_group_tasks();
+
+
+
+
+    //Check study group permissions
+    foreach($togroups as $key => $togroup_task){
+
+      $wrapper = entity_metadata_wrapper('node', $togroup_task);
+      $task_study_groups = $wrapper->ed_task_field_study_group->raw();
+
+      if(!empty($task_study_groups)){
+        if(isset($account->ed_field_study_group[LANGUAGE_NONE])){
+
+          if(in_array($account->ed_field_study_group[LANGUAGE_NONE][0]['value'], $task_study_groups) == false){
+
+            unset($togroups[$key]);
+          }
+
+        }else{
+          unset($togroups[$key]);
+        }
+      }
+
+    }
+
+
     if(isset($tousernids)){
       $tasknidstouser = array_merge($tousernids, $togroups);
       $tasknidstouser = array_unique($tasknidstouser);
@@ -155,26 +181,7 @@ function ed_task_listing_page() {
 
     $tasknodes = node_load_multiple($tasknidstouser);
 
-    //Check study group permissions
-    foreach($tasknodes as $key => $tasknode){
-      if(!empty($tasknode->ed_task_field_study_group)){
 
-
-        if(isset($account->ed_field_study_group[LANGUAGE_NONE])){
-
-          if(in_array($account->ed_field_study_group[LANGUAGE_NONE][0], $tasknode->ed_task_field_study_group[LANGUAGE_NONE]) == false){
-
-            unset($tasknodes[$key]);
-          }
-
-
-        }else{
-          unset($tasknodes[$key]);
-        }
-
-
-      }
-    }
 
     uasort($tasknodes, function($a, $b) {
       $ats = $a->ed_task_due_date[LANGUAGE_NONE][0]['value'];
@@ -666,15 +673,7 @@ function _ed_get_user_unanswered_tasks_count($account) {
   }
   $task_nids = array();
 
-  $query = db_select('node', 'n');
-  $query->join('field_data_ed_field_to_group_member', 'tgm', 'n.nid = tgm.entity_id');
-  $query->fields('n', array('nid'))
-    ->addTag('node_access')
-    ->condition('n.type', 'ed_task')
-    ->condition('tgm.ed_field_to_group_member_target_id', $account->uid);
 
-  // Get all task identifiers given directly to a user
-  $task_nids = $query->execute()->fetchCol();
 
   // Get all groups the user is not an administrator of
   $user_groups = og_get_groups_by_user($account, 'node');
@@ -697,9 +696,8 @@ function _ed_get_user_unanswered_tasks_count($account) {
       ->isNull('tgm.ed_field_to_group_member_target_id');
 
     // Merge all task identifiers given to user groups
-    // Make sure that identifiers are unique
-    $task_nids = array_unique(array_merge($task_nids, $query->execute()->fetchCol()));
-    $unansweredcount = 0;
+    $task_nids = $query->execute()->fetchCol();
+
 
 
     //Get user study group field
@@ -726,6 +724,19 @@ function _ed_get_user_unanswered_tasks_count($account) {
       }
 
     }
+
+
+    $query = db_select('node', 'n');
+    $query->join('field_data_ed_field_to_group_member', 'tgm', 'n.nid = tgm.entity_id');
+    $query->fields('n', array('nid'))
+        ->addTag('node_access')
+        ->condition('n.type', 'ed_task')
+        ->condition('tgm.ed_field_to_group_member_target_id', $account->uid);
+
+    // Get all task identifiers given directly to a user
+    // Make sure that identifiers are unique
+    $task_nids = array_unique(array_merge($task_nids, $query->execute()->fetchCol()));
+    $unansweredcount = 0;
 
 
 

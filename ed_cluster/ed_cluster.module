@@ -1235,7 +1235,7 @@ function ed_cluster_node_view($node, $view_mode, $langcode){
                 $user_study_group = $wrapper->ed_field_study_group->value();
 
                 if (isset($user_study_group)) {
-                  
+
                   if(in_array(array('value'=>$user_study_group), $content_node->ed_task_field_study_group[LANGUAGE_NONE]) == false){
 
                     unset($content[$key]);
