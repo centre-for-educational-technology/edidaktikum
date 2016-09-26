@@ -1223,20 +1223,29 @@ function ed_cluster_node_view($node, $view_mode, $langcode){
 
         $extracted_study_groups_count = 0;
 
-        //Get rid of unrelated study group tasks
-        foreach ($content as $key => $content_node){
-          if($content_node->type == 'ed_task'){
-            if (!empty($content_node->ed_task_field_study_group)) {
-              //Get user study group field
-              global $user;
-              $wrapper = entity_metadata_wrapper('user', $user->uid);
-              $user_study_group = $wrapper->ed_field_study_group->value();
+        // Get rid of unrelated study group tasks
+        // User with task manager access sees the same number as in Task Manager (includes the tasks of all the study groups)
+        if(!ed_task_manager_access('node', $node)){
+          foreach ($content as $key => $content_node){
+            if($content_node->type == 'ed_task'){
+              if (!empty($content_node->ed_task_field_study_group)) {
+                //Get user study group field
+                global $user;
+                $wrapper = entity_metadata_wrapper('user', $user->uid);
+                $user_study_group = $wrapper->ed_field_study_group->value();
 
-              if (isset($user_study_group)) {
+                if (isset($user_study_group)) {
+                  
+                  if(in_array(array('value'=>$user_study_group), $content_node->ed_task_field_study_group[LANGUAGE_NONE]) == false){
 
+                    unset($content[$key]);
+                    $extracted_study_groups_count++;
 
-                if(in_array(array('value'=>$user_study_group), $content_node->ed_task_field_study_group[LANGUAGE_NONE]) == false){
+                    //$destination = "node/{$node->nid}/tasks";
 
+                    //$node->content['ed_cluster_content'][$type]['heading']['#markup'] = l(_ed_cluster_plural_title_for_group_node_type($type) . ' (' . t('Total') . ': ' . $type_nodes_count . ')', $destination);
+                  }
+                } else {
                   unset($content[$key]);
                   $extracted_study_groups_count++;
 
@@ -1244,19 +1253,10 @@ function ed_cluster_node_view($node, $view_mode, $langcode){
 
                   //$node->content['ed_cluster_content'][$type]['heading']['#markup'] = l(_ed_cluster_plural_title_for_group_node_type($type) . ' (' . t('Total') . ': ' . $type_nodes_count . ')', $destination);
                 }
-              } else {
-                unset($content[$key]);
-                $extracted_study_groups_count++;
 
-                //$destination = "node/{$node->nid}/tasks";
-
-                //$node->content['ed_cluster_content'][$type]['heading']['#markup'] = l(_ed_cluster_plural_title_for_group_node_type($type) . ' (' . t('Total') . ': ' . $type_nodes_count . ')', $destination);
               }
-
             }
           }
-
-
         }
 
 
@@ -1282,10 +1282,12 @@ function ed_cluster_node_view($node, $view_mode, $langcode){
 
         foreach($types_unique as $type) {
           $show_link = true;
+          $destination_no_ed_task_manager_access = "";
           if ($type != 'ed_answer' && $type != 'ed_subgroup') {
             if ($type == 'ed_task') {
               if (!ed_task_manager_access('node', $node)) {
                 $show_link = false;
+                $destination_no_ed_task_manager_access = "node/{$node->nid}/tasks";
               }
             }
 
@@ -1299,6 +1301,8 @@ function ed_cluster_node_view($node, $view_mode, $langcode){
             $headingmarkup = _ed_cluster_plural_title_for_group_node_type($type) . ' (' . t('Total') . ': ' . $type_nodes_count . ')';
             if ($show_link) {
               $headingmarkup = l($headingmarkup, _ed_cluster_destination_for_group_node_type($node, $type));
+            }else{
+              $headingmarkup = l($headingmarkup, $destination_no_ed_task_manager_access);
             }
 
             $node->content['ed_cluster_content'][$type]['heading'] = array(
