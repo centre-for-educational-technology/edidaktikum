@@ -157,20 +157,22 @@ function ed_task_listing_page() {
 
     //Check study group permissions
     foreach($tasknodes as $key => $tasknode){
-      if(isset($tasknode->ed_task_field_study_group[LANGUAGE_NONE])){
-        foreach ($tasknode->ed_task_field_study_group[LANGUAGE_NONE] as $study_group){
+      if(!empty($tasknode->ed_task_field_study_group)){
 
 
-          if(isset($account->ed_field_study_group[LANGUAGE_NONE])){
-            if($account->ed_field_study_group[LANGUAGE_NONE][0]['value'] != $study_group['value']){
+        if(isset($account->ed_field_study_group[LANGUAGE_NONE])){
 
-              unset($tasknodes[$key]);
-            }
-          }else{
+          if(in_array($account->ed_field_study_group[LANGUAGE_NONE][0], $tasknode->ed_task_field_study_group[LANGUAGE_NONE]) == false){
+
             unset($tasknodes[$key]);
           }
 
+
+        }else{
+          unset($tasknodes[$key]);
         }
+
+
       }
     }
 
@@ -707,24 +709,22 @@ function _ed_get_user_unanswered_tasks_count($account) {
     //Check if these tasks belong to this user study group
     foreach ($task_nids as $key => $tasknid){
 
-
       $wrapper = entity_metadata_wrapper('node', $tasknid);
       $task_study_groups = $wrapper->ed_task_field_study_group->raw();
-      if(isset($task_study_groups) && is_array($task_study_groups)){
-        foreach ($task_study_groups as $task_study_group){
 
-          if(isset($user_study_group)){
+      if(!empty($task_study_groups)){
+        if(isset($user_study_group)){
 
-            if($user_study_group != $task_study_group){
+          if(in_array($user_study_group, $task_study_groups) == false){
 
-              unset($task_nids[$key]);
-            }
-          }else{
             unset($task_nids[$key]);
           }
 
+        }else{
+          unset($task_nids[$key]);
         }
       }
+
     }
 
 
