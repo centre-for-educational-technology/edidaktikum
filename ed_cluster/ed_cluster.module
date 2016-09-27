@@ -580,30 +580,30 @@ function ed_task_listing_for_students($test, $node){
 
 
           //Check if it is a study group case
-//          $wrapper = entity_metadata_wrapper('node', $tasknode->nid);
-//          $task_study_groups = $wrapper->ed_task_field_study_group->raw();
-//
-//
-//          if(!empty($task_study_groups)){
-//            //Get user study group field
-//            $wrapper = entity_metadata_wrapper('user', $user->uid);
-//            $user_study_group = $wrapper->ed_field_study_group->value();
-//
-//
-//            if(isset($user_study_group)){
-//
-//              if(in_array($user_study_group, $task_study_groups) == false){
-//                $tmp_data['class'] = 'na';
-//                $tmp_data['data'] = t('Not applicable');
-//                $tmp_data['title'] = t('Not applicable');
-//              }
-//
-//            }else{
-//              $tmp_data['class'] = 'na';
-//              $tmp_data['data'] = t('Not applicable');
-//              $tmp_data['title'] = t('Not applicable');
-//            }
-//          }
+          $wrapper = entity_metadata_wrapper('node', $tasknode->nid);
+          $task_study_groups = $wrapper->ed_task_field_study_group->raw();
+
+
+          if(!empty($task_study_groups)){
+            //Get user study group field
+            $wrapper = entity_metadata_wrapper('user', $user->uid);
+            $user_study_group = $wrapper->ed_field_study_group->value();
+
+
+            if(isset($user_study_group)){
+
+              if(in_array($user_study_group, $task_study_groups) == false){
+                $tmp_data['class'] = 'na';
+                $tmp_data['data'] = t('Not applicable');
+                $tmp_data['title'] = t('Not applicable');
+              }
+
+            }else{
+              $tmp_data['class'] = 'na';
+              $tmp_data['data'] = t('Not applicable');
+              $tmp_data['title'] = t('Not applicable');
+            }
+          }
 
 
           if (!empty($tasknode->{ED_FIELD_TO_GROUP_MEMBER}[LANGUAGE_NONE])) {
@@ -1755,29 +1755,29 @@ function ed_task_manager($test, $node){
 
 
 //          //Check if it is a study group case
-//          $wrapper = entity_metadata_wrapper('node', $node_single->nid);
-//          $task_study_groups = $wrapper->ed_task_field_study_group->raw();
-//
-//          if(!empty($task_study_groups)){
-//
-//
-//            //Get user study group field
-//            $wrapper = entity_metadata_wrapper('user', $member->uid);
-//            $user_study_group = $wrapper->ed_field_study_group->value();
-//
-//
-//            if(isset($user_study_group)){
-//              if(in_array($user_study_group, $task_study_groups) == false){
-//                $tmp_data['class'] = 'na';
-//                $tmp_data['title'] = t('Not applicable');
-//              }
-//
-//            }else{
-//              $tmp_data['class'] = 'na';
-//              $tmp_data['title'] = t('Not applicable');
-//            }
-//
-//          }
+          $wrapper = entity_metadata_wrapper('node', $node_single->nid);
+          $task_study_groups = $wrapper->ed_task_field_study_group->raw();
+
+          if(!empty($task_study_groups)){
+
+
+            //Get user study group field
+            $wrapper = entity_metadata_wrapper('user', $member->uid);
+            $user_study_group = $wrapper->ed_field_study_group->value();
+
+
+            if(isset($user_study_group)){
+              if(in_array($user_study_group, $task_study_groups) == false){
+                $tmp_data['class'] = 'na';
+                $tmp_data['title'] = t('Not applicable');
+              }
+
+            }else{
+              $tmp_data['class'] = 'na';
+              $tmp_data['title'] = t('Not applicable');
+            }
+
+          }
 
 
           if (!empty($node_single->{ED_FIELD_TO_GROUP_MEMBER}[LANGUAGE_NONE])) {
