@@ -524,6 +524,9 @@ function ed_task_listing_for_students($test, $node){
       }else{
         unset($tasknids[$key]);
       }
+
+
+
     }
   }
 
@@ -578,32 +581,42 @@ function ed_task_listing_for_students($test, $node){
           $tmp_data['data'] = t('Not Answered');
           $tmp_data['title'] = t('Not answered');
 
-
           //Check if it is a study group case
-//          $wrapper = entity_metadata_wrapper('node', $tasknode->nid);
-//          $task_study_groups = $wrapper->ed_task_field_study_group->raw();
-//
-//
-//          if(!empty($task_study_groups)){
-//            //Get user study group field
-//            $wrapper = entity_metadata_wrapper('user', $user->uid);
-//            $user_study_group = $wrapper->ed_field_study_group->value();
-//
-//
-//            if(isset($user_study_group)){
-//
-//              if(in_array($user_study_group, $task_study_groups) == false){
-//                $tmp_data['class'] = 'na';
-//                $tmp_data['data'] = t('Not applicable');
-//                $tmp_data['title'] = t('Not applicable');
-//              }
-//
-//            }else{
-//              $tmp_data['class'] = 'na';
-//              $tmp_data['data'] = t('Not applicable');
-//              $tmp_data['title'] = t('Not applicable');
-//            }
-//          }
+          $wrapper = entity_metadata_wrapper('node', $tasknode->nid);
+          $task_study_groups = $wrapper->ed_task_field_study_group->raw();
+
+
+          if(!empty($task_study_groups)){
+
+            $tasks_to_user = _ed_get_tasks_to_user();
+            $is_to_user_task = false;
+            foreach ($tasks_to_user as $task_to_user){
+              if($task_to_user->nid == $tasknode->nid){
+                $is_to_user_task=true;
+              }
+            }
+
+
+            if(!$is_to_user_task){
+              //Get user study group field
+              $wrapper = entity_metadata_wrapper('user', $user->uid);
+              $user_study_group = $wrapper->ed_field_study_group->value();
+
+
+              if(isset($user_study_group)){
+                if(in_array($user_study_group, $task_study_groups) == false ){
+                  $tmp_data['class'] = 'na';
+                  $tmp_data['title'] = t('Not applicable');
+                }
+
+              }else{
+                $tmp_data['class'] = 'na';
+                $tmp_data['title'] = t('Not applicable');
+              }
+
+            }
+
+          }
 
 
           if (!empty($tasknode->{ED_FIELD_TO_GROUP_MEMBER}[LANGUAGE_NONE])) {
@@ -1754,30 +1767,42 @@ function ed_task_manager($test, $node){
           $tmp_data['title'] = t('Not answered');
 
 
-//          //Check if it is a study group case
-//          $wrapper = entity_metadata_wrapper('node', $node_single->nid);
-//          $task_study_groups = $wrapper->ed_task_field_study_group->raw();
-//
-//          if(!empty($task_study_groups)){
-//
-//
-//            //Get user study group field
-//            $wrapper = entity_metadata_wrapper('user', $member->uid);
-//            $user_study_group = $wrapper->ed_field_study_group->value();
-//
-//
-//            if(isset($user_study_group)){
-//              if(in_array($user_study_group, $task_study_groups) == false){
-//                $tmp_data['class'] = 'na';
-//                $tmp_data['title'] = t('Not applicable');
-//              }
-//
-//            }else{
-//              $tmp_data['class'] = 'na';
-//              $tmp_data['title'] = t('Not applicable');
-//            }
-//
-//          }
+          //Check if it is a study group case
+          $wrapper = entity_metadata_wrapper('node', $node_single->nid);
+          $task_study_groups = $wrapper->ed_task_field_study_group->raw();
+
+          if(!empty($task_study_groups)){
+
+            $tasks_to_user = _ed_get_tasks_to_user();
+            $is_to_user_task = false;
+            foreach ($tasks_to_user as $task_to_user){
+              if($task_to_user->nid == $node_single->nid){
+                $is_to_user_task=true;
+              }
+            }
+
+
+            if(!$is_to_user_task){
+              //Get user study group field
+              $wrapper = entity_metadata_wrapper('user', $member->uid);
+              $user_study_group = $wrapper->ed_field_study_group->value();
+
+
+              if(isset($user_study_group)){
+                if(in_array($user_study_group, $task_study_groups) == false ){
+                  $tmp_data['class'] = 'na';
+                  $tmp_data['title'] = t('Not applicable');
+                }
+
+              }else{
+                $tmp_data['class'] = 'na';
+                $tmp_data['title'] = t('Not applicable');
+              }
+
+            }
+
+
+          }
 
 
           if (!empty($node_single->{ED_FIELD_TO_GROUP_MEMBER}[LANGUAGE_NONE])) {
