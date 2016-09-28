@@ -164,6 +164,10 @@ function ed_user_extra_form_alter(&$form, &$form_state, $form_id){
 
     $form['ed_notification_content_types']['#access'] = FALSE;
     $form['ed_field_study_group']['#access'] = FALSE;
+
+    $form['ed_field_full_name']['#weight'] = -12;
+    $form['field_institution']['#weight'] = -11;
+
   }else if ($form_id=='ed_user_notifications_page' || $form_id=='ed_user_study_groups_page'){
     if (isset($form['#metatags'])){
       unset($form['#metatags']);
