@@ -16,11 +16,15 @@ function ed_cluster_views_default_views_alter(&$views) {
     $handler->display->display_options['fields']['login']['table'] = 'users';
     $handler->display->display_options['fields']['login']['field'] = 'login';
     $handler->display->display_options['fields']['login']['date_format'] = 'time ago';
+	
+	/* fixes #394? I suspect the code below was supposed to push the edit column to the end of the table */
+	/*
     if (isset($handler->display->display_options['fields']['edit_membership'])) {
       $tmp_edit_membership = $handler->display->display_options['fields']['edit_membership'];
       unset($handler->display->display_options['fields']['edit_membership']);
       $handler->display->display_options['fields']['edit_membership'] = $tmp_edit_membership;
     }
+	*/
   }
 
   if (array_key_exists('og_members', $views)) {
