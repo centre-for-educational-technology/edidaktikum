@@ -1737,13 +1737,26 @@ function ed_task_manager($test, $node){
         $tmp_data = array('data' => '', 'class' => '');
 
         if (_ed_check_if_answered($member->uid, $node_single->nid)) {
-          $tmp_answer_nid = _ed_get_answer_nid($member->uid, $node_single->nid);                   
+          $tmp_answer_nid = _ed_get_answer_nid($member->uid, $node_single->nid);
+
           $tmp_data['data'] = l('&nbsp;', 'node/' . $tmp_answer_nid[0], array('html' => TRUE));
           $status = _ed_check_if_accepted($tmp_answer_nid[0]);
           
           if(empty($status)){
             $tmp_data['class'] = 'unchecked';
             $tmp_data['title'] = t('Unchecked');
+
+            //Check if it is late submission
+            $wrapper = entity_metadata_wrapper('node', $tmp_answer_nid[0]);
+            $task_submission_time = $wrapper->changed->value();
+
+            $due_date = $node_single->ed_task_due_date[LANGUAGE_NONE][0]['value'];
+
+            if($task_submission_time>$due_date){
+              $tmp_data['data'] = l('!&nbsp;', 'node/' . $tmp_answer_nid[0], array('html' => TRUE));
+            }
+
+
           }else{
             switch($status[0]){
               case('accepted'):
