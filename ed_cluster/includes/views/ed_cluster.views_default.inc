@@ -17,14 +17,21 @@ function ed_cluster_views_default_views_alter(&$views) {
     $handler->display->display_options['fields']['login']['field'] = 'login';
     $handler->display->display_options['fields']['login']['date_format'] = 'time ago';
 	
-	/* fixes #394? I suspect the code below was supposed to push the edit column to the end of the table */
-	/*
+	/* Note: if more element_column_label == FALSE members are added, they need to be moved too to prevent the wildcard column from being created too early */
     if (isset($handler->display->display_options['fields']['edit_membership'])) {
-      $tmp_edit_membership = $handler->display->display_options['fields']['edit_membership'];
-      unset($handler->display->display_options['fields']['edit_membership']);
-      $handler->display->display_options['fields']['edit_membership'] = $tmp_edit_membership;
+		/* Move edit to the end */
+		$tmp_edit_membership = $handler->display->display_options['fields']['edit_membership'];
+		unset($handler->display->display_options['fields']['edit_membership']);
+		$handler->display->display_options['fields']['edit_membership'] = $tmp_edit_membership;
     }
-	*/
+	
+	if (isset($handler->display->display_options['fields']['delete_membership'])) {
+		/* Move delete to the end */
+		$tmp_delete_membership = $handler->display->display_options['fields']['delete_membership'];
+		unset($handler->display->display_options['fields']['delete_membership']);
+		$handler->display->display_options['fields']['delete_membership'] = $tmp_delete_membership;
+	}
+	
   }
 
   if (array_key_exists('og_members', $views)) {
