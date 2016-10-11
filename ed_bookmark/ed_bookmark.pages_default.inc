@@ -60,7 +60,7 @@ $handler->conf = array(
   ),
 );
 $display = new panels_display();
-$display->layout = 'twocol_stacked_top';
+$display->layout = 'twocol_stacked';
 $display->layout_settings = array();
 $display->panel_settings = array(
   'style_settings' => array(
