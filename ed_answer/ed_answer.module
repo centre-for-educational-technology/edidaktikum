@@ -107,9 +107,14 @@ function ed_answer_form_alter(&$form, &$form_state, $form_id){
       $reftotask = $_GET['field_ref_to_task'];
     }
     $node = node_load($reftotask);
+	
+	
+	//	set group and hide
     if(isset($node->og_group_ref['und'][0]['target_id'])){
-      $form['og_group_ref']['und'][0]['default']['#default_value'] = $node->og_group_ref['und'][0]['target_id'];
+		$form['og_group_ref']['und'][0]['default']['#type'] = "hidden";
+		$form['og_group_ref']['und'][0]['default']['#value'] = $node->og_group_ref['und'][0]['target_id'];
     }
+	
     $form['ed_field_content']['#weight'] = 1;
     $form['field_ref_to_task']['und']['#title'] = t('Answer To Task');
     $form['tabs'] = array(
@@ -248,6 +253,7 @@ function ed_answer_form_alter(&$form, &$form_state, $form_id){
       $form['#submit'][] = 'ed_answer_redirect_to_taskmanager';
     }
   }
+
 }
 
 function ed_answer_redirect_to_taskmanager($form, &$form_state){
