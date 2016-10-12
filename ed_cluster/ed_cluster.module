@@ -1883,7 +1883,8 @@ function _ed_check_if_accepted($answer){
   $query->condition('c.uid', $groupadmins, 'IN');
   $result = $query->execute()->fetchCol();
 
-  print_r($answer.' '.$result[0]);
+  print_r(' comment_count '.$answernode->comment_count);
+  print_r(' last_comment_uid '.$answernode->last_comment_uid);
   return $result;
 
 
