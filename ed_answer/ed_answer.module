@@ -122,13 +122,14 @@ function ed_answer_form_alter(&$form, &$form_state, $form_id){
 
       $selected_groups_ids = array_intersect($task_groups_ids, $user_groups_ids['node']);
 
+      
 
       if ( $selected_groups_ids ) {
         $form['og_group_ref']['und'][0]['default']['#value'] = $selected_groups_ids;
       }
 
       // TODO Might make sense to always hide (when ref to user only)
-      $form['og_group_ref']['#access'] = false;
+      $form['og_group_ref']['und'][0]['default']['#type'] = "hidden";
     }else{
       drupal_set_message(t('This task does not belong to any group'));
     }
