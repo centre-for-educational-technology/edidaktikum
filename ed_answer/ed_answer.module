@@ -107,13 +107,33 @@ function ed_answer_form_alter(&$form, &$form_state, $form_id){
       $reftotask = $_GET['field_ref_to_task'];
     }
     $node = node_load($reftotask);
-	
-	
-	//	set group and hide
-    if(isset($node->og_group_ref['und'][0]['target_id'])){
-		$form['og_group_ref']['und'][0]['default']['#type'] = "hidden";
-		$form['og_group_ref']['und'][0]['default']['#value'] = $node->og_group_ref['und'][0]['target_id'];
+
+
+    // Get all groups this task belongs to, get user groups, make intersection of them and put these groups
+    // as default values, so that the members offered to user would be valid. Hide groups choice at all
+    if ( isset($node->og_group_ref[LANGUAGE_NONE]) && is_array($node->og_group_ref[LANGUAGE_NONE]) && count($node->og_group_ref[LANGUAGE_NONE]) > 0 ) {
+
+      $task_groups_ids = array_map(function($ref) {
+        return $ref['target_id'];
+      }, $node->og_group_ref[LANGUAGE_NONE]);
+
+      $user_groups_ids = og_get_groups_by_user();
+
+
+      $selected_groups_ids = array_intersect($task_groups_ids, $user_groups_ids['node']);
+
+
+      if ( $selected_groups_ids ) {
+        $form['og_group_ref']['und'][0]['default']['#value'] = $selected_groups_ids;
+      }
+
+      // TODO Might make sense to always hide (when ref to user only)
+      $form['og_group_ref']['#access'] = false;
+    }else{
+      drupal_set_message(t('This task does not belong to any group'));
     }
+
+
 	
     $form['ed_field_content']['#weight'] = 1;
     $form['field_ref_to_task']['und']['#title'] = t('Answer To Task');
