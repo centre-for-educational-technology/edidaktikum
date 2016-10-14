@@ -807,7 +807,7 @@ function ed_cluster_my_listing_page() {
         );
         $build['row-'.$counter][$i]['bottom']['bottom-left'] = array(
           '#type' => 'markup',          
-          '#prefix' => '<div class="span9 group-div-bottom-left">',
+          '#prefix' => '<div class="span7 group-div-bottom-left">',
           '#markup' => implode(' ', $adminimages),
           '#suffix' => '</div>',
         );
@@ -925,7 +925,7 @@ function ed_all_groups_listing(){
         );
         $build['row-'.$counter][$i]['bottom']['bottom-left'] = array(
           '#type' => 'markup',          
-          '#prefix' => '<div class="span9 group-div-bottom-left">',
+          '#prefix' => '<div class="span7 group-div-bottom-left">',
           '#markup' => implode(' ', $adminimages),
           '#suffix' => '</div>',
         );

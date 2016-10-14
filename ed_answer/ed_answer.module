@@ -119,23 +119,25 @@ function ed_answer_form_alter(&$form, &$form_state, $form_id){
 
       $user_groups_ids = og_get_groups_by_user();
 
-
       $selected_groups_ids = array_intersect($task_groups_ids, $user_groups_ids['node']);
-
-      
 
       if ( $selected_groups_ids ) {
         $form['og_group_ref']['und'][0]['default']['#value'] = $selected_groups_ids;
       }
 
+      // This solution prevents the Specify user box from showing the right selected group members we got before;
+      // it forces to show all the members of groups this user belongs to
+      //$form['og_group_ref']['und'][0]['default']['#type'] = "hidden";
+
+      // Using this instead keeps the right selected groups and hence the members, but prevents from changing groups
+      $form['og_group_ref']['#disabled'] = TRUE;
       // TODO Might make sense to always hide (when ref to user only)
-      $form['og_group_ref']['und'][0]['default']['#type'] = "hidden";
+
     }else{
       drupal_set_message(t('This task does not belong to any group'));
     }
 
 
-	
     $form['ed_field_content']['#weight'] = 1;
     $form['field_ref_to_task']['und']['#title'] = t('Answer To Task');
     $form['tabs'] = array(
