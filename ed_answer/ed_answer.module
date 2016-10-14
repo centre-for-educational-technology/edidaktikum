@@ -129,12 +129,19 @@ function ed_answer_form_alter(&$form, &$form_state, $form_id){
       // it forces to show all the members of groups this user belongs to
       //$form['og_group_ref']['und'][0]['default']['#type'] = "hidden";
 
-      // Using this instead keeps the right selected groups and hence the members, but prevents from changing groups
-      $form['og_group_ref']['#disabled'] = TRUE;
-      // TODO Might make sense to always hide (when ref to user only)
 
     }else{
       drupal_set_message(t('This task does not belong to any group'));
+    }
+
+    // Using this instead keeps the right selected groups and hence the members, but prevents from changing groups
+    $form['og_group_ref']['#disabled'] = TRUE;
+
+
+
+    //If this task is given to specific user, disable Specify user option in answer
+    if ( isset($node->ed_field_to_group_member[LANGUAGE_NONE]) && is_array($node->ed_field_to_group_member[LANGUAGE_NONE]) && count($node->ed_field_to_group_member[LANGUAGE_NONE]) > 0 ) {
+      $form['ed_field_to_group_member']['#disabled'] = TRUE;
     }
 
 
