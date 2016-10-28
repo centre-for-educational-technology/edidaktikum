@@ -1746,7 +1746,7 @@ function ed_task_manager($test, $node){
             $tmp_data['class'] = 'unchecked';
             $tmp_data['title'] = t('Unchecked');
 
-            //Check if it is late submission
+            //Check if it is late submission - if submitted on the due date or later
             $wrapper = entity_metadata_wrapper('node', $tmp_answer_nid[0]);
             $task_submission_time = $wrapper->changed->value();
 
@@ -2324,7 +2324,21 @@ function ed_cluster_comment_view_alter(&$build) {
   if (isset($build['#comment']->{ED_FIELD_PRIVATE_COMMENT}[LANGUAGE_NONE][0]['value']) && 1 == $build['#comment']->{ED_FIELD_PRIVATE_COMMENT}[LANGUAGE_NONE][0]['value']) {
     global $user;
     if (!(user_is_logged_in() && ($build['#comment']->uid == $user->uid || $build['#node']->uid == $user->uid))) {
+
       $build['#access'] = FALSE;
+
+      // Check if this user is group manager
+      if(isset($build['#node']->og_group_ref)){
+        foreach ($build['#node']->og_group_ref[LANGUAGE_NONE] as $referenced_group){
+
+          if(ed_task_manager_access('node', node_load($referenced_group['target_id']))){
+
+            //Group manager can see private comments
+            $build['#access'] = TRUE;
+          }
+        }
+      }
+
     }
   }
 }
