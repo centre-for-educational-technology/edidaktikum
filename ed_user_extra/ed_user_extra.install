@@ -366,3 +366,25 @@ function ed_user_extra_update_7103(&$sandbox) {
 }
 
 
+/**
+ * Add ekeom_tk and grvom_f values to ed_field_study_group field
+ */
+function ed_user_extra_update_7104(&$sandbox) {
+  // Get the field info
+  $info = field_info_field('ed_field_study_group');
+
+  // Get a reference to the values
+  $values = &$info['settings']['allowed_values'];
+
+  // Manipulate the values
+  $values['ekeom_tk'] = t('EKEOM - TK - Eesti keele kui teise keele ja eesti kultuuri õpetaja');
+
+  $values['grvom_f'] = t('GRVOM - F - Soome ja teise keele õpetaja');
+
+  // Save the field
+  field_update_field($info);
+
+
+}
+
+
