@@ -7,27 +7,27 @@
 
 function edidaktikum_home_page_admin_form() {
   $form = array();
-  $form['ed_home_page_intro_image_url'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Home page intro image URL'),
-    '#default_value' => variable_get('ed_home_page_intro_image_url', ''),
-    '#description' => t("Intro image to display in home page."),
-    '#required' => FALSE,
-  );
-  $form['ed_home_page_intro_text'] = array(
-    '#type' => 'textarea',
-    '#title' => t('Home page intro text'),
-    '#default_value' => variable_get('ed_home_page_intro_text', ''),
-    '#description' => t("Intro text to display in home page."),
-    '#required' => FALSE,
-  );
-  $form['ed_home_page_tour_text'] = array(
-    '#type' => 'textarea',
-    '#title' => t('Home page tour text'),
-    '#default_value' => variable_get('ed_home_page_tour_text', ''),
-    '#description' => t("Tour text to display in home page."),
-    '#required' => FALSE,
-  );
+//  $form['ed_home_page_intro_image_url'] = array(
+//    '#type' => 'textfield',
+//    '#title' => t('Home page intro image URL'),
+//    '#default_value' => variable_get('ed_home_page_intro_image_url', ''),
+//    '#description' => t("Intro image to display in home page."),
+//    '#required' => FALSE,
+//  );
+//  $form['ed_home_page_intro_text'] = array(
+//    '#type' => 'textarea',
+//    '#title' => t('Home page intro text'),
+//    '#default_value' => variable_get('ed_home_page_intro_text', ''),
+//    '#description' => t("Intro text to display in home page."),
+//    '#required' => FALSE,
+//  );
+//  $form['ed_home_page_tour_text'] = array(
+//    '#type' => 'textarea',
+//    '#title' => t('Home page tour text'),
+//    '#default_value' => variable_get('ed_home_page_tour_text', ''),
+//    '#description' => t("Tour text to display in home page."),
+//    '#required' => FALSE,
+//  );
   $form['ed_home_page_intro_notification_message'] = array(
     '#type' => 'textarea',
     '#title' => t('Message to be displayed on front page'),
@@ -35,6 +35,35 @@ function edidaktikum_home_page_admin_form() {
     '#default_value' => variable_get('ed_home_page_intro_notification_message', ''),
     '#required' => FALSE,
   );
+
+  $form['ed_home_page_what_text'] = array(
+      '#type' => 'textarea',
+      '#title' => t('Text to be displayed in What is eDidaktikum section'),
+      '#default_value' => variable_get('ed_home_page_what_text', ''),
+      '#required' => TRUE,
+  );
+
+  $form['ed_home_page_dashboard_text'] = array(
+      '#type' => 'textarea',
+      '#title' => t('Text to be displayed in Dashboard section'),
+      '#default_value' => variable_get('ed_home_page_dashboard_text', ''),
+      '#required' => TRUE,
+  );
+
+  $form['ed_home_page_groups_text'] = array(
+      '#type' => 'textarea',
+      '#title' => t('Text to be displayed in Groups and Courses section'),
+      '#default_value' => variable_get('ed_home_page_groups_text', ''),
+      '#required' => TRUE,
+  );
+
+  $form['ed_home_page_collections_text'] = array(
+      '#type' => 'textarea',
+      '#title' => t('Text to be displayed in Collections section'),
+      '#default_value' => variable_get('ed_home_page_collections_text', ''),
+      '#required' => TRUE,
+  );
+
   return system_settings_form($form);
 }
 

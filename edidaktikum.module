@@ -471,13 +471,16 @@ function edidaktikum_form_alter(&$form, $form_state, $form_id) {
     }  
   }
   
-  // Student can only set Group content visibility to private
+  // If not a blog post, then student can only set Group content visibility to private
   // Remove any other options from the node edit form
   if (!empty($form['#node_edit_form']) && isset($form['group_content_access'])) {
     $account = $GLOBALS['user'];
     if (!(in_array('teacher', $account->roles) || in_array('administrator', $account->roles))) {
-      unset($form['group_content_access']['und']['#options'][0]);
-      unset($form['group_content_access']['und']['#options'][1]);
+      if($form['type']['#value'] != 'ed_blog'){
+        unset($form['group_content_access']['und']['#options'][0]);
+        unset($form['group_content_access']['und']['#options'][1]);
+      }
+
     }
   }
 

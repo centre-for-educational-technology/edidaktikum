@@ -57,6 +57,36 @@ function edidaktikum_variable_info($options) {
     'group' => 'edidaktikum_settings',
   );
 
+  $variables['ed_home_page_what_text'] = array(
+      'type' => 'string',
+      'title' => t('Text to be displayed in What is eDidaktikum section', array(), $options),
+      'required' => TRUE,
+      'group' => 'edidaktikum_settings',
+  );
+
+  $variables['ed_home_page_dashboard_text'] = array(
+      'type' => 'string',
+      'title' => t('Text to be displayed in Dashboard section', array(), $options),
+      'required' => TRUE,
+      'group' => 'edidaktikum_settings',
+  );
+
+  $variables['ed_home_page_groups_text'] = array(
+      'type' => 'string',
+      'title' => t('Text to be displayed in Groups and Courses section', array(), $options),
+      'required' => TRUE,
+      'group' => 'edidaktikum_settings',
+  );
+
+  $variables['ed_home_page_collections_text'] = array(
+      'type' => 'string',
+      'title' => t('Text to be displayed in Collections section', array(), $options),
+      'required' => TRUE,
+      'group' => 'edidaktikum_settings',
+  );
+
+
+
   return $variables;
 }
 
