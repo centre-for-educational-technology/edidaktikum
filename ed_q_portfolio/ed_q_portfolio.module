@@ -81,8 +81,8 @@ function ed_q_portfolio_cv($node){
   $content['container']['cv']['name'] = array(
       '#type' => 'markup',
       '#markup' => '<i class="fa fa-user"></i> '.t('CV'),
-      '#prefix' => '<label>',
-      '#suffix' => '</label>'
+      '#prefix' => '<h2>',
+      '#suffix' => '</h2>'
   );
 
 
@@ -119,8 +119,8 @@ function ed_q_portfolio_cv($node){
   $content['container']['application']['name'] = array(
       '#type' => 'markup',
       '#markup' => '<i class="fa fa-file-text-o"></i> '.t('Application file'),
-      '#prefix' => '<label>',
-      '#suffix' => '</label>'
+      '#prefix' => '<h2>',
+      '#suffix' => '</h2>'
   );
 
 
@@ -1195,7 +1195,7 @@ function ed_q_portfolio_node_view($node, $view_mode, $langcode) {
             'modalSize' => array(
                 'type' => 'scale',
                 'width' => 0.75,
-                'height' => 0.75,
+                'height' => 0.8,
                 'addWidth' => 10,
                 'addHeight' => 10,
                 'contentRight' => 0,

@@ -443,7 +443,7 @@ function ed_cluster_search_page($form, &$form_state){
           );
           $build['row-'.$counter][$i]['bottom']['bottom-right'] = array(
             '#type' => 'markup',          
-            '#prefix' => '<div class="span3 group-div-bottom-right label label-success">',
+            '#prefix' => '<div class="span5 group-div-bottom-right label label-success">',
             '#markup' => l(t('Join'),'group/node/'.$nodeschunk[$i]->nid.'/subscribe/og_user_node'),
             '#suffix' => '</div>',
           );
@@ -813,7 +813,7 @@ function ed_cluster_my_listing_page() {
         );
         $build['row-'.$counter][$i]['bottom']['bottom-right'] = array(
           '#type' => 'markup',          
-          '#prefix' => '<div class="span3 group-div-bottom-right label label-important">',
+          '#prefix' => '<div class="span5 group-div-bottom-right label label-important">',
           '#markup' => l(t('Leave'),'group/node/'.$nodeschunk[$i]->nid.'/unsubscribe'),
           '#suffix' => '</div>',
         );
@@ -932,7 +932,7 @@ function ed_all_groups_listing(){
         if($nodeschunk[$i]->ed_field_group_state[LANGUAGE_NONE][0]['value']){
           $build['row-' . $counter][$i]['bottom']['bottom-right'] = array(
               '#type' => 'markup',
-              '#prefix' => '<div class="span3 group-div-bottom-right label label-success">',
+              '#prefix' => '<div class="span5 group-div-bottom-right label label-success">',
               '#markup' => l(t('Join'), 'group/node/' . $nodeschunk[$i]->nid . '/subscribe/og_user_node'),
               '#suffix' => '</div>',
           );
