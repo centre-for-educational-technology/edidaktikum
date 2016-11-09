@@ -74,6 +74,9 @@ function ed_bookmark_node_view($node, $view_mode, $langcode){
       $node->content['ed_bookmark_type'][0]['#prefix'] = '<div class="description">';
       $node->content['ed_bookmark_type'][0]['#suffix'] = '</div>';
 
+	  $node->content['bookmark_description'][0]['#prefix'] = '<div class="description">';  
+	  $node->content['bookmark_description'][0]['#markup'] = $node->bookmark_description[LANGUAGE_NONE][0]['value'];
+	  $node->content['bookmark_description'][0]['#suffix'] = '</div>';
     }
   }
 }
