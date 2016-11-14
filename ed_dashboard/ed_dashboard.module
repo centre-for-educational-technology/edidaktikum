@@ -67,7 +67,12 @@ function ed_dashboard_page() {
 
   if (!empty($groups)) {
     $content['groups-listing'] = node_view_multiple($groups, 'dashboard');
-
+	
+	// Sort by creation date
+	uasort($content['groups-listing']['nodes'], function($a, $b) {
+		return intval($a['#node']->created) < intval($b['#node']->created);
+	});
+	
     foreach ($content['groups-listing']['nodes'] as $node){
       if (isset($node['#node']->picture)) {
         //Hide user picture
@@ -78,6 +83,7 @@ function ed_dashboard_page() {
       '#theme' => 'pager',
       '#weight' => 5,
     );
+	
   } else {
     $content['groups-not-found'] = array(
       '#type' => 'markup',
