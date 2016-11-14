@@ -236,6 +236,7 @@ function ed_user_extra_node_insert($node){
       }
     }
   }
+
   if($node->type == 'ed_answer'){
     $tasknid = $node->field_ref_to_task[LANGUAGE_NONE][0]['target_id'];
     $tasknode = node_load($tasknid);
