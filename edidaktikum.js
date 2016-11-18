@@ -15,7 +15,7 @@
   // Take off overflow hidden used in front page parallax
   $(function() {
     if( $("body").hasClass("not-front") ) {
-      $('html').css("overflow", "initial");
+      $('html').css("overflow", "visible");
     }
   });
 

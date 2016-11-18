@@ -156,3 +156,24 @@ function ed_bookmark_update_7101(&$sandbox){
   taxonomy_vocabulary_delete($vid);
 }
 
+
+/**
+ * Add description field
+ */
+ 
+ function ed_bookmark_update_7102(&$sandbox) {
+	$field = array(
+		'field_name' => 'ed_bookmark_description',
+		'label' => t('Description'),
+		'type' => 'text'
+	);	
+	field_create_field($field);
+	
+	$instance = array(
+		'field_name' => 'ed_bookmark_description',
+		'label' => t('Description'),
+		'entity_type' => 'node',
+		'bundle' => 'ed_bookmark'
+	);
+	field_create_instance($instance);
+ }

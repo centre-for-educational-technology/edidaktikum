@@ -34,6 +34,8 @@ function ed_bookmark_form_alter(&$form, &$form_state, $form_id) {
 
     $form['title']['#required'] = FALSE;
     $form['ed_bookmark_url'][LANGUAGE_NONE][0]['#title'] = '';
+	
+	  unset($form['ed_bookmark_type']);
   }
 }
 
@@ -66,14 +68,14 @@ function ed_bookmark_ctools_plugin_api() {
  */
 function ed_bookmark_node_view($node, $view_mode, $langcode){
   if($node->type == 'ed_bookmark'){
-    if($view_mode == 'teaser'){
-      
+    if($view_mode == 'teaser'){    
       $node->content['ed_bookmark_type']['#label_display'] = 'hidden';
       $url = $node->ed_bookmark_url[LANGUAGE_NONE][0]['value'];
-      $node->content['ed_bookmark_type'][0]['#markup'] .= ' / '.l($url, $url);
-      $node->content['ed_bookmark_type'][0]['#prefix'] = '<div class="description">';
-      $node->content['ed_bookmark_type'][0]['#suffix'] = '</div>';
+      $node->content['ed_bookmark_type'][0]['#markup'] = '';
 
+      $node->content['ed_bookmark_description'][0]['#prefix'] = '<div class="description">';
+      $node->content['ed_bookmark_description'][0]['#markup'] = l($url, $url) . '<br>' . $node->ed_bookmark_description[LANGUAGE_NONE][0]['value'] ;
+      $node->content['ed_bookmark_description'][0]['#suffix'] = '</div>';
     }
   }
 }
