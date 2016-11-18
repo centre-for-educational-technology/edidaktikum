@@ -163,14 +163,14 @@ function ed_bookmark_update_7101(&$sandbox){
  
  function ed_bookmark_update_7102(&$sandbox) {
 	$field = array(
-		'field_name' => 'bookmark_description',
+		'field_name' => 'ed_bookmark_description',
 		'label' => t('Description'),
 		'type' => 'text'
 	);	
 	field_create_field($field);
 	
 	$instance = array(
-		'field_name' => 'bookmark_description',
+		'field_name' => 'ed_bookmark_description',
 		'label' => t('Description'),
 		'entity_type' => 'node',
 		'bundle' => 'ed_bookmark'
