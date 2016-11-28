@@ -201,7 +201,13 @@ function ed_task_listing_page() {
           if(empty($status)){
             $tasknodesgroupedbystatus['unchecked'][$key] = $tasknode;
           }else{
-            switch($status[0]){
+            //  find last status change that isn't unchecked
+            $last_good_status = $status[0];
+            for ($i = 1; $i < count($status); $i++) {
+              if ($status[$i] != 'unchecked') $last_good_status = $status[$i];
+            }
+
+            switch($last_good_status){
               case 'rejected':
                 $tasknodesgroupedbystatus['rejected'][$key] = $tasknode;
                 break;
@@ -273,8 +279,13 @@ function ed_task_listing_page() {
       if($isanswered){
         $tmp_answer_nid = _ed_get_answer_nid($user->uid, $tasknode->nid);                             
         $status = _ed_check_if_accepted($tmp_answer_nid[0]);
+        //  find last status change that isn't unchecked
+        $last_good_status = $status[0];
+        for ($i = 1; $i < count($status); $i++) {
+          if ($status[$i] != 'unchecked') $last_good_status = $status[$i];
+        }
        
-        switch($status ? $status[0] : 'invalid'){
+        switch($status ? $last_good_status : 'invalid'){
           case('accepted'):
             $tmp_data['class'] = 'answered';
             $tmp_data['data'] = l(t('Answered, Accepted'), 'node/' . $tmp_answer_nid[0], array('html' => TRUE));
