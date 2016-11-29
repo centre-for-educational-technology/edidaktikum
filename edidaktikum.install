@@ -361,3 +361,23 @@ function edidaktikum_update_7103(&$sandbox){
 function edidaktikum_update_7104(&$sandbox){
   edidaktikum_create_field_group_state();
 }
+
+/**
+* Add supervisor role
+*/
+function edidaktikum_update_7105(&$sandbox) {
+    if (user_role_load_by_name('supervisor') !== FALSE) return;
+    $administrator = user_role_load_by_name('administrator');
+
+    $supervisor = new stdClass();
+    $supervisor->name = 'supervisor';
+    $supervisor->weight = $administrator->weight;
+
+    //  increment administrator weight
+    $administrator->weight = (int) $administrator->weight + 1;
+    user_role_save($administrator);
+
+    user_role_save($supervisor);
+}
+
+

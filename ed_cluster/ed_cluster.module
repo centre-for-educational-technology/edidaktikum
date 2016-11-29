@@ -1756,9 +1756,9 @@ function ed_task_manager($test, $node){
 
 
           }else{
-            $status = _ed_interpret_task_statuses($status);
+            $status_last = _ed_last_status($status);
 
-            switch($status){
+            switch($status_last){
               case('accepted'):
                 $tmp_data['class'] = 'answered';
                 $tmp_data['title'] = t('Accepted');
@@ -1838,12 +1838,7 @@ function ed_task_manager($test, $node){
   );
   return $content;
 }
-function _ed_interpret_task_statuses($statuses) {
-  for ($i = count($statuses) - 1; $i >= 0; $i--) {
-    if ($statuses[$i] != 'unchecked') return $statuses[$i];
-  }
-  return 'unchecked';
-}
+
 
 function _ed_get_answer_nid($uid, $tnid){
   $query = db_select('node', 'n');
@@ -2602,6 +2597,9 @@ function ed_cluster_page_alter(&$page){
   }
 }
 
+function ed_cluster_node_access($node, $op, $account) {
+  if (in_array('supervisor', $account->roles) && $op == 'view') return NODE_ACCESS_ALLOW; 
+}
 
 /*
 function ed_cluster_node_view_alter(&$build) {
