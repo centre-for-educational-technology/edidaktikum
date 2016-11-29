@@ -1756,14 +1756,9 @@ function ed_task_manager($test, $node){
 
 
           }else{
+            $status = _ed_interpret_task_statuses($status);
 
-            //  find last status change that isn't unchecked
-            $last_good_status = $status[0];
-            for ($i = 1; $i < count($status); $i++) {
-              if ($status[$i] != 'unchecked') $last_good_status = $status[$i];
-            }
-
-            switch($last_good_status){
+            switch($status){
               case('accepted'):
                 $tmp_data['class'] = 'answered';
                 $tmp_data['title'] = t('Accepted');
@@ -1843,6 +1838,13 @@ function ed_task_manager($test, $node){
   );
   return $content;
 }
+function _ed_interpret_task_statuses($statuses) {
+  for ($i = count($statuses) - 1; $i >= 0; $i--) {
+    if ($statuses[$i] != 'unchecked') return $statuses[$i];
+  }
+  return 'unchecked';
+}
+
 function _ed_get_answer_nid($uid, $tnid){
   $query = db_select('node', 'n');
   $query->join('field_data_field_ref_to_task', 'ref', 'n.nid = ref.entity_id');
@@ -2599,3 +2601,14 @@ function ed_cluster_page_alter(&$page){
     );
   }
 }
+
+
+/*
+function ed_cluster_node_view_alter(&$build) {
+  if (!isset($build['group_group'])) return;
+  unset($build['group_group'][0]);
+}
+*/
+
+
+

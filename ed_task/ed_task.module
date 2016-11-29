@@ -201,13 +201,9 @@ function ed_task_listing_page() {
           if(empty($status)){
             $tasknodesgroupedbystatus['unchecked'][$key] = $tasknode;
           }else{
-            //  find last status change that isn't unchecked
-            $last_good_status = $status[0];
-            for ($i = 1; $i < count($status); $i++) {
-              if ($status[$i] != 'unchecked') $last_good_status = $status[$i];
-            }
+            $status_last = _ed_last_status($status);
 
-            switch($last_good_status){
+            switch($status_last){
               case 'rejected':
                 $tasknodesgroupedbystatus['rejected'][$key] = $tasknode;
                 break;
@@ -279,13 +275,9 @@ function ed_task_listing_page() {
       if($isanswered){
         $tmp_answer_nid = _ed_get_answer_nid($user->uid, $tasknode->nid);                             
         $status = _ed_check_if_accepted($tmp_answer_nid[0]);
-        //  find last status change that isn't unchecked
-        $last_good_status = $status[0];
-        for ($i = 1; $i < count($status); $i++) {
-          if ($status[$i] != 'unchecked') $last_good_status = $status[$i];
-        }
+        $status_last = _ed_last_status($status);
        
-        switch($status ? $last_good_status : 'invalid'){
+        switch($status ? $status_last : 'invalid'){
           case('accepted'):
             $tmp_data['class'] = 'answered';
             $tmp_data['data'] = l(t('Answered, Accepted'), 'node/' . $tmp_answer_nid[0], array('html' => TRUE));
@@ -665,6 +657,14 @@ function _ed_get_group_tasks(){
 
 }
 
+/* Return last in status array that isn't unchecked */
+function _ed_last_status($statuses) {
+  for ($i = count($statuses) - 1; $i >= 0; $i--) {
+    if ($statuses[$i] != 'unchecked') return $statuses[$i];
+  }
+  return 'unchecked';
+}
+
 /**
  * Returns count of unanswered tasks for a user. 
  * 
@@ -750,16 +750,15 @@ function _ed_get_user_unanswered_tasks_count($account) {
     $unansweredcount = 0;
 
 
-
+    // Count unanswered as unanswered and rejected (not unchecked)
     foreach($task_nids as $tasknid){
-      if(!(_ed_check_if_answered($account->uid, $tasknid))){
+      if(!(_ed_check_if_answered($account->uid, $tasknid))) {
         $unansweredcount++;
-      }else{
+      } else {
         $tmp_answer_nid = _ed_get_answer_nid($account->uid, $tasknid);
         $status = _ed_check_if_accepted($tmp_answer_nid[0]);
-        if(!empty($status) && $status[0] == 'rejected'){
-          $unansweredcount++;
-        }
+        $status_last = _ed_last_status($status);
+        if($status_last == 'rejected') $unansweredcount++;
       }
     }
     return $unansweredcount;
