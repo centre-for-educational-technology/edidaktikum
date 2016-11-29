@@ -484,6 +484,10 @@ function ed_task_listing_for_students_access($test, $node){
     return false;
   }
 
+  if (in_array('supervisor', $account->roles)) {
+    return false;
+  }
+
   if ($node->uid === $account->uid) {
     return false;
   }
@@ -1102,6 +1106,7 @@ function ed_group_content_listing_access($filler, $gnode, $type){
   if($gnode->type=='ed_subgroup'&&$type=='ed_subgroup'){
     return false;
   }
+
   return $is_group;
 }
 
@@ -1598,6 +1603,10 @@ function ed_task_manager_access($test, $node){
 
   $account = $GLOBALS['user'];
   if (in_array('administrator', $account->roles)) {
+    return true;
+  }
+
+  if (in_array('supervisor', $account->roles)) {
     return true;
   }
 
