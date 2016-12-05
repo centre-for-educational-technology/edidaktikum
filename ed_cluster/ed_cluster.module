@@ -2606,16 +2606,36 @@ function ed_cluster_page_alter(&$page){
   }
 }
 
+/**
+ * Implements hook_node_access
+ */
 function ed_cluster_node_access($node, $op, $account) {
   if (in_array('supervisor', $account->roles) && $op == 'view') return NODE_ACCESS_ALLOW; 
 }
 
-/*
-function ed_cluster_node_view_alter(&$build) {
-  if (!isset($build['group_group'])) return;
-  unset($build['group_group'][0]);
+
+/**
+ * Implements hook_field_formatter_info_alter
+ */
+function ed_cluster_field_formatter_info_alter(&$info) {
+  $info['og_group_subscribe']['module'] = 'ed_cluster';
 }
-*/
+
+/**
+ * Implements hook_field_formatter_view
+ */
 
 
+function ed_cluster_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  $element = og_ui_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display);
+
+  // Remove membership request if group inactive
+  if (isset($element[0]) && isset($element[0]['#title']) && $element[0]['#title'] == 'Request group membership') {
+    if ($entity->ed_field_group_state['und'][0]['value'] == 0) {
+      unset($element[0]);
+    }
+  }
+
+  return $element;
+}
 
