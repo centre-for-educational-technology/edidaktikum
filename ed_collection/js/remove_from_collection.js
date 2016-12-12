@@ -1,32 +1,62 @@
 (function ($) {
-    Drupal.behaviors.remove_from_collection = {
+    Drupal.behaviors.remove_from_collections = {
         attach: function(context, settings) {
-            if (Drupal.settings.ed_collection.canUpdate !== true ) {
-                return;
-            }
+                    var modalElement = $('#remove-from-collection-modal'),
+                        nid = modalElement.next('a').data('nid');
 
-            $('.single-remove-from-collection').show().on('click', function(e) {
-                e.preventDefault();
-                var that = this,
-                    confirmation = confirm(Drupal.t('Are you sure?'));
+                        
 
-                if (true != confirmation) {
-                    return false;
-                }
+                    modalElement.find('button.btn-primary').on('click', function() {
+                        var collectionsElement = modalElement.find('select[name="collections"]'),
+                            selectedCollections = collectionsElement.val();
 
-                $.ajax({
-                    url: Drupal.settings.basePath + Drupal.settings.pathPrefix + 'collections/remove/' + $(this).data('nid') + '/from/' + Drupal.settings.ed_collection.collectionNid,
-                    dataType: 'json',
-                    type: 'POST',
-                    cache: false,
-                    success: function(response) {
-                        if (true == response.success) {
-                            $(that).parents('.node').remove();
+                        if ( !selectedCollections ) {
+                            return false;
                         }
-                    }
-                });
-            });
-        }
+
+                        $(this).prop('disabled', true);
+                        collectionsElement.prop('disabled', true);
+
+                        $.ajax({
+                            url: Drupal.settings.basePath + Drupal.settings.pathPrefix + 'collections/learning_resource/remove/' + nid,
+                            dataType: 'json',
+                            type: 'POST',
+                            data: { selected_collections : selectedCollections },
+                            cache: false,
+                            success: function(response) {
+                                if (true == response.success) {
+                                    modalElement.modal('hide');
+                                }
+                            }
+                        });
+                    });
+
+                    modalElement.on('shown', function() {
+                        var that = this;
+
+                        $.ajax({
+                            url: Drupal.settings.basePath + Drupal.settings.pathPrefix + 'collections/learning_resource/load/' + nid,
+                            dataType: 'json',
+                            type: 'POST',
+                            cache: false,
+                            success: function(response) {
+                                if (true == response.success) {
+                                    if ( response.data ) {
+                                        $(that).find('button.btn-primary').prop('disabled', false);
+                                        $(that).find('.modal-body').append('<select name="collections" multiple="multiple" style="width:100%;"></select>');
+                                        var collectionsElement = $(that).find('select[name="collections"]');
+                                        $.each(response.data, function(key, single) {
+                                            collectionsElement.append('<option value="' + single.nid + '">' + single.title + '</option>');
+                                        });
+                                    }
+                                }
+                            }
+                        });
+                    }).on('hidden', function() {
+                        $(this).find('button.btn-primary').prop('disabled', true);
+                        $(this).find('select[name="collections"]').remove();
+                    });
+                }
     };
 })(jQuery);
 
