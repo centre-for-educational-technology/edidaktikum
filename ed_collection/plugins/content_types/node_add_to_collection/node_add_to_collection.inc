@@ -53,7 +53,7 @@ function ed_collection_node_add_to_collection_content_type_render($subtype, $con
     
     $content['add_to_collection']['link'] = array(
       '#type' => 'markup',
-      '#markup' => '<a href="#add-to-collection-modal" data-toggle="modal" data-nid="' . $node->nid . '"><i class="fa fa-plus-square-o"></i> ' . t('Add to collection') . '</a>',
+      '#markup' => '<a href="#add-to-collection-modal" data-toggle="modal" data-nid="' . $node->nid . '"><i class="fa fa-plus-square-o"></i> ' . t('Add to collection') . '</a>' . ($can_remove ? "<br>" : ""),
     );
   }
 
