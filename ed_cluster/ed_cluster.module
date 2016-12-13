@@ -554,30 +554,35 @@ function ed_task_listing_for_students($test, $node){
         if (_ed_check_if_answered($user->uid, $tasknode->nid)) {
           $tmp_answer_nid = _ed_get_answer_nid($user->uid, $tasknode->nid);                             
           $status = _ed_check_if_accepted($tmp_answer_nid[0]);
-          
+
           if(empty($status)){
             $tmp_data['class'] = 'unchecked';
-            $tmp_data['data'] = l(t('Answered, Unchecked'), 'node/' . $tmp_answer_nid[0], array('html' => TRUE));
+            $tmp_data['data'] = t('Answered, Unchecked');
             $tmp_data['title'] = t('Unchecked');
           }else{
-            switch($status[0]){
+            $last_status = _ed_last_status($status);
+            switch($last_status){
               case('accepted'):
                 $tmp_data['class'] = 'answered';
-                $tmp_data['data'] = l(t('Answered, Accepted'), 'node/' . $tmp_answer_nid[0], array('html' => TRUE));
+                $tmp_data['data'] = t('Answered, Accepted');
                 $tmp_data['title'] = t('Accepted');
               break;
               case('rejected'):
                 $tmp_data['class'] = 'rejected';
-                $tmp_data['data'] = l(t('Answered, Rejected'), 'node/' . $tmp_answer_nid[0], array('html' => TRUE));
+                $tmp_data['data'] = t('Answered, Rejected');
                 $tmp_data['title'] = t('Rejected');                
               break;
               case('unchecked'):
                 $tmp_data['class'] = 'unchecked';
-                $tmp_data['data'] = l(t('Answered, Unchecked'), 'node/' . $tmp_answer_nid[0], array('html' => TRUE));
+                $tmp_data['data'] = t('Answered, Unchecked');
                 $tmp_data['title'] = t('Unchecked');
               break;
             }
           }
+
+          $grade = _ed_get_last_grade($tmp_answer_nid[0]);
+          $grade_str = $grade == 0 ? "" : t(', Graded ') . $grade;
+          $tmp_data['data'] = l($tmp_data['data'] . $grade_str, 'node/' . $tmp_answer_nid[0], array('html' => TRUE));
           
         } else {
 
@@ -1765,7 +1770,8 @@ function ed_task_manager($test, $node){
         if (_ed_check_if_answered($member->uid, $node_single->nid)) {
           $tmp_answer_nid = _ed_get_answer_nid($member->uid, $node_single->nid);
 
-          $tmp_data['data'] = l('&nbsp;', 'node/' . $tmp_answer_nid[0], array('html' => TRUE));
+          $grade = _ed_get_last_grade($tmp_answer_nid[0]);
+          $tmp_data['data'] = l($grade == 0 ? '&nbsp;' : $grade, 'node/' . $tmp_answer_nid[0], array('html' => TRUE));
           $status = _ed_check_if_accepted($tmp_answer_nid[0]);
           if(empty($status)){
             $tmp_data['class'] = 'unchecked';
@@ -1799,6 +1805,7 @@ function ed_task_manager($test, $node){
                 $tmp_data['title'] = t('Unchecked');
               break;
             }
+
           }
           
         } else {
@@ -1862,6 +1869,7 @@ function ed_task_manager($test, $node){
     '#theme' => 'table',
     '#rows' => $rows,
     '#header' => $header,
+    '#attributes' => array('data-averaging_table' => '')
   );
   return $content;
 }
@@ -1893,9 +1901,26 @@ function _ed_check_if_answered($uid, $tnid){
   
 }
 
+function _ed_get_last_grade($answer) {
+  $answernode = node_load($answer);
+  $groupnid = $answernode->og_group_ref[LANGUAGE_NONE][0]['target_id'];
+  $group = node_load($groupnid);
+  $groupadmins = _ed_cluster_get_group_admins($group, true);
+
+  $query = db_select('comment', 'c');
+  $query->join('field_data_ed_answer_grade', 's', 'c.cid = s.entity_id');
+  $query->fields('s',array('ed_answer_grade_value'));
+  $query->condition('c.nid', $answer);
+  $query->condition('c.uid', $groupadmins, 'IN');
+  $result = $query->execute()->fetchCol();
+
+  if (count($result) == 0) return 0;
+  return $result[count($result) - 1];
+}
+
+
+
 function _ed_check_if_accepted($answer){
-  
-  
   $answernode = node_load($answer);
   //dpm($answernode);
   $groupnid = $answernode->og_group_ref[LANGUAGE_NONE][0]['target_id'];
@@ -1915,8 +1940,6 @@ function _ed_check_if_accepted($answer){
   //print_r($answer.' comment_count '.$answernode->comment_count. ' last_comment_uid '.$answernode->last_comment_uid. '<br/>');
 
   return $result;
-
-
 }
 
 /*

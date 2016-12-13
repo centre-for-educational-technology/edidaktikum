@@ -280,21 +280,25 @@ function ed_task_listing_page() {
         switch($status ? $status_last : 'invalid'){
           case('accepted'):
             $tmp_data['class'] = 'answered';
-            $tmp_data['data'] = l(t('Answered, Accepted'), 'node/' . $tmp_answer_nid[0], array('html' => TRUE));
+            $tmp_data['data'] = t('Answered, Accepted');
             $tmp_data['title'] = t('Accepted');
           break;
           case('rejected'):
             $tmp_data['class'] = 'rejected';
-            $tmp_data['data'] = l(t('Answered, Rejected'), 'node/' . $tmp_answer_nid[0], array('html' => TRUE));
+            $tmp_data['data'] = t('Answered, Rejected');
             $tmp_data['title'] = t('Rejected');                
           break;
           case('unchecked'):
           default:
             $tmp_data['class'] = 'unchecked';
-            $tmp_data['data'] = l(t('Answered, Unchecked'), 'node/' . $tmp_answer_nid[0], array('html' => TRUE));
+            $tmp_data['data'] = t('Answered, Unchecked'); 
             $tmp_data['title'] = t('Unchecked');
           break;
         }
+        
+        $grade = _ed_get_last_grade($tmp_answer_nid[0]);
+        $grade_str = $grade == 0 ? "" : t(', Graded ') . $grade;
+        $tmp_data['data'] = l($tmp_data['data'] . $grade_str, 'node/' . $tmp_answer_nid[0], array('html' => TRUE));
              
       }else{
         $tmp_data['class'] = 'unanswered';
