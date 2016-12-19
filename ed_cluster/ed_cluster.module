@@ -563,7 +563,7 @@ function ed_task_listing_for_students($test, $node){
   
   foreach($tasknodes as $tasknode){
     $titlelink = l($tasknode->title, 'node/'.$tasknode->nid);
-    $deadline = format_date($tasknode->ed_task_due_date[LANGUAGE_NONE][0]['value'], 'short');
+    $deadline = format_date($tasknode->ed_task_due_date[LANGUAGE_NONE][0]['value'],'custom','d/m/Y');
     
     $tmp_data = array('data' => '', 'class' => '');
 
