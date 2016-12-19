@@ -1869,7 +1869,7 @@ function ed_task_manager($test, $node){
     '#theme' => 'table',
     '#rows' => $rows,
     '#header' => $header,
-    '#attributes' => array('data-averaging_table' => '')
+    '#attributes' => array('data-averaging_table' => '', 'data-sticky_headers' => '')
   );
   return $content;
 }
