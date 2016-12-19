@@ -313,7 +313,7 @@ function ed_task_listing_page() {
 
         $grade = _ed_get_last_grade($tasknode->answer_nid);
         $grade_str = $grade == 0 ? "" : t(', Graded ') . $grade;
-        $tmp_data['data'] = l($tmp_data['data'] . $grade_str, 'node/' . $tmp_answer_nid[0], array('html' => TRUE));
+        $tmp_data['data'] = l($tmp_data['data'] . $grade_str, 'node/' . $tasknode->answer_nid, array('html' => TRUE));
              
       }else{
         $tmp_data['class'] = 'unanswered';
