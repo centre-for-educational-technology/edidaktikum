@@ -538,22 +538,37 @@ function ed_task_listing_for_students($test, $node){
 
 
   $tasknodes = node_load_multiple($tasknids);
-  
+
+
+
+  //attach answered data
+  foreach($tasknodes as &$tasknode) {
+    $answer_nid = _ed_get_answer_nid($user->uid, $tasknode->nid); 
+    $tasknode->is_answered = !empty($answer_nid);
+    if ($tasknode->is_answered) $tasknode->answer_nid = $answer_nid[0];
+    unset($tasknode);
+  }; 
+
+
+  // sort by unanswered first, due date second, created last  
+  uasort($tasknodes, function($a, $b) {
+      if (!$a->is_answered && $b->is_answered) return -1;
+      if (!$b->is_answered && $a->is_answered) return 1;
+      $d = $a->ed_task_due_date[LANGUAGE_NONE][0]['value'] - $b->ed_task_due_date[LANGUAGE_NONE][0]['value'];
+      if ($d == 0) return $b->created - $a->created;
+      return $d;
+    });
+
   $header = array(t('Task'), t('Due Date'), t('Status'));
-
-
   
   foreach($tasknodes as $tasknode){
     $titlelink = l($tasknode->title, 'node/'.$tasknode->nid);
     $deadline = format_date($tasknode->ed_task_due_date[LANGUAGE_NONE][0]['value'], 'short');
     
-    
-    
     $tmp_data = array('data' => '', 'class' => '');
 
-        if (_ed_check_if_answered($user->uid, $tasknode->nid)) {
-          $tmp_answer_nid = _ed_get_answer_nid($user->uid, $tasknode->nid);                             
-          $status = _ed_check_if_accepted($tmp_answer_nid[0]);
+        if ($tasknode->is_answered) {                             
+          $status = _ed_check_if_accepted($tasknode->answer_nid);
 
           if(empty($status)){
             $tmp_data['class'] = 'unchecked';
@@ -580,9 +595,9 @@ function ed_task_listing_for_students($test, $node){
             }
           }
 
-          $grade = _ed_get_last_grade($tmp_answer_nid[0]);
+          $grade = _ed_get_last_grade($tasknode->answer_nid);
           $grade_str = $grade == 0 ? "" : t(', Graded ') . $grade;
-          $tmp_data['data'] = l($tmp_data['data'] . $grade_str, 'node/' . $tmp_answer_nid[0], array('html' => TRUE));
+          $tmp_data['data'] = l($tmp_data['data'] . $grade_str, 'node/' . $tasknode->answer_nid, array('html' => TRUE));
           
         } else {
 
@@ -648,22 +663,7 @@ function ed_task_listing_for_students($test, $node){
     );
     
   }
-  usort($rows, function($a, $b){
-    if($a['data']['status']['class'] === $b['data']['status']['class']){
-      return 0;
-    }
-    
-    if($a['data']['status']['class'] === 'unanswered'){
-      return -1;
-    }
-    else if($a['data']['status']['class'] === 'rejected' && $b['data']['status']['class'] !== 'unanswered'){
-      return -1;
-    }
-    else if($a['data']['status']['class'] === 'unchecked' && !in_array($b['data']['status']['class'], array('unanswered', 'rejected'))){
-      return -1;
-    }
-    return 1;
-  });
+
   $content['tasks-table'] = array(
         '#theme' => 'table',
         '#rows' => $rows,
@@ -1881,9 +1881,11 @@ function _ed_get_answer_nid($uid, $tnid){
   $query->fields('n', array('nid'));
   $query->condition('n.uid', $uid)
       ->condition('ref.field_ref_to_task_target_id', $tnid);
-  $result = $query->execute()->fetchCol();
+  $result = $query->execute()->fetchCol();  
   return $result;
 }
+
+
 function _ed_check_if_answered($uid, $tnid){
   $query = db_select('node', 'n');
   $query->join('field_data_field_ref_to_task', 'ref', 'n.nid = ref.entity_id');
@@ -1917,6 +1919,7 @@ function _ed_get_last_grade($answer) {
   if (count($result) == 0) return 0;
   return $result[count($result) - 1];
 }
+
 
 
 

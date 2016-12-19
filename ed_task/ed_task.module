@@ -253,8 +253,24 @@ function ed_task_listing_page() {
     $current_page = pager_default_initialize(count($tasknodessorted), $per_page, 2);
     
     $chunks = array_chunk($tasknodessorted, $per_page, TRUE);
-    
-    
+
+    //attach answered data
+    foreach($chunks[$current_page] as &$tasknode) {
+      $answer_nid = _ed_get_answer_nid($user->uid, $tasknode->nid); 
+      $tasknode->is_answered = !empty($answer_nid);
+      if ($tasknode->is_answered) $tasknode->answer_nid = $answer_nid[0];
+      unset($tasknode);
+    }; 
+
+    // sort by unanswered first, due date second, created last
+    usort($chunks[$current_page], function($a, $b) {
+      if (!$a->is_answered && $b->is_answered) return -1;
+      if (!$b->is_answered && $a->is_answered) return 1;
+      $d = $a->ed_task_due_date[LANGUAGE_NONE][0]['value'] - $b->ed_task_due_date[LANGUAGE_NONE][0]['value'];
+      if ($d == 0) return $b->created - $a->created;
+      return $d;
+    });
+
     foreach($chunks[$current_page] as $tasknode){
       $shared_to_arr = array();
       if( isset($tasknode->og_group_ref[LANGUAGE_NONE]['0']['target_id']) ){
@@ -270,11 +286,10 @@ function ed_task_listing_page() {
 
 
       $shared_to_arr = implode(', ', $shared_to_arr);
-      $isanswered = _ed_check_if_answered($user->uid, $tasknode->nid);
+
       $tmp_data = array('data' => '', 'class' => '');
-      if($isanswered){
-        $tmp_answer_nid = _ed_get_answer_nid($user->uid, $tasknode->nid);                             
-        $status = _ed_check_if_accepted($tmp_answer_nid[0]);
+      if($tasknode->is_answered){                          
+        $status = _ed_check_if_accepted($tasknode->answer_nid);
         $status_last = _ed_last_status($status);
        
         switch($status ? $status_last : 'invalid'){
@@ -295,8 +310,8 @@ function ed_task_listing_page() {
             $tmp_data['title'] = t('Unchecked');
           break;
         }
-        
-        $grade = _ed_get_last_grade($tmp_answer_nid[0]);
+
+        $grade = _ed_get_last_grade($tasknode->answer_nid);
         $grade_str = $grade == 0 ? "" : t(', Graded ') . $grade;
         $tmp_data['data'] = l($tmp_data['data'] . $grade_str, 'node/' . $tmp_answer_nid[0], array('html' => TRUE));
              
@@ -322,7 +337,6 @@ function ed_task_listing_page() {
           ),
         );
     }
-
 
   
   //@TODO: There are so many things wrong right here ..
