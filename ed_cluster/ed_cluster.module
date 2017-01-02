@@ -2249,6 +2249,12 @@ function ed_cluster_form_alter(&$form, &$form_state, $form_id) {
     if (empty($form['#node']->nid)) {
       drupal_set_title(t('Create Group'));
     }
+
+    // swap featured image and access order
+    $tmp = $form['ed_field_featured_image']['#weight'];
+    $form['ed_field_featured_image']['#weight'] = $form['group_access']['#weight'];
+    $form['group_access']['#weight'] = $tmp;
+
   }
   // Change group user add form autocomplete to our own endpoint.
   if ('og_ui_add_users' == $form_id) {
