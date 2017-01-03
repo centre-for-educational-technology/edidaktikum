@@ -182,9 +182,19 @@ function ed_cluster_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'ed_cluster.pages.inc',
   );
+  $items['node/%node/pages'] = array(
+    'title' => t('Pages'),
+    'page callback' => 'ed_listing_from_group',
+    'access callback' => 'ed_group_content_listing_access',
+    'page arguments' => array('node', 1, 'ed_page'),
+    'access arguments' => array('node', 1, 'ed_page'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 50,
+  );
 
   return $items;
 }
+
 
 function ed_subgroup_listing_from_group($filler, $gnode, $type){
   

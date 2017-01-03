@@ -113,8 +113,16 @@ function ed_blog_listing_page() {
     '#header' => array(t('Type'), t('Title'), t('Date')),
   );
   $content['pager'] = array('#theme' => 'pager');
-  return $content;
 
+
+  /*
+  $content['derp'] = array(
+    '#type' => 'markup',
+    '#markup' => ed_super_table_render('kek'),
+    );
+  */
+
+  return $content;
 }
 
 function ed_blog_user_profile_blog_listing_page($user) {
