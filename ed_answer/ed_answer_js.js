@@ -5,4 +5,4 @@
       $('.competence-container', context).find('a').wrap('<li />');
     }
   }
-})(jQuery)
+})(jQuery);

@@ -182,9 +182,19 @@ function ed_cluster_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'ed_cluster.pages.inc',
   );
+  $items['node/%node/pages'] = array(
+    'title' => t('Pages'),
+    'page callback' => 'ed_listing_from_group',
+    'access callback' => 'ed_group_content_listing_access',
+    'page arguments' => array('node', 1, 'ed_page'),
+    'access arguments' => array('node', 1, 'ed_page'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 50,
+  );
 
   return $items;
 }
+
 
 function ed_subgroup_listing_from_group($filler, $gnode, $type){
   
@@ -484,6 +494,10 @@ function ed_task_listing_for_students_access($test, $node){
     return false;
   }
 
+  if (in_array('supervisor', $account->roles)) {
+    return false;
+  }
+
   if ($node->uid === $account->uid) {
     return false;
   }
@@ -534,46 +548,66 @@ function ed_task_listing_for_students($test, $node){
 
 
   $tasknodes = node_load_multiple($tasknids);
-  
+
+
+
+  //attach answered data
+  foreach($tasknodes as &$tasknode) {
+    $answer_nid = _ed_get_answer_nid($user->uid, $tasknode->nid); 
+    $tasknode->is_answered = !empty($answer_nid);
+    if ($tasknode->is_answered) $tasknode->answer_nid = $answer_nid[0];
+    unset($tasknode);
+  }; 
+
+
+  // sort by unanswered first, due date second, created last  
+  uasort($tasknodes, function($a, $b) {
+      if (!$a->is_answered && $b->is_answered) return -1;
+      if (!$b->is_answered && $a->is_answered) return 1;
+      $d = $a->ed_task_due_date[LANGUAGE_NONE][0]['value'] - $b->ed_task_due_date[LANGUAGE_NONE][0]['value'];
+      if ($d == 0) return $b->created - $a->created;
+      return $d;
+    });
+
   $header = array(t('Task'), t('Due Date'), t('Status'));
-
-
   
   foreach($tasknodes as $tasknode){
     $titlelink = l($tasknode->title, 'node/'.$tasknode->nid);
-    $deadline = format_date($tasknode->ed_task_due_date[LANGUAGE_NONE][0]['value'], 'short');
-    
-    
+    $deadline = format_date($tasknode->ed_task_due_date[LANGUAGE_NONE][0]['value'],'custom','d/m/Y');
     
     $tmp_data = array('data' => '', 'class' => '');
 
-        if (_ed_check_if_answered($user->uid, $tasknode->nid)) {
-          $tmp_answer_nid = _ed_get_answer_nid($user->uid, $tasknode->nid);                             
-          $status = _ed_check_if_accepted($tmp_answer_nid[0]);
-          
+        if ($tasknode->is_answered) {                             
+          $status = _ed_check_if_accepted($tasknode->answer_nid);
+
           if(empty($status)){
             $tmp_data['class'] = 'unchecked';
-            $tmp_data['data'] = l(t('Answered, Unchecked'), 'node/' . $tmp_answer_nid[0], array('html' => TRUE));
+            $tmp_data['data'] = t('Answered, Unchecked');
             $tmp_data['title'] = t('Unchecked');
           }else{
-            switch($status[0]){
+            $last_status = _ed_last_status($status);
+            switch($last_status){
               case('accepted'):
                 $tmp_data['class'] = 'answered';
-                $tmp_data['data'] = l(t('Answered, Accepted'), 'node/' . $tmp_answer_nid[0], array('html' => TRUE));
+                $tmp_data['data'] = t('Answered, Accepted');
                 $tmp_data['title'] = t('Accepted');
               break;
               case('rejected'):
                 $tmp_data['class'] = 'rejected';
-                $tmp_data['data'] = l(t('Answered, Rejected'), 'node/' . $tmp_answer_nid[0], array('html' => TRUE));
+                $tmp_data['data'] = t('Answered, Rejected');
                 $tmp_data['title'] = t('Rejected');                
               break;
               case('unchecked'):
                 $tmp_data['class'] = 'unchecked';
-                $tmp_data['data'] = l(t('Answered, Unchecked'), 'node/' . $tmp_answer_nid[0], array('html' => TRUE));
+                $tmp_data['data'] = t('Answered, Unchecked');
                 $tmp_data['title'] = t('Unchecked');
               break;
             }
           }
+
+          $grade = _ed_get_last_grade($tasknode->answer_nid);
+          $grade_str = $grade == 0 ? "" : t(', Graded ') . $grade;
+          $tmp_data['data'] = l($tmp_data['data'] . $grade_str, 'node/' . $tasknode->answer_nid, array('html' => TRUE));
           
         } else {
 
@@ -639,22 +673,7 @@ function ed_task_listing_for_students($test, $node){
     );
     
   }
-  usort($rows, function($a, $b){
-    if($a['data']['status']['class'] === $b['data']['status']['class']){
-      return 0;
-    }
-    
-    if($a['data']['status']['class'] === 'unanswered'){
-      return -1;
-    }
-    else if($a['data']['status']['class'] === 'rejected' && $b['data']['status']['class'] !== 'unanswered'){
-      return -1;
-    }
-    else if($a['data']['status']['class'] === 'unchecked' && !in_array($b['data']['status']['class'], array('unanswered', 'rejected'))){
-      return -1;
-    }
-    return 1;
-  });
+
   $content['tasks-table'] = array(
         '#theme' => 'table',
         '#rows' => $rows,
@@ -1098,10 +1117,11 @@ function ed_cluster_og_ui_get_group_admin_alter(&$data, $gid){
 
 function ed_group_content_listing_access($filler, $gnode, $type){
   $is_group = _ed_is_nid_group($gnode->nid);
-  
+
   if($gnode->type=='ed_subgroup'&&$type=='ed_subgroup'){
     return false;
   }
+
   return $is_group;
 }
 
@@ -1226,7 +1246,6 @@ function ed_cluster_preprocess_node(&$vars) {
  * Implements hook_node_view().
  */
 function ed_cluster_node_view($node, $view_mode, $langcode){
-
   switch ($node->type){
     case 'ed_cluster':      
       if($view_mode=='full'){
@@ -1387,6 +1406,24 @@ function ed_cluster_node_view($node, $view_mode, $langcode){
 
           }
         }
+
+        // sort users alphabetically in js since hook_views_default_views_alter doesn't provide enough flexibility to sort by data inside a blob
+        drupal_add_js('jQuery(document).ready(function(){
+         var og_members_container = document.querySelector(".view-og-members .view-content");
+         var og_members_sortable = [];
+         for (var i = 0; i < og_members_container.childNodes.length; i++) {
+            var node = og_members_container.childNodes[i];
+            if (typeof node.innerHTML === "undefined") continue;
+            og_members_sortable.push({"inner" : node.innerHTML, "name" : node.innerText});
+         }
+         og_members_sortable.sort(function(a,b){return (a.name>b.name) ? 1 : ((b.name > a.name) ? -1 : 0);});
+         var og_members_used = 0;
+         for (var i = 0; i < og_members_container.childNodes.length; i++) {
+            var node = og_members_container.childNodes[i];
+            if (typeof node.innerHTML === "undefined") continue;   
+            node.innerHTML = og_members_sortable[og_members_used++].inner;        
+         }
+        });','inline');
       } else if ('dashboard' == $view_mode) {
         $recent_content = _ed_get_group_recent_content($node->nid, 5);
         $recnt_content_nodes = node_load_multiple($recent_content);
@@ -1602,6 +1639,10 @@ function ed_task_manager_access($test, $node){
     return true;
   }
 
+  if (in_array('supervisor', $account->roles)) {
+    return true;
+  }
+
   if ($node->uid === $account->uid) {
     return true;
   }
@@ -1739,9 +1780,9 @@ function ed_task_manager($test, $node){
         if (_ed_check_if_answered($member->uid, $node_single->nid)) {
           $tmp_answer_nid = _ed_get_answer_nid($member->uid, $node_single->nid);
 
-          $tmp_data['data'] = l('&nbsp;', 'node/' . $tmp_answer_nid[0], array('html' => TRUE));
+          $grade = _ed_get_last_grade($tmp_answer_nid[0]);
+          $tmp_data['data'] = l($grade == 0 ? '&nbsp;' : $grade, 'node/' . $tmp_answer_nid[0], array('html' => TRUE));
           $status = _ed_check_if_accepted($tmp_answer_nid[0]);
-          
           if(empty($status)){
             $tmp_data['class'] = 'unchecked';
             $tmp_data['title'] = t('Unchecked');
@@ -1758,7 +1799,9 @@ function ed_task_manager($test, $node){
 
 
           }else{
-            switch($status[0]){
+            $status_last = _ed_last_status($status);
+
+            switch($status_last){
               case('accepted'):
                 $tmp_data['class'] = 'answered';
                 $tmp_data['title'] = t('Accepted');
@@ -1772,6 +1815,7 @@ function ed_task_manager($test, $node){
                 $tmp_data['title'] = t('Unchecked');
               break;
             }
+
           }
           
         } else {
@@ -1835,18 +1879,23 @@ function ed_task_manager($test, $node){
     '#theme' => 'table',
     '#rows' => $rows,
     '#header' => $header,
+    '#attributes' => array('data-averaging_table' => '', 'data-sticky_headers' => '')
   );
   return $content;
 }
+
+
 function _ed_get_answer_nid($uid, $tnid){
   $query = db_select('node', 'n');
   $query->join('field_data_field_ref_to_task', 'ref', 'n.nid = ref.entity_id');
   $query->fields('n', array('nid'));
   $query->condition('n.uid', $uid)
       ->condition('ref.field_ref_to_task_target_id', $tnid);
-  $result = $query->execute()->fetchCol();
+  $result = $query->execute()->fetchCol();  
   return $result;
 }
+
+
 function _ed_check_if_answered($uid, $tnid){
   $query = db_select('node', 'n');
   $query->join('field_data_field_ref_to_task', 'ref', 'n.nid = ref.entity_id');
@@ -1856,7 +1905,6 @@ function _ed_check_if_answered($uid, $tnid){
   $query->condition('ref.field_ref_to_task_target_id', $tnid);
   $result = $query->execute()->fetchCol();
   if(!empty($result)){
-    
     return TRUE;
   } else {
     return FALSE;
@@ -1865,9 +1913,27 @@ function _ed_check_if_answered($uid, $tnid){
   
 }
 
+function _ed_get_last_grade($answer) {
+  $answernode = node_load($answer);
+  $groupnid = $answernode->og_group_ref[LANGUAGE_NONE][0]['target_id'];
+  $group = node_load($groupnid);
+  $groupadmins = _ed_cluster_get_group_admins($group, true);
+
+  $query = db_select('comment', 'c');
+  $query->join('field_data_ed_answer_grade', 's', 'c.cid = s.entity_id');
+  $query->fields('s',array('ed_answer_grade_value'));
+  $query->condition('c.nid', $answer);
+  $query->condition('c.uid', $groupadmins, 'IN');
+  $result = $query->execute()->fetchCol();
+
+  if (count($result) == 0) return 0;
+  return $result[count($result) - 1];
+}
+
+
+
+
 function _ed_check_if_accepted($answer){
-  
-  
   $answernode = node_load($answer);
   //dpm($answernode);
   $groupnid = $answernode->og_group_ref[LANGUAGE_NONE][0]['target_id'];
@@ -1887,8 +1953,6 @@ function _ed_check_if_accepted($answer){
   //print_r($answer.' comment_count '.$answernode->comment_count. ' last_comment_uid '.$answernode->last_comment_uid. '<br/>');
 
   return $result;
-
-
 }
 
 /*
@@ -2195,6 +2259,12 @@ function ed_cluster_form_alter(&$form, &$form_state, $form_id) {
     if (empty($form['#node']->nid)) {
       drupal_set_title(t('Create Group'));
     }
+
+    // swap featured image and access order
+    $tmp = $form['ed_field_featured_image']['#weight'];
+    $form['ed_field_featured_image']['#weight'] = $form['group_access']['#weight'];
+    $form['group_access']['#weight'] = $tmp;
+
   }
   // Change group user add form autocomplete to our own endpoint.
   if ('og_ui_add_users' == $form_id) {
@@ -2595,3 +2665,35 @@ function ed_cluster_page_alter(&$page){
     );
   }
 }
+
+/**
+ * Implements hook_node_access
+ */
+function ed_cluster_node_access($node, $op, $account) {
+  if (in_array('supervisor', $account->roles) && $op == 'view') return NODE_ACCESS_ALLOW; 
+}
+
+
+/**
+ * Implements hook_field_formatter_info_alter
+ */
+function ed_cluster_field_formatter_info_alter(&$info) {
+  $info['og_group_subscribe']['module'] = 'ed_cluster';
+}
+
+/**
+ * Implements hook_field_formatter_view
+ */
+function ed_cluster_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  $element = og_ui_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display);
+
+  // Remove membership request if group inactive
+  if (isset($element[0]) && isset($element[0]['#title']) && $element[0]['#title'] == 'Request group membership') {
+    if ($entity->ed_field_group_state['und'][0]['value'] == 0) {
+      unset($element[0]);
+    }
+  }
+
+  return $element;
+}
+

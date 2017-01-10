@@ -346,6 +346,28 @@ function ed_answer_update_7111(&$sandbox){
   
 }
 
+/**
+ * Add grade field to ed_answer
+ */
+function ed_answer_update_7112(&$sandbox) {
+    $field = array(
+        'field_name' => 'ed_answer_grade',
+        'type' => 'number_integer',
+        'module' => 'ed_answer',
+        'cardinality' => 1,
+    );
+    field_create_field($field);
+
+    $instance = array(
+        'field_name' => 'ed_answer_grade',
+        'label' => t('Grade'),
+        'entity_type' => 'comment',
+        'bundle' => 'comment_node_ed_answer',
+      );
+    field_create_instance($instance);
+
+}
+
 
 /**
  * Add na value to ed_answer_status field

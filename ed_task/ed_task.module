@@ -201,7 +201,9 @@ function ed_task_listing_page() {
           if(empty($status)){
             $tasknodesgroupedbystatus['unchecked'][$key] = $tasknode;
           }else{
-            switch($status[0]){
+            $status_last = _ed_last_status($status);
+
+            switch($status_last){
               case 'rejected':
                 $tasknodesgroupedbystatus['rejected'][$key] = $tasknode;
                 break;
@@ -251,8 +253,24 @@ function ed_task_listing_page() {
     $current_page = pager_default_initialize(count($tasknodessorted), $per_page, 2);
     
     $chunks = array_chunk($tasknodessorted, $per_page, TRUE);
-    
-    
+
+    //attach answered data
+    foreach($chunks[$current_page] as &$tasknode) {
+      $answer_nid = _ed_get_answer_nid($user->uid, $tasknode->nid); 
+      $tasknode->is_answered = !empty($answer_nid);
+      if ($tasknode->is_answered) $tasknode->answer_nid = $answer_nid[0];
+      unset($tasknode);
+    }; 
+
+    // sort by unanswered first, due date second, created last
+    usort($chunks[$current_page], function($a, $b) {
+      if (!$a->is_answered && $b->is_answered) return -1;
+      if (!$b->is_answered && $a->is_answered) return 1;
+      $d = $a->ed_task_due_date[LANGUAGE_NONE][0]['value'] - $b->ed_task_due_date[LANGUAGE_NONE][0]['value'];
+      if ($d == 0) return $b->created - $a->created;
+      return $d;
+    });
+
     foreach($chunks[$current_page] as $tasknode){
       $shared_to_arr = array();
       if( isset($tasknode->og_group_ref[LANGUAGE_NONE]['0']['target_id']) ){
@@ -268,30 +286,34 @@ function ed_task_listing_page() {
 
 
       $shared_to_arr = implode(', ', $shared_to_arr);
-      $isanswered = _ed_check_if_answered($user->uid, $tasknode->nid);
+
       $tmp_data = array('data' => '', 'class' => '');
-      if($isanswered){
-        $tmp_answer_nid = _ed_get_answer_nid($user->uid, $tasknode->nid);                             
-        $status = _ed_check_if_accepted($tmp_answer_nid[0]);
+      if($tasknode->is_answered){                          
+        $status = _ed_check_if_accepted($tasknode->answer_nid);
+        $status_last = _ed_last_status($status);
        
-        switch($status ? $status[0] : 'invalid'){
+        switch($status ? $status_last : 'invalid'){
           case('accepted'):
             $tmp_data['class'] = 'answered';
-            $tmp_data['data'] = l(t('Answered, Accepted'), 'node/' . $tmp_answer_nid[0], array('html' => TRUE));
+            $tmp_data['data'] = t('Answered, Accepted');
             $tmp_data['title'] = t('Accepted');
           break;
           case('rejected'):
             $tmp_data['class'] = 'rejected';
-            $tmp_data['data'] = l(t('Answered, Rejected'), 'node/' . $tmp_answer_nid[0], array('html' => TRUE));
+            $tmp_data['data'] = t('Answered, Rejected');
             $tmp_data['title'] = t('Rejected');                
           break;
           case('unchecked'):
           default:
             $tmp_data['class'] = 'unchecked';
-            $tmp_data['data'] = l(t('Answered, Unchecked'), 'node/' . $tmp_answer_nid[0], array('html' => TRUE));
+            $tmp_data['data'] = t('Answered, Unchecked'); 
             $tmp_data['title'] = t('Unchecked');
           break;
         }
+
+        $grade = _ed_get_last_grade($tasknode->answer_nid);
+        $grade_str = $grade == 0 ? "" : t(', Graded ') . $grade;
+        $tmp_data['data'] = l($tmp_data['data'] . $grade_str, 'node/' . $tasknode->answer_nid, array('html' => TRUE));
              
       }else{
         $tmp_data['class'] = 'unanswered';
@@ -315,7 +337,6 @@ function ed_task_listing_page() {
           ),
         );
     }
-
 
   
   //@TODO: There are so many things wrong right here ..
@@ -654,6 +675,14 @@ function _ed_get_group_tasks(){
 
 }
 
+/* Return last in status array that isn't unchecked */
+function _ed_last_status($statuses) {
+  for ($i = count($statuses) - 1; $i >= 0; $i--) {
+    if ($statuses[$i] != 'unchecked') return $statuses[$i];
+  }
+  return 'unchecked';
+}
+
 /**
  * Returns count of unanswered tasks for a user. 
  * 
@@ -739,16 +768,15 @@ function _ed_get_user_unanswered_tasks_count($account) {
     $unansweredcount = 0;
 
 
-
+    // Count unanswered as unanswered and rejected (not unchecked)
     foreach($task_nids as $tasknid){
-      if(!(_ed_check_if_answered($account->uid, $tasknid))){
+      if(!(_ed_check_if_answered($account->uid, $tasknid))) {
         $unansweredcount++;
-      }else{
+      } else {
         $tmp_answer_nid = _ed_get_answer_nid($account->uid, $tasknid);
         $status = _ed_check_if_accepted($tmp_answer_nid[0]);
-        if(!empty($status) && $status[0] == 'rejected'){
-          $unansweredcount++;
-        }
+        $status_last = _ed_last_status($status);
+        if($status_last == 'rejected') $unansweredcount++;
       }
     }
     return $unansweredcount;
