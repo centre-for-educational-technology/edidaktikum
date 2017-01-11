@@ -1013,4 +1013,282 @@ function edidaktikum_views_query_alter(&$view, &$query){
 }*/
 
 
+//  used for arrays of keyed arrays
+//  concentrates keyed values into arrays where applicable by main key
+//  useful for things like left joined sql results
+function ed_util_concentrate_keyed_arrays($arr, $main_key) {
+  $map = [];
+  $ret = [];
+
+  foreach ($arr as &$item) {
+    $key = $item[$main_key];
+
+    if (!isset($map[$key])) {
+
+      $map[$key] = count($ret);
+      $ret []= $item;
+      $item['###collecting###'] = [];
+
+    } else {
+
+      $original = &$ret[$map[$key]];
+      foreach (array_keys($item) as $attr) {
+        if ($original[$attr] != $item[$attr]) {
+          if (!isset($original['###collecting###'][$attr])) {
+            $original['###collecting###'][$attr] = true;
+            $original[$attr] = [$original[$attr], $item[$attr]];
+          } else {
+            $original[$attr] []= $item[$attr];
+          }
+        }
+      }
+
+    }
+
+  }
+
+  foreach ($ret as &$item) {
+    if (isset($item['###collecting###'])) unset($item['###collecting###']);
+  }
+
+  return $ret;
+}
+
+//  used for arrays of keyed arrays
+//  renames a key of the keyed arrays in array
+function ed_util_rename_key_of_arrays($arr, $old_name, $new_name) {
+  foreach ($arr as &$item) {
+    $item[$new_name] = $item[$old_name];
+    unset($item[$old_name]);
+  }
+  return $arr;
+}
+
+//  gets group members ['uid']
+//  $gid: the group id
+//  $b_full_name: optionally adds full names ['full_name']
+//  $b_roles: optionally adds group roles ['roles']
+//  $b_study_groups_ optionally adds study groups ['study_groups']
+function ed_get_group_members($gid, $b_full_name = false, $b_roles = false, $b_study_groups = false) {
+  //  get group members
+  $q = db_select('og_membership', 'ogm');
+  $q->condition('ogm.gid', $gid);
+  $q->condition('ogm.entity_type', 'user');
+  $q->join('users', 'u', 'u.uid = ogm.etid AND u.status = 1'); 
+  $q->fields('u', ['uid']);
+
+  //  optionally with full names
+  if ($b_full_name) {
+    $q->join('field_data_ed_field_full_name', 'fn', 'fn.entity_id = ogm.etid');
+    $q->fields('fn', ['ed_field_full_name_value']);
+    $q->orderBy('ed_field_full_name_value', 'ASC');
+  }
+
+  //  optionally with study groups
+  if ($b_study_groups) {
+    $q->leftJoin('field_data_ed_field_study_group', 'sg', 'sg.entity_id = ogm.etid');
+    $q->fields('sg', ['ed_field_study_group_value']);
+  }
+
+  $members = $q->execute()->fetchAll(PDO::FETCH_ASSOC);
+  unset($q);
+
+  //  fetch roles 
+  if ($b_roles) {
+
+    //  get group creator id
+    $q = db_select('node', 'n');
+    $q->condition('n.nid', $gid);
+    $q->fields('n', ['uid']);
+    $creator_uid = $q->execute()->fetchCol()[0];
+    unset($q);
+
+    //  get group role names
+    $og_role_names = [];
+    $q = db_select('og_role', 'ogr');
+    $q->fields('ogr', ['rid', 'name']);
+    $tmp = $q->execute()->fetchAll(PDO::FETCH_ASSOC);
+    unset($q);
+    foreach ($tmp as $role) $og_role_names[$role['rid']] = $role['name']; 
+
+    //  process members
+    foreach($members as &$member) {
+      //  from og user roles
+      $q = db_select('og_users_roles', 'ogur');
+      $q->condition('uid', $member['uid']);
+      $q->condition('gid', $gid);
+      $q->fields('ogur', ['rid']);
+      $role_ids = $q->execute()->fetchCol();
+      $member['roles'] = [];
+      foreach($role_ids as $id) array_push($member['roles'], $og_role_names[$id]);
+
+      //  or if creator
+      if ($member['uid'] == $creator_uid) array_push($member['roles'], OG_ADMINISTRATOR_ROLE);
+    }   
+  }
+
+  //  process each
+  if ($b_full_name) $members = ed_util_rename_key_of_arrays($members, 'ed_field_full_name_value', 'full_name');
+  if ($b_study_groups) $members = ed_util_rename_key_of_arrays($members, 'ed_field_study_group_value', 'study_groups');
+
+  return $members;
+}
+
+//  gets group tasks ['nid', 'title']
+//  $gid: the group id
+//  $b_due_date: optionally adds due dates ['due_date']
+//  $b_study_group: optionally adds study groups ['study_groups']
+//  $b_targeted_members: optionally adds targeted members ['targeted_member_ids']
+function ed_get_group_tasks($gid, $b_due_date = false, $b_study_groups = false, $b_targeted_members = false) {
+  //  get group tasks
+  $q = db_select('og_membership', 'ogm');
+  $q->condition('ogm.gid', $gid);
+  $q->condition('ogm.entity_type', 'node');
+  $q->join('node', 'n', 'n.nid = ogm.etid AND n.type = \'ed_task\' AND n.status = 1');
+  $q->fields('n', ['nid', 'title']);
+
+  //  optionally with due date
+  if ($b_due_date) {
+    $q->join('field_data_ed_task_due_date', 'dd', 'dd.entity_id = ogm.etid');
+    $q->fields('dd', ['ed_task_due_date_value']);
+  }
+
+  //  optionally with study groups
+  if ($b_study_groups) {
+    $q->leftJoin('field_data_ed_task_field_study_group', 'sg', 'sg.entity_id = ogm.etid');
+    $q->fields('sg', ['ed_task_field_study_group_value']);
+  }
+
+  //  optionally with targeted members
+  if ($b_targeted_members) {
+    $q->leftJoin('field_data_ed_field_to_group_member', 'tm', 'tm.entity_id = ogm.etid');
+    $q->fields('tm', ['ed_field_to_group_member_target_id']);
+  }
+
+
+  $tasks = $q->execute()->fetchAll(PDO::FETCH_ASSOC);
+
+  //  roll up and rename study groups
+  if ($b_study_groups) $tasks = ed_util_concentrate_keyed_arrays($tasks, 'nid');
+
+  //  process each
+  if ($b_due_date) $tasks = ed_util_rename_key_of_arrays($tasks, 'ed_task_due_date_value', 'due_date');
+  if ($b_study_groups) $tasks = ed_util_rename_key_of_arrays($tasks, 'ed_task_field_study_group_value', 'study_groups');
+  if ($b_targeted_members) $tasks = ed_util_rename_key_of_arrays($tasks, 'ed_field_to_group_member_target_id', 'targeted_member_ids');
+
+  return $tasks;
+}
+
+//  checks if task is applicable to member
+//  $task: result item of ed_get_group_tasks with study groups and targeted member ids
+//  $member: result item of ed_get_group_members with study groups
+function ed_is_task_applicable($task, $member) {
+  $applicable = true;                                             //  default true
+
+  if (is_array($task['study_groups'])) {
+    $applicable = false;                                          //  excluded by presence of groups
+    if (is_array($member['study_groups'])) {
+      foreach ($member['study_groups'] as $study_group) {
+        if (in_array($study_group, $task['study_groups'])) {
+          $applicable = true;                                     //  included if member is in group
+          break;
+        }
+      }
+    }
+
+    if (is_array($task['targeted_member_ids'])) {
+      foreach($task['targeted_member_ids'] as $tid) {
+        if ($tid == $member['uid']) {
+          $applicable = true;                                     //  included if member is targeted
+          break;
+        }
+      }
+    }
+  } 
+
+  return $applicable;
+}
+
+//  gets a task answer ['nid', 'created', 'changed']
+//  $task_id: the task id
+//  $uid: the user id
+//  $b_content: optionally adds answer content ['content']
+//  $group_members: optionally adds answer status and comment ['status', 'grade']
+//  if provided with the output of ed_get_group_members with roles 
+function ed_get_answer($task_id, $uid, $b_content = false, $group_members = false) {
+
+  //  find answer id from task id and user id
+  $q = db_select('field_data_field_ref_to_task', 'rt');
+  $q->condition('rt.field_ref_to_task_target_id', $task_id);
+  $q->join('node', 'n', 'n.nid = rt.entity_id AND n.uid = :uid AND n.status = 1', ['uid' => $uid]);
+  $q->fields('n', ['nid', 'created', 'changed']);
+  $q->range(0, 1);
+
+  //  optionally with content
+  if ($b_content) {
+    $q->join('field_data_ed_field_content', 'fc', 'fc.entity_id = rt.entity_id');
+    $q->fields('fc', ['ed_field_content_value']);
+  }
+
+  $answers = $q->execute()->fetchAll(PDO::FETCH_ASSOC);
+  unset($q);
+
+  //  if no answer
+  if (count($answers) == 0) return ['status' => 'unanswered'];
+  $answer = $answers[0];
+
+  //  process
+  if ($b_content) {
+    $answer['content'] = $answer['ed_field_content_value']; 
+    unset($answer['ed_field_content_value']);
+  }
+
+  //  if comment and grade
+  if ($group_members !== false) {
+    //  get admin uid's
+    $admin_uids = [];
+    foreach ($group_members as $member) {
+      if (in_array(OG_ADMINISTRATOR_ROLE, $member['roles'])) array_push($admin_uids, $member['uid']);
+    }
+
+
+    //  get all comments regarding the answer node ordered backwards chronologically
+    $q = db_select('comment', 'c');
+    $q->condition('nid', $answer['nid']);
+    $q->fields('c', ['uid']);
+    $q->orderBy('created', 'DESC');
+
+    $q->leftJoin('field_data_ed_answer_grade', 'fg', 'fg.entity_id = c.cid');
+    $q->fields('fg', ['ed_answer_grade_value']);
+
+    $q->leftJoin('field_data_ed_answer_status', 'fs', 'fs.entity_id = c.cid');
+    $q->fields('fs', ['ed_answer_status_value']);
+
+    $comments = $q->execute()->fetchAll(PDO::FETCH_ASSOC);
+    unset($q);
+
+    //  get last grade from an admin role user
+    $answer['grade'] = 0;
+    for ($i = 0; $i < count($comments); $i++) {
+      if ($comments[$i]['ed_answer_grade_value'] != NULL && in_array($comments[$i]['uid'], $admin_uids)) {
+        $answer['grade'] = $comments[$i]['ed_answer_grade_value'];
+        break;
+      }
+    }
+
+    //  get last status from an admin role user
+    $answer['status'] = 'unchecked';
+    for ($i = 0; $i < count($comments); $i++) {
+      if ($comments[$i]['ed_answer_status_value'] != NULL && in_array($comments[$i]['uid'], $admin_uids)) {
+        $answer['status'] = $comments[$i]['ed_answer_status_value'];
+        break;
+      }
+    }
+
+    unset ($q);
+  }
+
+  return $answer;
+}
+
 
