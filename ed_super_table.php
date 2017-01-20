@@ -12,57 +12,29 @@
 	//	no headers: [['cell 1x1']]
 
 	function ed_super_table_render($data) {
-
-		//	test data
-		$data = [
-			'row1' => ['col1' => '1x1'],
-			'row2' => ['col1' => '1x2']
-		];
-
-		/*
-		$data = [
-			['col1' => '1x1'],
-			['col1' => '1x2']
-		];
-
-		$data = [
-			['1x1'],
-			['1x2']
-		];
-
-		$data = [
-			'row1' => ['1x1'],
-			'row2' => ['1x2']
-		];
-		*/
+		return "";
 		
-
-		if (count($data) < 1) return '';
-
-		//	standardize data
-		$has_row_titles = !isset($data[0]);
-		$row_titles = [];
-
-		$has_col_titles = !isset($data[key($data)][0]);
-		$col_titles = [];
-
-		foreach ($data as $row_title => $row_data) {
-			if ($has_row_titles && !array_key_exists($row_title, $row_titles)) array_push($row_titles, $row_title);
-			if (!$has_col_titles) continue;
-			foreach ($row_data as $col_title => $cell_data) {
-				if (!array_key_exists($col_title, $col_titles)) array_push($col_titles, $col_title);
+		$tasks = ed_get_group_tasks(149, true, true, true);	
+		$members = ed_get_group_members(149, true, true, true);
+			
+		$answers = [];
+		for ($x = 0; $x < count($tasks); $x++) {
+			for ($y = 0; $y < count($members); $y++) {
+				array_push($answers, [
+					'data' => ed_get_answer($tasks[$x]['nid'], $members[$y]['uid'], false, $members),
+					'row' => $x,
+					'col' => $y
+				]);
 			}
 		}
 
-		$markup = "
+		$table_data = [
+			'rows' => $members,
+			'cols' => $tasks,
+			'cells' => $answers
+		];
 
-			<div data-super_table ></div>
-
-
-
-
-
-		";
+		$markup = "<script> var test_table_data = " . json_encode($table_data) . " ;</script>";
 
 		drupal_add_js(drupal_get_path('module', 'edidaktikum') . '/ed_super_table.js');
 		drupal_add_css(drupal_get_path('module', 'edidaktikum') . '/ed_super_table.css');
