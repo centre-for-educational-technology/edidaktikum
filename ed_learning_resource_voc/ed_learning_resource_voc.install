@@ -107,6 +107,10 @@ function _add_terms() {
   _create_term('ed_learning_resource_language_voc', t('Estonian'), t('Estonian'));
   _create_term('ed_learning_resource_language_voc', t('Russian'), t('Russian'));
 
+  _create_term('ed_learning_resource_language_voc', t('Finnish'), t('Finnish'));
+  _create_term('ed_learning_resource_language_voc', t('German'), t('German'));
+  _create_term('ed_learning_resource_language_voc', t('French'), t('French'));
+
   //Learning Resource tags: @todo put true values here
   /*_create_term('ed_learning_resource_tags_voc', t('Mathematics'), t('Mathematics'));
   _create_term('ed_learning_resource_tags_voc', t('Biology'), t('Biology'));
@@ -148,4 +152,11 @@ function _create_term($vocab, $term, $desc='', $weight = 0) {
  */
 function ed_learning_resource_voc_update_7100(&$sandbox){
   _create_term('ed_learning_resource_type_voc', t('other'), t('other'));
+}
+
+
+function ed_learning_resource_voc_update_7101(&$sandbox){
+  _create_term('ed_learning_resource_language_voc', t('Finnish'), t('Finnish'));
+  _create_term('ed_learning_resource_language_voc', t('German'), t('German'));
+  _create_term('ed_learning_resource_language_voc', t('French'), t('French'));
 }
