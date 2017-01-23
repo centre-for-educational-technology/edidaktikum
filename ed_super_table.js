@@ -1,76 +1,31 @@
+{	//edf namespace and basic utilities 
 
-
-var data1 = [
-	['1x1', '2x1'],
-	['2x1', '2x2']
-];
-
-var data2 = [
-	{'col1' : '1x1', 'col2' : '2x1'},
-	{'col1' : '1x2', 'col2' : '2x2'}
-];
-
-var data3 = {
-	'row1' : ['1x1', '2x1'],
-	'row2' : ['2x1', '2x2']
-};
-
-var data4 = {
-	'row1' : {'col1' : '1x1', 'col2' : '2x1'},
-	'row2' : {'col1' : '1x2', 'col2' : '2x2', 'col3' : '3x2'}
+	window['edf'] = {
+		'isdef' : function(x) { return typeof x !== 'undefined'; },
+		'optional' : function(x, def) { return edf.isdef(x) ? x : def; },
+		'filter' : function(collection, predicate) {
+			var ret = [];
+			for (var i = 0; i < collection.length; i++) {
+				if (predicate(collection[i])) ret.push(collection[i]);
+			}
+			return ret;
+		}
+	}
 }
 
-{	//	super_table_data
 
-	function super_table_data(data) {
-		var has_row_titles = !(data instanceof Array);
-		var has_col_titles = !(data[Object.keys(data)[0]] instanceof Array);
+{	//	edf.drag_handler
 
-		//	either use provided row titles or fill with empty strings
-		this.row_titles = has_row_titles ? Object.keys(data) : Array.apply(null, Array(data.length)).map(String.prototype.valueOf,"");
-		this.height = this.row_titles.length;
+	/*
+		generic drag handling utility
+	
+		constructor:
+			el 			- DOM element 					- the element to click on to start the drag
+			callback 	- function(delta_x, delta_y) 	- is called when mouse moves while dragging
+			button 		- "left", "right", "middle" 	- determines the mouse button used for dragging
+	*/
 
-		//	either create a superset of column titles or fill with empty strings
-		if (has_col_titles) {
-			var temp = {};
-			for (var y = 0; y < Object.keys(data).length; y++) {
-				for (var col_key in data[Object.keys(data)[y]]) temp[col_key] = undefined;
-			}
-			this.col_titles = Object.keys(temp);
-		} else {
-			var len = 0;
-			for (var y = 0; y < Object.keys(data).length; y++) {
-				len = Math.max(data[Object.keys(data)[y]].length);
-			}
-			this.col_titles = Array.apply(null, Array(len)).map(String.prototype.valueOf,"")
-		}
-		this.width = this.col_titles.length;
-
-		//	collect data into fixed array, any missing data is filled by an empty string
-		this.data = new Array(this.height);
-
-		if (has_col_titles) {
-			for (var y = 0; y < Object.keys(data).length; y++) {
-				this.data[y] = Array.apply(null, Array(this.width)).map(String.prototype.valueOf,"");
-				var row = data[Object.keys(data)[y]];
-				for (var x = 0; x < this.width; x++) {
-					if (this.col_titles[x] in row) this.data[y][x] = row[this.col_titles[x]]
-				}
-			}
-		} else {
-			for (var y = 0; y < Object.keys(data).length; y++) {
-				this.data[y] = Array.apply(null, Array(this.width)).map(String.prototype.valueOf,"");
-				var row = data[Object.keys(data)[y]];
-				for (var x = 0; x < row.length; x++) this.data[y][x] = row[x]
-			}
-		}
-
-	};
-}
-
-{	//	super_drag_handler
-
-	function super_drag_handler(el, callback, button) {
+	edf.drag_handler = function (el, callback, button) {
 		this.button_mask = (button == "left" ? 1 : (button == "right" ? 2 : 4));
 		this.callback = callback;
 
@@ -96,6 +51,116 @@ var data4 = {
 	}
 
 }
+
+
+{	//	edf.table_data
+
+	/*
+		standard data format
+
+		interfaces:
+			i_cell
+				.row	- {}	- associated i_header object
+				.col	- {}	- associated i_header object
+				.data	- {}	- object data
+
+			i_header
+				.data	- {}	- object data
+				.cells	- {}	- associated i_cell objects indexed by corresponding i_header object
+
+		members: 
+			rows		- [] of i_header	- array of i_header objects, order is guaranteed
+			cols		- [] of i_header	- array of i_header objects, order is guaranteed
+			cells		- [] of i_cell		- array of i_cell objects
+
+		constructor: 
+			refer to import_data
+	*/
+
+	edf.table_data = function(rows, cols, cells) {
+		this.rows = [];
+		this.cols = [];
+		this.cells = [];
+
+		import_data(rows, cols, cells);
+	}
+
+	{	//	width, height
+		Object.defineProperty(edf.table_data.prototype, 'width', {
+			'get' : function() { return this.cols.length; }
+		});
+
+		Object.defineProperty(edf.table_data.prototype, 'height', {
+			'get' : function() { return this.rows.length; }
+		});
+	}
+
+	{	//	import_data
+		/*
+			interfaces:
+				i_cell_json
+					.row	- Number	- row association with N'th row object in this table
+					.col	- Number	- col association with N'th col object in this table
+					.data	- {}		- cell data object
+
+			arguments:
+				rows	- []				- array of row objects
+				cols	- []				- array of col objects
+				cells	- [] of i_cell_json	- array of objects implementing i_cell_json
+
+		*/
+
+		edf.table_data.prototype.import_data = function(rows, cols, cells) {
+			//	arguments
+			rows = edf.optional(rows, []);
+			cols = edf.optional(cols, []);
+			cells = edf.optional(cells, []);
+
+			//	import
+			for (var i = 0; i < rows.length; i++) {
+				var row = { 'data' : rows[i], 'cells' : {} };
+				this.rows.push(row);
+			}
+
+			for (var i = 0; i < cols.length; i++) {
+				var col = { 'data' : cols[i], 'cells' : {} };
+				this.cols.push(col);
+			}
+
+			for (var i = 0; i < cells.length; i++) {
+				var cell = cells[i];
+				cell.row = this.rows[cells[i].row];
+				cell.col = this.cols[cells[i].col];
+				cell.row.cells[cell.col] = cell;
+				cell.col.cells[cell.row] = cell;
+				this.cells.push(cell);
+			}
+		}
+	}
+
+	edf.table_data.prototype.filter_rows = function(predicate) {
+		this.rows = edf.filter(this.rows, function(row) { return predicate(row.data); });
+	}
+
+	edf.table_data.prototype.filter_cols = function(predicate) {
+		this.cols = edf.filter(this.cols, function(col) { return predicate(col.data); });
+	}
+
+	edf.table_data.prototype.sort_rows = function(predicate) {
+		this.rows.sort(predicate);
+	}
+
+	edf.table_data.prototype.sort_cols = function(predicate) {
+		this.cols.sort(predicate);
+	}
+
+}
+
+
+
+
+
+
 
 
 {	//	super_table
@@ -240,6 +305,7 @@ var data4 = {
 }
 
 window.addEventListener("load", function() {
-	var testy = document.querySelector('[data-super_table]');
-	new super_table(testy);
+
+	
+
 });

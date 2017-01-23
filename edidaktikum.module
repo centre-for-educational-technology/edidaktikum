@@ -1012,43 +1012,27 @@ function edidaktikum_views_query_alter(&$view, &$query){
   dpm($query, __FUNCTION__);
 }*/
 
-
 //  used for arrays of keyed arrays
-//  concentrates keyed values into arrays where applicable by main key
+//  concentrates a member of the keyed arrays into an array
 //  useful for things like left joined sql results
-function ed_util_concentrate_keyed_arrays($arr, $main_key) {
+//  example: 
+//    ed_util_array_concentrate_member([ ['id' => 1, 'value' => 1], ['id' => 1, 'value' => 2] ], 'id', 'value')
+//    returns: ['id' => 1, 'value' => [1, 2]];
+function ed_util_array_concentrate_member($arr, $primary_key, $concentrate_key) {
   $map = [];
   $ret = [];
 
-  foreach ($arr as &$item) {
-    $key = $item[$main_key];
+  foreach($arr as &$item) {
+    $key = $item[$primary_key];
 
-    if (!isset($map[$key])) {
-
-      $map[$key] = count($ret);
-      $ret []= $item;
-      $item['###collecting###'] = [];
-
+    if (!isset($map[$key])) {   
+      $item[$concentrate_key] = empty($item[$concentrate_key]) ? [] : [ $item[$concentrate_key] ];
+      $ret []=& $item;
+      $map[$key] =& $item;
     } else {
-
-      $original = &$ret[$map[$key]];
-      foreach (array_keys($item) as $attr) {
-        if ($original[$attr] != $item[$attr]) {
-          if (!isset($original['###collecting###'][$attr])) {
-            $original['###collecting###'][$attr] = true;
-            $original[$attr] = [$original[$attr], $item[$attr]];
-          } else {
-            $original[$attr] []= $item[$attr];
-          }
-        }
-      }
-
+      $original =& $map[$key];
+      if (!empty($item[$concentrate_key])) $original[$concentrate_key] []= $item[$concentrate_key];
     }
-
-  }
-
-  foreach ($ret as &$item) {
-    if (isset($item['###collecting###'])) unset($item['###collecting###']);
   }
 
   return $ret;
@@ -1127,9 +1111,15 @@ function ed_get_group_members($gid, $b_full_name = false, $b_roles = false, $b_s
     }   
   }
 
-  //  process each
-  if ($b_full_name) $members = ed_util_rename_key_of_arrays($members, 'ed_field_full_name_value', 'full_name');
-  if ($b_study_groups) $members = ed_util_rename_key_of_arrays($members, 'ed_field_study_group_value', 'study_groups');
+  //  roll up
+  if ($b_full_name) {
+    $members = ed_util_rename_key_of_arrays($members, 'ed_field_full_name_value', 'full_name');
+  }
+
+  if ($b_study_groups) {
+    $members = ed_util_rename_key_of_arrays($members, 'ed_field_study_group_value', 'study_groups');
+    $members = ed_util_array_concentrate_member($members, 'uid', 'study_groups');
+  }
 
   return $members;
 }
@@ -1168,13 +1158,18 @@ function ed_get_group_tasks($gid, $b_due_date = false, $b_study_groups = false, 
 
   $tasks = $q->execute()->fetchAll(PDO::FETCH_ASSOC);
 
-  //  roll up and rename study groups
-  if ($b_study_groups) $tasks = ed_util_concentrate_keyed_arrays($tasks, 'nid');
+  if ($b_study_groups) {
+    $tasks = ed_util_rename_key_of_arrays($tasks, 'ed_task_field_study_group_value', 'study_groups');
+    $tasks = ed_util_array_concentrate_member($tasks, 'nid', 'study_groups');
+  }
 
-  //  process each
+  if ($b_targeted_members) {
+    $tasks = ed_util_rename_key_of_arrays($tasks, 'ed_field_to_group_member_target_id', 'targeted_member_ids');
+    $tasks = ed_util_array_concentrate_member($tasks, 'nid', 'targeted_member_ids');
+  }
+
   if ($b_due_date) $tasks = ed_util_rename_key_of_arrays($tasks, 'ed_task_due_date_value', 'due_date');
-  if ($b_study_groups) $tasks = ed_util_rename_key_of_arrays($tasks, 'ed_task_field_study_group_value', 'study_groups');
-  if ($b_targeted_members) $tasks = ed_util_rename_key_of_arrays($tasks, 'ed_field_to_group_member_target_id', 'targeted_member_ids');
+
 
   return $tasks;
 }
@@ -1185,18 +1180,16 @@ function ed_get_group_tasks($gid, $b_due_date = false, $b_study_groups = false, 
 function ed_is_task_applicable($task, $member) {
   $applicable = true;                                             //  default true
 
-  if (is_array($task['study_groups'])) {
+  if (count($task['study_groups']) > 0) {
     $applicable = false;                                          //  excluded by presence of groups
-    if (is_array($member['study_groups'])) {
-      foreach ($member['study_groups'] as $study_group) {
-        if (in_array($study_group, $task['study_groups'])) {
-          $applicable = true;                                     //  included if member is in group
-          break;
-        }
+    foreach ($member['study_groups'] as $study_group) {
+      if (in_array($study_group, $task['study_groups'])) {
+        $applicable = true;                                     //  included if member is in group
+        break;
       }
     }
 
-    if (is_array($task['targeted_member_ids'])) {
+    if (count($task['targeted_member_ids']) > 0) {
       foreach($task['targeted_member_ids'] as $tid) {
         if ($tid == $member['uid']) {
           $applicable = true;                                     //  included if member is targeted
