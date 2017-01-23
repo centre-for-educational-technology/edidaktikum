@@ -38,7 +38,7 @@ function ed_subgroup_menu(){
   $items['node/%node/news'] = array(
     'title' => t('News'),
     'page callback' => 'ed_listing_from_group',
-    'access callback' => 'ed_subgroup_content_listing_access',    
+    'access callback' => 'ed_subgroup_content_listing_access',
     'page arguments' => array('node', 1, 'ed_news'),
     'access arguments' => array('node', 1, 'ed_news'),
     'type' => MENU_LOCAL_TASK,
@@ -46,7 +46,7 @@ function ed_subgroup_menu(){
   );
   $items['node/%node/task-manager'] = array(
     'title' => t('Task Manager'),
-    'page callback' => 'ed_task_manager',    
+    'page callback' => 'ed_task_manager',
     'access callback' => 'ed_task_manager_access',
     'page arguments' => array('node', 1),
     'access arguments' => array('node', 1),
@@ -55,8 +55,8 @@ function ed_subgroup_menu(){
   );
   $items['node/%node/event'] = array(
     'title' => t('Events'),
-    'page callback' => 'ed_listing_from_group',    
-    'access callback' => 'ed_subgroup_content_listing_access',     
+    'page callback' => 'ed_listing_from_group',
+    'access callback' => 'ed_subgroup_content_listing_access',
     'page arguments' => array('node', 1, 'ed_event'),
     'access arguments' => array('node', 1, 'ed_event'),
     'type' => MENU_LOCAL_TASK,
@@ -73,8 +73,8 @@ function ed_subgroup_menu(){
   );
   $items['node/%node/learning-resource'] = array(
     'title' => t('Learning Resources'),
-    'page callback' => 'ed_listing_from_group',    
-    'access callback' => 'ed_subgroup_content_listing_access',    
+    'page callback' => 'ed_listing_from_group',
+    'access callback' => 'ed_subgroup_content_listing_access',
     'page arguments' => array('node', 1, 'ed_learning_resource'),
     'access arguments' => array('node', 1, 'ed_learning_resource'),
     'type' => MENU_LOCAL_TASK,
@@ -82,14 +82,14 @@ function ed_subgroup_menu(){
   );
   $items['node/%node/forum'] = array(
     'title' => t('Discussion Board'),
-    'page callback' => 'ed_listing_from_group',    
-    'access callback' => 'ed_subgroup_content_listing_access',    
+    'page callback' => 'ed_listing_from_group',
+    'access callback' => 'ed_subgroup_content_listing_access',
     'page arguments' => array('node', 1, 'ed_forum'),
     'access arguments' => array('node', 1, 'ed_forum'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 50,
   );
-  
+
   $items['node/%node/bookmark'] = array(
     'title' => t('Bookmarks'),
     'page callback' => 'ed_listing_from_group',
@@ -108,12 +108,12 @@ function ed_subgroup_menu(){
     'type' => MENU_LOCAL_TASK,
     'weight' => 50,
   );
-  
+
   return $items;
 }
 
 function ed_subgroup_content_listing_access($filler, $gnode, $type){
-  $is_group = _ed_is_nid_subgroup($gnode->nid);  
+  $is_group = _ed_is_nid_subgroup($gnode->nid);
   return $is_group;
 }
 
@@ -131,14 +131,14 @@ function _ed_is_nid_subgroup($nid){
 
 
 function ed_subgroup_node_insert($node){
-  if($node->type == 'ed_subgroup'){    
+  if($node->type == 'ed_subgroup'){
     $subgroupnode = node_load($node->nid);
-    
+
     $parentgroupnode = node_load($subgroupnode->og_group_ref[LANGUAGE_NONE][0]['target_id']);
     $parentgroupadmins = _ed_cluster_get_group_admins($parentgroupnode, true);
-    
+
     foreach($parentgroupadmins as $parentgroupadmin){
-      
+
       $values = array(
         'entity_type' => 'user',
         'entity' => $parentgroupadmin,
@@ -153,16 +153,16 @@ function ed_subgroup_node_insert($node){
 
 function ed_subgroup_node_view($node, $view_mode, $langcode){
   switch ($node->type){
-    case 'ed_subgroup':      
+    case 'ed_subgroup':
       if($view_mode=='full'){
         //menu_tree_set_path('main-menu', 'clusters');
-        $content_nids = _ed_get_group_content($node->nid);      
-        $content = node_load_multiple($content_nids);        
+        $content_nids = _ed_get_group_content($node->nid);
+        $content = node_load_multiple($content_nids);
         $types = array();
-        foreach($content as $content_single){        
+        foreach($content as $content_single){
           $types[] = $content_single->type;
         }
-        
+
         if (in_array('ed_task', $types)) {
           array_unshift($types, 'ed_task');
         }
@@ -185,15 +185,15 @@ function ed_subgroup_node_view($node, $view_mode, $langcode){
               if (!ed_task_manager_access('node', $node)) {
                 $show_link = false;
               }
-            }          
-            
+            }
+
             $type_nodes_count = _ed_get_group_content_by_type_count($node->nid, $type);
-            
+
             $headingmarkup =  _ed_cluster_plural_title_for_group_node_type($type) . ' ('.t('Total') . ': ' . $type_nodes_count . ')';
             if ($show_link) {
               $headingmarkup = l($headingmarkup, _ed_cluster_destination_for_group_node_type($node, $type));
             }
-            
+
             $node->content['ed_subgroup_content'][$type]['heading'] = array(
               '#type' => 'markup',
               '#prefix' => '<h2 class="' . $type. '">',
@@ -212,7 +212,7 @@ function ed_subgroup_node_view($node, $view_mode, $langcode){
           }
         }
       }
-      
+
   }
 }
 
@@ -225,5 +225,12 @@ function ed_subgroup_field_extra_fields(){
       'weight' => 10,
     ),
   );
-  return $extra;   
+  return $extra;
+}
+
+function ed_subgroup_form_alter(&$form, $form_state, $form_id) {
+  if ($form_id == "ed_subgroup_node_form") {
+    $form['group_access'][LANGUAGE_NONE]['#default_value'] = 1;
+    $form['group_access']['#access'] = 0;
+  }
 }
