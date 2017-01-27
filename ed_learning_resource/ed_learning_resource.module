@@ -26,30 +26,30 @@ function ed_learning_resource_form($node, $form_state) {
 }
 
 function ed_learning_resource_node_view($node, $view_mode, $langcode){
+
   if($view_mode == 'front'){
     $node->picture = 0;
     $node->content['links']['comment'] = 0;
-    
   }
   if($view_mode == 'teaser'){
     $node->picture = 0;
     drupal_add_css('ul.links.inline {display: none;}', array('group' => CSS_THEME, 'type' => 'inline'));
   }
   if($view_mode == 'teaser' && $node->type == 'ed_learning_resource'){
-    
-    
-    
-    $viewscount = ed_get_views($node->nid);    
+
+
+
+    $viewscount = ed_get_views($node->nid);
     $likescount = ed_get_likes($node->nid);
     $termtype = taxonomy_term_load($node->ed_learning_resource_type[LANGUAGE_NONE][0]['value']);
     $authtids = array();
     $authorsforparts = array();
     if(!empty($node->ed_learning_resource_authors)){
-      foreach($node->ed_learning_resource_authors[LANGUAGE_NONE] as $term){        
-        array_push($authtids, $term['tid']);        
+      foreach($node->ed_learning_resource_authors[LANGUAGE_NONE] as $term){
+        array_push($authtids, $term['tid']);
       }
-      
-      $termauthors = taxonomy_term_load_multiple($authtids);      
+
+      $termauthors = taxonomy_term_load_multiple($authtids);
       foreach($termauthors as $author){
         array_push($authorsforparts, l($author->name, 'taxonomy/term/'.$author->tid));
       }
@@ -60,7 +60,7 @@ function ed_learning_resource_node_view($node, $view_mode, $langcode){
         t('Views: ').$viewscount,
         t('Likes: ').$likescount,
       );
-      
+
     }else{
       $author = user_load($node->uid);
       $username = edidaktikum_get_full_name_for_user_account($author);
@@ -72,9 +72,9 @@ function ed_learning_resource_node_view($node, $view_mode, $langcode){
         t('Likes: ').$likescount,
       );
     }
-    
-    
- 
+
+
+
     $node->content['metadata'] = array(
       '#type' => 'markup',
       '#weight' => 50,
@@ -87,7 +87,7 @@ function ed_learning_resource_node_view($node, $view_mode, $langcode){
 	if (isset($node->content['links']['comment'])) {
 	  $node->content['links']['comment']['#access'] = FALSE;
 	}
-	
+
     // TODO Use some default image if not provided
     if(!empty($node->ed_field_featured_image)){
       $imgpath = image_style_url('thumbnail', $node->ed_field_featured_image[LANGUAGE_NONE][0]['uri']);
@@ -95,8 +95,8 @@ function ed_learning_resource_node_view($node, $view_mode, $langcode){
       $node->content['cover-image'] = array(
         '#type' => 'markup',
         '#weight' => 5,
-        '#markup' => '<img src="'.$imgpath.'"/>',
-        '#prefix' => '<div class="cover-image">',
+        '#markup' => '<img src="'.$imgpath.'" style="float: left; margin: 0 20px 20px 0;" /><span>'. t($node->ed_field_excerpt['und']['0']['safe_value']) .'</span>',
+        '#prefix' => '<div class="cover image">',
         '#suffix' => '</div>',
       );
     }
@@ -163,7 +163,7 @@ function ed_learning_resource_menu() {
 }
 
 function ed_learning_resource_listing(){
-  $content = array();  
+  $content = array();
   if(node_access('create', 'ed_learning_resource')){
     $content['add-new'] = array(
       '#type' => 'link',
@@ -174,12 +174,12 @@ function ed_learning_resource_listing(){
     );
   }
   $content['sorting'] = drupal_get_form('_ed_get_sorting_options');
-  
+
   $sql_order = ed_get_sorting_type($content);
 
   $nids = _ed_get_learning_resources($sql_order);
   if(!empty($nids)){
-    $nodes = node_load_multiple($nids);    
+    $nodes = node_load_multiple($nids);
     $build = node_view_multiple($nodes);
     $build['pager'] = array(
       '#theme' => 'pager',
@@ -187,14 +187,14 @@ function ed_learning_resource_listing(){
     );
     $content['pager']['resources'] = $build;
   }
-  
-  
+
+
   return $content;
 }
 
 
 
-function _ed_get_learning_resources($order){  
+function _ed_get_learning_resources($order){
   $query = db_select('node', 'n')
     ->extend('PagerDefault')
     ->fields('n', array('nid'))
@@ -206,13 +206,13 @@ function _ed_get_learning_resources($order){
   }else{
     $query->orderBy('created', $order);
   }
-  
+
   $query->limit(ed_get_paging_nr());
   $result = $query->execute()->fetchCol();
-  
+
   return $result;
-  
-  
+
+
 }
 
 
@@ -385,4 +385,3 @@ function ed_learning_resource_field_formatter_view($entity_type, $entity, $field
 
   return $element;
 }
-
