@@ -1654,10 +1654,173 @@ function ed_task_manager_access($test, $node){
   return false;
 }
 
+//  new task manager page
+
+function ed_task_manager($test, $node) {
+  //  stuff
+  menu_tree_set_path('main-menu', 'clusters');
+  drupal_add_css(drupal_get_path('module', 'ed_cluster').'/task_manager.css');
+  drupal_add_js(drupal_get_path('module', 'ed_cluster').'/js/ed_task_manager_task_filter.js');
+
+
+  //  more stuff
+  $tasks = ed_get_group_tasks($node->nid, true, true, true);
+  $account = $GLOBALS['user'];
+  $content = [];
+
+  //  add new container button
+  $content['add-new-container'] = [
+    '#type' => 'container',
+    '#attributes' => [ 'class' => ['ed-add-new-node', 'ed-add-new-task'] ],
+
+    'add-new' => [
+      '#type' => 'markup',
+      '#markup' => l(t('Add new'), 'node/add/ed-task', 
+        [ 'attributes' => [],
+          'query' => [
+            'og_group_ref' => $node->nid,
+            'destination' => _ed_cluster_destination_for_group_node_type($node, 'ed_task')
+          ]
+        ]
+      )
+    ]
+  ];
+
+  //  filter thingy
+  $task_titles = [t('All tasks')];
+  foreach ($tasks as $task) $task_titles []= $task['title'];
+
+  $content['task-filter-container'] = [
+    '#type' => 'container',
+    '#attributes' => [ 'class' => ['ed-filter-tasks'] ],
+
+    'container' => [
+      '#type' => 'container',
+      '#attributes' => [ 'class' => ['row'] ],
+
+      'selection-box' => [
+        '#type' => 'select',
+        '#title' => t('Select task to filter'),
+        '#options' => $task_titles,
+        '#prefix' => '<div class="span4">',
+        '#suffix' => '</div>',
+        '#value' => (isset($_GET['tasknid']) ? $_GET['tasknid'] : 0),
+        '#attributes' => [
+          'class' => ['ed_task_selection_for_filtering'],
+          'data-cluster' => $node->nid
+        ]
+      ],
+
+      'submit-button' => [
+        '#type' => 'markup',
+        '#prefix' => '<div class="span4">',
+        '#suffix' => '</div>',
+        '#markup' => '<button class="btn btn-primary ed_filter_tasks">'.t('Filter').'</button>'
+      ]
+
+    ]
+  ];
+
+  //  if task id filter is set, remove all other tasks
+  if ( isset($_GET['tasknid']) ) {
+    foreach ($tasks as $task) {
+      if ($task['nid'] == $_GET['tasknid']) {
+        $tasks = [$task];
+        break;
+      }
+    }
+  }
+
+  //  get members and separate out admins
+  $members = ed_get_group_members($node->nid, true, true, true);
+  $admins = [];
+  for ($i = count($members) - 1; $i >= 0; $i--) {
+    if (in_array(OG_ADMINISTRATOR_ROLE, $members[$i]["roles"])) {
+      $admins []= $members[$i];
+      unset($members[$i]);
+    }
+  }
+
+  //  construct table headers
+  $headers = [t('Name')];
+  foreach($tasks as $task) {
+    $header = l($task['title'], 'node/' . $task['nid'], ['attributes' => ['title' => $task['title']]]);
+    $header .= '<br><div class="description">'.t('Due date: ').format_date($task['due_date'], 'short').'</div>';
+    $headers []= $header;
+  }
+
+  //  construct table rows
+  $rows = [];
+  foreach ($members as $member) {
+    $row = [ 'data' => [ l($member['full_name'], 'user/' . $member['uid']) ] ];
+
+    //  construct cells
+    foreach ($tasks as $task) {
+      $cell = [ 'data' => '&nbsp' ];
+
+      if (ed_is_task_applicable($task, $member)) {
+        //  if applicable, get answer and fill cell
+        $answer = ed_get_answer($task['nid'], $member['uid'], false, $admins);
+
+
+        //  title and class
+        switch($answer['status']) {
+          case 'unanswered':
+            $cell['class'] = 'unanswered';
+            $cell['title'] = t('Not answered');
+            break;
+
+          case 'unchecked':
+            $cell['class'] = 'unchecked';
+            $cell['title'] = t('Unchecked');
+            if ($answer['changed'] > $task['due_date']) $cell['data'] = '!&nbsp;';
+            break;
+
+          case 'accepted':
+            $cell['class'] = 'answered';
+            $cell['title'] = t('Accepted');
+            break;
+
+          case 'rejected':
+            $cell['class'] = 'rejected';
+            $cell['title'] = t('Rejected');
+            break;
+
+        }
+
+        //  cell text is grade if graded, blank if ungraded, exclamation mark if late
+        if ($answer['status'] != 'unanswered') {
+          if ($answer['grade'] != 0) $cell['data'] = $answer['grade'];
+          $cell['data'] = l($cell['data'], 'node/' . $answer['nid'], ['html' => TRUE]);
+        }
+
+      } else {
+        //  not applicable
+        $cell['class'] = 'na';
+        $cell['title'] = t('Not applicable');
+      }
+
+      $row['data'] []= $cell;
+    }
+
+    $rows []= $row;
+  }
+
+  $content['table'] = array(
+    '#theme' => 'table',
+    '#rows' => $rows,
+    '#header' => $headers,
+    '#attributes' => array('data-averaging_table' => t("Average"), 'data-sticky_headers' => '')
+  );
+  
+  return $content;
+}
+
+
 /**
- * Task Manager page.
+ * old Task Manager page. keeping it around for now, just in case
  */
-function ed_task_manager($test, $node){
+function ed_task_manager_OLD($test, $node){
   menu_tree_set_path('main-menu', 'clusters');
   drupal_add_css(drupal_get_path('module', 'ed_cluster').'/task_manager.css');
   drupal_add_js(drupal_get_path('module', 'ed_cluster').'/js/ed_task_manager_task_filter.js');
@@ -1982,6 +2145,10 @@ function _ed_get_user_group_tasks($uid, $nid){
   return $query->execute()->fetchCol();
 }
 
+
+
+
+
 /**
  * Get all users of a group
  */
@@ -2060,8 +2227,7 @@ function _ed_cluster_get_group_admins(&$node, $add_creator = false) {
   
   $query = db_select('users', 'u');
   $query->join('og_users_roles', 'ogur', "u.uid = ogur.uid AND ogur.gid = :gid AND ogur.group_type = 'node' AND ogur.rid = :rid", array(':gid' => $node->nid, ':rid' => $admin_rid));
-  $query
-    ->fields('u', array('uid'));
+  $query->fields('u', array('uid'));
   $admins = $query->execute()->fetchCol();
 
   if ($add_creator && !in_array($node->uid, $admins)) {
