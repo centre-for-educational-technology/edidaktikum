@@ -17,7 +17,7 @@ function ed_portfolio_views_default_views() {
 function _user_ed_portfolio_items_view() {
   $view = new view();
   $view->name = 'user_ed_portfolio_items';
-  $view->description = 'User portfolio items (files, learning resources, blog posts).';
+  $view->description = 'User portfolio items (files, learning resources, blog posts, answers).';
   $view->tag = 'edidaktikum';
   $view->base_table = 'node';
   $view->human_name = 'eDidaktikum user portfolio items';
@@ -63,6 +63,7 @@ function _user_ed_portfolio_items_view() {
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
   $handler->display->display_options['filters']['type']['value'] = array(
+    'ed_answer' => 'ed_answer',
     'ed_blog' => 'ed_blog',
     'ed_file' => 'ed_file',
     'ed_learning_resource' => 'ed_learning_resource',
@@ -108,4 +109,3 @@ function _user_ed_portfolio_items_view() {
   );
   return $view;
 }
-

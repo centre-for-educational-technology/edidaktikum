@@ -87,7 +87,7 @@ function ed_answer_node_view($node, $view_mode, $langcode){
     }elseif ('teaser' == $view_mode) {
       $teaser = true;
       $node->title = ed_answer_get_answer_title($node, $teaser);
-      
+
     }
   }
 }
@@ -102,7 +102,7 @@ function ed_answer_form_alter(&$form, &$form_state, $form_id){
       drupal_set_title(t('Create Answer'));
     }
 
-    if(isset($form['#node']->field_ref_to_task)){      
+    if(isset($form['#node']->field_ref_to_task)){
       $reftotask = $form['#node']->field_ref_to_task['und'][0]['target_id'];
     }
     else{
@@ -280,14 +280,14 @@ function ed_answer_form_alter(&$form, &$form_state, $form_id){
   }else if($form_id == 'comment_node_ed_answer_form'){
     $isgadmin = ed_answer_is_group_manager($form['#node']->og_group_ref[LANGUAGE_NONE][0]['target_id']);
     if(!$isgadmin){
-      $form['ed_answer_status']['#access'] = FALSE;   
-      $form['ed_answer_grade']['#access'] = FALSE; 
+      $form['ed_answer_status']['#access'] = FALSE;
+      $form['ed_answer_grade']['#access'] = FALSE;
     }else{
       $form['#submit'][] = 'ed_answer_redirect_to_taskmanager';
     }
 
     $form['ed_answer_grade']['und']['#prefix'] = $form['ed_answer_grade']['und']['#prefix'] . "<div data-grade_limiter>";
-    $form['ed_answer_grade']['und']['#suffix'] = "</div>" . $form['ed_answer_grade']['und']['#suffix']; 
+    $form['ed_answer_grade']['und']['#suffix'] = "</div>" . $form['ed_answer_grade']['und']['#suffix'];
 
   }
 
@@ -321,7 +321,7 @@ function _ed_answer_get_user_comments($nid){
 function ed_answer_comment_insert($comment){
   if($comment->node_type=='comment_node_ed_answer'){
 
-    /*  I'm assuming this code was the old way of determining the actionable status on the dashboard which ended up bugged with the introduction of multiple teachers. 
+    /*  I'm assuming this code was the old way of determining the actionable status on the dashboard which ended up bugged with the introduction of multiple teachers.
 
     $usercomments = comment_load_multiple(_ed_answer_get_user_comments($comment->nid));
     foreach($usercomments as $usercomment){
@@ -330,20 +330,20 @@ function ed_answer_comment_insert($comment){
     }
     */
 
-    $node = node_load($comment->nid); 
-    $task = node_load($node->field_ref_to_task[LANGUAGE_NONE][0]['target_id']);   
+    $node = node_load($comment->nid);
+    $task = node_load($node->field_ref_to_task[LANGUAGE_NONE][0]['target_id']);
     $recipient = user_load($node->uid);
     $teacher = user_load($comment->uid);
     $teacher_fullname = edidaktikum_get_full_name_for_user_account($teacher);
     $language = user_preferred_language($recipient);
     $params = array(
       'fullname' => $teacher_fullname,
-      'taskname' => $task->title,      
+      'taskname' => $task->title,
       'answerurl' => url('node/' . $node->nid, array('absolute' => TRUE)),
       'status' => $comment->ed_answer_status[LANGUAGE_NONE][0]['value'],
     );
     drupal_mail('ed_answer', 'answer_status_modified', $recipient->mail, $language, $params, EDIDAKTIKUM_NO_REPLY_EMAIL, TRUE);
-  }  
+  }
 }
 
 /**
@@ -351,8 +351,8 @@ function ed_answer_comment_insert($comment){
  */
 function ed_answer_mail($key, &$message, $params){
   if ('answer_status_modified' == $key)  {
-    $options = array('langcode' => $message['language']->language);    
-    switch($params['status']){      
+    $options = array('langcode' => $message['language']->language);
+    switch($params['status']){
       case 'accepted':
         $action = t('accepted');
         break;
@@ -391,7 +391,7 @@ function ed_answer_check_tid_parents($tid){
   $result = $query->execute()->fetchCol();
   return $result[0];
 }
- 
+
 
 
 function ed_answer_check_tid_parent($tid){
@@ -492,7 +492,7 @@ function ed_answer_comment_view_alter(&$build){
   $gid = $build['#node']->og_group_ref[LANGUAGE_NONE][0]['target_id'];
   $group = node_load($gid);
   $admins = _ed_cluster_get_group_admins($group, true);
-  if(!empty($build['comment_body'])){	  
+  if(!empty($build['comment_body'])){
     if(!in_array($build['comment_body']['#object']->uid, $admins)){
       $build['ed_answer_status']['#access'] = FALSE;
 
@@ -503,11 +503,73 @@ function ed_answer_comment_view_alter(&$build){
 function ed_answer_node_update($node){
   if($node->type == 'ed_answer'){
     $comments = comment_load_multiple(comment_get_thread($node, COMMENT_MODE_FLAT, 100));
-    foreach($comments as $comment){      
+    foreach($comments as $comment){
       if($comment->ed_answer_status[LANGUAGE_NONE][0]['value'] == 'rejected'){
         $comment->ed_answer_status[LANGUAGE_NONE][0]['value'] = 'unchecked';
         comment_save($comment);
       }
-    }    
+    }
+  }
+}
+
+function ed_answer_prefill_titles(&$view,&$nodes){
+  $target_ids = array();
+  $task_title = NULL;
+  foreach($nodes as $node){
+    if($node->type == 'ed_answer'){
+      $target_ids[] = $node->field_ref_to_task[LANGUAGE_NONE][0]['target_id'];
+    }
+  }
+
+  if(!empty($target_ids)){
+    $query = db_select('node', 'n')
+      ->fields('n', array('nid', 'title'))
+      ->condition('n.nid', $target_ids, 'IN');
+    $titles = $query->execute()->fetchAll();
+
+    if(isset($titles)){
+      foreach($nodes as $node){
+        foreach($titles as $title){
+          if($node->field_ref_to_task[LANGUAGE_NONE][0]['target_id'] == $title->nid){
+            if(!empty($view)){
+              foreach($view->result as $result){
+                if($result->nid == $node->nid){
+                  // TODO Translate with placeholder
+                  //$result->node_title = $title->title . " - Answer";
+                  $task_title = $title->title;
+                  $result->node_title = t('!task-title - Answer', array(
+                    '!task-title' => $task_title,
+                  ));
+                }
+                if (empty($result->node_title)){
+                  $result->node_title = t('Answer with task removed');
+                }
+              }
+            } else {
+              // TODO Translate with placeholder
+              $task_title = $title->title;
+              $node->title = t('!task-title - Answer', array(
+                '!task-title' => $task_title,
+              ));
+            }
+          }
+        }
+        if (empty($node->title)){
+          $node->title = t('Answer with task removed');
+        }
+      }
+    } else {
+      if(!empty($view)){
+        foreach($view->result as $result){
+          if(in_array($result->nid,$nodes->nid)){
+            $result->node_title = t('Answer with task removed');
+          }
+        }
+      } else {
+        foreach($nodes as $node){
+          $node->title = t('Answer with task removed');
+        }
+      }
+    }
   }
 }
