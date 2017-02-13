@@ -11,11 +11,6 @@
 define('EDIDAKTIKUM_NO_REPLY_EMAIL', 'no-reply@edidaktikum.ee');
 
 /**
- * import super table!
- */
-include 'ed_super_table.php';
-
-/**
  * Implements hook_init().
  */
 function edidaktikum_init() {
