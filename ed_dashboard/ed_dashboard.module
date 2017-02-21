@@ -251,6 +251,7 @@ function _ed_dashboard_get_current_user_groups() {
   $query->fields('n', array('nid'))
     ->condition('n.type', 'ed_cluster')
     ->addTag('node_access');
+  $query->orderBy('n.created','DESC');
 
   return $query->execute()->fetchCol();
 }
