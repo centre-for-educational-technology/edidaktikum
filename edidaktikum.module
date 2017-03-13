@@ -1058,9 +1058,9 @@ function ed_get_group_members($gid, $b_full_name = false, $b_roles = false, $b_s
 
   //  optionally with full names
   if ($b_full_name) {
-    $q->join('field_data_ed_field_full_name', 'fn', 'fn.entity_id = ogm.etid');
+    $q->leftJoin('field_data_ed_field_full_name', 'fn', 'fn.entity_id = ogm.etid');
     $q->fields('fn', ['ed_field_full_name_value']);
-    $q->orderBy('ed_field_full_name_value', 'ASC');
+    //  $q->orderBy('ed_field_full_name_value', 'ASC'); cant order by name if doesn't exist
   }
 
   //  optionally with study groups
@@ -1071,6 +1071,37 @@ function ed_get_group_members($gid, $b_full_name = false, $b_roles = false, $b_s
 
   $members = $q->execute()->fetchAll(PDO::FETCH_ASSOC);
   unset($q);
+
+  //  if full name not present, get data from user blob
+  if ($b_full_name) {
+    $missing = [];
+    foreach ($members as &$member) {
+      if ($member['ed_field_full_name_value'] == NULL) {
+        $missing []= $member['uid'];
+      }
+    }
+    
+    if (count($missing) > 0) {      
+      $members_with_datas = db_query('SELECT uid, data FROM users WHERE uid IN (:uids)', [':uids' => $missing])->fetchAll(PDO::FETCH_ASSOC);
+      foreach ($members_with_datas as &$member_with_data) {
+        $data = unserialize($member_with_data['data']);
+        $display_name = $data['hybridauth']['displayName'];
+        foreach ($members as &$member) {
+          if ($member['uid'] == $member_with_data['uid']) {
+            $member['ed_field_full_name_value'] = $display_name;
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  //  order
+  if ($b_full_name) {
+    usort($members, function($a, $b) { 
+      return strnatcasecmp( $a['ed_field_full_name_value'], $b['ed_field_full_name_value'] );
+    });
+  }
 
   //  fetch roles 
   if ($b_roles) {
