@@ -94,6 +94,7 @@ function ed_task_listing_page() {
     // Tasks that are made by the logged in user.
     $nodes = _ed_get_cur_user_tasks();
 
+
     if ( !empty($nodes) ) {
       foreach($nodes as $node) {      
         if(isset($node->{ED_FIELD_TO_GROUP_MEMBER}['und']['0']['target_id']) && !isset($node->{ED_FIELD_TO_GROUP_MEMBER}['und']['1']['target_id'])) {
@@ -148,7 +149,6 @@ function ed_task_listing_page() {
 
 
 
-
     //Check study group permissions
     foreach($togroups as $key => $togroup_task){
 
@@ -179,68 +179,43 @@ function ed_task_listing_page() {
     }
 
 
-    $tasknodes = node_load_multiple($tasknidstouser);
-
-
-
-    uasort($tasknodes, function($a, $b) {
-      $ats = $a->ed_task_due_date[LANGUAGE_NONE][0]['value'];
-      $bts = $b->ed_task_due_date[LANGUAGE_NONE][0]['value'];
-      if ($ats == $bts) return 0;
-      return ($ats < $bts) ? -1 : 1;
-    });
-    $tasknodesgroupedbystatus = array();
-    foreach($tasknodes as $key => $tasknode){
-      if(_is_task_answered($tasknode->nid)){
+    $tasknodes = node_load_multiple($tasknidstouser); 
+    //  attatch status;
+    foreach($tasknodes as $key => &$tasknode) {
+      if (_is_task_answered($tasknode->nid)) {
         $tmp_answer_nid = _ed_get_answer_nid($user->uid, $tasknode->nid);
         $answernode = node_load($tmp_answer_nid[0]);
-        if($answernode->status == 0){
-          $tasknodesgroupedbystatus['unanswered'][$key] = $tasknode;     
-        }else{      
+        if ($answernode->status == 0) {
+          $tasknode->ed_status = "unanswered";
+        } else {
           $status = _ed_check_if_accepted($tmp_answer_nid[0]);
-          if(empty($status)){
-            $tasknodesgroupedbystatus['unchecked'][$key] = $tasknode;
-          }else{
-            $status_last = _ed_last_status($status);
-
-            switch($status_last){
-              case 'rejected':
-                $tasknodesgroupedbystatus['rejected'][$key] = $tasknode;
-                break;
-              case 'unchecked':
-                $tasknodesgroupedbystatus['unchecked'][$key] = $tasknode;
-                break;
-              case 'accepted':
-                $tasknodesgroupedbystatus['accepted'][$key] = $tasknode;
-                break;
-            }
+          if(empty($status)) {
+            $tasknode->ed_status = "unchecked";
+          } else {
+            $tasknode->ed_status = _ed_last_status($status);
           }
         }
-      }else{
-        if (!empty($tasknode->{ED_FIELD_TO_GROUP_MEMBER}[LANGUAGE_NONE]) && !in_array($user->uid, array_map(function($element) { return $element['target_id']; }, $tasknode->{ED_FIELD_TO_GROUP_MEMBER}[LANGUAGE_NONE]))) {
-          // do nothing
-        }else{
-          $tasknodesgroupedbystatus['unanswered'][$key] = $tasknode;        
-        }
+      } else {
+        $tasknode->ed_status = "unanswered";
       }
+      unset($tasknode);
     }
-    
-    
-    
-    if(isset($tasknodesgroupedbystatus['unanswered'])){
-      $tasknodesgroupedbystatussorted[0] = $tasknodesgroupedbystatus['unanswered'];
-    }
-    if(isset($tasknodesgroupedbystatus['rejected'])){
-      $tasknodesgroupedbystatussorted[1] = $tasknodesgroupedbystatus['rejected'];
-    }
-    if(isset($tasknodesgroupedbystatus['unchecked'])){
-      $tasknodesgroupedbystatussorted[2] = $tasknodesgroupedbystatus['unchecked'];
-    }
-    if(isset($tasknodesgroupedbystatus['accepted'])){
-      $tasknodesgroupedbystatussorted[3] = $tasknodesgroupedbystatus['accepted'];
-    }
-        
-    $tasknodessorted = call_user_func_array('array_merge', $tasknodesgroupedbystatussorted);
+
+    uasort($tasknodes, function($a, $b) {
+      $a_score = 0;
+      if ($a->ed_status == 'rejected') $a_score = 2;
+      if ($a->ed_status == 'unanswered') $a_score = 1;
+
+      $b_score = 0;
+      if ($b->ed_status == 'rejected') $b_score = 2;
+      if ($b->ed_status == 'unanswered') $b_score = 1;
+
+      if ($a_score != $b_score) return $b_score - $a_score;  
+      return $a->ed_task_due_date[LANGUAGE_NONE][0]['value'] - $b->ed_task_due_date[LANGUAGE_NONE][0]['value'];
+    });
+
+    $tasknodessorted = $tasknodes;
+
     
     
     
@@ -261,15 +236,6 @@ function ed_task_listing_page() {
       if ($tasknode->is_answered) $tasknode->answer_nid = $answer_nid[0];
       unset($tasknode);
     }; 
-
-    // sort by unanswered first, due date second, created last
-    usort($chunks[$current_page], function($a, $b) {
-      if (!$a->is_answered && $b->is_answered) return -1;
-      if (!$b->is_answered && $a->is_answered) return 1;
-      $d = $a->ed_task_due_date[LANGUAGE_NONE][0]['value'] - $b->ed_task_due_date[LANGUAGE_NONE][0]['value'];
-      if ($d == 0) return $b->created - $a->created;
-      return $d;
-    });
 
     foreach($chunks[$current_page] as $tasknode){
       $shared_to_arr = array();
@@ -695,119 +661,34 @@ function _ed_last_status($statuses) {
  */
 function _ed_get_user_unanswered_tasks_count($account) {
   static $count;
-
-
   if (isset($count)) {
     return $count;
   }
-  $task_nids = array();
 
-
-
-  // Get all groups the user is not an administrator of
   $user_groups = og_get_groups_by_user($account, 'node');
-  $administered_groups = _ed_cluster_get_all_administered_groups($account);
+  $unanswered_or_rejected = 0;
 
-  $groups = array();
-  if (!empty($user_groups)) {
-    $groups = array_diff($user_groups, $administered_groups);
-  }
+  foreach ($user_groups as $key => &$group) {
+    $members = ed_get_group_members($group, false, true, true);
+    $admins = ed_filter_admins($members);
+    $user = array_filter($members, function($item) use ($account) { return $item['uid'] == $account->uid; });
+    if (count($user) < 1) continue; else $user = $user[array_keys($user)[0]];
+    $tasks = ed_get_group_tasks($group, false, true, true);
 
-  if ($groups && is_array($groups) && sizeof($groups) > 0) {
-    $query = db_select('node', 'n');
-    $query->join('og_membership', 'og', 'n.nid = og.etid');
-    $query->leftJoin('field_data_ed_field_to_group_member', 'tgm', 'n.nid = tgm.entity_id');
-    $query->fields('n', array('nid'))
-      ->addTag('node_access')
-      ->condition('n.type', 'ed_task')
-      ->condition('n.uid', $account->uid, '<>')
-      ->condition('og.gid', $groups, "IN")
-      ->isNull('tgm.ed_field_to_group_member_target_id');
-
-    // Merge all task identifiers given to user groups
-    $task_nids = $query->execute()->fetchCol();
-
-
-
-    //Get user study group field
-    $wrapper = entity_metadata_wrapper('user', $account->uid);
-    $user_study_group = $wrapper->ed_field_study_group->value();
-
-    //Check if these tasks belong to this user study group
-    foreach ($task_nids as $key => $tasknid){
-
-      $wrapper = entity_metadata_wrapper('node', $tasknid);
-      $task_study_groups = $wrapper->ed_task_field_study_group->raw();
-
-      if(!empty($task_study_groups)){
-        if(isset($user_study_group)){
-
-          if(in_array($user_study_group, $task_study_groups) == false){
-
-            unset($task_nids[$key]);
-          }
-
-        }else{
-          unset($task_nids[$key]);
+    if (isset($user['uid'])) {
+      foreach ($tasks as $key => &$task) {
+        if(ed_is_task_applicable($task, $user)) {
+          $answer = ed_get_answer($task['nid'], $user['uid'], false, $admins);
+          if ($answer['status'] == 'unanswered') $unanswered_or_rejected++;
+          if ($answer['status'] == 'rejected') $unanswered_or_rejected++;
         }
       }
-
     }
-
-
-    $query = db_select('node', 'n');
-    $query->join('field_data_ed_field_to_group_member', 'tgm', 'n.nid = tgm.entity_id');
-    $query->fields('n', array('nid'))
-        ->addTag('node_access')
-        ->condition('n.type', 'ed_task')
-        ->condition('tgm.ed_field_to_group_member_target_id', $account->uid);
-
-    // Get all task identifiers given directly to a user
-    // Make sure that identifiers are unique
-    $task_nids = array_unique(array_merge($task_nids, $query->execute()->fetchCol()));
-    $unansweredcount = 0;
-
-
-    // Count unanswered as unanswered and rejected (not unchecked)
-    foreach($task_nids as $tasknid){
-      if(!(_ed_check_if_answered($account->uid, $tasknid))) {
-        $unansweredcount++;
-      } else {
-        $tmp_answer_nid = _ed_get_answer_nid($account->uid, $tasknid);
-        $status = _ed_check_if_accepted($tmp_answer_nid[0]);
-        $status_last = _ed_last_status($status);
-        if($status_last == 'rejected') $unansweredcount++;
-      }
-    }
-    return $unansweredcount;
-    //$tasknodes = node_load_multiple($task_nids);
-    
-    //dpm($tasknodes, 'nodes');
-    
-    
   }
 
-  $count = sizeof($task_nids);
-
-  // Return zero if no task are present
-  if (!($count > 0)) {
-    return $count;
-  }
-
-  $query = db_select('node', 'n');
-  $query->join('field_data_field_ref_to_task', 'ref', 'n.nid = ref.entity_id');
-  $query->fields('n', array('nid'))
-    ->addTag('node_access')
-    ->condition('n.type', 'ed_answer')
-    ->condition('n.uid', $account->uid)
-    ->condition('ref.field_ref_to_task_target_id', $task_nids, 'IN');
-
-  // Substract the number of answers created by user
-  // Make sure to only consider answers for currently active tasks
-  // This will deal with answers with tasks removed
-  $count -= $query->countQuery()->execute()->fetchField();
-
+  $count = $unanswered_or_rejected;
   return $count;
+
 }
 
 function ed_task_preprocess_page(&$variables){

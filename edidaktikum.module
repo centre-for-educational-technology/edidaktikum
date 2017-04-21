@@ -1043,6 +1043,34 @@ function ed_util_rename_key_of_arrays($arr, $old_name, $new_name) {
   return $arr;
 }
 
+function ed_get_user($uid) {
+  $q = db_select('users', 'u');
+  $q->condition('u.uid', $uid);
+  $q->fields('u', ['uid', 'data']);
+  $q->leftJoin('field_data_ed_field_full_name', 'fn', 'fn.entity_id = u.uid');
+  $q->fields('fn', ['ed_field_full_name_value']);
+  $q->leftJoin('field_data_ed_field_study_group', 'sg', 'sg.entity_id = u.uid');
+  $q->fields('sg', ['ed_field_study_group_value']);
+  $user = $q->execute()->fetchAll(PDO::FETCH_ASSOC);
+  unset($q);
+
+  //  change names of things + concentrate
+  $user = ed_util_array_concentrate_member($user, 'uid', 'study_groups');
+  $user = ed_util_rename_key_of_arrays($user, 'ed_field_full_name_value', 'full_name');
+  $user = ed_util_rename_key_of_arrays($user, 'ed_field_study_group_value', 'study_groups');
+  $user = $user[0];
+
+  //  if no name given, try fetch from hybridauth data
+  if ($user['full_name'] == NULL) {
+    $data = unserialize($user['data']);
+    if (isset($data['hybridauth']['displayName'])) {
+      $user['full_name'] = $data['hybridauth']['displayName'];
+    }
+  }
+
+  return $user;
+}
+
 //  gets group members ['uid']
 //  $gid: the group id
 //  $b_full_name: optionally adds full names ['full_name']
@@ -1148,6 +1176,17 @@ function ed_get_group_members($gid, $b_full_name = false, $b_roles = false, $b_s
   }
 
   return $members;
+}
+
+function ed_filter_admins(&$members) {
+  $admins = [];
+  for ($i = count($members) - 1; $i >= 0; $i--) {
+    if (in_array(OG_ADMINISTRATOR_ROLE, $members[$i]["roles"])) {
+      $admins []= $members[$i];
+      unset($members[$i]);
+    }
+  }
+  return $admins;
 }
 
 //  gets group tasks ['nid', 'title']
