@@ -196,6 +196,8 @@ function edidaktikum_menu() {
     'page arguments' => array(1, 2),
   );
 
+
+
   return $items;
 }
 
@@ -1006,6 +1008,41 @@ function edidaktikum_views_query_alter(&$view, &$query){
   dpm($view, __FUNCTION__);
   dpm($query, __FUNCTION__);
 }*/
+
+//  used for arrays of keyed arrays
+//  concentrates a member of the keyed arrays into an array
+//  useful for things like left joined sql results
+//  example: 
+//    ed_util_array_concentrate_member([ ['id' => 1, 'value' => 1], ['id' => 1, 'value' => 2] ], 'id', 'value')
+//    returns: ['id' => 1, 'value' => [1, 2]];
+function ed_util_array_concentrate_members($arr, $primary_key, $concentrate_keys) {
+  $map = [];
+  $ret = [];
+
+  foreach($arr as &$item) {
+    $key = $item[$primary_key];
+
+    if (!isset($map[$key])) {  
+      foreach($concentrate_keys as &$concentrate_key) {
+        $item[$concentrate_key] = empty($item[$concentrate_key]) ? [] : [ $item[$concentrate_key] ];
+      }      
+      $ret []=& $item;
+      $map[$key] =& $item;
+    } else {
+      $original =& $map[$key];
+      foreach($concentrate_keys as &$concentrate_key) {
+        if (!empty($item[$concentrate_key])) {
+          if (!in_array($item[$concentrate_key], $original[$concentrate_key])) {
+            $original[$concentrate_key] []= $item[$concentrate_key];
+          }
+        }
+      }
+    }
+  }
+
+  return $ret;
+}
+
 
 //  used for arrays of keyed arrays
 //  concentrates a member of the keyed arrays into an array

@@ -48,8 +48,246 @@ function ed_dashboard_menu() {
     'type' => MENU_CALLBACK,
     'access callback' => 'user_is_logged_in',
   );
+  $items['dashboard/student_activity'] = [
+    'title' => t('Student activity'),
+    'access callback' => 'ed_current_user_is_administrator',
+    'page callback' => 'ed_student_activity_page',
+    'weight' => 50,
+    'menu_name' => 'ed-dashboard-menu',
+    'type' => MENU_NORMAL_ITEM
+  ];
 
   return $items;
+}
+
+function ed_current_user_is_administrator() {
+  return in_array('administrator', $GLOBALS['user']->roles);
+}
+
+function ed_student_activity_page() {
+  menu_tree_set_path('main-menu', 'dashboard');
+
+  //  _fetch og role names_
+  $q = db_select('og_role', 'ogr');
+  $q->fields('ogr', ['rid', 'name']);
+  $tmp = $q->execute()->fetchAll(PDO::FETCH_ASSOC);
+  $og_role_names_by_id = [];
+  foreach ($tmp as $role) $og_role_names_by_id[$role['rid']] = $role['name']; 
+  unset($q, $tmp);
+
+  //  _fetch all users_
+  //  basic
+  $q = db_select('users', 'u'); 
+  $q->condition('u.status', 1); 
+  $q->fields('u', ['uid', 'data']);
+
+  //  groups
+  $q->join('og_membership', 'ogm', 'ogm.etid = u.uid AND ogm.entity_type = \'user\' AND ogm.state = 1');
+  $q->addField('ogm', 'gid', 'group_ids');
+
+  //  group creation
+  $q->leftJoin('node', 'n', 'n.nid = ogm.gid AND n.type = \'ed_cluster\' AND n.uid = u.uid');
+  $q->addField('n', 'nid', 'created_group_ids');
+
+  //  group roles
+  $q->leftJoin('og_users_roles', 'ogur', 'ogur.uid = u.uid');
+  $q->addField('ogur', 'gid', 'group_role_group_id');
+  $q->addField('ogur', 'rid', 'group_role_id');
+
+  //  names
+  $q->leftJoin('field_data_ed_field_full_name', 'fn', 'fn.entity_id = u.uid');
+  $q->addField('fn', 'ed_field_full_name_value', 'full_name');
+  
+  //  study groups
+  $q->leftJoin('field_data_ed_field_study_group', 'sg', 'sg.entity_id = u.uid');
+  $q->addField('sg', 'ed_field_study_group_value', 'study_group_ids');
+
+  //  role ids
+  $q->leftJoin('users_roles', 'ur', 'ur.uid = u.uid');
+  $q->addField('ur', 'rid', 'role_ids');
+
+  //  roles
+  $q->leftJoin('role', 'r', 'r.rid = ur.rid');
+  $q->addField('r', 'name', 'role_names');
+
+  //  exec
+  $users = $q->execute()->fetchAll(PDO::FETCH_ASSOC);
+  unset($q);
+
+  //  concentrate
+  $c_users = [];
+  foreach ($users as $user) {
+    if (!isset($c_users[$user['uid']])) {
+      //  prep
+      $c_user = $user;
+      $c_user['study_group_ids'] = [];
+      $c_user['role_names'] = [];
+      $c_user['role_ids'] = [];
+      $c_user['group_ids'] = [];
+      $c_user['created_group_ids'] = [];
+      $c_user['group_role_ids_by_group_id'] = [];
+      $c_user['group_role_names_by_group_id'] = [];
+      unset($c_user['group_role_group_id'], $c_user['group_role_id']);
+      $c_users[$user['uid']] =& $c_user;
+      unset($c_user);
+    }
+
+    //  fill
+    $c_user =& $c_users[$user['uid']];
+
+    if (!empty($user['study_group_ids']) && !in_array($user['study_group_ids'], $c_user['study_group_ids'])) $c_user['study_group_ids'] []= $user['study_group_ids'];
+    if (!empty($user['role_ids']) && !in_array($user['role_ids'], $c_user['role_ids'])) $c_user['role_ids'] []= $user['role_ids'];
+    if (!empty($user['role_names']) && !in_array($user['role_names'], $c_user['role_names'])) $c_user['role_names'] []= $user['role_names'];
+    if (!empty($user['group_ids']) && !in_array($user['group_ids'], $c_user['group_ids'])) $c_user['group_ids'] []= $user['group_ids'];
+    if (!empty($user['created_group_ids']) && !in_array($user['created_group_ids'], $c_user['created_group_ids'])) $c_user['created_group_ids'] []= $user['created_group_ids'];
+
+    if (!empty($user['group_role_id']) && !empty($user['group_role_group_id'])) {
+      if (!isset($c_user['group_role_ids_by_group_id'][$user['group_role_group_id']])) {
+        $c_user['group_role_ids_by_group_id'][$user['group_role_group_id']] = [];
+        $c_user['group_role_names_by_group_id'][$user['group_role_group_id']] = [];
+      }
+
+      if (!in_array($user['group_role_id'], $c_user['group_role_ids_by_group_id'][$user['group_role_group_id']])) {
+        $c_user['group_role_ids_by_group_id'][$user['group_role_group_id']] []= $user['group_role_id'];
+        $c_user['group_role_names_by_group_id'][$user['group_role_group_id']] []= $og_role_names_by_id[$user['group_role_id']];
+      }
+    }
+
+    unset($user, $c_user);
+  }
+  $users = $c_users;
+
+  //  hybridauth names
+  foreach ($users as &$user) {
+    if ($user['full_name'] === NULL) {
+      $data = unserialize($user['data']);
+      if (isset($data['hybridauth']) && isset($data['hybridauth']['displayName'])) {
+        $user['full_name'] = $data['hybridauth']['displayName'];
+      }
+    }
+    unset($user);
+  }
+
+  //  _group admins by group ids
+  $group_admins_by_group_ids = [];
+
+  foreach ($users as $user) {
+    $administrating = $user['created_group_ids'];
+    foreach ($user['group_role_names_by_group_id'] as $group_id => $group_roles) {
+      if (in_array(OG_ADMINISTRATOR_ROLE, $group_roles)) {
+        $administrating []= $group_id;
+      }
+    }
+
+    foreach ($administrating as $gid) {
+      if(!isset($group_admins_by_group_ids[$gid])) $group_admins_by_group_ids[$gid] = [];
+      $group_admins_by_group_ids[$gid] []= ['uid' => $user['uid'], 'roles' => [OG_ADMINISTRATOR_ROLE]];
+    }
+    unset($user);
+  }
+
+  //  _fetching all tasks_
+  //  basic
+  $q = db_select('og_membership', 'ogm');
+  $q->condition('ogm.entity_type', 'node');
+  $q->fields('ogm', ['gid']);
+  $q->join('node', 'n', 'n.nid = ogm.etid AND n.type = \'ed_task\' AND n.status = 1');
+  $q->fields('n', ['nid', 'title']);
+
+  //  due date
+  $q->join('field_data_ed_task_due_date', 'dd', 'dd.entity_id = ogm.etid');
+  $q->addField('dd', 'ed_task_due_date_value', 'due_date');
+
+  //  study groups
+  $q->leftJoin('field_data_ed_task_field_study_group', 'sg', 'sg.entity_id = ogm.etid');
+  $q->addField('sg', 'ed_task_field_study_group_value', 'study_group_ids');
+
+  //  targeted members
+  $q->leftJoin('field_data_ed_field_to_group_member', 'tm', 'tm.entity_id = ogm.etid');
+  $q->addField('tm', 'ed_field_to_group_member_target_id', 'targeted_member_ids');
+
+  //  exec
+  $tasks = $q->execute()->fetchAll(PDO::FETCH_ASSOC);
+  unset($q);
+
+  //  rename and concentrate
+  $tasks = ed_util_array_concentrate_members($tasks, 'nid', ['study_group_ids', 'targeted_member_ids']);
+
+  //  _sort tasks by gid_
+  $tasks_by_gid = [];
+  foreach ($tasks as &$task) {
+    $gid = $task['gid'];
+    if (!isset($tasks_by_gid[$gid])) $tasks_by_gid[$gid] = [];
+    $tasks_by_gid[$gid] []=& $task;
+    unset($task);
+  }
+
+
+  //  _match tasks to users_
+  
+  foreach ($users as &$user) {
+    $user['answers'] = [];
+    $user['unanswered'] = 0;
+    $user['accepted'] = 0;
+    $user['unchecked'] = 0;
+    $user['rejected'] = 0;
+    $user['total_grade'] = 0;
+    $user['total_gradeables'] = 0;
+    $user['on_time'] = 0;
+
+    foreach($user['group_ids'] as $gid) {
+      if (!isset($tasks_by_gid[$gid])) continue;
+      foreach($tasks_by_gid[$gid] as $task) {
+        $applicable = true;
+        if (count($task['study_group_ids']) > 0) {
+          $applicable = false;
+          foreach ($task['study_group_ids'] as $sg_id) {
+            if (in_array($sg_id, $user['study_group_ids'])) $applicable = true;
+          }
+        }
+        if (in_array($user['uid'], $task['targeted_member_ids'])) $applicable = true;
+        if (in_array($gid, $user['created_group_ids'])) $applicable = false;
+        if (isset($user['group_role_names_by_group_id'][$gid]) && in_array(OG_ADMINISTRATOR_ROLE, $user['group_role_names_by_group_id'][$gid])) $applicable = false;
+
+        if ($applicable && isset($group_admins_by_group_ids[$gid])) {
+          $answer = ed_get_answer($task['nid'], $user['uid'], false, $group_admins_by_group_ids[$gid]);
+          $user['answers'][$task['nid']] = $answer;
+          $user[$answer['status']]++;
+          if (isset($answer['grade'])) {
+            $user['total_grade'] += $answer['grade'];
+            $user['total_gradeables']++;
+          }
+          if (isset($answer['created'])) {
+            if ($answer['created'] < $task['due_date']) $user['on_time']++;
+          }
+        }
+      }
+      unset($gid);
+    }
+    unset($user);
+  }
+
+
+  //  _process_
+  $table = "<table><tr><th>Nimi</th><th>Aktiivsus skoor</th></tr>";
+
+  foreach($users as &$user) {
+    if (count($user['answers']) > 0) {
+      $score1 = $user['accepted'] / (count($user['answers']) - $user['unchecked']);
+      $score2 = $user['total_gradeables'] < 1 ? 1 : ($user['total_grade'] / $user['total_gradeables']) / 100;
+      $score3 = $user['on_time'] / count($user['answers']);
+      $score = ($score1 + $score2 + $score3) / 3 * 100;
+      $table .= "<tr><td>" . $user['full_name'] . "</td><td>" . $score . "</td></tr>"; 
+    }
+
+    unset($user);
+  }
+  $table .= "</table>";
+    
+
+
+  $content = [];
+  return $table;
 }
 
 /**
