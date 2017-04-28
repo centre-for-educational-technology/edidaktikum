@@ -73,8 +73,7 @@ function ed_student_activity_page() {
   $tasks = edf_get_tasks();
   edf_fill_user_tasks($users, $tasks);
 
-  //  _process_
-  $table = "<table><tr><th>" . t('Name') . "</th><th>" . t('Activity Score') . "</th></tr>";
+  //  analyze
 
   foreach($users as &$user) {
     $all_tasks = [];
@@ -118,17 +117,55 @@ function ed_student_activity_page() {
         }
       }
 
-      $score_answered = $total_answered / $total;
-      $score_on_time = $total_on_time / $total;
-      $score_accepted =  $total_checked == 0 ? 1 : $total_accepted / $total_checked;
-      $score_grades = $total_gradeable == 0 ? 1 : $total_grade / $total_gradeable;
+      $score = [
+        'answered' => round($total_answered / $total * 100),
+        'on_time' => round($total_on_time / $total * 100),
+      ];
+      $score_total = $score['answered'] + $score['on_time'];
+      $score_comp = 2;
 
-      $score = ($score_answered + $score_on_time + $score_accepted + $score_grades) * 25;
-      $table .= "<tr><td>" . $user['full_name'] . "</td><td>" . $score . "</td></tr>"; 
+      if ($total_checked == 0) {
+        $score['accepted'] = '-';
+      } else {
+        $score['accepted'] = round($total_accepted / $total_checked * 100);
+        $score_total += $score['accepted'];
+        $score_comp++;
+      }
+
+      if ($total_gradeable == 0) {
+        $score['grades'] = '-';
+      } else {
+        $score['grades'] = round($total_grade / $total_gradeable * 100);
+        $score_total += $score['grades'];
+        $score_comp++;
+      }
+
+      $score['average'] = round($score_total / $score_comp);
+      $user['score'] = $score;
+    } else {
+      unset($users[$user['uid']]);
     }
 
     unset($user);
   }
+
+  uasort($users, function($a, $b) {
+    return ($b['score']['average'] - $a['score']['average']);
+  });
+  
+  //  parse
+
+  $table = "<table><tr><th>" . t('Name') . "</th><th>" . t('Participation') . "</th><th>" . t('Punctuality') . "</th><th>";
+  $table .= t('Success') . "</th><th>" . t('Grades') . "</th><th>" . t('Average') . "</th></tr>";
+
+  foreach($users as &$user) {
+    if (!isset($user['score'])) continue;
+    $table .= "<tr><td><a href=../user/" . $user['uid'] . ">" . $user['full_name'] . "</a></td><td>" . $user['score']['answered'] . "</td><td>" . $user['score']['on_time'] . "</td><td>";
+    $table .= $user['score']['accepted'] . "</td><td>" . $user['score']['grades'] . "</td><td>" . $user['score']['average'] . "</td></tr>"; 
+    unset($user);
+  }
+
+
   $table .= "</table>";
     
   return $table;
