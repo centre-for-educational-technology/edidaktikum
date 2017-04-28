@@ -243,6 +243,12 @@ function edf_get_tasks($fields = ['due_date', 'study_groups', 'targeted_users', 
 	$q->join('og_membership', 'ogm', 'ogm.etid = n.nid');
 	$q->addField('ogm', 'gid', 'gid');
 
+	//	uid filter
+	if (isset($filter['uid'])) {
+		$q->join('og_membership', 'ogm2', 'ogm2.gid = ogm.gid AND ogm2.entity_type = \'user\'');
+		$q->condition('ogm2.etid', $filter['uid']);
+	}
+
 	//	changed time ago filter 
 	if (isset($filter['max_time_ago_changed'])) {
 		$q->condition('n.changed', time() - $filter['max_time_ago_changed'], '>');
@@ -434,12 +440,10 @@ function edf_fill_user_tasks(&$users, $tasks) {
 					//	if has a set answer for this user, use that
 					if (isset($task['answers_by_uid'][$user['uid']])) {
 						$task['answer'] =& $task['answers_by_uid'][$user['uid']];
-
+						$task['grade']['status'] = 'unchecked';
+						
 						//	try to refer to last grade
-						if (count($task['answer']['grades']) < 1) {
-							$task['grade']['status'] = 'unchecked';
-						} else {
-
+						if (count($task['answer']['grades']) > 0) {
 							//	remove non admin grades
 							foreach ($task['answer']['grades'] as $grade_id => $grade) {
 								if (!isset($admins[$group['group_id']]) || !array_key_exists($grade['uid'], $admins[$group['group_id']])) {
@@ -454,8 +458,10 @@ function edf_fill_user_tasks(&$users, $tasks) {
 								return $b['created'] - $a['created']; 
 							});
 
-							$key = array_keys($task['answer']['grades'])[0];
-							$task['grade'] = $task['answer']['grades'][$key];
+							if (count($task['answer']['grades']) > 0) {
+								$key = array_keys($task['answer']['grades'])[0];
+								$task['grade'] = $task['answer']['grades'][$key];
+							}
 						}
 					}
 
