@@ -36,8 +36,8 @@ function edf_get_roles() {
 //	universal user getter
 //	supported fields:
 //	'full_name', groups', 'study_groups', 'roles'
-//	supported filters (EQ only)
-//	'uid', 'gid'
+//	supported filters
+//	'uid', 'gid', 'max_offline_time'
 //	usage example: edf_get_users(['full_name'], ['gid' => 10]);
 function edf_get_users($fields = ['groups', 'full_name', 'study_groups', 'roles'], $filter = []) {
 	
@@ -46,9 +46,14 @@ function edf_get_users($fields = ['groups', 'full_name', 'study_groups', 'roles'
 	$q->condition('u.status', 1); 
 	$q->fields('u', ['uid', 'data']);
 
+	//	filter by login 
+	if (isset($filter['max_offline_time'])) {
+		$q->condition('u.login', time() - $filter['max_offline_time'], '>');
+	}
+
 	//	filter by uid
-	if (isset($filters['uid'])) {
-		$q->condition('u.uid', $filters['uid']);
+	if (isset($filter['uid'])) {
+		$q->condition('u.uid', $filter['uid']);
 	}
 
 	//	optionally full name
@@ -63,8 +68,8 @@ function edf_get_users($fields = ['groups', 'full_name', 'study_groups', 'roles'
 	}
 
 	//	filter by gid
-	if (isset($filters['gid'])) {
-		$q->condition('ogm.gid', $filters['gid']);
+	if (isset($filter['gid'])) {
+		$q->condition('ogm.gid', $filter['gid']);
 	}
 
 	//	optionally groups
@@ -224,9 +229,9 @@ function edf_extract_og_admins(&$users, $extract_gid = -1) {
 //	supported fields:
 //	'due_date', 'study_groups', 'targeted_users', 'answers_by_uid'
 //	supported filters (EQ only)
-//	'uid', 'gid', 'task_id'
+//	'gid', 'task_id', 'max_time_ago_changed'
 //	usage example: edf_get_tasks(['due_date'], ['uid' => 5, 'gid' => 3])
-function edf_get_tasks($fields = ['due_date', 'study_groups', 'targeted_users', 'answers_by_uid'], $filters = []) {
+function edf_get_tasks($fields = ['due_date', 'study_groups', 'targeted_users', 'answers_by_uid'], $filter = []) {
 
 	//	get raw tasks from db
 	$q = db_select('node', 'n');
@@ -237,6 +242,26 @@ function edf_get_tasks($fields = ['due_date', 'study_groups', 'targeted_users', 
 
 	$q->join('og_membership', 'ogm', 'ogm.etid = n.nid');
 	$q->addField('ogm', 'gid', 'gid');
+
+	//	changed time ago filter 
+	if (isset($filter['max_time_ago_changed'])) {
+		$q->condition('n.changed', time() - $filter['max_time_ago_changed'], '>');
+	}
+
+	//	gid filter
+	if (isset($filter['gid'])) {
+		$q->condition('ogm.gid', $filters['gid']);
+	}
+
+	//	task_id filter
+	if (isset($filter['task_id'])) {
+		$q->condition('n.nid', $filters['task_id']);
+	}
+
+	//	changed filter
+	if (isset($filter['changed'])) {
+		$q->condition('n.changed', $filters['changed']);
+	}
 
 	//  optionally due date
 	if (in_array('due_date', $fields)) {

@@ -69,8 +69,8 @@ function ed_current_user_is_administrator() {
 function ed_student_activity_page() {
   menu_tree_set_path('main-menu', 'dashboard');
 
-  $users = edf_get_users();
-  $tasks = edf_get_tasks();
+  $users = edf_get_users(['groups', 'full_name', 'study_groups', 'roles'], ['max_offline_time' => 2 * 365 * 24 * 60 * 60]);
+  $tasks = edf_get_tasks(['due_date', 'study_groups', 'targeted_users', 'answers_by_uid'], ['max_time_ago_changed' => 2 * 365 * 24 * 60 * 60]);
   edf_fill_user_tasks($users, $tasks);
 
   //  analyze
