@@ -5,6 +5,8 @@
  * eDidaktikum module.
  */
 
+require("edf.php");
+
 /**
  * Email to be used with automatic system messages
  */
