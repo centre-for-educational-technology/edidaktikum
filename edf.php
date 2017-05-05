@@ -36,7 +36,7 @@ function edf_get_roles() {
 //	universal user getter
 //	supported fields:
 //	'full_name', groups', 'study_groups', 'roles'
-//	supported filters
+//	supported filter
 //	'uid', 'gid', 'max_offline_time'
 //	usage example: edf_get_users(['full_name'], ['gid' => 10]);
 function edf_get_users($fields = ['groups', 'full_name', 'study_groups', 'roles'], $filter = []) {
@@ -63,7 +63,7 @@ function edf_get_users($fields = ['groups', 'full_name', 'study_groups', 'roles'
 	}
 
 	//	optionally groups or gid filter
-	if (isset($filters['gid']) || in_array('groups', $fields)) {
+	if (isset($filter['gid']) || in_array('groups', $fields)) {
 		$q->leftJoin('og_membership', 'ogm', 'ogm.etid = u.uid AND ogm.entity_type = \'user\' AND ogm.state = 1');
 	}
 
@@ -228,7 +228,7 @@ function edf_extract_og_admins(&$users, $extract_gid = -1) {
 //	universal task getter
 //	supported fields:
 //	'due_date', 'study_groups', 'targeted_users', 'answers_by_uid'
-//	supported filters (EQ only)
+//	supported filter (EQ only)
 //	'gid', 'task_id', 'max_time_ago_changed'
 //	usage example: edf_get_tasks(['due_date'], ['uid' => 5, 'gid' => 3])
 function edf_get_tasks($fields = ['due_date', 'study_groups', 'targeted_users', 'answers_by_uid'], $filter = []) {
@@ -256,17 +256,17 @@ function edf_get_tasks($fields = ['due_date', 'study_groups', 'targeted_users', 
 
 	//	gid filter
 	if (isset($filter['gid'])) {
-		$q->condition('ogm.gid', $filters['gid']);
+		$q->condition('ogm.gid', $filter['gid']);
 	}
 
 	//	task_id filter
 	if (isset($filter['task_id'])) {
-		$q->condition('n.nid', $filters['task_id']);
+		$q->condition('n.nid', $filter['task_id']);
 	}
 
 	//	changed filter
 	if (isset($filter['changed'])) {
-		$q->condition('n.changed', $filters['changed']);
+		$q->condition('n.changed', $filter['changed']);
 	}
 
 	//  optionally due date
@@ -417,6 +417,9 @@ function edf_fill_user_tasks(&$users, $tasks) {
 			if (isset($tasks_by_gid[$group['group_id']])) {
 				foreach ($tasks_by_gid[$group['group_id']] as $task) {
 
+					//	default
+					$task['grade'] = ['status' => 'unanswered'];
+
 					//	check if applicable
 					if (count($task['study_groups']) > 0) {
 						$applicable = false;
@@ -431,11 +434,10 @@ function edf_fill_user_tasks(&$users, $tasks) {
 							$applicable = true;
 						}
 
-						if (!$applicable) continue;
+						if (!$applicable) {
+							$task['grade'] = ['status' => 'not_applicable'];
+						} 
 					}
-
-					//	dummy grade
-					$task['grade'] = ['status' => 'unanswered'];
 
 					//	if has a set answer for this user, use that
 					if (isset($task['answers_by_uid'][$user['uid']])) {

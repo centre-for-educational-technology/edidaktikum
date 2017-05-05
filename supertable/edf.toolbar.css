@@ -1,0 +1,303 @@
+/* reset */
+
+.edf_toolbar, .edf_toolbar * {
+	animation : none;
+    animation-delay : 0;
+    animation-direction : normal;
+    animation-duration : 0;
+    animation-fill-mode : none;
+    animation-iteration-count : 1;
+    animation-name : none;
+    animation-play-state : running;
+    animation-timing-function : ease;
+    backface-visibility : visible;
+    background : 0;
+    background-attachment : scroll;
+    background-clip : border-box;
+    background-color : transparent;
+    background-image : none;
+    background-origin : padding-box;
+    background-position : 0 0;
+    background-position-x : 0;
+    background-position-y : 0;
+    background-repeat : repeat;
+    background-size : auto auto;
+    border : 0;
+    border-style : none;
+    border-width : medium;
+    border-color : inherit;
+    border-bottom : 0;
+    border-bottom-color : inherit;
+    border-bottom-left-radius : 0;
+    border-bottom-right-radius : 0;
+    border-bottom-style : none;
+    border-bottom-width : medium;
+    border-collapse : separate;
+    border-image : none;
+    border-left : 0;
+    border-left-color : inherit;
+    border-left-style : none;
+    border-left-width : medium;
+    border-radius : 0;
+    border-right : 0;
+    border-right-color : inherit;
+    border-right-style : none;
+    border-right-width : medium;
+    border-spacing : 0;
+    border-top : 0;
+    border-top-color : inherit;
+    border-top-left-radius : 0;
+    border-top-right-radius : 0;
+    border-top-style : none;
+    border-top-width : medium;
+    bottom : auto;
+    box-shadow : none;
+    box-sizing : content-box;
+    caption-side : top;
+    clear : none;
+    clip : auto;
+    color : inherit;
+    columns : auto;
+    column-count : auto;
+    column-fill : balance;
+    column-gap : normal;
+    column-rule : medium none currentColor;
+    column-rule-color : currentColor;
+    column-rule-style : none;
+    column-rule-width : none;
+    column-span : 1;
+    column-width : auto;
+    content : normal;
+    counter-increment : none;
+    counter-reset : none;
+    cursor : auto;
+    direction : ltr;
+    aaaaaadisplay : inline;
+    empty-cells : show;
+    float : none;
+    font : normal;
+    font-family : inherit;
+    font-size : medium;
+    font-style : normal;
+    font-variant : normal;
+    font-weight : normal;
+    height : auto;
+    hyphens : none;
+    left : auto;
+    letter-spacing : normal;
+    line-height : normal;
+    list-style : none;
+    list-style-image : none;
+    list-style-position : outside;
+    list-style-type : disc;
+    margin : 0;
+    margin-bottom : 0;
+    margin-left : 0;
+    margin-right : 0;
+    margin-top : 0;
+    max-height : none;
+    max-width : none;
+    min-height : 0;
+    min-width : 0;
+    opacity : 1;
+    orphans : 0;
+    outline : 0;
+    outline-color : invert;
+    outline-style : none;
+    outline-width : medium;
+    overflow : visible;
+    overflow-x : visible;
+    overflow-y : visible;
+    padding : 0;
+    padding-bottom : 0;
+    padding-left : 0;
+    padding-right : 0;
+    padding-top : 0;
+    page-break-after : auto;
+    page-break-before : auto;
+    page-break-inside : auto;
+    perspective : none;
+    perspective-origin : 50% 50%;
+    position : static;
+    /* May need to alter quotes for different locales (e.g fr) */
+    quotes : '\201C' '\201D' '\2018' '\2019';
+    right : auto;
+    tab-size : 8;
+    table-layout : auto;
+    text-align : inherit;
+    text-align-last : auto;
+    text-decoration : none;
+    text-decoration-color : inherit;
+    text-decoration-line : none;
+    text-decoration-style : solid;
+    text-indent : 0;
+    text-shadow : none;
+    text-transform : none;
+    top : auto;
+    transform : none;
+    transform-style : flat;
+    transition : none;
+    transition-delay : 0s;
+    transition-duration : 0s;
+    transition-property : none;
+    transition-timing-function : ease;
+    unicode-bidi : normal;
+    vertical-align : baseline;
+    visibility : visible;
+    white-space : normal;
+    widows : 0;
+    width : auto;
+    word-spacing : normal;
+    z-index : auto;
+}
+
+/* stuff */
+
+
+.edf_toolbar  {
+	text-align:right;
+}
+
+
+/*    container    */
+
+.edf_toolbar .container {
+	display:inline-block;
+	margin-right:5px;
+
+	vertical-align:text-top;
+	overflow:hidden;
+	white-space:nowrap;
+
+	transition:max-width 0.2s ease-in;
+	max-width:400px;
+	height:50px;
+
+}
+
+.edf_toolbar .menu:not([data-toggled]) + .container {
+
+	transition:max-width 0.2s ease-out, opacity 0.2s;
+	max-width:0px;
+	opacity:0;
+
+}
+
+
+
+/*    item    */
+
+.edf_toolbar .item {
+	display:inline-block;
+	filter: drop-shadow(0px 1px 2px rgba(0,0,0,0.3));
+	background-color:rgba(245,245,245,1);
+	padding:6px;
+	margin:3px;
+	vertical-align:text-top;
+	cursor:pointer;
+	border-radius:4px;
+	color:rgba(0,0,0,0.7);
+	font-family: arial;
+	font-size:14px;
+	user-select:none;
+	min-width:20;
+	box-sizing:border-box;
+	position:relative;
+	text-align:left;
+}
+
+.edf_toolbar .item:hover {
+	background-color:rgba(250,250,250,1);
+	filter: drop-shadow(0px 1px 2px rgba(128,128,64,0.3));
+}
+
+.edf_toolbar .menu[data-toggled], .edf_toolbar .toggle[data-toggled] {
+	filter: drop-shadow(0px 1px 4px rgba(0,128,0,0.5));
+	abackground-color:rgba(255,255,255,1);
+}
+
+.edf_toolbar .item:active {
+	transform: translateY(2px);
+}
+
+/*    menu    */
+
+.edf_toolbar .menu {
+	position:relative;
+	margin-left:10px;
+	padding:0;
+	width:30px;
+	height:30px;
+}
+
+.edf_toolbar .menu:after {
+	content:'';
+
+	position:absolute;
+	bottom:-13px;
+	width:100%;
+	height:15px;
+	
+	box-sizing:border-box;
+	border-left:15px solid rgba(245,245,245,1);
+	border-right:15px solid rgba(245,245,245,1);
+	border-bottom:15px solid transparent;
+
+}
+
+.edf_toolbar .menu:hover:after {
+	border-left:15px solid rgba(250,250,250,1);
+	border-right:15px solid rgba(250,250,250,1);
+	border-bottom:15px solid transparent;
+}
+
+
+/*    specific    */
+
+
+.edf_toolbar .item.functions {
+	font-size:0;
+}
+
+.edf_toolbar .item.functions:before {
+	content:'fx';
+	font-family: gabriola;
+	font-size:24px;
+	font-style:italic;
+	color:rgba(0,0,0,0.6);
+	position:absolute;
+	left:50%;
+	transform:translate(-50%);
+}
+
+.edf_toolbar .item.fullsize {
+	width:35px;
+	height:30px;
+	font-size:0px;
+}
+
+.edf_toolbar .item.fullsize:before {
+	content: '[\2610]';
+	font-family:arial;
+	font-size:16px;
+	color:rgba(0,0,0,0.5);
+}
+
+.edf_toolbar .item.resize {
+	width:35px;
+	height:30px;
+	font-size:0px;
+}
+
+.edf_toolbar .item.resize:before {
+	content: '\21f2';
+	font-family:arial;
+	font-size:24px;
+	color:rgba(0,0,0,0.5);
+
+	position:absolute;
+	left:50%;
+	top:50%;
+	transform:translate(-50%, -50%);
+}
+
