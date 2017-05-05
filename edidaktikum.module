@@ -5,6 +5,8 @@
  * eDidaktikum module.
  */
 
+require("edf.php");
+
 /**
  * Email to be used with automatic system messages
  */
@@ -195,6 +197,8 @@ function edidaktikum_menu() {
     'access callback' => true,
     'page arguments' => array(1, 2),
   );
+
+
 
   return $items;
 }
@@ -1013,6 +1017,41 @@ function edidaktikum_views_query_alter(&$view, &$query){
 //  example: 
 //    ed_util_array_concentrate_member([ ['id' => 1, 'value' => 1], ['id' => 1, 'value' => 2] ], 'id', 'value')
 //    returns: ['id' => 1, 'value' => [1, 2]];
+function ed_util_array_concentrate_members($arr, $primary_key, $concentrate_keys) {
+  $map = [];
+  $ret = [];
+
+  foreach($arr as &$item) {
+    $key = $item[$primary_key];
+
+    if (!isset($map[$key])) {  
+      foreach($concentrate_keys as &$concentrate_key) {
+        $item[$concentrate_key] = empty($item[$concentrate_key]) ? [] : [ $item[$concentrate_key] ];
+      }      
+      $ret []=& $item;
+      $map[$key] =& $item;
+    } else {
+      $original =& $map[$key];
+      foreach($concentrate_keys as &$concentrate_key) {
+        if (!empty($item[$concentrate_key])) {
+          if (!in_array($item[$concentrate_key], $original[$concentrate_key])) {
+            $original[$concentrate_key] []= $item[$concentrate_key];
+          }
+        }
+      }
+    }
+  }
+
+  return $ret;
+}
+
+
+//  used for arrays of keyed arrays
+//  concentrates a member of the keyed arrays into an array
+//  useful for things like left joined sql results
+//  example: 
+//    ed_util_array_concentrate_member([ ['id' => 1, 'value' => 1], ['id' => 1, 'value' => 2] ], 'id', 'value')
+//    returns: ['id' => 1, 'value' => [1, 2]];
 function ed_util_array_concentrate_member($arr, $primary_key, $concentrate_key) {
   $map = [];
   $ret = [];
@@ -1041,6 +1080,34 @@ function ed_util_rename_key_of_arrays($arr, $old_name, $new_name) {
     unset($item[$old_name]);
   }
   return $arr;
+}
+
+function ed_get_user($uid) {
+  $q = db_select('users', 'u');
+  $q->condition('u.uid', $uid);
+  $q->fields('u', ['uid', 'data']);
+  $q->leftJoin('field_data_ed_field_full_name', 'fn', 'fn.entity_id = u.uid');
+  $q->fields('fn', ['ed_field_full_name_value']);
+  $q->leftJoin('field_data_ed_field_study_group', 'sg', 'sg.entity_id = u.uid');
+  $q->fields('sg', ['ed_field_study_group_value']);
+  $user = $q->execute()->fetchAll(PDO::FETCH_ASSOC);
+  unset($q);
+
+  //  change names of things + concentrate
+  $user = ed_util_array_concentrate_member($user, 'uid', 'study_groups');
+  $user = ed_util_rename_key_of_arrays($user, 'ed_field_full_name_value', 'full_name');
+  $user = ed_util_rename_key_of_arrays($user, 'ed_field_study_group_value', 'study_groups');
+  $user = $user[0];
+
+  //  if no name given, try fetch from hybridauth data
+  if ($user['full_name'] == NULL) {
+    $data = unserialize($user['data']);
+    if (isset($data['hybridauth']['displayName'])) {
+      $user['full_name'] = $data['hybridauth']['displayName'];
+    }
+  }
+
+  return $user;
 }
 
 //  gets group members ['uid']
@@ -1148,6 +1215,17 @@ function ed_get_group_members($gid, $b_full_name = false, $b_roles = false, $b_s
   }
 
   return $members;
+}
+
+function ed_filter_admins(&$members) {
+  $admins = [];
+  for ($i = count($members) - 1; $i >= 0; $i--) {
+    if (in_array(OG_ADMINISTRATOR_ROLE, $members[$i]["roles"])) {
+      $admins []= $members[$i];
+      unset($members[$i]);
+    }
+  }
+  return $admins;
 }
 
 //  gets group tasks ['nid', 'title']

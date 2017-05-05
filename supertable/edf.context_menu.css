@@ -1,0 +1,64 @@
+.edf_context_menu {
+	position:absolute;
+	left:0;top:0;
+	
+	border-radius:4px;
+	/*
+	overflow:hidden;
+	box-shadow: 0px 1px 3px 0px rgba(0,0,0,0.3);
+	background-color:rgb(240,240,240);
+	*/
+}
+
+.edf_context_menu > * {
+	position:absolute;
+	left:0;top:0;
+	font:12px arial;
+	color:black;
+	padding:7px;
+	box-sizing:border-box;
+	box-shadow: 0px 1px 3px 0px rgba(0,0,0,0.3);
+}
+
+.edf_context_menu .button {
+	width:150px;
+	background-color:rgb(250,250,250);
+	border-radius:4px;
+	cursor:pointer;
+	white-space:nowrap;
+	z-index:2;
+}
+
+.edf_context_menu .button:hover {
+	background-color:rgb(255,255,255);
+	/*
+	width:155px;
+	border-right:0;
+	border-radius:4px 0px 0px 4px;
+	*/
+}
+
+/*
+
+.edf_context_menu .button:hover:before {
+	position:absolute;
+	right:-5px;
+	width:5px;
+	height:100%;
+	top:0;
+	background-color:rgb(255,255,255);
+	content:"";
+}
+*/
+
+.edf_context_menu .button:hover + .info {
+
+	opacity:1;
+}
+
+.edf_context_menu .info {
+	width:150px;
+	background-color:rgba(255,255,255, 1);
+	z-index:1;
+	opacity:0;
+}

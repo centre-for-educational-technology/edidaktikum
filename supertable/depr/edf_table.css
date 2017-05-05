@@ -1,0 +1,85 @@
+.edf_table {
+	position:relative;
+	border:1px solid rgba(0,0,0,0.1);
+	border-radius:5px;
+	box-shadow: 0px 1px 3px 0px rgba(0,0,0,0.3);
+}
+
+.edf_table * {
+	position:absolute;
+	z-index:1;
+}
+.edf_table .edf_slider {
+	z-index:2;
+	opacity:0.3;
+}
+
+.edf_table .table_cell_viewer {
+	overflow:hidden;
+}
+
+.edf_table .horizontal_scroll {
+	bottom:0;
+	height:10px;
+}
+
+.edf_table .horizontal_scroll .thumb {
+	width:40px;
+	height:3px;
+}
+
+.edf_table .vertical_scroll {
+	right:0;
+	width:10px;
+}
+
+.edf_table .vertical_scroll .thumb {
+	height:40px;
+	width:3px;
+}
+
+/*	buttonize */
+
+.edf_table .button {
+	z-index:3;
+	display:flex;
+	justify-content:center;
+	align-items:center;
+	box-shadow: 0px 1px 3px 0px rgba(0,0,0,0.3);
+	border-radius:5px;
+	background-color:rgba(255,255,255,1);
+	position:absolute;
+}
+
+/*	resize thumb */
+
+.edf_table .resize_thumb {
+	right:-10px;
+	bottom:-10px;
+	width:30px;
+	height:30px;
+	cursor:nwse-resize;
+}
+
+.edf_table .resize_thumb:before {
+	content:"\2927\2929";
+	letter-spacing:-18.5px;
+	width:19px; height:31px;
+	font-family:arial;
+	font-size:20px;
+}
+
+/*	add statistics */
+.edf_table .add_row_statistics {
+	right:-10px;
+	top:5px;
+	width:20px;
+	height:20px;
+	cursor:pointer;
+}
+
+.edf_table .add_row_statistics:before {
+	content:'+f';
+	font-family:arial;
+	font-size:12px;
+}

@@ -1,0 +1,47 @@
+.edf_slider {
+	position:absolute;
+	pointer-events:none;
+}
+
+.edf_slider.horizontal {
+	cursor:ew-resize;
+}
+
+.edf_slider.vertical {
+	cursor:ns-resize;
+}
+
+.edf_slider .thumb {
+	pointer-events:all;
+	left:0;
+	top:0;
+	position:absolute;
+	width:10px;
+	height:10px;
+}
+
+.edf_slider .thumb:before {
+	content:"";
+	background-color:black;
+	position:absolute;
+}
+
+.edf_slider:not(.horizontal) .thumb {
+	right:0;
+	width:initial;
+}
+
+.edf_slider:not(.horizontal) .thumb:before {
+	top:4.5px;bottom:4.5px;
+	left:0;right:0;
+}
+
+.edf_slider:not(.vertical) .thumb {
+	bottom:0;
+	height:initial;
+}
+
+.edf_slider:not(.vertical) .thumb:before {
+	top:0;bottom:0;
+	left:4.5px;right:4.5px;
+}
