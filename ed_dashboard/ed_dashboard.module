@@ -50,7 +50,7 @@ function ed_dashboard_menu() {
   );
   $items['dashboard/student_activity'] = [
     'title' => t('Student activity'),
-    'access callback' => 'ed_current_user_is_administrator',
+    'access callback' => 'ed_current_user_is_administrator_or_supervisor',
     'page callback' => 'ed_student_activity_page',
     'weight' => 50,
     'menu_name' => 'ed-dashboard-menu',
@@ -62,6 +62,14 @@ function ed_dashboard_menu() {
 
 function ed_current_user_is_administrator() {
   return in_array('administrator', $GLOBALS['user']->roles);
+}
+
+function ed_current_user_is_supervisor() {
+  return in_array('supervisor', $GLOBALS['user']->roles);
+}
+
+function ed_current_user_is_administrator_or_supervisor() {
+  return ed_current_user_is_administrator() || ed_current_user_is_supervisor();
 }
 
 
