@@ -20,13 +20,14 @@
 		this.toolbar = new edf.toolbar(this.el, [
 			['menu', 'functions', 'functions'],		
 			['toggle', 'fullsize', 'fullsize', function(fullsize) { 
-				if (fullsize) this.el.setAttribute('fullsize', ''); 
-				else this.el.removeAttribute('fullsize'); 
-				for (var i = 0; i < 500; i+= 25) {
+				if (fullsize) {
+					edf.rect.set_hard(this.el, this.max_rect.x, this.max_rect.y, this.max_rect.width, this.max_rect.height);
+					this.set_camera(this.camera.x, this.camera.y, this.max_rect.width, this.max_rect.height - 60);
+				} else {
+					edf.rect.set_hard(this.el, this.normal_rect.x, this.normal_rect.y, this.normal_rect.width, this.normal_rect.height);
 					setTimeout(function() {
-						var rect = this.el.getBoundingClientRect();
-						this.set_camera(0, 0, rect.width, rect.height - 60);
-					}.bind(this), i);
+						this.set_camera(this.camera.x, this.camera.y, this.normal_rect.width, this.normal_rect.height - 60);
+					}.bind(this), 300);
 				}
 			}.bind(this)],
 			['button', 'resize', 'resize'],
@@ -44,13 +45,20 @@
 		}.bind(this));
 
 		edf.rect.set(this.el, 0, 0, 940, 550);
-	}
+	};
+
+	edf.table.prototype.calc_resize_rects = function() {
+		this.normal_rect = edf.rect.get(this.el);
+		var bcr = this.el.getBoundingClientRect();
+		this.max_rect = new edf.rect(-(bcr.left - 50), this.normal_rect.y, bcr.left + bcr.right - 100, this.normal_rect.height + 50);
+	};
 
 	edf.table.prototype.initialize = function() {
 		this.cols.calculate_positions();
 		this.rows.calculate_positions();
 		var rect = edf.rect.get(this.el_cells_outer);
 		this.set_camera(0, 0, rect.width, rect.height);
+		this.calc_resize_rects();
 	};
 
 	edf.table.prototype.set_camera = function(x, y, width, height) {

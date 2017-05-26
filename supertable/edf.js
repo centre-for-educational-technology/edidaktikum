@@ -195,7 +195,21 @@ edf.compress = function(s) {
 		'get' : function() { return this.y + this.height; },
 	});
 
+	edf.rect.prototype.subtract = function(other) {
+		return new edf.rect(this.x - other.x, this.y - other.y, this.width - other.width, this.height - other.height);
+	};
 
+	edf.rect.prototype.add = function(other) {
+		return new edf.rect(this.x + other.x, this.y + other.y, this.width + other.width, this.height + other.height);
+	}
+
+	edf.rect.prototype.divide = function(by) {
+		return new edf.rect(this.x / by, this.y / by, this.width / by, this.height / by);
+	};
+
+	edf.rect.prototype.multiply = function(by) {
+		return new edf.rect(this.x * by, this.y * by, this.width * by, this.height * by);
+	};
 
 	edf.rect.regex_numbers = /(\d+\.?\d+)/g;
 	edf.rect.extract_numbers = function(s) { 
@@ -314,6 +328,7 @@ edf.compress = function(s) {
 	
 	
 }
+
 
 
 

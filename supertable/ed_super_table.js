@@ -131,9 +131,6 @@
 window.addEventListener("load", function() {
 	var ed = new edf.table();
 
-	console.log(test_data.rows);
-	console.log(test_data.cols);
-
 	ed.add_rows(test_data.rows);
 
 	ed.add_cols(test_data.cols);

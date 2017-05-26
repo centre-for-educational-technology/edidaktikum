@@ -163,7 +163,7 @@
 	height:300px;
 	width:600px;
 	position:relative;
-	transition:min-width 0.3s;
+	transition:width 0.1s linear, height 0.1s linear, transform 0.1s linear;
 	font-family: 'Open Sans', sans-serif;
 	font-weight:300;
 	font-size:14px;
