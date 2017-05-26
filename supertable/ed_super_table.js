@@ -1,10 +1,12 @@
 
 
-{
+{	//	generator
+
+
 	function make_name() {
 		var first_names = ['Toomas', 'Juhan', 'Ilmar', 'Pärt', 'Anne', 'Terje', 'Jaana', 'Mari', 'Peeter', 'Liisa', 'Jaak', 'Elina', 'Mart', 'Maarja'];
 		var last_names = ['Sepp', 'Tungal', 'Koidula', 'Sillamäe', 'Kingsepp', 'Poher', 'Tamm', 'Vaher', 'Kask', 'Puu', 'Lumi', 'Pohl', 'Maasikas', 'Kukeseen'];
-		return first_names[Math.floor(Math.random() * 0.9999999 * first_names.length)] + " " + last_names[Math.floor(Math.random() * 0.9999999 * last_names.length)];
+		return first_names[Math.floor(Math.random() * first_names.length)] + " " + last_names[Math.floor(Math.random() * last_names.length)];
 	}
 
 	function make_study_group() {
@@ -39,10 +41,12 @@
 	var test_counter = 0;
 	var exam_counter = 0;
 	function make_title() {
+		var date = new Date(Math.random() * 2000000000000);
+		date = "<br>" + date.getDate() + "/" + date.getMonth() + "/" + date.getYear();
 		var r = Math.random();
-		if (r < 0.7) return 'Kodune ülesanne ' + ++home_task_counter;
-		if (r < 0.9) return 'Kontrolltöö ' + ++test_counter;
-		return 'Eksam ' + ++exam_counter;
+		if (r < 0.7) return 'Kodune ülesanne ' + ++home_task_counter + date;
+		if (r < 0.9) return 'Kontrolltöö ' + ++test_counter + date;
+		return 'Eksam ' + ++exam_counter + date;
 		
 	}
 
@@ -54,25 +58,25 @@
 			'due_date' : make_date(),
 			'include_ids' : make_include_ids(),
 			'title' : make_title(),
-			'can_grade' : Math.random() < 0.8
+			'can_grade' : Math.random() < 0.8,
 		}
 	}
 	
 	function make_status() {
 		var r = Math.random();
-		if (r < 0.5) return 'Accepted';
-		if (r < 0.75) return 'Rejected';
-		if (r < 0.9) return 'Unanswered';
-		return 'Unchecked';
+		if (r < 0.5) return 'accepted';
+		if (r < 0.75) return 'rejected';
+		if (r < 0.9) return 'unanswered';
+		return 'unchecked';
 	}
 	
 	function make_answer(task, user) {
 		var stat = make_status();
 		var grade = undefined;
 		if (task.can_grade) {
-			if (stat == 'Accepted') {
+			if (stat == 'accepted') {
 				grade = 50 + Math.floor(Math.random() * 50);
-			} else if (stat == 'Rejected') {
+			} else if (stat == 'rejected') {
 				grade = Math.floor(Math.random() * 49);
 			}
 		}
@@ -88,86 +92,55 @@
 	}
 }
 
-var test_table_data = {
-	'rows' : [],
-	'cols' : [],
-	'cells' : [],
-	'row_id_func' : function(cell) { return cell.user_id },
-	'col_id_func' : function(cell) { return cell.task_id }
-};
 
-for (var i = 0; i < 100; i++) {
-	test_table_data.rows.push(make_person());
-}
+{	//	generating
 
-for (var i = 0; i < 50; i++) {
-	test_table_data.cols.push(make_task());
-}
-
-for (var y = 0; y < test_table_data.rows.length; y++) {
-	for (var x = 0; x < test_table_data.cols.length; x++) {
-		var task = test_table_data.cols[x];
-		var user = test_table_data.rows[y];
-		test_table_data.cells.push(make_answer(task, user));
-	}
-}
-
-
-var divs = [];
-window.addEventListener("load", function() {
-	/*
-	var statcols = {'Accepted' : 'rgba(220,255,220,1)', 'Rejected' : 'rgba(255,220,220,1)', 'Unanswered' : 'transparent', 'Unchecked' : 'rgba(255,255,220,1)'};
-	var tt = new edf.table_old(test_table_data.rows, test_table_data.cols, test_table_data.cells, 
-		function(answer) { return { 'row_id' : answer.user_id, 'col_id' : answer.task_id }; },
-		function(member_row) { return member_row.data.name; },
-		function(task_col) 	 { return task_col.data.title; },
-		function(answer_cell) { return "<div style='background-color:" + statcols[answer_cell.data.status] + "'>" + (edf.isdef(answer_cell.data.grade) ? answer_cell.data.grade : "") + "</div>"; }
-	);
-	document.body.appendChild(tt.el);
-	tt.init();
-	*/
-
-	//	make column groups
-	var column_title_by_id = {};
-	var column_groups = {
-		'_' : ['Name'],
-		'Personal Information' : ['Age', 'Height'],
-		'Results' : []
-	};
-	for (var i = 0; i < test_table_data.cols.length; i++) {
-		column_groups['Results'].push(test_table_data.cols[i].title);
-		column_title_by_id[test_table_data.cols[i].id] = test_table_data.cols[i].title;
+	var test_data = {
+		'rows' : [],
+		'cols' : [
+			{'title' : 'name', 'sticky' : 'before', 'css_class' : 'col_header'}, 
+			{'title' : 'age', 'group' : 'Personal Information', 'size' : 70},
+			{'title' : 'height', 'group' : 'Personal Information', 'size' : 80}
+		]
 	}
 
-	//	make rows
-	var rows = [];
-	for (var i = 0; i < test_table_data.rows.length; i++) {
-		var row = test_table_data.rows[i];
-		for (var j = 0; j < test_table_data.cells.length; j++) {
-			if (test_table_data.cells[j].user_id == row.id) {
-				test_table_data.cells[j].title = test_table_data.cells[j].status
-				row[column_title_by_id[test_table_data.cells[j].task_id]] = test_table_data.cells[j];
-			}
+	var test_tasks = []
+	for (var i = 0; i < 10; i++) {
+		var task = make_task()
+		test_tasks.push(task);
+		test_data.cols.push({
+			'title' : task.title, 'id' : task.id, 'group' : 'Study Results', 'data' : task, 'sort_key' : 'grade'
+		});
+	}
+
+	for (var i = 0; i < 30; i++) {
+		var person = make_person();
+		for (var j = 0; j < test_tasks.length; j++) {
+			person[test_tasks[j].id] = make_answer(test_tasks[j], person);
 		}
-		rows.push(row);
+		test_data.rows.push({
+			'id' : person.id, 'data' : person
+		});
 	}
-	//console.log(column_groups);
-	console.log(rows);
+}
 
+
+
+
+
+window.addEventListener("load", function() {
 	var ed = new edf.table();
 
-	ed.add_col('name', undefined, 150, true);
-	ed.add_col('age', 'Personal Information');
-	ed.add_col('height', 'Personal Information');
-	for (var i = 0; i < test_table_data.cols.length; i++) {
-		ed.add_col(test_table_data.cols[i].title, 'Study results', 150);
-	}
+	console.log(test_data.rows);
+	console.log(test_data.cols);
 
-	for (var i = 0; i < rows.length; i++) {
-		ed.add_row(rows[i]);
-	}
+	ed.add_rows(test_data.rows);
 
-	var mean_grade_func = function(values) {
+	ed.add_cols(test_data.cols);
+
+	ed.header_row.size = 50;
+
+	ed.add_function("Mean Grade", undefined, "Study Results", function(values) {
 		var total = 0;
 		var count = 0;
 		for (var i = 0; i < values.length; i++) {
@@ -177,55 +150,20 @@ window.addEventListener("load", function() {
 			}
 		}
 		return Math.round((total / count) * 10) / 10;
-	};
+	});
 
-	var percent_accepted_func = function(values) {
+	ed.add_function("% Accepted", undefined, "Study Results", function(values) {
 		var total = 0;
 		var count = 0;
 		for (var i = 0; i < values.length; i++) {
-			if (values[i].status === "Accepted") count++;
-			if (values[i].status != "Unanswered" && values[i].status != "Unchecked") total++;
+			if (values[i].status === "accepted") count++;
+			if (values[i].status != "unanswered" && values[i].status != "unchecked") total++;
 		}
 		return (Math.round((count / total * 100) * 10) / 10) + "%";
-	}
-	
+	});
 
-	ed.add_function("Mean Grade", undefined, "Study results", mean_grade_func);
-	ed.add_function("% Accepted", undefined, "Study results", percent_accepted_func);
-
-	//console.log(edt);
-
-
-	
-	
 	document.body.appendChild(ed.el);
 	ed.initialize();
-	//console.log(edf.rect.get(ed.el));
-
-	var kekmax = 300;
-	var kekmin = 100;
-
-	var kekxm = 3;
-	var kekx = kekmin + kekxm;
-	
-	var kekym = 4;
-	var keky = kekmin + kekym;
-	
-
-	function kekmaster() {
-		kekx += kekxm;
-		if (kekx >= kekmax || kekx <= kekmin) {
-			kekxm = -kekxm;
-			keky += kekym;
-			if (keky >= kekmax || keky <= kekmin) {
-				kekym = -kekym;
-			}
-		}
-		ed.set_camera(kekx, keky);
-		setTimeout(kekmaster, 0);
-	}
-
-	//kekmaster();
 });
 
 

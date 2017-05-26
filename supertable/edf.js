@@ -3,6 +3,7 @@
 	window['edf'] = {
 		'isdef' : function(x) { return x !== undefined; },
 		'optional' : function(x, def) { return edf.isdef(x) ? x : def; },
+		'ifdef' : function(test, a, b) { return edf.isdef(test) ? a : b },
 		'filter' : function(collection, predicate) {
 			var ret = [];
 			for (var i = 0; i < collection.length; i++) {
@@ -79,9 +80,40 @@ edf.differentiate_arrays = function(old_arr, new_arr) {
 }
 
 
+edf.compress = function(s) {
+	var capital_token = '²';
+	var palette = [capital_token];
+	var data = [];
+	for (var i = 0; i < s.length; i++) {
+		var c = s.substring(i, i + 1);
+		var cl = c.toLowerCase();
 
+		if (cl != c) {
+			c = cl;
+			data.push(0);
+		}
 
+		var idx = palette.indexOf(c);
+		if (idx == -1) {
+			idx = palette.length;
+			palette.push(c);
+		}
 
+		data.push(idx);
+	}
+	var pad = function(s) {while (s.length < 5) {s = '0' + s;} return s;};
+	var bin = "";
+	for (var i = 0; i < data.length; i++) {
+		bin += pad(data[i].toString(2));
+	}
+	var encoded = "";
+	for (var i = 0; i < bin.length; i += 8) {
+		var b = bin.substring(i, Math.min(i + 8, bin.length));
+		var n = parseInt(b, 2);
+		encoded += String.fromCharCode(n);
+	}
+	return encoded;
+};
 
 
 

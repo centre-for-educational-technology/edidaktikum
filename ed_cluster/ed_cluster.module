@@ -1680,48 +1680,77 @@ function ed_task_manager_experimental($arg_type, $node) {
   drupal_add_css(drupal_get_path('module', 'edidaktikum') . '/supertable/edf.toolbar.css');
 
 
+  //  fetch data
   $users = edf_get_users(['groups', 'full_name', 'study_groups', 'roles'], ['gid' => $node->nid]);
   $tasks = edf_get_tasks(['due_date', 'study_groups', 'targeted_users', 'answers_by_uid'], ['gid' => $node->nid]);
-
-  //  make task names unique
-  $u_task_names = [];
-  foreach ($tasks as &$task) {
-    if (!isset($u_task_names[$task['title']])) {
-      $u_task_names[$task['title']] = 1;
-    } else {
-      $u_task_names[$task['title']]++;
-      $task['title'] .= " " . $u_task_names[$task['title']];
-    }
-    unset($task);
-  }
-
   edf_fill_user_tasks($users, $tasks);
 
   //  build cols
-  $cols_json = 'var cols = {"undefined" : ["Name"], "Study Results" : ['; 
-  foreach ($tasks as $task) {
-    $cols_json .= '"' . $task['title'] . '",';
-  }
-  $cols_json .= ']};';
+  $cols = [
+    [ 
+      'title' => 'Name',
+      'id' => 'full_name',
+      'group' => 'Personal Information',
+      'sticky' => 'before',
+      'css_class' => 'col_header'
+    ]
+  ];
+
+  foreach ($tasks as &$task) {
+    $cols []= [
+      'id' => $task['task_id'],
+      'title' => $task['title'],
+      'group' => 'Tasks',
+      'sort_key' => 'grade'
+    ];
+    unset($task);
+  };
+  $cols_json = json_encode($cols);
 
   //  build rows
   $rows = [];
-  foreach ($users as $user) {
+
+  foreach ($users as &$user) {
     if (!isset($user['groups'][$node->nid])) continue;
-    if ($user['groups'][$node->nid]['admin']) continue;
-    if (count($user['groups'][$node->nid]['tasks']) < 1) continue;
+    $group_data = $user['groups'][$node->nid];
+    if ($group_data['admin']) continue;
 
-    $row = [ 'Name' => $user['full_name'] ];
-    foreach ($user['groups'][$node->nid]['tasks'] as $task) {
-      $task['grade']['title'] = $task['grade']['status'];
-      $row[$task['title']] = $task['grade'];
+    //  build cells
+    $data = [ 'full_name' => $user['full_name'] ];
+    foreach ($group_data['tasks'] as &$task) {
+      $data[$task['task_id']] = $task['grade'];
+      unset($task);
     }
-    
-    $rows [] = $row;
-  }
-  $rows_json = 'var rows = ' . json_encode($rows) . ';';
 
-  return "<div id='super_table_experiment'></div><script>(function(){" . $rows_json . $cols_json . "super_table_loader(rows, cols);})();</script>";
+    $rows []= [
+      'id' => $user['uid'],
+      'title' => $user['full_name'],
+      'group' => 'All Students',
+      'data' => $data
+    ];
+    unset($user);
+  }
+  $rows_json = json_encode($rows);
+
+  //  build table
+
+  $markup = '
+    <script id="tme_placeholder">
+      window.addEventListener("load", function() {
+        var table = new edf.table();
+        table.add_rows('. $rows_json .');
+        table.add_cols('. $cols_json .');
+        table.header_row.size = 50;
+
+        var el = document.querySelector("#tme_placeholder");
+        el.parentElement.replaceChild(table.el, el);
+        table.initialize();
+      });
+    </script>
+  ';
+
+
+  return $markup;
 }
 
 

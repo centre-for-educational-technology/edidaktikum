@@ -4,17 +4,17 @@
 		this.el = edf.create_element("div", "edf_table");
 		this.el_cells_outer = edf.create_element("div", "cells_outer", this.el);
 		this.el_cells_inner = edf.create_element("div", "cells_inner", this.el_cells_outer);
-		this.dyna_cells = [];
+		this.dyna_els = {};
 		this.camera = new edf.rect(0,0,0,0);
 		this.last_frame = Date.now();
 
 		this.visibility_version = 0;
 		this.default_row_size = 24;
-		this.default_col_size = 50;
+		this.default_col_size = 160;
 
 		this.cols = new edf.table.header_manager();
 		this.rows = new edf.table.header_manager();
-		this.header_row = this.add_row({}, "header", this.default_row_size, true);
+		this.header_row = this.add_row({'data' : {}, 'sticky' : 'before', 'sorting' : true});
 
 
 		this.toolbar = new edf.toolbar(this.el, [
@@ -77,15 +77,13 @@
 	};
 
 	edf.table.prototype.get_cells = function(rows, cols) {
-		var cells = [];
+		var cells = {};
 		for (var y = 0; y < rows.length; y++) {
-			if (rows[y].type == 'group_item') continue;
 			for (var x = 0; x < cols.length; x++) {
-				if (cols[x].type == 'group_item') continue;
-				cells.push(rows[y].get_cell(cols[x]));
+				var cell = rows[y].get_cell(cols[x]);
+				cells[cell.id] = cell;
 			}
 		}
-
 		return cells;
 	};
 
@@ -93,28 +91,27 @@
 		//	get visible rows, cols and cells
 		var cols = this.cols.get_visible(this.camera.x, this.camera.x + this.camera.width, true);
 		var rows = this.rows.get_visible(this.camera.y, this.camera.y + this.camera.height, true);
-
-		
+	
 		//	find max x
 		var max_x = 0, max_x_w = 0;
 		for (var i = 0; i < cols.length; i++) {
-			if (!cols[i].sticky && cols[i].pos > max_x) max_x = cols[i].pos;
-			if (cols[i].sticky) {
+			if (cols[i].sticky == 'after') {
 				max_x_w += cols[i].size;
 			} else {
-				if (cols[i].pos > max_x) max_x = cols[i].pos;
+				max_x = Math.max(max_x, cols[i].pos);
 			}
 		}
 		max_x += max_x_w;
 
+
+
 		//	find max y
 		var max_y = 0, max_y_w = 0;
 		for (var i = 0; i < rows.length; i++) {
-			if (!rows[i].sticky && rows[i].pos > max_y) max_y = rows[i].pos;
-			if (rows[i].sticky) {
+			if (rows[i].sticky == 'after') {
 				max_y_w += rows[i].size;
 			} else {
-				if (rows[i].pos > max_y) max_y = rows[i].pos;
+				max_y = Math.max(max_y, rows[i].pos);
 			}
 		}
 		max_y += max_y_w;
@@ -125,119 +122,139 @@
 		var sticky_right = Math.min(sticky_left + this.camera.width, max_x);
 		var sticky_bottom = Math.min(sticky_top + this.camera.height, max_y);
 
-		//	update sticky col positions
+		//	stickies and dynamic content
 		for (var i = 0; i < cols.length; i++) {
-			if (cols[i].sticky) {
-				if (cols[i].type === 'dynacol') {
-					sticky_right -= cols[i].size;
-					cols[i].pos = sticky_right;
-				} else {
-					cols[i].pos = sticky_left;
-					sticky_left += cols[i].size;
-				}
+			cols[i].update_data(this.visibility_version);
+
+			if (cols[i].sticky == 'before') {
+				cols[i].pos = sticky_left;
+				sticky_left += cols[i].size;
+			}
+			if (cols[i].sticky == 'after') {
+				sticky_right -= cols[i].size;
+				cols[i].pos = sticky_right;
 			}
 		}
 
-		//	update sticky row positions
 		for (var i = 0; i < rows.length; i++) {
-			if (rows[i].sticky) {
-				if (rows[i].type === 'dynarow') {
-					sticky_bottom -= rows[i].size;
-					rows[i].pos = sticky_bottom;
-				} else {
-					rows[i].pos = sticky_top;
-					sticky_top += rows[i].size;
-				}
+			rows[i].update_data(this.visibility_version);
+
+			if (rows[i].sticky == 'before') {
+				rows[i].pos = sticky_top;
+				sticky_top += rows[i].size;
+			}
+			if (rows[i].sticky == 'after') {
+				sticky_bottom -= rows[i].size;
+				rows[i].pos = sticky_bottom;
 			}
 		}	
 
 
-		var cells = this.get_cells(rows, cols);
+		var new_cells = this.get_cells(rows, cols);
 
-
-
-		//	update dynarow and dynacol content and sticky positions
-		for (var i = 0; i < cols.length; i++) {
-			if (cols[i].type === 'dynacol') cols[i].test_update_data(this.visibility_version);
-		}
-		for (var i = 0; i < rows.length; i++) {
-			if (rows[i].type === 'dynarow') rows[i].test_update_data(this.visibility_version);
-		}	
-
-		//	remove unused cells and filter out old items
-		var new_cells = cells.slice();
-		for (var i = this.dyna_cells.length - 1; i >= 0; i--) {
-			var idx = new_cells.indexOf(this.dyna_cells[i].item);
-
-			if (idx == -1) {
-				this.el_cells_inner.removeChild(this.dyna_cells[i].el);
-				this.dyna_cells.splice(i, 1);
+		//	remove existing ids from new cells list and delete elements with no match
+		for (var cell_id in this.dyna_els) {
+			if (cell_id in new_cells) {
+				delete new_cells[cell_id];
 			} else {
-				new_cells.splice(idx, 1);
+				this.el_cells_inner.removeChild(this.dyna_els[cell_id].el);
+				delete this.dyna_els[cell_id];
 			}
 		}
 
 		//	assign new items to cells
-		for (var i = 0; i < new_cells.length; i++) {
-			var dyna = {'item' : undefined, 'el' : edf.create_element('div', undefined, this.el_cells_inner), 'visibility_version' : -1};
-			dyna.el.className = "cell";
-			dyna.item = new_cells[i];
+		for (var cell_id in new_cells) {
+			var dyna = {'item' : new_cells[cell_id], 'el' : edf.create_element('div', 'cell', this.el_cells_inner), 'visibility_version' : -1};
 			dyna.item.dyna = dyna;
 			dyna.item.render(dyna.el);
-			this.dyna_cells.push(dyna);
+			this.dyna_els[cell_id] = dyna;
+
+			//	sorting stuff
+			if (dyna.item.row.sorting) {
+				var butt_sort_ascending = edf.create_element('div', 'sort_ascending', dyna.el);
+				butt_sort_ascending.addEventListener('click', (function(dyna) {
+					return function() {
+						this.visibility_version++;
+						this.rows.add_sorter(dyna.item.col, 'ascending');
+						this.rows.sort_and_filter();
+						this.update_view();
+					}.bind(this);
+				}.bind(this))(dyna));
+
+				var butt_sort_descending = edf.create_element('div', 'sort_descending', dyna.el);
+				butt_sort_descending.addEventListener('click', (function(dyna) {
+					return function() {
+						this.visibility_version++;
+						this.rows.add_sorter(dyna.item.col, 'descending');
+						this.rows.sort_and_filter();
+						this.update_view();
+					}.bind(this);
+				}.bind(this))(dyna));
+
+				var butt_sort_filter = edf.create_element('div', 'sort_filter', dyna.el);
+				butt_sort_filter.setAttribute('contenteditable', '');
+				butt_sort_filter.addEventListener('keyup', (function(dyna) {
+					return function(e) {
+						
+						var el = e.target;
+						var value = el.innerText;
+						if (value.length > 0) {
+							el.setAttribute("data-active", "");
+						} else {
+							el.removeAttribute("data-active");
+						}
+
+						this.visibility_version++;
+						this.rows.add_visibility_filter(dyna.item.col, value);
+						this.rows.sort_and_filter();
+						this.update_view();
+					}.bind(this);
+				}.bind(this))(dyna));
+			}
 		}
 		
 		//	apply updated positions
-		for (var i = 0; i < cells.length; i++) {
-			var dyna = cells[i].dyna;
+		for (var cell_id in this.dyna_els) {
+			var dyna = this.dyna_els[cell_id];
 			if (dyna.visibility_version != this.visibility_version || dyna.item.col.sticky || dyna.item.row.sticky) {
 				edf.rect.set_hard(dyna.el, dyna.item.col.pos, dyna.item.row.pos, dyna.item.col.size, dyna.item.row.size);
 				dyna.visibility_version = this.visibility_version;
 			}	
 		}
-
 		edf.rect.set_hard(this.el_cells_inner, -this.camera.x, -this.camera.y);
 	}
 
-	edf.table.prototype.add_row = function(data, group_name, size, sticky) {
-		var item = edf.table.header.create_row(data, size || this.default_row_size, sticky);
-		this.rows.add(item, group_name);
-		return item;
+	edf.table.prototype.add_row = function(row) {
+		var item = new edf.table.header(row);
+		item.default_size(this.default_row_size);
+		return this.rows.add(item);
 	};
 
-	edf.table.prototype.add_col = function(name, group_name, size, sticky) {
-		var item = edf.table.header.create_col(name, size || this.default_col_size, sticky);
-		this.cols.add(item, group_name);
-		this.header_row.data[name] = name;
-		return item;
-	};
-
-	edf.table.prototype.add_dynarow = function(name, row_group_name, col_group_name, func, size, sticky) {
-		var rows = !edf.isdef(row_group_name) ? this.rows.flat : this.rows.get_group(row_group_name);
-		var cols = !edf.isdef(col_group_name) ? this.cols.flat : this.cols.get_group(col_group_name);
-		var item = edf.table.header.create_dynarow(name, func, rows, cols, size || this.default_row_size, sticky);
-		this.rows.add(item, row_group_name);
-		return item;
-	};
-
-	edf.table.prototype.add_dynacol = function(name, row_group_name, col_group_name, func, size, sticky) {
-		var rows = !edf.isdef(row_group_name) ? this.rows.flat : this.rows.get_group(row_group_name);
-		var cols = !edf.isdef(col_group_name) ? this.cols.flat : this.cols.get_group(col_group_name);
-		var item = edf.table.header.create_dynacol(name, func, rows, cols, size || this.default_col_size, sticky);
-		this.cols.add(item, col_group_name);
-		this.header_row.data[name] = name;
-		return item;
+	edf.table.prototype.add_col = function(col) {
+		var item = new edf.table.header(col);
+		item.default_size(this.default_col_size);
+		this.header_row.data[item.id] = item.title;
+		return this.cols.add(item);
 	};
 
 	edf.table.prototype.add_function = function(title, row_group_name, col_group_name, func) {
 		var row, col;
 		var button = edf.toolbar.item.from_definition(["toggle", title, "tooltip", function(state) {
 			if (state) {
-				row = this.add_dynarow(title, row_group_name, col_group_name, func, this.default_row_size, true);
-				col = this.add_dynacol(title, row_group_name, col_group_name, func, this.default_col_size, true);
+				var rows = !edf.isdef(row_group_name) ? this.rows.flat : this.rows.get_group(row_group_name);
+				var cols = !edf.isdef(col_group_name) ? this.cols.flat : this.cols.get_group(col_group_name);
+
+				row = new edf.table.header({'group' : row_group_name, 'id' : title, 'title' : title, 'func' : func, 'func_rows' : rows, 'func_cols' : cols, 'size' : this.default_row_size, 'sticky' : 'after'});
+				this.rows.add(row);
+				col = new edf.table.header({'group' : col_group_name, 'id' : title, 'title' : title, 'func' : func, 'func_rows' : rows, 'func_cols' : cols, 'size' : this.default_col_size, 'sticky' : 'after'});
+				this.cols.add(col);
+
 			} else {
 				this.rows.rem(row);
 				this.cols.rem(col);
+				for (var i = 0; i < this.rows.flat.length; i++) {
+					this.rows.flat[i].rem_cell(col);
+				}
 			}
 			this.cols.calculate_positions();
 			this.rows.calculate_positions();
@@ -249,6 +266,22 @@
 		tb_funcs.add_child(button);
 	};
 
+	edf.table.prototype.add_rows = function(rows) {
+		for (var i = 0; i < rows.length; i++) {
+			this.add_row(rows[i]);
+		}
+	}
+
+	edf.table.prototype.add_cols = function(cols) {
+		for (var i = 0; i < cols.length; i++) {
+			this.add_col(cols[i]);
+		}
+	}
+
+	edf.table.prototype.sort_ascending = function(col) {
+		this.rows.sort_ascending(col);
+
+	}
 }
 
 

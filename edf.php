@@ -1,6 +1,7 @@
 <?php
 
 
+
 //	og role getter
 function edf_get_og_roles() {
 	static $roles;
