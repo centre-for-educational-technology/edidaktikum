@@ -203,7 +203,7 @@
 				butt_sort_ascending.addEventListener('click', (function(dyna) {
 					return function() {
 						this.visibility_version++;
-						this.rows.add_sorter(item.col, 'ascending');
+						this.rows.add_sorter(dyna.item.col, 'ascending');
 						this.rows.sort_and_filter();
 						this.update_view();
 					}.bind(this);
@@ -213,7 +213,7 @@
 				butt_sort_descending.addEventListener('click', (function(dyna) {
 					return function() {
 						this.visibility_version++;
-						this.rows.add_sorter(item.col, 'descending');
+						this.rows.add_sorter(dyna.item.col, 'descending');
 						this.rows.sort_and_filter();
 						this.update_view();
 					}.bind(this);
@@ -233,7 +233,7 @@
 						}
 
 						this.visibility_version++;
-						this.rows.add_visibility_filter(item.col, value);
+						this.rows.add_visibility_filter(dyna.item.col, value);
 						this.rows.sort_and_filter();
 						this.update_view();
 					}.bind(this);

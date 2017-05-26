@@ -264,10 +264,14 @@
 	edf.table.cell.prototype.get_data = function() {
 		if (this.col.id in this.row.data) return this.row.data[this.col.id];
 		return undefined;
-	}
+	};
 
 	edf.table.cell.prototype.get_sort_value = function() {
 		var data = this.get_data();
+
+		if (edf.isdef(data.data)) {
+			data = data.data;
+		}
 
 		if (edf.isdef(this.col.sort_key)) {
 			data = data[this.col.sort_key];
@@ -281,6 +285,7 @@
 			}
 		}
 
+
 		return data;
-	}
+	};
 }
