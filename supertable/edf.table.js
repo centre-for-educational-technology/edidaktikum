@@ -164,18 +164,46 @@
 
 		//	assign new items to cells
 		for (var cell_id in new_cells) {
-			var dyna = {'item' : new_cells[cell_id], 'el' : edf.create_element('div', 'cell', this.el_cells_inner), 'visibility_version' : -1};
-			dyna.item.dyna = dyna;
-			dyna.item.render(dyna.el);
+			var item = new_cells[cell_id];
+			var el = edf.create_element('a', 'cell', this.el_cells_inner);
+			var dyna = { 'item' : item, 'el' : el, 'visibility_version' : -1};
 			this.dyna_els[cell_id] = dyna;
+			item.dyna = dyna;
+
+			//	stickyness
+			if (item.col.sticky !== undefined) el.setAttribute("data-sticky_col", item.col.sticky);
+			if (item.row.sticky !== undefined) el.setAttribute("data-sticky_row", item.row.sticky);
+
+			//	class
+			if (item.col.css_class !== undefined) el.className += " " + item.col.css_class;
+			if (item.row.css_class !== undefined) el.className += " " + item.row.css_class;
+
+			//	data
+			var cell = item.get_data();
+			if (cell !== undefined) {
+				if (cell instanceof Object) {
+					if (edf.isdef(cell.data) && cell.data instanceof Object) {
+						for (var key in cell.data) {
+							if (cell.data[key] === undefined) continue;
+							el.setAttribute('data-' + key, cell.data[key]);			
+						}
+					} else {
+						el.innerHTML = cell.data;
+					}
+					if (edf.isdef(cell.url)) el.href = cell.url;
+					if (edf.isdef(cell.tooltip)) el.title = cell.tooltip;
+				} else {
+					el.innerHTML = cell
+				}
+			}
 
 			//	sorting stuff
-			if (dyna.item.row.sorting) {
+			if (item.row.sorting) {
 				var butt_sort_ascending = edf.create_element('div', 'sort_ascending', dyna.el);
 				butt_sort_ascending.addEventListener('click', (function(dyna) {
 					return function() {
 						this.visibility_version++;
-						this.rows.add_sorter(dyna.item.col, 'ascending');
+						this.rows.add_sorter(item.col, 'ascending');
 						this.rows.sort_and_filter();
 						this.update_view();
 					}.bind(this);
@@ -185,7 +213,7 @@
 				butt_sort_descending.addEventListener('click', (function(dyna) {
 					return function() {
 						this.visibility_version++;
-						this.rows.add_sorter(dyna.item.col, 'descending');
+						this.rows.add_sorter(item.col, 'descending');
 						this.rows.sort_and_filter();
 						this.update_view();
 					}.bind(this);
@@ -195,7 +223,7 @@
 				butt_sort_filter.setAttribute('contenteditable', '');
 				butt_sort_filter.addEventListener('keyup', (function(dyna) {
 					return function(e) {
-						
+
 						var el = e.target;
 						var value = el.innerText;
 						if (value.length > 0) {
@@ -205,7 +233,7 @@
 						}
 
 						this.visibility_version++;
-						this.rows.add_visibility_filter(dyna.item.col, value);
+						this.rows.add_visibility_filter(item.col, value);
 						this.rows.sort_and_filter();
 						this.update_view();
 					}.bind(this);

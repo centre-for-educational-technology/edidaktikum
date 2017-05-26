@@ -261,40 +261,13 @@
 		this.id = col.id + '_' + row.id;
 	}
 
-	edf.table.cell.prototype.render = function(el) {
-		if (this.col.sticky) {
-			el.setAttribute("data-sticky_col", "");
-		}
-		if (this.row.sticky) {
-			el.setAttribute("data-sticky_row", "");
-		}
-
-		if (edf.isdef(this.col.css_class) && el.className.indexOf(this.col.css_class) == -1) {
-			el.className += " " + this.col.css_class;
-		}
-
-		if (edf.isdef(this.row.css_class) && el.className.indexOf(this.row.css_class) == -1) {
-			el.className += " " + this.row.css_class;
-		}
-
-
-
-		var data = this.row.data[this.col.id];
-
-		if (!edf.isdef(data)) return;
-		if (data instanceof Object) {
-			for (var key in data) {
-				if (!edf.isdef(data[key])) continue;
-				if (key == "title") el.title = data[key];
-				el.setAttribute("data-" + key, data[key]);
-			}
-		} else {
-			el.innerHTML = data;
-		}
+	edf.table.cell.prototype.get_data = function() {
+		if (this.col.id in this.row.data) return this.row.data[this.col.id];
+		return undefined;
 	}
 
 	edf.table.cell.prototype.get_sort_value = function() {
-		var data = this.row.data[this.col.id];
+		var data = this.get_data();
 
 		if (edf.isdef(this.col.sort_key)) {
 			data = data[this.col.sort_key];

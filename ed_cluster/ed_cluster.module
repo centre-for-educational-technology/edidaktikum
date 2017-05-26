@@ -1718,7 +1718,14 @@ function ed_task_manager_experimental($arg_type, $node) {
     //  build cells
     $data = [ 'full_name' => $user['full_name'] ];
     foreach ($group_data['tasks'] as &$task) {
-      $data[$task['task_id']] = $task['grade'];
+      $cell = [
+        'data' => $task['grade'],
+        'tooltip' => $task['grade']['status']
+      ];
+      if (isset($task['answer'])) {
+        $cell['url'] = "../" . $task['answer']['id'];
+      }
+      $data[$task['task_id']] = $cell;
       unset($task);
     }
 
