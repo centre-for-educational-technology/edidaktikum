@@ -20,6 +20,10 @@
 		this.rows = new edf.table.header_manager();
 		this.header_row = this.add_row({'data' : {}, 'sticky' : 'before', 'sorting' : true});
 
+		this.last_set_inner_width = 0;
+		this.last_set_inner_height = 0;
+		this.auto_size = true;
+
 
 		this.toolbar = new edf.toolbar(this.el, [
 			['menu', 'functions', 'functions'],		
@@ -55,20 +59,41 @@
 			this.mod_camera(e.deltaX, e.deltaY);
 		}.bind(this));
 
-		edf.rect.set(this.el, 0, 0, 940, 550);
+		edf.rect.set(this.el, 0, 0, 200, 100);
 	};
 
 	edf.table.prototype.calc_resize_rects = function() {
 		this.normal_rect = edf.rect.get(this.el);
 		var bcr = this.el.getBoundingClientRect();
-		this.max_rect = new edf.rect(-(bcr.left - 50), this.normal_rect.y, bcr.left + bcr.right - 100, this.normal_rect.height + 50);
+		this.max_rect = new edf.rect(-(bcr.left - 50), this.normal_rect.y, window.innerWidth - 100, this.normal_rect.height + 50);
 	};
 
 	edf.table.prototype.initialize = function() {
 		this.cols.calculate_positions();
 		this.rows.calculate_positions();
-		var rect = edf.rect.get(this.el_cells_outer);
-		this.set_camera(0, 0, rect.width, rect.height);
+		this.set_inner_size(940, 400);	
+	};
+
+	edf.table.prototype.set_inner_size = function(width, height) {
+		this.last_set_inner_width = width;
+		this.last_set_inner_height = height;
+		var inner_rect = edf.rect.get(this.el_cells_outer);
+		var outer_rect = edf.rect.get(this.el);
+
+		var width = edf.optional(width, inner_rect.width);
+		var height = edf.optional(height, inner_rect.height);
+
+		if (this.auto_size === true) {
+			if (height > this.rows.pos_max) {
+				height = this.rows.pos_max;
+				this.el_scroll_vertical.style.visibility = "hidden";
+			} else {
+				this.el_scroll_vertical.style.visibility = "visible";
+			}
+		}
+
+		edf.rect.set(this.el, undefined, undefined, width + outer_rect.width - inner_rect.width, height + outer_rect.height - inner_rect.height);
+		this.set_camera(undefined, undefined, width, height);
 		this.calc_resize_rects();
 	};
 
@@ -111,11 +136,14 @@
 
 	edf.table.prototype.get_cells = function(rows, cols) {
 		var cells = {};
+		var odd = false;
 		for (var y = 0; y < rows.length; y++) {
 			for (var x = 0; x < cols.length; x++) {
 				var cell = rows[y].get_cell(cols[x]);
+				cell.row_parity = odd ? "odd" : "even";
 				cells[cell.id] = cell;
 			}
+			odd = !odd;
 		}
 		return cells;
 	};
@@ -203,6 +231,9 @@
 			this.dyna_els[cell_id] = dyna;
 			item.dyna = dyna;
 
+			//	parity
+			el.setAttribute("data-row_parity", item.row_parity);
+
 			//	stickyness
 			if (item.col.sticky !== undefined) el.setAttribute("data-sticky_col", item.col.sticky);
 			if (item.row.sticky !== undefined) el.setAttribute("data-sticky_row", item.row.sticky);
@@ -234,7 +265,7 @@
 			if (item.row.sorting) {
 				var butt_sort_ascending = edf.create_element('div', 'sort_ascending', dyna.el);
 				butt_sort_ascending.addEventListener('click', (function(dyna) {
-					return function() {
+					return function(e) {
 						this.visibility_version++;
 						this.rows.add_sorter(dyna.item.col, 'ascending');
 						this.rows.sort_and_filter();
@@ -256,7 +287,6 @@
 				butt_sort_filter.setAttribute('contenteditable', '');
 				butt_sort_filter.addEventListener('keyup', (function(dyna) {
 					return function(e) {
-
 						var el = e.target;
 						var value = el.innerText;
 						if (value.length > 0) {
@@ -294,7 +324,7 @@
 	edf.table.prototype.add_col = function(col) {
 		var item = new edf.table.header(col);
 		item.default_size(this.default_col_size);
-		this.header_row.data[item.id] = item.title;
+		this.header_row.data[item.id] = {'data' : item.title, 'url' : col.url};
 		return this.cols.add(item);
 	};
 

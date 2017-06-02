@@ -1701,7 +1701,8 @@ function ed_task_manager_experimental($arg_type, $node) {
       'id' => $task['task_id'],
       'title' => $task['title'] . "<br>" . date("d/m/y", $task['due_date'])  ,
       'group' => 'Tasks',
-      'sort_key' => 'grade'
+      'sort_key' => 'grade',
+      'url_temp_disabled' => "../" . $task['task_id']
     ];
     unset($task);
   };
@@ -1717,7 +1718,10 @@ function ed_task_manager_experimental($arg_type, $node) {
     if ($group_data['admin']) continue;
 
     //  build cells
-    $data = [ 'full_name' => $user['full_name'] ];
+    $data = [ 'full_name' => [
+      'data' => $user['full_name'],
+      'url' => "../../user/" . $user['uid']
+    ]];
     foreach ($group_data['tasks'] as &$task) {
       $cell = [
         'data' => $task['grade'],
@@ -1734,7 +1738,7 @@ function ed_task_manager_experimental($arg_type, $node) {
       'id' => $user['uid'],
       'title' => $user['full_name'],
       'group' => 'All Students',
-      'data' => $data
+      'data' => $data,
     ];
 
     unset($user);

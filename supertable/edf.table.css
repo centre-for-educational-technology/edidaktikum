@@ -172,7 +172,7 @@
 .edf_table .scroll_horizontal, .edf_table .scroll_vertical {
     position:absolute;
     background-color:rgb(255,255,255);
-    border:1px solid rgb(200,200,200);
+    border:1px solid rgb(230,230,230);
     border-radius:4px;
     opacity:1;
 }
@@ -199,7 +199,7 @@
 	bottom:65px;
 	overflow:hidden;
 	background-color:rgba(0,0,0,0.02);
-	border:1px solid rgb(210,210,210);
+	border:1px solid rgb(240,240,240);
 	border-radius:4px;
 }
 
@@ -215,18 +215,19 @@
 
 .edf_table .cell {
 	position:absolute;
-	border-right:1px solid rgb(210,210,210);
-	border-bottom:1px solid rgb(210,210,210);
+	border-right:1px solid rgb(240,240,240);
+	border-bottom:1px solid rgb(240,240,240);
 	padding:3px;
 	box-sizing:border-box;
 	z-index:1;
     text-align:center;
-    adisplay:flex;
-    aalign-items:center;
-
 
 	background-color:white;
 }
+
+.edf_table .cell[data-row_parity=odd] {
+    background-color:rgb(252,252,252);
+} 
 
 .edf_table .cell:before {
 	text-align:center;
@@ -300,12 +301,12 @@
 /*	stickies */
 .edf_table .cell[data-sticky_row] {
 	z-index:2;
-	border-bottom:1px solid rgb(150,150,150);
+	border-bottom:1px solid rgb(230,230,230);
 }
 
 .edf_table .cell[data-sticky_col] {
 	z-index:3;
-	border-right:1px solid rgb(150,150,150);
+	border-right:1px solid rgb(230,230,230);
 }
 
 .edf_table .cell[data-sticky_row][data-sticky_col] {
@@ -323,17 +324,27 @@
 
 /*	table specific */
 
+.edf_table .cell[data-status] {
+    color:white;
+    overflow:hidden;
+}
+
+.edf_table .cell[data-status]:hover {
+    color:rgb(150,255,255);
+    box-shadow: inset 0px 0px 0px 20px rgba(255,255,255,0.1);
+}
+
 .edf_table .cell[data-status=accepted] {
-	background-color:rgba(200, 255, 200, 1);
+    background-color:#63b463;
 }
 .edf_table .cell[data-status=rejected] {
-	background-color:rgba(255,200,200,1);
+    background-color:#e96030;
 }
 .edf_table .cell[data-status=unchecked] {
-	background-color:rgba(255,255,200, 1);
+	background-color:#f0ad4e;
 }
 .edf_table .cell[data-status=not_applicable] {
-	background-color:rgba(180,180,180, 1);
+	background-color:#bdbdbd;;
 }
 .edf_table .cell:before {
 	content: attr(data-grade);
