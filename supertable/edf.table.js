@@ -4,6 +4,10 @@
 		this.el = edf.create_element("div", "edf_table");
 		this.el_cells_outer = edf.create_element("div", "cells_outer", this.el);
 		this.el_cells_inner = edf.create_element("div", "cells_inner", this.el_cells_outer);
+		this.el_scroll_horizontal = edf.create_element("div", "scroll_horizontal", this.el);
+		this.el_scroll_vertical = edf.create_element("div", "scroll_vertical", this.el);
+		this.scroll_horizontal_factor = 0;
+		this.scroll_vertical_factor = 0;
 		this.dyna_els = {};
 		this.camera = new edf.rect(0,0,0,0);
 		this.last_frame = Date.now();
@@ -37,11 +41,18 @@
 			edf.rect.mod(this.el, undefined, undefined, x, y);
 			this.mod_camera(undefined, undefined, x, y);
 		}.bind(this));
+
+		this.scroll_horizontal_handler = new edf.drag_handler(this.el_scroll_horizontal, 'left', function(x, y) {
+			this.mod_camera(x / this.scroll_horizontal_factor, 0);
+		}.bind(this));
+
+		this.scroll_vertical_handler = new edf.drag_handler(this.el_scroll_vertical, 'left', function(x, y) {
+			this.mod_camera(0, x / this.scroll_vertical_factor);
+		}.bind(this));
 		
 		this.el.addEventListener("wheel", function(e) {
 			e.preventDefault();
-			this.set_camera(Math.max(0, this.camera.x + e.deltaX),
-							Math.max(0, this.camera.y + e.deltaY));
+			this.mod_camera(e.deltaX, e.deltaY);
 		}.bind(this));
 
 		edf.rect.set(this.el, 0, 0, 940, 550);
@@ -67,10 +78,19 @@
 		width = edf.optional(width, this.camera.width);
 		height = edf.optional(height, this.camera.height);
 
-		this.camera.x = Math.max(0, Math.min(x, this.cols.pos_max - width));
-		this.camera.y = Math.max(0, Math.min(y, this.rows.pos_max - height));
+		var x_max = this.cols.pos_max - width;
+		var y_max = this.rows.pos_max - height;
+
+		this.camera.x = Math.max(0, Math.min(x, x_max));
+		this.camera.y = Math.max(0, Math.min(y, y_max));
 		this.camera.width = width;
 		this.camera.height = height;
+
+		this.scroll_horizontal_factor = (width - edf.rect.get(this.el_scroll_horizontal).width) / x_max;
+		this.scroll_vertical_factor = (height - edf.rect.get(this.el_scroll_vertical).height) / y_max;
+
+		edf.rect.set(this.el_scroll_horizontal, x * this.scroll_horizontal_factor);
+		edf.rect.set(this.el_scroll_vertical, undefined, y * this.scroll_vertical_factor);
 
 		if (0 == 1) {
 			var t = performance.now();
