@@ -1699,13 +1699,14 @@ function ed_task_manager_experimental($arg_type, $node) {
   foreach ($tasks as &$task) {
     $cols []= [
       'id' => $task['task_id'],
-      'title' => $task['title'],
+      'title' => $task['title'] . "<br>" . date("d/m/y", $task['due_date'])  ,
       'group' => 'Tasks',
       'sort_key' => 'grade'
     ];
     unset($task);
   };
   $cols_json = json_encode($cols);
+  $cols_json = edf_standardize_json($cols_json);
 
   //  build rows
   $rows = [];
@@ -1735,9 +1736,11 @@ function ed_task_manager_experimental($arg_type, $node) {
       'group' => 'All Students',
       'data' => $data
     ];
+
     unset($user);
   }
   $rows_json = json_encode($rows);
+  $rows_json = edf_standardize_json($rows_json);
 
   //  build table
 

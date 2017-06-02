@@ -62,10 +62,15 @@
 	};
 
 	edf.table.prototype.set_camera = function(x, y, width, height) {
-		if (edf.isdef(x)) this.camera.x = x;
-		if (edf.isdef(y)) this.camera.y = y;
-		if (edf.isdef(width)) this.camera.width = width;
-		if (edf.isdef(height)) this.camera.height = height;
+		x = edf.optional(x, this.camera.x);
+		y = edf.optional(y, this.camera.y);
+		width = edf.optional(width, this.camera.width);
+		height = edf.optional(height, this.camera.height);
+
+		this.camera.x = Math.max(0, Math.min(x, this.cols.pos_max - width));
+		this.camera.y = Math.max(0, Math.min(y, this.rows.pos_max - height));
+		this.camera.width = width;
+		this.camera.height = height;
 
 		if (0 == 1) {
 			var t = performance.now();
@@ -303,6 +308,7 @@
 	};
 
 	edf.table.prototype.add_rows = function(rows) {
+
 		for (var i = 0; i < rows.length; i++) {
 			this.add_row(rows[i]);
 		}
