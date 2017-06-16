@@ -1,6 +1,7 @@
 <?php
 
 
+
 //	og role getter
 function edf_get_og_roles() {
 	static $roles;
@@ -480,4 +481,8 @@ function edf_fill_user_tasks(&$users, $tasks) {
 	}
 
 	return $users;
+}
+
+function edf_standardize_json($json) {
+	return str_replace('":null,', '":undefined,', $json);
 }
