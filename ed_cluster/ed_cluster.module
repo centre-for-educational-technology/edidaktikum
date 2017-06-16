@@ -2064,7 +2064,7 @@ function ed_task_manager_OLD($test, $node){
 
             $due_date = $node_single->ed_task_due_date[LANGUAGE_NONE][0]['value'];
 
-            if($task_submission_time>$due_date){
+            if($task_submission_time>=$due_date){
               $tmp_data['data'] = l('!&nbsp;', 'node/' . $tmp_answer_nid[0], array('html' => TRUE));
             }
 
