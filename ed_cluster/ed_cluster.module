@@ -891,14 +891,14 @@ function ed_all_groups_listing(){
       $content['add-new-type-1'] = array(
 		      '#type' => 'item',
 		      '#title' => t(''),
-		      '#markup' => l(t('New Tuition Course type group'), 'node/add/ed-cluster', $options_type1),
+		      '#markup' => l(t('New Degree Studies type group'), 'node/add/ed-cluster', $options_type1),
 	        '#prefix' => '<div class="ed-add-new-node ed-add-new-cluster">',
 	        '#suffix' => '</div>',
       );
 		  $content['add-new-type-2'] = array(
 				  '#type' => 'item',
 				  '#title' => t(''),
-				  '#markup' => l(t('New Training type group'), 'node/add/ed-cluster', $options_type2),
+				  '#markup' => l(t('New Continuing Education type group'), 'node/add/ed-cluster', $options_type2),
 				  '#prefix' => '<div class="ed-add-new-node ed-add-new-cluster">',
 				  '#suffix' => '</div>',
 		  );
