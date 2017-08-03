@@ -193,7 +193,7 @@ function ed_task_update_7105(&$sandbox){
 
 
 /**
- * Adds study group field to ed_task module
+ * Creates and adds study group field to ed_task module
  */
 function ed_task_node_add_field_study_group() {
 

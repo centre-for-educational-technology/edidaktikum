@@ -398,6 +398,7 @@ function ed_user_extra_node_type_to_notification_type($nodetype){
  */
 function _ed_user_extra_study_groups_options_list(){
   $options = array(
+  		//Values used in ed_field_study_group and  ed_task_field_study_group
       'kukkm'  => t('KUKKM - Käsitöö ja kodunduse õpetaja'),
       'tskom'  => t('TSKOM - kehakultuuri õpetaja'),
       'kakpm'  => t('KAKPM - kutseõpetaja'),
@@ -416,6 +417,8 @@ function _ed_user_extra_study_groups_options_list(){
       'kutom' => t('KUTOM - töö- ja tehnoloogiaõpetuse õpetaja'),
       'ekeom_tk' => t('EKEOM - TK - Eesti keele kui teise keele ja eesti kultuuri õpetaja'),
       'grvom_f' => t('GRVOM - F - Soome ja teise keele õpetaja'),
+  
+  
   );
 
   return $options;

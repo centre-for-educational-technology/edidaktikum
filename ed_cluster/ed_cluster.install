@@ -19,6 +19,16 @@ function ed_cluster_install() {
   ed_cluster_node_add_field_featured_image();
   ed_cluster_add_field_private_comment();
   ed_cluster_create_field_to_group_member();
+  
+	ed_cluster_create_field_group_type();
+	ed_cluster_node_add_field_group_type();
+	ed_cluster_node_add_field_curriculum();
+	ed_cluster_node_add_field_university();
+	ed_cluster_node_add_field_course_code();
+	ed_cluster_node_add_field_course_aim();
+	ed_cluster_node_add_field_learning_outcomes();
+	ed_cluster_node_add_field_assessment_method();
+	ed_cluster_node_add_field_study_year();
 }
 
 function ed_cluster_node_add_field_featured_image() {
@@ -49,6 +59,30 @@ function ed_cluster_node_add_field_featured_image() {
 function ed_cluster_uninstall() {
   ed_cluster_delete_ed_cluster_nodes();
   ed_cluster_delete_node();
+	
+	field_delete_field('ed_field_group_type');
+	field_delete_instance('ed_field_group_type');
+	
+	field_delete_field('ed_field_curriculum');
+	field_delete_instance('ed_field_curriculum');
+	
+	field_delete_field('ed_field_university');
+	field_delete_instance('ed_field_university');
+	
+	field_delete_field('ed_field_course_code');
+	field_delete_instance('ed_field_course_code');
+	
+	field_delete_field('ed_field_course_aim');
+	field_delete_instance('ed_field_course_aim');
+	
+	field_delete_field('ed_field_learning_outcomes');
+	field_delete_instance('ed_field_learning_outcomes');
+	
+	field_delete_field('ed_field_assessment_method');
+	field_delete_instance('ed_field_assessment_method');
+	
+	field_delete_field('ed_field_study_year');
+	field_delete_instance('ed_field_study_year');
 }
 
 /**
@@ -254,6 +288,442 @@ function ed_cluster_create_field_to_group_member() {
 }
 
 /**
+ * Creates ed_group_type field if not exists.
+ */
+function ed_cluster_create_field_group_type() {
+	$field_name = 'ed_field_group_type';
+	if (!field_info_field($field_name)) {
+		$field = array(
+				'field_name' => $field_name,
+				'type' => 'number_integer',
+				'entity_types' => array('node'),
+				'cardinality' => 1,
+				'locked' => false,
+		);
+		field_create_field($field);
+	}
+}
+
+/**
+ * Add ed_group_type field
+ */
+function ed_cluster_node_add_field_group_type()
+{
+	
+	$field_name = 'ed_field_group_type';
+	$field = field_info_field($field_name);
+	if (!empty($field) && !field_info_instance('node', $field, 'ed_cluster')) {
+		$instance = array(
+				'field_name' => $field_name,
+				'entity_type' => 'node',
+				'bundle' => 'ed_cluster',
+				'required' => true,
+				'label' => t('Group type'),
+				'description' => t('1 - Degree studies; 2 - Continuing education; 3 - Project-based learning/Other'),
+				'widget' => array(
+						'type' => 'radio',
+						'settings' => array(
+								'display_label' => TRUE,
+						),
+				),
+			
+//				'settings' => array(
+//						'behaviors' => array(
+//								'prepopulate' => array(
+//										'status' => 1,
+//										'action' => 'disable',
+//										'action_on_edit' => 1,
+//										'fallback' => 'none',
+//										'skip_perm' => '0',
+//										'og_context' => 0,
+//								),
+//						),
+//						'user_register_form' => FALSE,
+//				),
+				'display' => array(
+						'default' => array('type' => 'hidden'),
+						'teaser' => array('type' => 'hidden')
+				)
+		);
+		field_create_instance($instance);
+	}
+	
+}
+
+
+/**
+ * Creates and adds curriculum field
+ */
+function ed_cluster_node_add_field_curriculum() {
+	
+	if(!field_info_field('ed_field_curriculum')){
+		$field = array(
+				'field_name' => 'ed_field_curriculum',
+				'label' => t('Study Programme'),
+				'type' => 'list_text',
+				'cardinality' => 1,
+				'foreign keys' => array(),
+				'module' => 'list',
+				'settings' => array(
+						'allowed_values' => _ed_cluster_curriculum_options_list(),
+				),
+		);
+		field_create_field($field);
+	}
+	
+	if(!field_info_instance('node', 'ed_field_curriculum', 'ed_cluster')){
+		$instance = array(
+				'field_name' => 'ed_field_curriculum',
+				'label' => t('Study Programme'),
+				'description' => '',
+				'required' => false,
+				'entity_type' => 'node',
+				'bundle' => 'ed_cluster',
+				'display' => array(
+						'default' => array(
+								'label' => 'above',
+								'type' => 'list_default',
+								'module' => 'list',
+						),
+				),
+				'widget' => array(
+						'type' => 'options_select',
+				),
+		);
+		field_create_instance($instance);
+	}
+}
+
+/**
+ * Creates and adds university field
+ */
+function ed_cluster_node_add_field_university() {
+	
+	if(!field_info_field('ed_field_university')){
+		$field = array(
+				'field_name' => 'ed_field_university',
+				'label' => t('University'),
+				'type' => 'list_text',
+				'cardinality' => 1,
+				'foreign keys' => array(),
+				'module' => 'list',
+				'settings' => array(
+						'allowed_values' => _ed_cluster_universities_options_list(),
+				),
+		);
+		field_create_field($field);
+	}
+	
+	if(!field_info_instance('node', 'ed_field_university', 'ed_cluster')){
+		$instance = array(
+				'field_name' => 'ed_field_university',
+				'label' => t('University'),
+				'description' => '',
+				'required' => false,
+				'entity_type' => 'node',
+				'bundle' => 'ed_cluster',
+				'display' => array(
+						'default' => array(
+								'label' => 'above',
+								'type' => 'list_default',
+								'module' => 'list',
+						),
+				),
+				'widget' => array(
+						'type' => 'options_select',
+				),
+		);
+		field_create_instance($instance);
+	}
+}
+
+
+/**
+ * Creates and adds course_code field
+ */
+function ed_cluster_node_add_field_course_code() {
+	$field_name = 'ed_field_course_code';
+	if (!field_info_field($field_name)) {
+		$field = array(
+				'field_name' => $field_name,
+				'type' => 'text',
+				'entity_types' => array('node'),
+				'cardinality' => 1,
+				'locked' => FALSE,
+		);
+		field_create_field($field);
+	}
+	
+
+	if (!field_info_instance('node', 'ed_field_course_code', 'ed_cluster')) {
+		$instance = array(
+				'field_name' => $field_name,
+				'entity_type' => 'node',
+				'bundle' => 'ed_cluster',
+				'label' => t('Course code'),
+				'description' => '',
+				'settings' => array(
+						'text_processing' => false,
+				),
+				'widget' => array(
+						'settings' => array(
+								'rows' => 1,
+						),
+				),
+				'required' => FALSE,
+				'display' => array(
+						'default' => array(
+								'label' => 'hidden',
+								'type' => 'text_default',
+						),
+						'featured' => array(
+								'label' => 'hidden',
+								'type' => 'text_default',
+						),
+				),
+		);
+		field_create_instance($instance);
+	}
+	
+}
+
+/**
+ * Creates and adds course_aim field
+ */
+function ed_cluster_node_add_field_course_aim() {
+	$field_name = 'ed_field_course_aim';
+	if (!field_info_field($field_name)) {
+		$field = array(
+				'field_name' => $field_name,
+				'type' => 'text_long',
+				'entity_types' => array('node'),
+				'cardinality' => 1,
+				'locked' => FALSE,
+		);
+		field_create_field($field);
+	}
+	
+	
+	if (!field_info_instance('node', 'ed_field_course_aim', 'ed_cluster')) {
+		$instance = array(
+				'field_name' => $field_name,
+				'entity_type' => 'node',
+				'bundle' => 'ed_cluster',
+				'label' => t('Course objective'),
+				'description' => '',
+				'settings' => array(
+						'text_processing' => true,
+				),
+				'widget' => array(
+						'settings' => array(
+								'rows' => 5,
+						),
+				),
+				'required' => FALSE,
+				'display' => array(
+						'default' => array(
+								'label' => 'hidden',
+								'type' => 'text_default',
+						),
+						'featured' => array(
+								'label' => 'hidden',
+								'type' => 'text_default',
+						),
+				),
+		);
+		field_create_instance($instance);
+	}
+	
+}
+
+/**
+ * Creates and adds course_learning_outcomes field
+ */
+function ed_cluster_node_add_field_learning_outcomes() {
+	$field_name = 'ed_field_learning_outcomes';
+	if (!field_info_field($field_name)) {
+		$field = array(
+				'field_name' => $field_name,
+				'type' => 'text_long',
+				'entity_types' => array('node'),
+				'cardinality' => 1,
+				'locked' => FALSE,
+		);
+		field_create_field($field);
+	}
+	
+	
+	if (!field_info_instance('node', 'ed_field_learning_outcomes', 'ed_cluster')) {
+		$instance = array(
+				'field_name' => $field_name,
+				'entity_type' => 'node',
+				'bundle' => 'ed_cluster',
+				'label' => t('Learning outcomes'),
+				'description' => '',
+				'settings' => array(
+						'text_processing' => true,
+				),
+				'widget' => array(
+						'settings' => array(
+								'rows' => 3,
+						),
+				),
+				'required' => FALSE,
+				'display' => array(
+						'default' => array(
+								'label' => 'hidden',
+								'type' => 'text_default',
+						),
+						'featured' => array(
+								'label' => 'hidden',
+								'type' => 'text_default',
+						),
+				),
+		);
+		field_create_instance($instance);
+	}
+	
+}
+
+/**
+ * Creates and adds assessment_method field
+ */
+function ed_cluster_node_add_field_assessment_method() {
+	$field_name = 'ed_field_assessment_method';
+	if (!field_info_field($field_name)) {
+		$field = array(
+				'field_name' => $field_name,
+				'type' => 'text_long',
+				'entity_types' => array('node'),
+				'cardinality' => 1,
+				'locked' => FALSE,
+		);
+		field_create_field($field);
+	}
+	
+	
+	if (!field_info_instance('node', 'ed_field_assessment_method', 'ed_cluster')) {
+		$instance = array(
+				'field_name' => $field_name,
+				'entity_type' => 'node',
+				'bundle' => 'ed_cluster',
+				'label' => t('Assessment method'),
+				'description' => '',
+				'settings' => array(
+						'text_processing' => true,
+				),
+				'widget' => array(
+						'settings' => array(
+								'rows' => 4,
+						),
+				),
+				'required' => FALSE,
+				'display' => array(
+						'default' => array(
+								'label' => 'hidden',
+								'type' => 'text_default',
+						),
+						'featured' => array(
+								'label' => 'hidden',
+								'type' => 'text_default',
+						),
+				),
+		);
+		field_create_instance($instance);
+	}
+	
+}
+
+
+/**
+ * Creates and adds study_year field
+ */
+function ed_cluster_node_add_field_study_year() {
+	
+		if(!field_info_field('ed_field_study_year')){
+		$field = array(
+				'field_name' => 'ed_field_study_year',
+				'label' => t('Study Year'),
+				'cardinality' => 1,
+				'settings' => array(
+						'input_format' => 'Y',
+						'granularity' => array('year'),
+				),
+				'module' => 'date',
+				'type' => 'date',
+				'entity_types' => array(),
+			
+			
+		);
+		field_create_field($field);
+	}
+	
+	if(!field_info_instance('node', 'ed_field_study_year', 'ed_cluster')){
+		$instance = array(
+				'field_name' => 'ed_field_study_year',
+				'label' => '',
+				'description' => '',
+				'required' => false,
+				'entity_type' => 'node',
+				'bundle' => 'ed_cluster',
+				
+				'display' => array(
+						'default' => array(
+								'label' => 'above',
+								'module' => 'date',
+								'settings' => array(
+										'format_type' => 'medium',
+										'fromto' => 'both',
+										'multiple_from' => '',
+										'multiple_number' => '',
+										'multiple_to' => '',
+										'show_repeat_rule' => 'show',
+								),
+								'type' => 'date_default',
+								'weight' => '1',
+						),
+						'teaser' => array(
+								'label' => 'above',
+								'settings' => array(),
+								'type' => 'hidden',
+								'weight' => 0,
+						),
+				),
+				
+				'widget' => array(
+						'active' => 1,
+						'type' => 'date_select',
+						'weight' => 6,
+						'module' => 'date',
+						'settings' => array(
+								'increment' => '1',
+								'input_format' => 'Y',
+								'input_format_custom' => '',
+								'label_position' => 'above',
+								'repeat_collapsed' => 0,
+								'text_parts' => array(),
+								'year_range' => '-2:+2',
+						),
+				),
+				
+				'settings' => array(
+						'default_format' => 'short',
+						'default_value' => 'now',
+						'default_value2' => 'blank',
+						'default_value_code' => '',
+						'default_value_code2' => '',
+						'user_register_form' => FALSE,
+				),
+			
+			
+		);
+		field_create_instance($instance);
+	}
+}
+
+
+
+/**
  * Deletes node type ed_cluster.
  */
 function ed_cluster_delete_node() {
@@ -349,4 +819,57 @@ function ed_cluster_update_7105(&$sandbox){
         ->execute();
   }
 }
+
+
+/**
+ * Add ed_group_type field
+ */
+function ed_cluster_update_7106(&$sandbox){
+	
+	ed_cluster_create_field_group_type();
+	ed_cluster_node_add_field_group_type();
+	
+
+	// Get all nodes of 'ed_cluster' type, populate the field with a value of '3' - third and default group type.
+	$groups = db_query("SELECT nid, vid FROM {node} WHERE type = 'ed_cluster'")->fetchAllAssoc('nid');
+	foreach ($groups as $nid => $values) {
+		$fields = array(
+				'entity_type' => 'node',
+				'bundle' => 'ed_cluster',
+				'deleted' => 0,
+				'entity_id' => $values->nid,
+				'revision_id' => $values->vid,
+				'language' => LANGUAGE_NONE,
+				'delta' => 0,
+				'ed_field_group_type_value' => 3,
+		);
+		db_insert('field_data_ed_field_group_type')
+				->fields($fields)
+				->execute();
+		db_insert('field_revision_ed_field_group_type')
+				->fields($fields)
+				->execute();
+	}
+
+}
+
+
+/**
+ * Add new fields used in different group types
+ */
+function ed_cluster_update_7107(&$sandbox){
+	
+	ed_cluster_node_add_field_curriculum();
+	ed_cluster_node_add_field_university();
+	ed_cluster_node_add_field_course_code();
+	ed_cluster_node_add_field_course_aim();
+	ed_cluster_node_add_field_learning_outcomes();
+	ed_cluster_node_add_field_assessment_method();
+	ed_cluster_node_add_field_study_year();
+	
+}
+
+
+
+
 

@@ -870,13 +870,45 @@ function ed_all_groups_listing(){
   $content['sorting'] = drupal_get_form('_ed_get_sorting_options');
   $sql_order = ed_get_sorting_type($content);
   if(node_access('create', 'ed_cluster')){
-      $content['add-new'] = array(
-        '#type' => 'link',
-        '#title' => t('Add new group'),
-        '#href' => 'node/add/ed-cluster',
-        '#prefix' => '<div class="ed-add-new-node ed-add-new-cluster">',
-        '#suffix' => '</div>',
+		  $options_type1 = array(
+				  'attributes' => array(),
+				  'query' => array(
+						  'field_group_type' => 1,
+				  ),
+		  );
+	    $options_type2 = array(
+				  'attributes' => array(),
+				  'query' => array(
+						  'field_group_type' => 2,
+				  ),
+		  );
+	    $options_type3 = array(
+				  'attributes' => array(),
+				  'query' => array(
+						  'field_group_type' => 3,
+				  ),
+		  );
+      $content['add-new-type-1'] = array(
+		      '#type' => 'item',
+		      '#title' => t(''),
+		      '#markup' => l(t('New Tuition Course type group'), 'node/add/ed-cluster', $options_type1),
+	        '#prefix' => '<div class="ed-add-new-node ed-add-new-cluster">',
+	        '#suffix' => '</div>',
       );
+		  $content['add-new-type-2'] = array(
+				  '#type' => 'item',
+				  '#title' => t(''),
+				  '#markup' => l(t('New Training type group'), 'node/add/ed-cluster', $options_type2),
+				  '#prefix' => '<div class="ed-add-new-node ed-add-new-cluster">',
+				  '#suffix' => '</div>',
+		  );
+		  $content['add-new-type-3'] = array(
+				  '#type' => 'item',
+				  '#title' => t(''),
+				  '#markup' => l(t('New Project-based Learning/Other type group'), 'node/add/ed-cluster', $options_type3),
+				  '#prefix' => '<div class="ed-add-new-node ed-add-new-cluster">',
+				  '#suffix' => '</div>',
+		  );
     }
   drupal_add_css(drupal_get_path('module', 'ed_cluster').'/group-listing.css');
   $remove_user_groups = TRUE;
@@ -2540,6 +2572,50 @@ function ed_cluster_form_alter(&$form, &$form_state, $form_id) {
     $tmp = $form['ed_field_featured_image']['#weight'];
     $form['ed_field_featured_image']['#weight'] = $form['group_access']['#weight'];
     $form['group_access']['#weight'] = $tmp;
+	
+	
+    // Group types related
+	  $form['ed_field_group_type']['und']['#disabled'] = true;
+	  
+	  $form['ed_field_group_type']['#weight'] = 0;
+	  $form['ed_field_university']['#weight'] = 1;
+	  $form['ed_field_curriculum']['#weight'] = 2;
+	  $form['ed_field_study_year']['#weight'] = 3;
+	  $form['ed_field_course_code']['#weight'] = 4;
+	  $form['ed_field_course_aim']['#weight'] = 5;
+	  $form['ed_field_learning_outcomes']['#weight'] = 6;
+	  $form['ed_field_category']['#weight'] = 7;
+	  $form['ed_field_assessment_method']['#weight'] = 8;
+	  $form['group_access']['#weight'] = 9;
+	  $form['ed_field_featured_image']['#weight'] = 10;
+	  $form['ed_field_excerpt']['#weight'] = 11;
+	  $form['ed_field_content']['#weight'] = 12;
+	  
+	  if(isset($form['#node']->ed_field_group_type)){
+		  $group_type = $form['#node']->ed_field_group_type[LANGUAGE_NONE][0]['value'];
+	  }
+	  else{
+		  $group_type = $_GET['field_group_type'];
+		  $form['ed_field_group_type']['und'][0]['value']['#default_value'] = $group_type;
+	  }
+
+
+	  
+	  if($group_type==1){
+	
+	  }elseif ($group_type==2){
+		  $form['ed_field_curriculum']['und']['#access'] = 0;
+		  $form['ed_field_study_year']['und']['#access'] = 0;
+		 
+	  }elseif ($group_type==3){
+		  $form['ed_field_university']['und']['#access'] = 0;
+		  $form['ed_field_curriculum']['und']['#access'] = 0;
+		  $form['ed_field_study_year']['und']['#access'] = 0;
+		  $form['ed_field_course_code']['und']['#access'] = 0;
+		  $form['ed_field_learning_outcomes']['und']['#access'] = 0;
+		  $form['ed_field_category']['und']['#access'] = 0;
+		  $form['ed_field_assessment_method']['und']['#access'] = 0;
+	  }
 
   }
   // Change group user add form autocomplete to our own endpoint.
@@ -2554,6 +2630,24 @@ function ed_cluster_form_alter(&$form, &$form_state, $form_id) {
 
     }
   }
+}
+
+function mymodule_format_dob($form_element, &$form_state){
+	// We unset the current values
+	unset($form_element['year']['#options']);
+	
+	// Now we set the range we want
+	$max_age = date('Y') - 0; // 100 years ago
+	$min_age = date('Y') + 2; // 7 years ago
+	
+	// Now we populate the array
+	$form_element['year']['#options'] = array();
+	foreach (range($max_age, $min_age) as $year){
+		$form_element['year']['#options'][$year] = $year;
+	}
+	
+	// We return our modified element
+	return $form_element;
 }
 
 function ed_cluster_redirect_after_submit($form, &$form_state){
@@ -2973,3 +3067,86 @@ function ed_cluster_field_formatter_view($entity_type, $entity, $field, $instanc
   return $element;
 }
 
+function _ed_cluster_universities_options_list(){
+	
+	$options = array(
+			t('Estonian Academy of Arts'),
+			t('Estonian Aviation Academy'),
+			t('Estonian University of Life Sciences'),
+			t('Estonian Academy of Music and Theatre'),
+			t('Lääne-Viru College'),
+			t('Estonian Academy of Security Sciences'),
+			t('University of Applied Sciences'),
+			t('Tallinn Health Care College'),
+			t('Tallinn University of Technology'),
+			t('Estonian Maritime Academy'),
+			t('Institute of Geology at Tallinn University of Technology'),
+			t('Kuressaare College of Tallinn University of Technology'),
+			t('Institute of Cybernetics at Tallinn University of Technology'),
+			t('Marine Systems Institute at Tallinn University of Technology'),
+			t('Certification Centre of Tallinn University of Technology'),
+			t('Tallinn College of Tallinn University of Technology'),
+			t('Tallinn University of Technology Tartu College'),
+			t('Technomedicum of Tallinn University of Technology'),
+			t('Virumaa College of Tallinn University of Technology'),
+			t('Tallinn University'),
+			t('Tallinn Pedagogical College'),
+			t('Tartu Art College'),
+			t('Tartu Health Care College'),
+			t('University of Tartu'),
+	
+	);
+	
+	return $options;
+}
+
+function _ed_cluster_curriculum_options_list(){
+	$options = array(
+			'IFHTM.DT' => t('IFHTM.DT - Educational Technology'),
+			'KAKLI.HR' => t('KAKLI.HR - Primary School Teacher'),
+			'KAKPB.HR' => t('KAKPB.HR - Vocational Pedagogy'),
+			'KAALB.HR' => t('KAALB.HR - Early Childhood Education'),
+			'KAEPB.HR' => t('KAEPB.HR - Special Education'),
+			'KAANB.HR' => t('KAANB.HR - Adult Education'),
+			'KAPB.HR' => t('KAPB.HR - Education'),
+			'KUTOM.LT' => t('KUTOM.LT - Teacher of Craft and Technology Education'),
+			'KUKKM.LT' => t('KUKKM.LT - Teacher of Handicraft and Home Economics'),
+			'MLMOM.DT' => t('MLMOM.DT - Teacher of Mathematics'),
+			'KAMOM.HR' => t('KAMOM.HR - Teacher of Several Subjects'),
+			'IFIOM.DT' => t('IFIOM.DT - Teacher of Computer Sciences, School ICT Manager'),
+			'GRIOM.HT' => t('GRIOM.HT - Teacher of English'),
+			'KUKUM.FK' => t('KUKUM.FK - Art Teacher'),
+			'SKVOM.HT' => t('SKVOM.HT - Teacher of Russian Language and Literature'),
+			'KUMOM.FK' => t('KUMOM.FK - Music Teacher'),
+			'GRPOM.HT' => t('GRPOM.HT - Teacher of French'),
+			'GRSOM.HT' => t('GRSOM.HT - Teacher of German'),
+			'AIAOM.HT' => t('AIAOM.HT - Teacher of History and Civic'),
+			'MLBOM.LT' => t('MLBOM.LT - Teacher of Biology'),
+			'EKEOM.HT' => t('EKEOM.HT - Teacher of Estonian Language and Literature'),
+			'EKEVM.HT' => t('EKEVM.HT - Teacher of Estonian as a Second Language'),
+			'MLFOM.LT' => t('MLFOM.LT - Teacher of Physics'),
+			'KAALM.HR' => t('KAALM.HR - Early Childhood Education'),
+			'KAANM.HR' => t('KAANM.HR - Adult Education'),
+			'KAEPM.HR' => t('KAEPM.HR - Consultant in Special Education'),
+			'KAHJM.HR' => t('KAHJM.HR - Educational Management'),
+			'MLGOM.LT' => t('MLGOM.LT - Teacher of Geography'),
+			'TSKOM.LT' => t('TSKOM.LT - Teacher of Physical Education'),
+			'KAKTM.HR' => t('KAKTM.HR - Educational Sciences'),
+			'KAKTD.HR' => t('KAKTD.HR - Educational Sciences'),
+			'KAKOM.HR' => t('KAKOM.HR - Vocational Teacher'),
+			'TPNR.HR' => t('TPNR.HR - Youth Work'),
+			'TPLR.HR' => t('TPLR.HR - Kindergarten and Pre-School Teacher'),
+			'MLLOM.LT' => t('MLLOM.LT - Teacher of natural and exact sciences in Basic School'),
+			'TPNM.HR' => t('TPNM.HR - Youth Work Management'),
+			'MLGLM.LT' => t('MLGLM.LT - Teacher of Natural Sciences in Secondary School'),
+			'DTLGM.DT' => t('DTLGM.DT - Digital Learning Games'),
+			'KAKPM.HR' => t('KAKPM.HR - Vocational Teacher'),
+			'KUKAM.FK' => t('KUKAM.FK - Art Teacher'),
+			'KUMUM.FK' => t('KUMUM.FK - Music Teacher'),
+			'KATHM.HR' => t('KATHM.HR - Adult Education for Social Change'),
+			'GRVOM.HT' => t('GRVOM.HT - Teacher of Foreign Languages'),
+			'KUIKM.LT' => t('KUIKM.LT - Teacher of Technology Education'),
+	);
+	
+	return $options;
+}
