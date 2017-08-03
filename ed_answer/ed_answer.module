@@ -108,7 +108,6 @@ function ed_answer_form_alter(&$form, &$form_state, $form_id){
     else{
       $reftotask = $_GET['field_ref_to_task'];
     }
-    dpm($reftotask);
     $node = node_load($reftotask);
 
 
