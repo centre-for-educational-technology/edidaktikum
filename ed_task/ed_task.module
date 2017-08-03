@@ -332,7 +332,7 @@ function ed_task_node_view($node, $view_mode, $langcode) {
       $acc = $GLOBALS['user'];
 
 
-      //Teaser when task has study group defined - look ed_cluster.module
+      //Teaser when task has study group defined - see ed_cluster.module
       if ($view_mode == 'teaser'){
 
 

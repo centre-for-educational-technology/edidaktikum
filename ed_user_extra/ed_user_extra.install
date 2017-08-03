@@ -294,7 +294,7 @@ function _ed_user_extra_notification_options_list(){
 
 
 /**
- * Adds study group field to ed_user_extra module
+ * Creates and adds study group field to ed_user_extra module
  */
 function ed_user_extra_node_add_field_study_group() {
 
