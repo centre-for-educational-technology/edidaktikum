@@ -318,8 +318,8 @@ function ed_cluster_node_add_field_group_type()
 				'entity_type' => 'node',
 				'bundle' => 'ed_cluster',
 				'required' => true,
-				'label' => t('Group type'),
-				'description' => t('1 - Degree studies; 2 - Continuing education; 3 - Project-based learning/Other'),
+				'label' => t('Kursuse tüüp'),
+				'description' => t('1 - Tasemeõppekursus; 2 - Täiendkoolitus; 3 - Projektipõhineõpe/Muu'),
 				'widget' => array(
 						'type' => 'radio',
 						'settings' => array(
@@ -359,7 +359,7 @@ function ed_cluster_node_add_field_curriculum() {
 	if(!field_info_field('ed_field_curriculum')){
 		$field = array(
 				'field_name' => 'ed_field_curriculum',
-				'label' => t('Study Programme'),
+				'label' => t('Õppekava'),
 				'type' => 'list_text',
 				'cardinality' => 1,
 				'foreign keys' => array(),
@@ -374,7 +374,7 @@ function ed_cluster_node_add_field_curriculum() {
 	if(!field_info_instance('node', 'ed_field_curriculum', 'ed_cluster')){
 		$instance = array(
 				'field_name' => 'ed_field_curriculum',
-				'label' => t('Study Programme'),
+				'label' => t('Õppekava'),
 				'description' => '',
 				'required' => false,
 				'entity_type' => 'node',
@@ -402,7 +402,7 @@ function ed_cluster_node_add_field_university() {
 	if(!field_info_field('ed_field_university')){
 		$field = array(
 				'field_name' => 'ed_field_university',
-				'label' => t('University'),
+				'label' => t('Ülikool'),
 				'type' => 'list_text',
 				'cardinality' => 1,
 				'foreign keys' => array(),
@@ -417,7 +417,7 @@ function ed_cluster_node_add_field_university() {
 	if(!field_info_instance('node', 'ed_field_university', 'ed_cluster')){
 		$instance = array(
 				'field_name' => 'ed_field_university',
-				'label' => t('University'),
+				'label' => t('Ülikool'),
 				'description' => '',
 				'required' => false,
 				'entity_type' => 'node',
@@ -460,7 +460,7 @@ function ed_cluster_node_add_field_course_code() {
 				'field_name' => $field_name,
 				'entity_type' => 'node',
 				'bundle' => 'ed_cluster',
-				'label' => t('Course code'),
+				'label' => t('Õppeaine kood'),
 				'description' => '',
 				'settings' => array(
 						'text_processing' => false,
@@ -509,7 +509,7 @@ function ed_cluster_node_add_field_course_aim() {
 				'field_name' => $field_name,
 				'entity_type' => 'node',
 				'bundle' => 'ed_cluster',
-				'label' => t('Course objective'),
+				'label' => t('Aine eesmärk'),
 				'description' => '',
 				'settings' => array(
 						'text_processing' => true,
@@ -558,7 +558,7 @@ function ed_cluster_node_add_field_learning_outcomes() {
 				'field_name' => $field_name,
 				'entity_type' => 'node',
 				'bundle' => 'ed_cluster',
-				'label' => t('Learning outcomes'),
+				'label' => t('Õpiväljundid'),
 				'description' => '',
 				'settings' => array(
 						'text_processing' => true,
@@ -607,7 +607,7 @@ function ed_cluster_node_add_field_assessment_method() {
 				'field_name' => $field_name,
 				'entity_type' => 'node',
 				'bundle' => 'ed_cluster',
-				'label' => t('Assessment method'),
+				'label' => t('Hindamismeetod'),
 				'description' => '',
 				'settings' => array(
 						'text_processing' => true,
@@ -643,7 +643,7 @@ function ed_cluster_node_add_field_study_year() {
 		if(!field_info_field('ed_field_study_year')){
 		$field = array(
 				'field_name' => 'ed_field_study_year',
-				'label' => t('Study Year'),
+				'label' => t('Õppeaasta'),
 				'cardinality' => 1,
 				'settings' => array(
 						'input_format' => 'Y',

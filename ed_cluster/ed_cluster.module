@@ -707,24 +707,88 @@ function ed_cluster_my_listing_page() {
       '#suffix' => '</div>',
     );
     if(node_access('create', 'ed_cluster')){
-      $content['add-new'] = array(
-        '#type' => 'link',
-        '#title' => t('Add new group'),
-        '#href' => 'node/add/ed-cluster',
-        '#prefix' => '<div class="ed-add-new-node ed-add-new-cluster">',
-        '#suffix' => '</div>',
-      );
+	    $options_type1 = array(
+			    'attributes' => array(),
+			    'query' => array(
+					    'field_group_type' => 1,
+			    ),
+	    );
+	    $options_type2 = array(
+			    'attributes' => array(),
+			    'query' => array(
+					    'field_group_type' => 2,
+			    ),
+	    );
+	    $options_type3 = array(
+			    'attributes' => array(),
+			    'query' => array(
+					    'field_group_type' => 3,
+			    ),
+	    );
+	    $content['add-new-type-1'] = array(
+			    '#type' => 'item',
+			    '#title' => t(''),
+			    '#markup' => l(t('New Degree Studies type group'), 'node/add/ed-cluster', $options_type1),
+			    '#prefix' => '<div class="ed-add-new-node ed-add-new-cluster">',
+			    '#suffix' => '</div>',
+	    );
+	    $content['add-new-type-2'] = array(
+			    '#type' => 'item',
+			    '#title' => t(''),
+			    '#markup' => l(t('New Continuing Education type group'), 'node/add/ed-cluster', $options_type2),
+			    '#prefix' => '<div class="ed-add-new-node ed-add-new-cluster">',
+			    '#suffix' => '</div>',
+	    );
+	    $content['add-new-type-3'] = array(
+			    '#type' => 'item',
+			    '#title' => t(''),
+			    '#markup' => l(t('New Project-based Learning/Other type group'), 'node/add/ed-cluster', $options_type3),
+			    '#prefix' => '<div class="ed-add-new-node ed-add-new-cluster">',
+			    '#suffix' => '</div>',
+	    );
     }
     return $content;
   }else{
     if(node_access('create', 'ed_cluster')){
-      $content['add-new'] = array(
-        '#type' => 'link',
-        '#title' => t('Add new group'),
-        '#href' => 'node/add/ed-cluster',
-        '#prefix' => '<div class="ed-add-new-node ed-add-new-cluster">',
-        '#suffix' => '</div>',
-      );
+	    $options_type1 = array(
+			    'attributes' => array(),
+			    'query' => array(
+					    'field_group_type' => 1,
+			    ),
+	    );
+	    $options_type2 = array(
+			    'attributes' => array(),
+			    'query' => array(
+					    'field_group_type' => 2,
+			    ),
+	    );
+	    $options_type3 = array(
+			    'attributes' => array(),
+			    'query' => array(
+					    'field_group_type' => 3,
+			    ),
+	    );
+	    $content['add-new-type-1'] = array(
+			    '#type' => 'item',
+			    '#title' => t(''),
+			    '#markup' => l(t('New Degree Studies type group'), 'node/add/ed-cluster', $options_type1),
+			    '#prefix' => '<div class="ed-add-new-node ed-add-new-cluster">',
+			    '#suffix' => '</div>',
+	    );
+	    $content['add-new-type-2'] = array(
+			    '#type' => 'item',
+			    '#title' => t(''),
+			    '#markup' => l(t('New Continuing Education type group'), 'node/add/ed-cluster', $options_type2),
+			    '#prefix' => '<div class="ed-add-new-node ed-add-new-cluster">',
+			    '#suffix' => '</div>',
+	    );
+	    $content['add-new-type-3'] = array(
+			    '#type' => 'item',
+			    '#title' => t(''),
+			    '#markup' => l(t('New Project-based Learning/Other type group'), 'node/add/ed-cluster', $options_type3),
+			    '#prefix' => '<div class="ed-add-new-node ed-add-new-cluster">',
+			    '#suffix' => '</div>',
+	    );
     }
     $mygroups = $mygroups['node'];
     
@@ -1020,13 +1084,45 @@ function ed_cluster_my_inactive_listing_page(){
   $content['sorting'] = drupal_get_form('_ed_get_sorting_options');
   $sql_order = ed_get_sorting_type($content);
   if(node_access('create', 'ed_cluster')){
-    $content['add-new'] = array(
-        '#type' => 'link',
-        '#title' => t('Add new group'),
-        '#href' => 'node/add/ed-cluster',
-        '#prefix' => '<div class="ed-add-new-node ed-add-new-cluster">',
-        '#suffix' => '</div>',
-    );
+	  $options_type1 = array(
+			  'attributes' => array(),
+			  'query' => array(
+					  'field_group_type' => 1,
+			  ),
+	  );
+	  $options_type2 = array(
+			  'attributes' => array(),
+			  'query' => array(
+					  'field_group_type' => 2,
+			  ),
+	  );
+	  $options_type3 = array(
+			  'attributes' => array(),
+			  'query' => array(
+					  'field_group_type' => 3,
+			  ),
+	  );
+	  $content['add-new-type-1'] = array(
+			  '#type' => 'item',
+			  '#title' => t(''),
+			  '#markup' => l(t('New Degree Studies type group'), 'node/add/ed-cluster', $options_type1),
+			  '#prefix' => '<div class="ed-add-new-node ed-add-new-cluster">',
+			  '#suffix' => '</div>',
+	  );
+	  $content['add-new-type-2'] = array(
+			  '#type' => 'item',
+			  '#title' => t(''),
+			  '#markup' => l(t('New Continuing Education type group'), 'node/add/ed-cluster', $options_type2),
+			  '#prefix' => '<div class="ed-add-new-node ed-add-new-cluster">',
+			  '#suffix' => '</div>',
+	  );
+	  $content['add-new-type-3'] = array(
+			  '#type' => 'item',
+			  '#title' => t(''),
+			  '#markup' => l(t('New Project-based Learning/Other type group'), 'node/add/ed-cluster', $options_type3),
+			  '#prefix' => '<div class="ed-add-new-node ed-add-new-cluster">',
+			  '#suffix' => '</div>',
+	  );
   }
   drupal_add_css(drupal_get_path('module', 'ed_cluster').'/group-listing.css');
   $remove_user_groups = TRUE;
