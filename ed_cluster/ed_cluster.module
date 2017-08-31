@@ -2669,6 +2669,8 @@ function ed_cluster_form_alter(&$form, &$form_state, $form_id) {
     $form['ed_field_featured_image']['#weight'] = $form['group_access']['#weight'];
     $form['group_access']['#weight'] = $tmp;
 	
+    //Translate group title
+	  $form['title']['#title'] = t('Grupi nimi');
 	
     // Group types related
 	  $form['ed_field_group_type']['und']['#disabled'] = true;
