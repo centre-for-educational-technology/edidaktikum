@@ -2670,7 +2670,7 @@ function ed_cluster_form_alter(&$form, &$form_state, $form_id) {
     $form['group_access']['#weight'] = $tmp;
 	
     //Translate group title
-	  $form['title']['#title'] = t('Grupi nimi');
+	  $form['title']['#title'] = t('Title');
 	
     // Group types related
 	  $form['ed_field_group_type']['und']['#disabled'] = true;
