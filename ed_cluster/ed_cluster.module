@@ -2675,8 +2675,8 @@ function ed_cluster_form_alter(&$form, &$form_state, $form_id) {
     // Group types related
 	  $form['ed_field_group_type']['und']['#disabled'] = true;
 	  
-	  $form['ed_field_group_type']['#weight'] = -1;
-	  $form['ed_field_course_code']['#weight'] = 0;
+	  $form['ed_field_group_type']['#weight'] = -7;
+	  $form['ed_field_course_code']['#weight'] = -6;
 	  $form['ed_field_university']['#weight'] = 2;
 	  $form['ed_field_curriculum']['#weight'] = 3;
 	  $form['ed_field_study_year']['#weight'] = 4;
@@ -2697,8 +2697,6 @@ function ed_cluster_form_alter(&$form, &$form_state, $form_id) {
 		  $group_type = $_GET['field_group_type'];
 		  $form['ed_field_group_type']['und'][0]['value']['#default_value'] = $group_type;
 	  }
-
-
 	  
 	  if($group_type==1){
 		 
