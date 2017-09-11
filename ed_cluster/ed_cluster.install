@@ -404,7 +404,7 @@ function ed_cluster_node_add_field_university() {
 				'field_name' => 'ed_field_university',
 				'label' => t('Ülikool'),
 				'type' => 'list_text',
-				'cardinality' => 1,
+				'cardinality' => FIELD_CARDINALITY_UNLIMITED,
 				'foreign keys' => array(),
 				'module' => 'list',
 				'settings' => array(
@@ -779,7 +779,7 @@ function ed_cluster_update_7103(&$sandbox) {
   ed_cluster_node_add_field_content();
 }
 
-/**
+/**$form['ed_field_course_code']['#weight'] = 4;
  * Grant edit any page post permissions to group members
  */
 function ed_cluster_update_7104(&$sandbox){

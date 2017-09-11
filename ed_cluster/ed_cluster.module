@@ -2675,19 +2675,20 @@ function ed_cluster_form_alter(&$form, &$form_state, $form_id) {
     // Group types related
 	  $form['ed_field_group_type']['und']['#disabled'] = true;
 	  
-	  $form['ed_field_group_type']['#weight'] = 0;
-	  $form['ed_field_university']['#weight'] = 1;
-	  $form['ed_field_curriculum']['#weight'] = 2;
-	  $form['ed_field_study_year']['#weight'] = 3;
-	  $form['ed_field_course_code']['#weight'] = 4;
-	  $form['ed_field_course_aim']['#weight'] = 5;
-	  $form['ed_field_learning_outcomes']['#weight'] = 6;
-	  $form['ed_field_category']['#weight'] = 7;
-	  $form['ed_field_assessment_method']['#weight'] = 8;
-	  $form['group_access']['#weight'] = 9;
-	  $form['ed_field_featured_image']['#weight'] = 10;
-	  $form['ed_field_excerpt']['#weight'] = 11;
-	  $form['ed_field_content']['#weight'] = 12;
+	  $form['ed_field_group_type']['#weight'] = -1;
+	  $form['ed_field_course_code']['#weight'] = 0;
+	  $form['ed_field_university']['#weight'] = 2;
+	  $form['ed_field_curriculum']['#weight'] = 3;
+	  $form['ed_field_study_year']['#weight'] = 4;
+	  $form['ed_field_excerpt']['#weight'] = 5;
+	  $form['ed_field_content']['#weight'] = 6;
+	  $form['ed_field_course_aim']['#weight'] = 7;
+	  $form['ed_field_learning_outcomes']['#weight'] = 8;
+	  $form['ed_field_category']['#weight'] = 9;
+	  $form['ed_field_assessment_method']['#weight'] = 10;
+	  $form['group_access']['#weight'] = 11;
+	  $form['ed_field_featured_image']['#weight'] = 12;
+	 
 	  
 	  if(isset($form['#node']->ed_field_group_type)){
 		  $group_type = $form['#node']->ed_field_group_type[LANGUAGE_NONE][0]['value'];
@@ -2700,6 +2701,7 @@ function ed_cluster_form_alter(&$form, &$form_state, $form_id) {
 
 	  
 	  if($group_type==1){
+		 
 	
 	  }elseif ($group_type==2){
 		  $form['ed_field_curriculum']['und']['#access'] = 0;
@@ -3117,6 +3119,27 @@ function ed_cluster_node_presave( $node ) {
   if (in_array('teacher', $account->roles) && $node->is_new) {
     $node->sticky = 1;
   }
+	
+	if ('ed_cluster' == $node->type) {
+		$group_type = 3;
+		if(isset($node->ed_field_group_type)){
+			$group_type = $node->ed_field_group_type[LANGUAGE_NONE][0]['value'];
+		}
+		
+		//Make composite title of Course code + Title for the 1st and 2nd type groups
+		if($group_type == 1 || $group_type == 2){
+			if(isset($node->ed_field_course_code[LANGUAGE_NONE][0]['value'])){
+				//Check if there is already Course code in Title
+				if (strpos($node->title, $node->ed_field_course_code[LANGUAGE_NONE][0]['value']) === false) {
+					$node->title = $node->ed_field_course_code[LANGUAGE_NONE][0]['value'].' '.$node->title;
+				}
+				
+			}
+			
+		}
+		
+	}
+	
 }
 
 
