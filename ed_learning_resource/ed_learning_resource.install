@@ -218,31 +218,10 @@ function ed_learning_resource_update_7102(&$sandbox) {
 
 
 /**
- * Add new fieldsed_field_study_area
+ * Add new fields
  */
 function ed_learning_resource_update_7103(&$sandbox) {
 
-//	$instance =  array(
-//			'field_name' => 'ed_field_excerpt',
-//			'label' => t('Excerpt'),
-//			'description' => '',
-//			'required' => TRUE,
-//			'entity_type' => 'node',
-//			'bundle' => 'ed_learning_resource',
-//			'display' => array(
-//					'teaser' => array(
-//							'label' => 'hidden',
-//							'type' => 'text_trimmed',
-//							'weight' => 5,
-//					),
-//					'front' => array(
-//							'label' => 'hidden',
-//							'type' => 'text_trimmed',
-//					),
-//			),
-//	);
-//
-//	field_create_instance($instance);
 	
 	//Delete unused fields
 	field_delete_field('ed_learning_resource_mg');
