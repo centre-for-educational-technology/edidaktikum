@@ -497,3 +497,33 @@ function _ed_learning_resource_language_list() {
   }
   return $options;
 }
+
+function _ed_learning_resource_study_areas_options_list(){
+	$options = array(
+			t('Alusharidus'),
+			t('Üldharidus'),
+			t('Noorsootöö'),
+			t('Sotsiaaltöö'),
+			t('Eripedagoogika'),
+			t('Andragoogika'),
+			t('Kutsepedagoogika'),
+			t('Sotsiaalpedagoogika'),
+			t('Hariduse juhtimine'),
+			t('Kasvatusteadused'),
+			t('Psühholoogia')
+	
+	);
+	
+	return $options;
+}
+
+function _ed_learning_resource_assets_distribution_options_list(){
+	
+	$options = array(
+			t('Kursuse õppematerjal'),
+			t('Üldharidus'),
+	);
+	
+	return $options;
+	
+}
