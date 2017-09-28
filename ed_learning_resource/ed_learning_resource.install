@@ -78,6 +78,97 @@ function ed_learning_resource_uninstall() {
   field_purge_batch(1000);
 }
 
+
+
+/**
+ * Creates and adds study area field
+ */
+function ed_learning_resource_node_add_field_study_area() {
+	
+	if(!field_info_field('ed_field_study_area')){
+		$field = array(
+				'field_name' => 'ed_field_study_area',
+				'label' => t('Valdkond'),
+				'type' => 'list_text',
+				'cardinality' => 1,
+				'foreign keys' => array(),
+				'module' => 'list',
+				'settings' => array(
+						'allowed_values' => _ed_learning_resource_study_areas_options_list(),
+				),
+		);
+		field_create_field($field);
+	}
+	
+	if(!field_info_instance('node', 'ed_field_study_area', 'ed_learning_resource')){
+		$instance = array(
+				'field_name' => 'ed_field_study_area',
+				'label' => t('Valdkond'),
+				'description' => '',
+				'required' => true,
+				'entity_type' => 'node',
+				'bundle' => 'ed_learning_resource',
+				'display' => array(
+						'default' => array(
+								'label' => 'above',
+								'type' => 'list_default',
+								'module' => 'list',
+						),
+				),
+				'widget' => array(
+						'type' => 'options_select',
+				),
+		);
+		field_create_instance($instance);
+	}
+}
+
+
+/**
+ * Creates and adds study area field
+ */
+function ed_learning_resource_node_add_field_assets_distribution() {
+	
+	if(!field_info_field('ed_field_assets_distribution')){
+		$field = array(
+				'field_name' => 'ed_field_assets_distribution',
+				'label' => t('Õppevara jaotus'),
+				'type' => 'list_text',
+				'cardinality' => 1,
+				'foreign keys' => array(),
+				'module' => 'list',
+				'settings' => array(
+						'allowed_values' => _ed_learning_resource_assets_distribution_options_list(),
+				),
+		);
+		field_create_field($field);
+	}
+	
+	if(!field_info_instance('node', 'ed_field_assets_distribution', 'ed_learning_resource')){
+		$instance = array(
+				'field_name' => 'ed_field_assets_distribution',
+				'label' => t('Õppevara jaotus'),
+				'description' => '',
+				'required' => true,
+				'entity_type' => 'node',
+				'bundle' => 'ed_learning_resource',
+				'display' => array(
+						'default' => array(
+								'label' => 'above',
+								'type' => 'list_default',
+								'module' => 'list',
+						),
+				),
+				'widget' => array(
+						'type' => 'options_select',
+				),
+		);
+		field_create_instance($instance);
+	}
+}
+
+
+
 /**
  * Add to_group_member field instance to ed_learning_resource
  */
@@ -123,5 +214,53 @@ function ed_learning_resource_update_7102(&$sandbox) {
       field_update_instance($instance);
     }
   }
+}
+
+
+/**
+ * Add new fieldsed_field_study_area
+ */
+function ed_learning_resource_update_7103(&$sandbox) {
+
+//	$instance =  array(
+//			'field_name' => 'ed_field_excerpt',
+//			'label' => t('Excerpt'),
+//			'description' => '',
+//			'required' => TRUE,
+//			'entity_type' => 'node',
+//			'bundle' => 'ed_learning_resource',
+//			'display' => array(
+//					'teaser' => array(
+//							'label' => 'hidden',
+//							'type' => 'text_trimmed',
+//							'weight' => 5,
+//					),
+//					'front' => array(
+//							'label' => 'hidden',
+//							'type' => 'text_trimmed',
+//					),
+//			),
+//	);
+//
+//	field_create_instance($instance);
+	
+	//Delete unused fields
+	field_delete_field('ed_learning_resource_mg');
+	field_delete_instance('ed_learning_resource_mg');
+
+	field_delete_field('ed_learning_resource_add_req');
+	field_delete_instance('ed_learning_resource_add_req');
+
+	field_delete_field('ed_learning_resource_date');
+	field_delete_instance('ed_learning_resource_date');
+	
+	
+	$instance = field_info_instance('node', 'ed_field_excerpt', 'ed_learning_resource');
+	field_delete_instance($instance);
+	
+	ed_learning_resource_node_add_field_study_area();
+	ed_learning_resource_node_add_field_assets_distribution();
+	
+
 }
 
