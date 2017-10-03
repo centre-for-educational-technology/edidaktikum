@@ -13,7 +13,10 @@ function ed_cluster_views_default_views_alter(&$views) {
 	  $handler->display->display_options['footer']['area_text_custom']['empty'] = TRUE;
 	  $handler->display->display_options['footer']['area_text_custom']['content'] = '<a href="/node/%2"><i class="fa fa-arrow-circle-o-left"></i> '.t('Back to group page').'</a> ';
 	  $handler->display->display_options['footer']['area_text_custom']['tokenize'] = TRUE;
-    /* Field: User: Last access */
+	  $translatables['og_members_admin'] = array(
+			  t('<a href="/node/%2"><i class="fa fa-arrow-circle-o-left"></i> Back to group page</a> '),
+	  );
+	  /* Field: User: Last access */
     $handler->display->display_options['fields']['access']['id'] = 'access';
     $handler->display->display_options['fields']['access']['table'] = 'users';
     $handler->display->display_options['fields']['access']['field'] = 'access';
