@@ -601,6 +601,35 @@
 	  $display->content['new-faad0310-43e5-4277-aa2d-22282cc513cf'] = $pane;
 	  $display->panels['left'][1] = 'new-faad0310-43e5-4277-aa2d-22282cc513cf';
 	  $pane = new stdClass();
+	  $pane->pid = 'new-3a433006-610d-44a6-990c-0b6302c2dee4';
+	  $pane->panel = 'left';
+	  $pane->type = 'entity_field';
+	  $pane->subtype = 'node:ed_g_drive_file';
+	  $pane->shown = TRUE;
+	  $pane->access = array();
+	  $pane->configuration = array(
+			  'label' => 'title',
+			  'formatter' => 'ed_g_drive_file_default',
+			  'delta_limit' => '0',
+			  'delta_offset' => '0',
+			  'delta_reversed' => 0,
+			  'formatter_settings' => array(),
+			  'context' => 'argument_entity_id:node_1',
+			  'override_title' => 0,
+			  'override_title_text' => '',
+	  );
+	  $pane->cache = array();
+	  $pane->style = array(
+			  'settings' => NULL,
+	  );
+	  $pane->css = array();
+	  $pane->extras = array();
+	  $pane->position = 2;
+	  $pane->locks = array();
+	  $pane->uuid = '3a433006-610d-44a6-990c-0b6302c2dee4';
+	  $display->content['new-3a433006-610d-44a6-990c-0b6302c2dee4'] = $pane;
+	  $display->panels['left'][2] = 'new-3a433006-610d-44a6-990c-0b6302c2dee4';
+	  $pane = new stdClass();
 	  $pane->pid = 'new-7e750ea6-0637-4910-a78d-4eef79622812';
 	  $pane->panel = 'right';
 	  $pane->type = 'node_statistics_and_likes';
@@ -969,9 +998,10 @@
 	  $display->hide_title = PANELS_TITLE_FIXED;
 	  $display->title_pane = '0';
 	  $handler->conf['display'] = $display;
-
-
-    return $handler;
+	
+	
+	
+	  return $handler;
 
   }
 

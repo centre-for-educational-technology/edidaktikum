@@ -16,7 +16,10 @@ define('EDIDAKTIKUM_NO_REPLY_EMAIL', 'no-reply@edidaktikum.ee');
  * Implements hook_init().
  */
 function edidaktikum_init() {
-  $uservoice_api_key = variable_get('ed_uservoice_api_key');
+	//Used by ed_g_drive Google Drive files integration
+	drupal_add_js('https://apis.google.com/js/api.js?onload=loadPicker', array('type' => 'external', 'defer' => 'defer'));
+	
+	$uservoice_api_key = variable_get('ed_uservoice_api_key');
   if (!empty($uservoice_api_key)) {
     global $language;
     drupal_add_js(array(

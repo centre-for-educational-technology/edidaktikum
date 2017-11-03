@@ -25,6 +25,7 @@ function ed_learning_resource_install() {
 	  field_create_instance($instance);
   }
   ed_learning_resource_add_og_audience();
+	ed_learning_resource_node_add_field_g_drive_file();
 }
 
 function ed_learning_resource_add_og_audience() {
@@ -168,6 +169,39 @@ function ed_learning_resource_node_add_field_assets_distribution() {
 }
 
 
+/**
+ * Adds ed_g_drive_file field instance
+ */
+function ed_learning_resource_node_add_field_g_drive_file() {
+	$field_name = 'ed_g_drive_file';
+	$field = field_info_field($field_name);
+	if (!empty($field) && !field_info_instance('node', $field_name, 'ed_learning_resource')) {
+		$instance = array(
+				'field_name' => $field_name,
+				'entity_type' => 'node',
+				'bundle' => 'ed_learning_resource',
+				'label' => t('Failid Google Drive-st'),
+				'description' => '',
+				'widget' => array(
+						'settings' => array(
+								'rows' => 1,
+						),
+				),
+				'required' => FALSE,
+				'display' => array(
+						'default' => array(
+								'label' => 'hidden',
+						),
+						'featured' => array(
+								'label' => 'hidden',
+						),
+				)
+		);
+		field_create_instance($instance);
+	}
+}
+
+
 
 /**
  * Add to_group_member field instance to ed_learning_resource
@@ -243,3 +277,12 @@ function ed_learning_resource_update_7103(&$sandbox) {
 
 }
 
+
+/**
+ * Add ed_g_drive_file field instance
+ */
+function ed_learning_resource_update_7104(&$sandbox) {
+
+	ed_learning_resource_node_add_field_g_drive_file();
+	
+}

@@ -1,0 +1,14 @@
+name = eDidaktikum Google Drive integration
+description = eDidaktikum Google Drive file picker integration
+package = eDidaktikum
+core = 7.x
+
+dependencies[] = edidaktikum
+dependencies[] = entityreference
+dependencies[] = entityreference_dragdrop
+dependencies[] = views
+dependencies[] = ctools
+dependencies[] = ed_file
+dependencies[] = og
+dependencies[] = og_access
+dependencies[] = og_ui

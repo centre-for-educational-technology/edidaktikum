@@ -1,0 +1,100 @@
+<?php
+
+/**
+ * Implements hook_install().
+ */
+function ed_g_drive_install() {
+	ed_g_drive_create_ed_g_drive_node_type();
+	ed_g_drive_create_field_g_drive_file();
+}
+
+
+/**
+ * Implements hook_uninstall().
+ */
+function ed_g_drive_uninstall() {
+	
+	field_delete_field('ed_g_drive_file');
+	ed_g_drive_delete_ed_g_drive_node_type();
+}
+
+
+/**
+ * Creates ed_g_drive node type.
+ * This is needed to be able to create custom field
+ */
+function ed_g_drive_create_ed_g_drive_node_type() {
+	if (!in_array('ed_g_drive', node_type_get_names())) {
+		$type = array(
+				'type' => 'ed_g_drive',
+				'name' => t('eDidaktikum Google Drive Integration'),
+				'base' => 'node_content',
+				'custom' => FALSE,
+				'modified' => FALSE,
+				'locked' => TRUE,
+				'has_title' => TRUE,
+				'title_label' => t('Title'),
+				'module' => 'ed_g_drive',
+		);
+		$type = node_type_set_defaults($type);
+		node_type_save($type);
+	}
+}
+
+/**
+ * Deletes ed_g_drive node type.
+ */
+function ed_g_drive_delete_ed_g_drive_node_type() {
+	if (array_key_exists('ed_g_drive', node_type_get_names())) {
+		node_type_delete('ed_g_drive');
+		node_types_rebuild();
+	}
+}
+
+
+/**
+ * Creates g drive file field
+ */
+function ed_g_drive_create_field_g_drive_file(){
+	$field_name = 'ed_g_drive_file';
+	if(!field_info_field($field_name)) {
+		$field = array(
+				'field_name' => $field_name,
+				'type' => 'ed_g_drive_file',
+				'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+		);
+		field_create_field($field);
+	}
+}
+
+
+
+/**
+ * Implements hook_field_schema().
+ * Used by ed_g_drive_file field
+ */
+function ed_g_drive_field_schema($field) {
+	$schema = array(
+			'columns' => array(
+					'name' => array(
+							'type' => 'varchar',
+							'length' => 3000,
+							'not null' => FALSE,
+					),
+					'url' => array(
+							'type' => 'varchar',
+							'length' => 4000,
+							'not null' => FALSE,
+					),
+					'mime' => array(
+							'type' => 'varchar',
+							'length' => 255,
+							'not null' => FALSE,
+					),
+			),
+	
+	);
+	
+	return $schema;
+	
+}

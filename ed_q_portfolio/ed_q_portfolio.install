@@ -54,68 +54,68 @@ function ed_q_portfolio_add_og_audience(){
         'action' => 'none',
         'fallback' => 'none',
         'skip_perm' => FALSE,
-    );
-    og_create_field(OG_AUDIENCE_FIELD, 'node', 'ed_q_portfolio', $og_field);
-  }
-}
-
-/**
- * Implements hook_uninstall().
- */
-function ed_q_portfolio_uninstall() {
+    );/**
+	   * Implements hook_uninstall().
+	   */
+	  function ed_q_portfolio_uninstall() {
 //  ed_qualification_voc_delete_voc();
-  ed_q_portfolio_delete_ed_q_portfolio_nodes();
-  ed_q_portfolio_delete_ed_q_portfolio_node_type();
-  field_delete_field('ed_q_portfolio_field_level');
-  field_delete_field('ed_q_portfolio_competence_desc');
-
-  field_delete_field('ed_q_portfolio_field_cv');
-  field_delete_field('ed_q_portfolio_field_application');
-
-  field_delete_field('ed_q_portfolio_field_status');
-  //delete set variables
-  variable_del('ed-q-portfolio');
-
-  $instances = field_info_instances('node', 'ed_q_portfolio');
-  foreach ($instances as $instance_name => $instance) {
-    field_delete_instance($instance);
-  }
-
-  $result = db_select('node', 'n')
-      ->fields('n', array('nid'))
-      ->condition("n.type", 'ed_q_portfolio')
-      ->execute();
-
-  $nids = array();
-  foreach ($result as $row){
-    $nids[] = $row->nid;
-  }
+		  ed_q_portfolio_delete_ed_q_portfolio_nodes();
+		  ed_q_portfolio_delete_ed_q_portfolio_node_type();
+		  field_delete_field('ed_q_portfolio_field_level');
+		  field_delete_field('ed_q_portfolio_competence_desc');
+		
+		  field_delete_field('ed_q_portfolio_field_cv');
+		  field_delete_field('ed_q_portfolio_field_application');
+		
+		  field_delete_field('ed_q_portfolio_field_status');
+		  //delete set variables
+		  variable_del('ed-q-portfolio');
+		
+		  $instances = field_info_instances('node', 'ed_q_portfolio');
+		  foreach ($instances as $instance_name => $instance) {
+			  field_delete_instance($instance);
+		  }
+		
+		  $result = db_select('node', 'n')
+				  ->fields('n', array('nid'))
+				  ->condition("n.type", 'ed_q_portfolio')
+				  ->execute();
+		
+		  $nids = array();
+		  foreach ($result as $row){
+			  $nids[] = $row->nid;
+		  }
 //  node_type_delete('ed_q_portfolio');
 //
-
-
-  //Delete group Hindajad
-
-  $assessorGroupNode = null;
-
-  $query = new EntityFieldQuery();
-  $entities = $query->entityCondition('entity_type', 'node', 'title')
-      ->entityCondition('bundle', 'ed_cluster')
-      ->propertyCondition('title', 'Hindajad', '=')
-      ->execute();
-
-
-
-  if(!empty($entities)){
-
-    foreach($entities['node'] as $groupnode){
-        $assessorGroupNode = $groupnode;
-    }
-
+		
+		
+		  //Delete group Hindajad
+		
+		  $assessorGroupNode = null;
+		
+		  $query = new EntityFieldQuery();
+		  $entities = $query->entityCondition('entity_type', 'node', 'title')
+				  ->entityCondition('bundle', 'ed_cluster')
+				  ->propertyCondition('title', 'Hindajad', '=')
+				  ->execute();
+		
+		
+		
+		  if(!empty($entities)){
+			
+			  foreach($entities['node'] as $groupnode){
+				  $assessorGroupNode = $groupnode;
+			  }
+			
+		  }
+		
+		  node_delete($assessorGroupNode->nid);
+	  }
+	
+	  og_create_field(OG_AUDIENCE_FIELD, 'node', 'ed_q_portfolio', $og_field);
   }
-
-  node_delete($assessorGroupNode->nid);
 }
+
 
 
 /*
@@ -191,7 +191,7 @@ function ed_q_portfolio_create_ed_q_portfolio_node_type() {
       'locked' => TRUE,
       'has_title' => TRUE,
       'title_label' => t('Title'),
-      'module' => 'ed_file',
+      'module' => 'ed_q_portfolio',
     );
     $type = node_type_set_defaults($type);
     node_type_save($type);

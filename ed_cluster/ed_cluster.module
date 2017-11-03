@@ -2673,7 +2673,7 @@ function ed_cluster_form_alter(&$form, &$form_state, $form_id) {
 	  $form['title']['#title'] = t('Title');
 	
     // Group types related
-	  $form['ed_field_group_type']['und']['#disabled'] = true;
+	 
 	  
 	  $form['ed_field_group_type']['#weight'] = -7;
 	  $form['ed_field_course_code']['#weight'] = -6;
@@ -2693,11 +2693,16 @@ function ed_cluster_form_alter(&$form, &$form_state, $form_id) {
 	  if(isset($form['#node']->ed_field_group_type)){
 		  $group_type = $form['#node']->ed_field_group_type[LANGUAGE_NONE][0]['value'];
 	  }
-	  else{
+	  else {
 		  $group_type = $_GET['field_group_type'];
+		
 		  $form['ed_field_group_type']['und'][0]['value']['#default_value'] = $group_type;
+	
 	  }
 	  
+	  
+	  //Disabling the field causes it losing its value after any ajax call from this page (disabled in css instead)
+	  //$form['ed_field_group_type']['und']['#disabled'] = true;
 	  if($group_type==1){
 		 
 	
