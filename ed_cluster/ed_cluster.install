@@ -29,6 +29,8 @@ function ed_cluster_install() {
 	ed_cluster_node_add_field_learning_outcomes();
 	ed_cluster_node_add_field_assessment_method();
 	ed_cluster_node_add_field_study_year();
+	
+	ed_cluster_node_add_field_g_drive_file();
 }
 
 function ed_cluster_node_add_field_featured_image() {
@@ -83,6 +85,10 @@ function ed_cluster_uninstall() {
 	
 	field_delete_field('ed_field_study_year');
 	field_delete_instance('ed_field_study_year');
+	
+	
+	field_delete_instance('ed_g_drive_file');
+	
 }
 
 /**
@@ -722,6 +728,40 @@ function ed_cluster_node_add_field_study_year() {
 }
 
 
+/**
+ * Adds ed_g_drive_file field instance
+ */
+function ed_cluster_node_add_field_g_drive_file() {
+	$field_name = 'ed_g_drive_file';
+	$field = field_info_field($field_name);
+	if (!empty($field) && !field_info_instance('node', $field_name, 'ed_cluster')) {
+		$instance = array(
+				'field_name' => $field_name,
+				'entity_type' => 'node',
+				'bundle' => 'ed_cluster',
+				'label' => t('Failid Google Drive-st'),
+				'description' => '',
+				'widget' => array(
+						'settings' => array(
+								'rows' => 1,
+						),
+				),
+				'required' => FALSE,
+				'display' => array(
+						'default' => array(
+								'label' => 'hidden',
+						),
+						'featured' => array(
+								'label' => 'hidden',
+						),
+				)
+		);
+		field_create_instance($instance);
+	}
+}
+
+
+
 
 /**
  * Deletes node type ed_cluster.
@@ -866,6 +906,17 @@ function ed_cluster_update_7107(&$sandbox){
 	ed_cluster_node_add_field_learning_outcomes();
 	ed_cluster_node_add_field_assessment_method();
 	ed_cluster_node_add_field_study_year();
+	
+}
+
+
+/**
+ * Add ed_g_drive_file field instance
+ */
+function ed_cluster_update_7108(&$sandbox){
+	
+	
+	ed_cluster_node_add_field_g_drive_file();
 	
 }
 

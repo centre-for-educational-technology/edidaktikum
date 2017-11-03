@@ -1,0 +1,269 @@
+<?php
+
+/*
+ * Implements hook_field_info
+ */
+function ed_g_drive_field_info() {
+	return array (
+			'ed_g_drive_file' => array (
+					'label' => t('Failid Google Drive-st'),
+					'description' => t('This field stores links to Google Drive linked files'),
+					'default_widget' => 'ed_g_drive_file_widget',
+					'default_formatter' => 'ed_g_drive_file_default',
+					'property_type' => 'ed_g_drive_file', // we add the propert type here
+					'property_callbacks' => array('ed_g_drive_file_property_info_callback'), // we add the callback
+			),
+	);
+}
+
+
+function ed_g_drive_file_property_info_callback(&$info, $entity_type, $field, $instance, $field_type) {
+	$property = &$info[$entity_type]['bundles'][$instance['bundle']]['properties'][$field['field_name']];
+	
+	$property['getter callback'] = 'entity_metadata_field_verbatim_get';
+	$property['setter callback'] = 'entity_metadata_field_verbatim_set';
+	unset($property['query callback']);
+	
+	$property['property info']['name'] = array(
+			'type' => 'text',
+			'label' => t('name'),
+			'setter callback' => 'entity_property_verbatim_set',
+	);
+	
+	$property['property info']['url'] = array(
+			'type' => 'text',
+			'label' => t('url'),
+			'setter callback' => 'entity_property_verbatim_set',
+	);
+	$property['property info']['mime'] = array(
+			'type' => 'text',
+			'label' => t('mime'),
+			'setter callback' => 'entity_property_verbatim_set',
+	);
+}
+
+/**
+ * Implements hook_field_widget_info().
+ */
+function ed_g_drive_field_widget_info() {
+
+	return array(
+			'ed_g_drive_file_widget' => array(
+					'label' => t('Default'),
+					'field types' => array('ed_g_drive_file'),
+			),
+	);
+}
+
+
+/**
+ * Implements hook_field_formatter_info().
+ */
+function ed_g_drive_field_formatter_info() {
+	
+	return array(
+			'ed_g_drive_file_default' => array(
+					'label' => t('Default'),
+					'field types' => array('ed_g_drive_file'),
+			),
+	);
+}
+
+/**
+* Implements hook_field_formatter_view().
+ */
+function ed_g_drive_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+	
+	$element = array();
+	switch ($display['type']) {
+		case 'ed_g_drive_file_default' :
+	
+			foreach ($items as $delta => $item) {
+				if (isset($item['url'])) {
+					$element[$delta]['#markup'] = " <a href='".$item['url']."'>".$item['name']."</a> <img src='".$item['mime']."'>";;
+				}
+			}
+			break;
+	}
+	return $element;
+}
+
+/*
+ * Implements hook_field_is_empty().
+ */
+function ed_g_drive_field_is_empty($item, $field) {
+	$temp = array_keys($field['columns']);
+	$key = array_shift($temp);
+	return empty($item[$key]);
+}
+
+
+/**
+ * Implements hook_field_validate().
+ */
+function ed_g_drive_field_validate($entity_type, $entity, $field, $instance, $langcode, $items, &$errors) {
+	// Loop through field items in the case of multiple values.
+	foreach ($items as $delta => $item) {
+		if (isset($item['url']) && $item['url'] != '') {
+			if (strlen($item['url']) > 4000) {
+				$errors[$field['field_name']][$langcode][$delta][] = array(
+						'error' => 'ed_g_drive_invalid_url',
+						'message' => t('%url: URL cannot be empty', array('%url' => $instance['label'])),
+				);
+			}
+		}
+	}
+	
+}
+
+
+
+/**
+ * Implements hook_field_widget_form().
+ */
+function ed_g_drive_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
+	
+	
+	//drupal_add_js(drupal_get_path('module', 'ed_g_drive') . '/js/ed_g_drive.js', 'file');
+	
+	
+	//Some data
+	if(!empty($form['#node']->ed_g_drive_file[LANGUAGE_NONE][$element['#delta']]['url'])){
+		
+		$name = $form['#node']->ed_g_drive_file[LANGUAGE_NONE][$element['#delta']]['name'];
+		$url = $form['#node']->ed_g_drive_file[LANGUAGE_NONE][$element['#delta']]['url'];
+		$mime = $form['#node']->ed_g_drive_file[LANGUAGE_NONE][$element['#delta']]['mime'];
+		
+		
+		$suffix = " <a href='".$url."'>".$name."</a> <img src='".$mime."'></div>";
+		
+		$element['name'] = array(
+				'#type' => 'hidden',
+				'#title' => t('Name'),
+				'#required' => $element['#required'],
+				'#size' => 3000,
+				'#attributes' => array('maxlength' => 3000),
+				'#prefix' => '<div class="ed_g_drive" order='.$element['#delta'].'>',
+				'#suffix' => '</div>',
+				'#default_value' => $form['#node']->ed_g_drive_file[LANGUAGE_NONE][$element['#delta']]['name']
+		);
+		
+		$element['url'] = array(
+				'#type' => 'hidden',
+				'#title' => t('URL'),
+				'#required' => $element['#required'],
+				'#size' => 4000,
+				'#attributes' => array('maxlength' => 4000),
+				'#prefix' => '<div class="ed_g_drive" order='.$element['#delta'].'>',
+				'#suffix' => '</div>',
+				'#default_value' => $form['#node']->ed_g_drive_file[LANGUAGE_NONE][$element['#delta']]['url'],
+		
+		);
+		$element['mime'] = array(
+				'#type' => 'hidden',
+				'#title' => t('MIME type'),
+				'#required' => $element['#required'],
+				'#size' => 255,
+				'#attributes' => array('maxlength' => 255),
+				'#prefix' => '<div class="ed_g_drive" order='.$element['#delta'].'>',
+				'#suffix' => '</div>',
+				'#default_value' => $form['#node']->ed_g_drive_file[LANGUAGE_NONE][$element['#delta']]['mime'],
+		);
+		
+		$element['button'] = array(
+				'#type' => 'button',
+				'#value' => t('Kustuta'),
+				'#attributes' => array(
+						'onclick' => "return false",
+						'class' => array('ed_g_drive_file_btn_delete'),
+						'order' => $element['#delta']
+				),
+				'#prefix' => '<div class="ed_g_drive_file_btn_wrapper">',
+				'#suffix' => $suffix,
+		
+		);
+	
+		
+	}else{
+		
+		$element['name'] = array(
+				'#type' => 'hidden',
+				'#title' => t('Name'),
+				'#required' => $element['#required'],
+				'#size' => 3000,
+				'#attributes' => array('maxlength' => 3000),
+				'#prefix' => '<div class="ed_g_drive" order='.$element['#delta'].'>',
+				'#suffix' => '</div>'
+		);
+		
+		$element['url'] = array(
+				'#type' => 'hidden',
+				'#title' => t('URL'),
+				'#required' => $element['#required'],
+				'#size' => 4000,
+				'#attributes' => array('maxlength' => 4000),
+				'#prefix' => '<div class="ed_g_drive" order='.$element['#delta'].'>',
+				'#suffix' => '</div>'
+		
+		);
+		$element['mime'] = array(
+				'#type' => 'hidden',
+				'#title' => t('MIME type'),
+				'#required' => $element['#required'],
+				'#size' => 255,
+				'#attributes' => array('maxlength' => 255),
+				'#prefix' => '<div class="ed_g_drive" order='.$element['#delta'].'>',
+				'#suffix' => '</div>'
+		);
+		
+		$element['button'] = array(
+				'#type' => 'button',
+				'#value' => t('Lisa'),
+				'#attributes' => array(
+						'onclick' => "return false",
+						'class' => array('ed_g_drive_file_btn'),
+						'order' => $element['#delta']
+				),
+				'#prefix' => '<div class="ed_g_drive_file_btn_wrapper">',
+				'#suffix' => '</div>',
+				'#attached' => array(
+					// Add javascript to trigger the colorpicker.
+						'js' => array(drupal_get_path('module', 'ed_g_drive') . '/js/ed_g_drive.js'),
+				),
+
+		);
+		
+		
+	}
+	
+	
+	//error_log(print_r($form_state['input']['ed_g_drive_file'][LANGUAGE_NONE][$element['#delta']]['url'], true));
+
+	if(!empty($form_state['input']['ed_g_drive_file'][LANGUAGE_NONE][$element['#delta']]['url'])){
+		
+		
+		$name = $form_state['input']['ed_g_drive_file'][LANGUAGE_NONE][$element['#delta']]['name'];
+		$url = $form_state['input']['ed_g_drive_file'][LANGUAGE_NONE][$element['#delta']]['url'];
+		$mime = $form_state['input']['ed_g_drive_file'][LANGUAGE_NONE][$element['#delta']]['mime'];
+		
+		$suffix = " <a href='".$url."'>".$name."</a> <img src='".$mime."'></div>";
+
+		
+		$element['button'] = array(
+				'#type' => 'button',
+				'#value' => t('Kustuta'),
+				'#attributes' => array(
+						'onclick' => "return false",
+						'class' => array('ed_g_drive_file_btn_delete'),
+						'order' => $element['#delta']
+				),
+				'#prefix' => '<div class="ed_g_drive_file_btn_wrapper">',
+				'#suffix' => $suffix,
+		
+		);
+		
+	}
+	
+
+	return $element;
+}

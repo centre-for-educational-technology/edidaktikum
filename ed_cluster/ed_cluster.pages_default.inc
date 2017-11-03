@@ -258,6 +258,35 @@ function _ed_cluster_node_view_page_handler() {
 	$display->content['new-74a8940e-b7da-4b0b-b852-6ffba5e5a599'] = $pane;
 	$display->panels['left'][6] = 'new-74a8940e-b7da-4b0b-b852-6ffba5e5a599';
 	$pane = new stdClass();
+	$pane->pid = 'new-46d59b64-dca2-4f08-9a55-7150ed5310c2';
+	$pane->panel = 'left';
+	$pane->type = 'entity_field';
+	$pane->subtype = 'node:ed_g_drive_file';
+	$pane->shown = TRUE;
+	$pane->access = array();
+	$pane->configuration = array(
+			'label' => 'title',
+			'formatter' => 'ed_g_drive_file_default',
+			'delta_limit' => '0',
+			'delta_offset' => '0',
+			'delta_reversed' => 0,
+			'formatter_settings' => array(),
+			'context' => 'argument_entity_id:node_1',
+			'override_title' => 0,
+			'override_title_text' => '',
+	);
+	$pane->cache = array();
+	$pane->style = array(
+			'settings' => NULL,
+	);
+	$pane->css = array();
+	$pane->extras = array();
+	$pane->position = 7;
+	$pane->locks = array();
+	$pane->uuid = '46d59b64-dca2-4f08-9a55-7150ed5310c2';
+	$display->content['new-46d59b64-dca2-4f08-9a55-7150ed5310c2'] = $pane;
+	$display->panels['left'][7] = 'new-46d59b64-dca2-4f08-9a55-7150ed5310c2';
+	$pane = new stdClass();
 	$pane->pid = 'new-dad41d08-1ee0-41ca-8e99-448fb1b3aeda';
 	$pane->panel = 'right';
 	$pane->type = 'node_statistics_and_likes';
@@ -510,6 +539,7 @@ function _ed_cluster_node_view_page_handler() {
 	$display->hide_title = PANELS_TITLE_FIXED;
 	$display->title_pane = '0';
 	$handler->conf['display'] = $display;
+	
 	
 	
 	

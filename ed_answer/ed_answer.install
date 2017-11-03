@@ -161,6 +161,8 @@ function ed_answer_install() {
   }
 
   ed_answer_add_og_audience();
+	
+	ed_answer_node_add_field_g_drive_file();
 }
 
 function ed_answer_add_og_audience() {
@@ -176,6 +178,38 @@ function ed_answer_add_og_audience() {
     );
     og_create_field(OG_AUDIENCE_FIELD, 'node', 'ed_answer', $og_field);
   }
+}
+
+/**
+ * Adds ed_g_drive_file field instance
+ */
+function ed_answer_node_add_field_g_drive_file() {
+	$field_name = 'ed_g_drive_file';
+	$field = field_info_field($field_name);
+	if (!empty($field) && !field_info_instance('node', $field_name, 'ed_answer')) {
+		$instance = array(
+				'field_name' => $field_name,
+				'entity_type' => 'node',
+				'bundle' => 'ed_answer',
+				'label' => t('Failid Google Drive-st'),
+				'description' => '',
+				'widget' => array(
+						'settings' => array(
+								'rows' => 1,
+						),
+				),
+				'required' => FALSE,
+				'display' => array(
+						'default' => array(
+								'label' => 'hidden',
+						),
+						'featured' => array(
+								'label' => 'hidden',
+						),
+				)
+		);
+		field_create_instance($instance);
+	}
 }
 
 
@@ -366,6 +400,13 @@ function ed_answer_update_7112(&$sandbox) {
       );
     field_create_instance($instance);
 
+}
+
+
+
+function ed_answer_update_7113(&$sandbox) {
+	ed_answer_node_add_field_g_drive_file();
+	
 }
 
 
