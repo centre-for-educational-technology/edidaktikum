@@ -29,6 +29,8 @@ function ed_task_install() {
 
   //Disable comments
   variable_set('comment_ed_task', COMMENT_NODE_CLOSED);
+	
+	ed_task_node_add_field_g_drive_file();
 }
 
 function ed_task_add_og_audience() {
@@ -237,6 +239,39 @@ function ed_task_node_add_field_study_group() {
 
 
 /**
+ * Adds ed_g_drive_file field instance
+ */
+function ed_task_node_add_field_g_drive_file() {
+	$field_name = 'ed_g_drive_file';
+	$field = field_info_field($field_name);
+	if (!empty($field) && !field_info_instance('node', $field_name, 'ed_task')) {
+		$instance = array(
+				'field_name' => $field_name,
+				'entity_type' => 'node',
+				'bundle' => 'ed_task',
+				'label' => t('Failid Google Drive-st'),
+				'description' => '',
+				'widget' => array(
+						'settings' => array(
+								'rows' => 1,
+						),
+				),
+				'required' => FALSE,
+				'display' => array(
+						'default' => array(
+								'label' => 'hidden',
+						),
+						'featured' => array(
+								'label' => 'hidden',
+						),
+				)
+		);
+		field_create_instance($instance);
+	}
+}
+
+
+/**
  * Add ed_task_field_study_group field to ed_task
  */
 function ed_task_update_7107(&$sandbox) {
@@ -283,4 +318,14 @@ function ed_task_update_7109(&$sandbox) {
   // Save the field
   field_update_field($info);
 
+}
+
+
+/**
+ * Adds ed_g_drive_file field instance to ed_task
+ */
+function ed_task_update_7110(&$sandbox) {
+	
+	ed_task_node_add_field_g_drive_file();
+	
 }
