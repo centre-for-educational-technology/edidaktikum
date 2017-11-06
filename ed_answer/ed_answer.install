@@ -403,7 +403,9 @@ function ed_answer_update_7112(&$sandbox) {
 }
 
 
-
+/**
+ * Adds ed_g_drive_file field instance to ed_answer
+ */
 function ed_answer_update_7113(&$sandbox) {
 	ed_answer_node_add_field_g_drive_file();
 	
