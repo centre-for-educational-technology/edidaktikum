@@ -42,8 +42,8 @@
 		]);	
 		
 		this.resize_handler = new edf.drag_handler(this.toolbar.get_item_by_title('resize').el, 'left', function(x, y) {
-			edf.rect.mod(this.el, undefined, undefined, x, y);
-			this.mod_camera(undefined, undefined, x, y);
+			this.auto_size = false;
+			this.mod_inner_size(x, y);
 		}.bind(this));
 
 		this.scroll_horizontal_handler = new edf.drag_handler(this.el_scroll_horizontal, 'left', function(x, y) {
@@ -74,12 +74,17 @@
 		this.set_inner_size(940, 400);	
 	};
 
+	edf.table.prototype.mod_inner_size = function(width, height) {
+		var inner_rect = this.el_cells_outer.getBoundingClientRect();
+		console.log(inner_rect.width, inner_rect.height);
+		this.set_inner_size(width + inner_rect.width, height + inner_rect.height);
+	};
+
 	edf.table.prototype.set_inner_size = function(width, height) {
 		this.last_set_inner_width = width;
 		this.last_set_inner_height = height;
 		var inner_rect = edf.rect.get(this.el_cells_outer);
 		var outer_rect = edf.rect.get(this.el);
-
 		var width = edf.optional(width, inner_rect.width);
 		var height = edf.optional(height, inner_rect.height);
 
@@ -94,6 +99,7 @@
 
 		edf.rect.set(this.el, undefined, undefined, width + outer_rect.width - inner_rect.width, height + outer_rect.height - inner_rect.height);
 		this.set_camera(undefined, undefined, width, height);
+		console.log(width,height);
 		this.calc_resize_rects();
 	};
 
