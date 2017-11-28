@@ -192,14 +192,14 @@ function ed_cluster_menu() {
     'weight' => 50,
   );
 
-  $items['node/%node/task-manager-experimental'] = [
-    'title' => t('Task Manager (experimental)'),
-    'access callback' => 'ed_current_user_is_administrator_or_supervisor',
-    'page callback' => 'ed_task_manager_experimental',
-    'page arguments' => array('node', 1),
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 51
-  ];
+//  $items['node/%node/task-manager-experimental'] = [
+//    'title' => t('Task Manager (experimental)'),
+//    'access callback' => 'ed_current_user_is_administrator_or_supervisor',
+//    'page callback' => 'ed_task_manager_experimental',
+//    'page arguments' => array('node', 1),
+//    'type' => MENU_LOCAL_TASK,
+//    'weight' => 51
+//  ];
 
   return $items;
 }
