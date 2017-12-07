@@ -706,90 +706,14 @@ function ed_cluster_my_listing_page() {
       '#markup' => t('Hi! Nothing to show here at the moment. Join some groups to see them here.'),
       '#suffix' => '</div>',
     );
-    if(node_access('create', 'ed_cluster')){
-	    $options_type1 = array(
-			    'attributes' => array(),
-			    'query' => array(
-					    'field_group_type' => 1,
-			    ),
-	    );
-	    $options_type2 = array(
-			    'attributes' => array(),
-			    'query' => array(
-					    'field_group_type' => 2,
-			    ),
-	    );
-	    $options_type3 = array(
-			    'attributes' => array(),
-			    'query' => array(
-					    'field_group_type' => 3,
-			    ),
-	    );
-	    $content['add-new-type-1'] = array(
-			    '#type' => 'item',
-			    '#title' => t(''),
-			    '#markup' => l(t('New Degree Studies type group'), 'node/add/ed-cluster', $options_type1),
-			    '#prefix' => '<button type="button" class="btn btn-link">',
-			    '#suffix' => '</button>',
-	    );
-	    $content['add-new-type-2'] = array(
-			    '#type' => 'item',
-			    '#title' => t(''),
-			    '#markup' => l(t('New Continuing Education type group'), 'node/add/ed-cluster', $options_type2),
-			    '#prefix' => '<button type="button" class="btn btn-link">',
-			    '#suffix' => '</button>',
-	    );
-	    $content['add-new-type-3'] = array(
-			    '#type' => 'item',
-			    '#title' => t(''),
-			    '#markup' => l(t('New Project-based Learning/Other type group'), 'node/add/ed-cluster', $options_type3),
-			    '#prefix' => '<button type="button" class="btn btn-link">',
-			    '#suffix' => '</button>',
-	    );
-    }
+	  if(node_access('create', 'ed_cluster')){
+		  $content = ed_generate_group_create_buttons($content);
+	  }
     return $content;
   }else{
-    if(node_access('create', 'ed_cluster')){
-	    $options_type1 = array(
-			    'attributes' => array(),
-			    'query' => array(
-					    'field_group_type' => 1,
-			    ),
-	    );
-	    $options_type2 = array(
-			    'attributes' => array(),
-			    'query' => array(
-					    'field_group_type' => 2,
-			    ),
-	    );
-	    $options_type3 = array(
-			    'attributes' => array(),
-			    'query' => array(
-					    'field_group_type' => 3,
-			    ),
-	    );
-	    $content['add-new-type-1'] = array(
-			    '#type' => 'item',
-			    '#title' => t(''),
-			    '#markup' => l(t('New Degree Studies type group'), 'node/add/ed-cluster', $options_type1),
-			    '#prefix' => '<button type="button" class="btn btn-link">',
-			    '#suffix' => '</button>',
-	    );
-	    $content['add-new-type-2'] = array(
-			    '#type' => 'item',
-			    '#title' => t(''),
-			    '#markup' => l(t('New Continuing Education type group'), 'node/add/ed-cluster', $options_type2),
-			    '#prefix' => '<button type="button" class="btn btn-link">',
-			    '#suffix' => '</button>',
-	    );
-	    $content['add-new-type-3'] = array(
-			    '#type' => 'item',
-			    '#title' => t(''),
-			    '#markup' => l(t('New Project-based Learning/Other type group'), 'node/add/ed-cluster', $options_type3),
-			    '#prefix' => '<button type="button" class="btn btn-link">',
-			    '#suffix' => '</button>',
-	    );
-    }
+	  if(node_access('create', 'ed_cluster')){
+		  $content = ed_generate_group_create_buttons($content);
+	  }
     $mygroups = $mygroups['node'];
 
     $mygroupallnodes = node_load_multiple($mygroups);
@@ -934,50 +858,8 @@ function ed_all_groups_listing(){
   $content['sorting'] = drupal_get_form('_ed_get_sorting_options');
   $sql_order = ed_get_sorting_type($content);
   if(node_access('create', 'ed_cluster')){
-		  $options_type1 = array(
-				  'attributes' => array(
-				  		'class' => 'btn btn-success',
-					    'role' => 'button'
-				  ),
-				  'query' => array(
-						  'field_group_type' => 1,
-				  ),
-		  );
-	    $options_type2 = array(
-			    'attributes' => array(
-					    'class' => 'btn btn-success',
-					    'role' => 'button'
-			    ),
-				  'query' => array(
-						  'field_group_type' => 2,
-				  ),
-		  );
-	    $options_type3 = array(
-			    'attributes' => array(
-					    'class' => 'btn btn-success',
-					    'role' => 'button'
-			    ),
-				  'query' => array(
-						  'field_group_type' => 3,
-				  ),
-		  );
-      $content['add-new-type-1'] = array(
-		      '#type' => 'item',
-		      '#title' => t(''),
-		      '#markup' => l(t('New Degree Studies type group'), 'node/add/ed-cluster', $options_type1),
-	       
-      );
-		  $content['add-new-type-2'] = array(
-				  '#type' => 'item',
-				  '#title' => t(''),
-				  '#markup' => l(t('New Continuing Education type group'), 'node/add/ed-cluster', $options_type2),
-		  );
-		  $content['add-new-type-3'] = array(
-				  '#type' => 'item',
-				  '#title' => t(''),
-				  '#markup' => l(t('New Project-based Learning/Other type group'), 'node/add/ed-cluster', $options_type3),
-		  );
-    }
+	  $content = ed_generate_group_create_buttons($content);
+  }
   drupal_add_css(drupal_get_path('module', 'ed_cluster').'/group-listing.css');
   $remove_user_groups = TRUE;
   $og_groups = ed_cluster_get_clusters($sql_order, $remove_user_groups, false);
@@ -985,25 +867,28 @@ function ed_all_groups_listing(){
     $nodes = node_load_multiple($og_groups);
 	
 	  $counter = 1;
+	  $row = 1;
 	
 	  $build['row-grid'] = array(
 			  '#type' => 'markup',
 			  '#prefix' => '<div class="row grid">',
 			  '#suffix' => '</div>',
 	  );
+	
+	  $build['row-grid']['row-'.$row] = array(
+			  '#type' => 'markup',
+			  '#prefix' => '<div class="row">',
+			  '#suffix' => '</div>',
+	  );
+	
+	  $lastNode = end($nodes);
 	  
     foreach($nodes as $node){
 	    
-	    if(isset($node->nid)){
-		
-		      $build['row-grid']['row-'.$node->nid] = array(
-		        '#type' => 'markup',
-		        '#prefix' => '<div class="col-xs-12 col-sm-4 col-md-3 col-lg-3">',
-		        '#suffix' => '</div>',
-		      );
- 
-        
-	        $query = new EntityFieldQuery();
+		    if(isset($node->nid)){
+			    
+			
+			    $query = new EntityFieldQuery();
 	        $query->entityCondition('entity_type', 'user')
 	            ->fieldCondition('og_user_node', 'target_id', $node->nid, '=');
 	        $results = $query->execute();
@@ -1024,52 +909,93 @@ function ed_all_groups_listing(){
 	        }else{
 	          $title = l($node->title, 'node/'.$node->nid).' <p class="open-group-title">'.t('Open Group').'</p>';
 	        }
-	        $build['row-grid']['row-'.$node->nid][$counter] = array(
+	        $build['row-grid']['row-'.$row]['node-'.$node->nid] = array(
 	          '#type' => 'markup',
-	          '#prefix' => '<div class="item">',
-	          '#suffix' => '</div>',
+	          '#prefix' => '<div class="col-xs-12 col-sm-4 col-md-3 col-lg-3"><div class="item">',
+	          '#suffix' => '</div></div>',
 	        );
-	        $build['row-grid']['row-'.$node->nid][$counter]['list-item'] = array(
+	        $build['row-grid']['row-'.$row]['node-'.$node->nid]['list-item'] = array(
 	          '#type' => 'markup',
 	          '#prefix' => '<div class="product-list__item">',
 	          '#suffix' => '</div>',
 	        );
-	        $build['row-grid']['row-'.$node->nid][$counter]['list-item']['list-img'] = array(
+	        $build['row-grid']['row-'.$row]['node-'.$node->nid]['list-item']['list-img'] = array(
 	          '#type' => 'markup',
 	          '#prefix' => '<figure class="product-list__img">',
 		        '#markup' => !empty($node->ed_field_featured_image) ? l('<img src="'.image_style_url('medium', $node->ed_field_featured_image[LANGUAGE_NONE][0]['uri']).'">', 'node/'.$node->nid, array('html' => TRUE)):l('<img src="'.$GLOBALS['base_url'].'/'.path_to_theme().'/images/icons/ed_group_icon_default.png">', 'node/'.$node->nid, array('html' => true)),
 		        '#suffix' => '</figure>',
 	        );
-		      $build['row-grid']['row-'.$node->nid][$counter]['list-item']['list-content'] = array(
+		      $build['row-grid']['row-'.$row]['node-'.$node->nid]['list-item']['list-content'] = array(
 	          '#type' => 'markup',
 	          '#prefix' => '<div class="product-list__content"><h3 class="product-list__title">',
 	          '#markup' => $title,
 	          '#suffix' => '</h3></div>',
 	        );
-		      $build['row-grid']['row-'.$node->nid][$counter]['list-item']['list-item-info'] = array(
-	          '#type' => 'markup',
-	          '#prefix' => '<div class="product-list__item-info">',
-	          '#suffix' => '</div>',
-	        );
-//		      $build['row-'.$node->nid][$counter]['list-item']['list-item-info']['admins'] = array(
-//	          '#type' => 'markup',
-//	          '#prefix' => '<p class="item-info__text-01">',
-//	          '#markup' => implode(' ', $adminimages),
-//	          '#suffix' => '</p>',
-//	        );
-//	        if($node->ed_field_group_state[LANGUAGE_NONE][0]['value']){
-//	          $build['row-' . $counter][$i]['bottom']['bottom-right'] = array(
-//	              '#type' => 'markup',
-//	              '#prefix' => '<button type="button" class="btn btn-success">',
-//	              '#markup' => l(t('Join'), 'group/node/' . $nodeschunk[$i]->nid . '/subscribe/og_user_node'),
-//	              '#suffix' => '</button>',
-//	          );
-//	        }
-
-      }
-      
-      $counter++;
+			   
+			
+			    if($node->ed_field_group_state[LANGUAGE_NONE][0]['value']){
+				    $build['row-grid']['row-'.$row]['node-'.$node->nid]['list-item']['list-content-admins'] = array(
+						    '#type' => 'markup',
+						    '#prefix' => '<div class="product-list__content admins">',
+						    '#suffix' => '</div>',
+				    );
+				    $build['row-grid']['row-'.$row]['node-'.$node->nid]['list-item']['list-content-admins']['admins'] = array(
+						    '#type' => 'markup',
+						    '#prefix' => '<p class="item-info__text-01">',
+						    '#markup' => implode(' ', $adminimages),
+						    '#suffix' => '</p>',
+				    );
+				
+				    $build['row-grid']['row-'.$row]['node-'.$node->nid]['list-item']['list-item-info'] = array(
+						    '#type' => 'markup',
+						    '#prefix' => '<div class="product-list__item-info">',
+						    '#suffix' => '</div>',
+				    );
+				
+				    
+				    $build['row-grid']['row-'.$row]['node-'.$node->nid]['list-item']['list-item-info']['button'] = array(
+						    '#type' => 'markup',
+						    '#markup' => l(t('Join'), 'group/node/' . $node->nid . '/subscribe/og_user_node', array('attributes' => array('class' => 'btn btn-success'))),
+				    );
+			    }else{
+				
+				    $build['row-grid']['row-'.$row]['node-'.$node->nid]['list-item']['list-item-info'] = array(
+						    '#type' => 'markup',
+						    '#prefix' => '<div class="product-list__item-info">',
+						    '#suffix' => '</div>',
+				    );
+				    
+				    $build['row-grid']['row-'.$row]['node-'.$node->nid]['list-item']['list-item-info']['admins'] = array(
+						    '#type' => 'markup',
+						    '#prefix' => '<p class="item-info__text-01">',
+						    '#markup' => implode(' ', $adminimages),
+						    '#suffix' => '</p>',
+				    );
+				
+				 
+				
+				
+				
+			    }
+			    
+	        
+			 
+			    if($counter %4 == 0 && $node != $lastNode) {
+				    $row++;
+				    
+				    $build['row-grid']['row-'.$row] = array(
+						    '#type' => 'markup',
+						    '#prefix' => '<div class="row">',
+						    '#suffix' => '</div>',
+				    );
+			    }
+			
+			    $counter++;
+			
+		    }
+	   
     }
+
     $content['clusters'] = $build;
     $content['pager'] = array(
       '#theme' => 'pager',
@@ -1079,53 +1005,68 @@ function ed_all_groups_listing(){
   return $content;
 }
 
+function ed_generate_group_create_buttons(&$content){
+	$options_type1 = array(
+			'attributes' => array(
+					'class' => 'btn btn-success new-group',
+					'role' => 'button'
+			),
+			'query' => array(
+					'field_group_type' => 1,
+			),
+	);
+	$options_type2 = array(
+			'attributes' => array(
+					'class' => 'btn btn-success new-group',
+					'role' => 'button'
+			),
+			'query' => array(
+					'field_group_type' => 2,
+			),
+	);
+	$options_type3 = array(
+			'attributes' => array(
+					'class' => 'btn btn-success new-group',
+					'role' => 'button'
+			),
+			'query' => array(
+					'field_group_type' => 3,
+			),
+	);
+	$content['new-group-buttons'] = array(
+			'#type' => 'markup',
+			'#prefix' => '<div class="new-group-buttons">',
+			'#suffix' => '</div>',
+	);
+	$content['new-group-buttons']['add-new-type-1'] = array(
+			'#type' => 'item',
+			'#title' => t(''),
+			'#markup' => l(t('New Degree Studies type group'), 'node/add/ed-cluster', $options_type1),
+	
+	);
+	$content['new-group-buttons']['add-new-type-2'] = array(
+			'#type' => 'item',
+			'#title' => t(''),
+			'#markup' => l(t('New Continuing Education type group'), 'node/add/ed-cluster', $options_type2),
+	);
+	$content['new-group-buttons']['add-new-type-3'] = array(
+			'#type' => 'item',
+			'#title' => t(''),
+			'#markup' => l(t('New Project-based Learning/Other type group'), 'node/add/ed-cluster', $options_type3),
+	);
+	
+	return $content;
+}
+
 
 function ed_cluster_my_inactive_listing_page(){
   drupal_set_title(t('Inactive Groups'));
   $content = array();
   $content['sorting'] = drupal_get_form('_ed_get_sorting_options');
   $sql_order = ed_get_sorting_type($content);
-  if(node_access('create', 'ed_cluster')){
-	  $options_type1 = array(
-			  'attributes' => array(),
-			  'query' => array(
-					  'field_group_type' => 1,
-			  ),
-	  );
-	  $options_type2 = array(
-			  'attributes' => array(),
-			  'query' => array(
-					  'field_group_type' => 2,
-			  ),
-	  );
-	  $options_type3 = array(
-			  'attributes' => array(),
-			  'query' => array(
-					  'field_group_type' => 3,
-			  ),
-	  );
-	  $content['add-new-type-1'] = array(
-			  '#type' => 'item',
-			  '#title' => t(''),
-			  '#markup' => l(t('New Degree Studies type group'), 'node/add/ed-cluster', $options_type1),
-			  '#prefix' => '<button type="button" class="btn btn-link">',
-			  '#suffix' => '</button>',
-	  );
-	  $content['add-new-type-2'] = array(
-			  '#type' => 'item',
-			  '#title' => t(''),
-			  '#markup' => l(t('New Continuing Education type group'), 'node/add/ed-cluster', $options_type2),
-			  '#prefix' => '<button type="button" class="btn btn-link">',
-			  '#suffix' => '</button>',
-	  );
-	  $content['add-new-type-3'] = array(
-			  '#type' => 'item',
-			  '#title' => t(''),
-			  '#markup' => l(t('New Project-based Learning/Other type group'), 'node/add/ed-cluster', $options_type3),
-			  '#prefix' => '<button type="button" class="btn btn-link">',
-			  '#suffix' => '</button>',
-	  );
-  }
+	if(node_access('create', 'ed_cluster')){
+		$content = ed_generate_group_create_buttons($content);
+	}
   drupal_add_css(drupal_get_path('module', 'ed_cluster').'/group-listing.css');
   $remove_user_groups = TRUE;
   $og_groups = ed_cluster_get_clusters($sql_order, $remove_user_groups, true);
