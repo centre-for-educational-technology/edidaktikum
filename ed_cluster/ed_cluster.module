@@ -141,7 +141,7 @@ function ed_cluster_menu() {
     'type' => MENU_LOCAL_TASK,
     'weight' => 50,
   );
-  
+
   $items['node/%node/bookmark'] = array(
     'title' => t('Bookmarks'),
     'page callback' => 'ed_listing_from_group',
@@ -208,11 +208,11 @@ function ed_cluster_menu() {
 
 
 function ed_subgroup_listing_from_group($filler, $gnode, $type){
-  
-  
-  
-  
-  
+
+
+
+
+
   $content = array();
   $content['sorting'] = drupal_get_form('_ed_get_sorting_options');
   $sql_order = ed_get_sorting_type($content);
@@ -223,7 +223,7 @@ function ed_subgroup_listing_from_group($filler, $gnode, $type){
       'destination' => _ed_cluster_destination_for_group_node_type($gnode, 'ed_subgroup'),
     ),
   );
-  
+
   if(node_access('create', 'ed_subgroup')){
     $content['add-new'] = array(
       '#type' => 'link',
@@ -238,7 +238,7 @@ function ed_subgroup_listing_from_group($filler, $gnode, $type){
   $subgroup_nids = ed_cluster_get_subgroups($sql_order, $gnode->nid);
   $nodes = node_load_multiple($subgroup_nids);
   $nodeschunked = array_chunk($nodes, 4);
-  
+
   $lastchunk = end($nodeschunked);
 
   if($lastchunk && count($lastchunk<4)){
@@ -257,7 +257,7 @@ function ed_subgroup_listing_from_group($filler, $gnode, $type){
       );
       for($i=0;$i<count($nodeschunk);$i++){
         if(isset($nodeschunk[$i]->nid)){
-        
+
           $query = new EntityFieldQuery();
           $query->entityCondition('entity_type', 'user')
               ->fieldCondition('og_user_node', 'target_id', $nodeschunk[$i]->nid, '=');
@@ -314,7 +314,7 @@ function ed_subgroup_listing_from_group($filler, $gnode, $type){
           );
           $build['row-'.$counter][$i]['bottom']['bottom-right'] = array(
             '#type' => 'markup',
-            
+
             '#suffix' => '</div>',
           );
           //If user is not a member of that group:
@@ -322,27 +322,27 @@ function ed_subgroup_listing_from_group($filler, $gnode, $type){
             $build['row-'.$counter][$i]['bottom']['bottom-right']['#prefix'] = '<div class="span3 group-div-bottom-right label label-success">';
             $build['row-'.$counter][$i]['bottom']['bottom-right']['#markup'] = l(t('Join'),'group/node/'.$nodeschunk[$i]->nid.'/subscribe/og_user_node');
           }else{
-            
+
             $build['row-'.$counter][$i]['bottom']['bottom-right']['#prefix'] = '<div class="span3 group-div-bottom-right label label-important">';
             $build['row-'.$counter][$i]['bottom']['bottom-right']['#markup'] = l(t('Leave'),'group/node/'.$nodeschunk[$i]->nid.'/unsubscribe');
           }
-          
+
           //If user is a member of that group:
-          
+
         }
       }
       $counter++;
     }
-    
+
     $content['clusters'] = $build;
     $content['pager'] = array(
       '#theme' => 'pager',
     );
-  
-  
-  
-  
-  
+
+
+
+
+
   return $content;
 }
 
@@ -372,9 +372,9 @@ function ed_cluster_search_page($form, &$form_state){
     ),
   );
   $form['#submit'][] = 'ed_cluster_cluster_search_submit_handler';
-  
+
   if( $searchstring!=''){
-   
+
     $nids = _ed_cluster_search_for_clusters($searchstring);
     if(empty($nids)){
       $form['listing'] = array(
@@ -395,10 +395,10 @@ function ed_cluster_search_page($form, &$form_state){
           array_push($lastchunk, $x);
         }
       }
-      
+
       $nodeschunked[count($nodeschunked)-1] = $lastchunk;
       $counter = 1;
-      
+
       foreach($nodeschunked as $nodeschunk){
         $build['row-'.$counter] = array(
           '#type' => 'markup',
@@ -476,7 +476,7 @@ function ed_cluster_search_page($form, &$form_state){
       $form['pager'] = array(
         '#theme' => 'pager',
       );
-      
+
     }
   }else{
     $form['listing'] = ed_all_groups_listing();
@@ -484,7 +484,7 @@ function ed_cluster_search_page($form, &$form_state){
     unset($form['listing']['sorting']);
     unset($form['listing']['add-new']);
   }
-  
+
   return $form;
 }
 
@@ -672,9 +672,9 @@ function ed_task_listing_for_students($test, $node){
             }
           }
         }
-        
-        
-        
+
+
+
     $rows[] = array(
       'data' => array(
         'title' => $titlelink,
@@ -682,7 +682,7 @@ function ed_task_listing_for_students($test, $node){
         'status' => $tmp_data,
       ),
     );
-    
+
   }
 
   $content['tasks-table'] = array(
@@ -698,7 +698,7 @@ function ed_cluster_my_listing_page() {
   $content = array();
   $mygroups = og_get_entity_groups();
   drupal_set_title(t('My Groups A-Z'));
-  
+
   if(empty($mygroups)){
     $content['groups-not-found'] = array(
       '#type' => 'markup',
@@ -731,7 +731,7 @@ function ed_cluster_my_listing_page() {
       }
       return ($a->ed_field_group_state[LANGUAGE_NONE][0] < $b->ed_field_group_state[LANGUAGE_NONE][0]);
     });
-    
+
 //    uasort($mygroupallnodes, function($a, $b){
 //      return strncasecmp(trim($a->title), trim($b->title), 15);
 //    });
