@@ -234,6 +234,10 @@ function edidaktikum_menu() {
   return $items;
 }
 
+function schools_custom_page(){
+	return '<p>Hello world</p>';
+}
+
 function edidaktikum_node_delete_page($groups, $deletedtitle){
   
   $content = array();
