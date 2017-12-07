@@ -935,19 +935,28 @@ function ed_all_groups_listing(){
   $sql_order = ed_get_sorting_type($content);
   if(node_access('create', 'ed_cluster')){
 		  $options_type1 = array(
-				  'attributes' => array(),
+				  'attributes' => array(
+				  		'class' => 'btn btn-success',
+					    'role' => 'button'
+				  ),
 				  'query' => array(
 						  'field_group_type' => 1,
 				  ),
 		  );
 	    $options_type2 = array(
-				  'attributes' => array(),
+			    'attributes' => array(
+					    'class' => 'btn btn-success',
+					    'role' => 'button'
+			    ),
 				  'query' => array(
 						  'field_group_type' => 2,
 				  ),
 		  );
 	    $options_type3 = array(
-				  'attributes' => array(),
+			    'attributes' => array(
+					    'class' => 'btn btn-success',
+					    'role' => 'button'
+			    ),
 				  'query' => array(
 						  'field_group_type' => 3,
 				  ),
@@ -956,22 +965,17 @@ function ed_all_groups_listing(){
 		      '#type' => 'item',
 		      '#title' => t(''),
 		      '#markup' => l(t('New Degree Studies type group'), 'node/add/ed-cluster', $options_type1),
-	        '#prefix' => '<button type="button" class="btn btn-link">',
-	        '#suffix' => '</button>',
+	       
       );
 		  $content['add-new-type-2'] = array(
 				  '#type' => 'item',
 				  '#title' => t(''),
 				  '#markup' => l(t('New Continuing Education type group'), 'node/add/ed-cluster', $options_type2),
-				  '#prefix' => '<button type="button" class="btn btn-link">',
-				  '#suffix' => '</button>',
 		  );
 		  $content['add-new-type-3'] = array(
 				  '#type' => 'item',
 				  '#title' => t(''),
 				  '#markup' => l(t('New Project-based Learning/Other type group'), 'node/add/ed-cluster', $options_type3),
-				  '#prefix' => '<button type="button" class="btn btn-link">',
-				  '#suffix' => '</button>',
 		  );
     }
   drupal_add_css(drupal_get_path('module', 'ed_cluster').'/group-listing.css');
@@ -979,93 +983,91 @@ function ed_all_groups_listing(){
   $og_groups = ed_cluster_get_clusters($sql_order, $remove_user_groups, false);
   if (!empty($og_groups)) {
     $nodes = node_load_multiple($og_groups);
-
-    $nodeschunked = array_chunk($nodes, 4);
-
-    $lastchunk = end($nodeschunked);
-
-    if(count($lastchunk<4)){
-      foreach(range(1, 4-count($lastchunk))as $i){
-        $x = new stdClass();
-        array_push($lastchunk, $x);
-      }
-    }
-    $nodeschunked[count($nodeschunked)-1] = $lastchunk;
-    $counter = 1;
-    foreach($nodeschunked as $nodeschunk){
-
-      $build['row-'.$counter] = array(
-        '#type' => 'markup',
-        '#prefix' => '<div class="row" id="row-'.$counter.'">',
-        '#suffix' => '</div>',
-      );
-      for($i=0;$i<count($nodeschunk);$i++){
-        if(isset($nodeschunk[$i]->nid)){
-        $query = new EntityFieldQuery();
-        $query->entityCondition('entity_type', 'user')
-            ->fieldCondition('og_user_node', 'target_id', $nodeschunk[$i]->nid, '=');
-        $results = $query->execute();
-        $uids = array_keys($results['user']);
-        $groupnode = node_load($nodeschunk[$i]->nid);
-        $groupadmins = _ed_cluster_get_group_admins($groupnode, TRUE);
-        $adminimages = array();
-        foreach($groupadmins as $groupadmin){
-          $admin = user_load($groupadmin);
-          if($admin->picture){
-            $adminimages[] =l('<img src="'.image_style_url('thumbnail', $admin->picture->uri).'" title="'.$admin->ed_field_full_name[LANGUAGE_NONE][0]['safe_value'].'" />', 'user/'.$admin->uid, array('html' => TRUE));
-          }else{
-            $adminimages[] =l('<img src="'.$GLOBALS['base_url'].'/'.path_to_theme().'/images/user_icon_default.png" title="'.$admin->ed_field_full_name[LANGUAGE_NONE][0]['safe_value'].'"/>', 'user/'.$admin->uid, array('html' => TRUE));
-          }
-        }
-        if($nodeschunk[$i]->group_access[LANGUAGE_NONE][0]['value']){
-          $title = l($nodeschunk[$i]->title, 'node/'.$nodeschunk[$i]->nid).' <p class="private-group-title">'.t('Private Group').'</p>';
-        }else{
-          $title = l($nodeschunk[$i]->title, 'node/'.$nodeschunk[$i]->nid);
-        }
-        $build['row-'.$counter][$i] = array(
-          '#type' => 'markup',
-          '#prefix' => '<div class="span3 group-div-outer">',
-          '#suffix' => '</div>',
-        );
-        $build['row-'.$counter][$i]['top'] = array(
-          '#type' => 'markup',
-          '#prefix' => '<div class="group-div-top">',
-          '#suffix' => '</div>',
-        );
-        $build['row-'.$counter][$i]['top']['top-top'] = array(
-          '#type' => 'markup',
-          '#prefix' => '<div class="group-div-top-cover">',
-          '#markup' => !empty($nodeschunk[$i]->ed_field_featured_image) ? l('<img src="'.image_style_url('medium', $nodeschunk[$i]->ed_field_featured_image[LANGUAGE_NONE][0]['uri']).'">', 'node/'.$nodeschunk[$i]->nid, array('html' => TRUE)):l('<img src="'.$GLOBALS['base_url'].'/'.path_to_theme().'/images/icons/ed_group_icon_default.png">', 'node/'.$nodeschunk[$i]->nid, array('html' => true)),
-          '#suffix' => '</div>',
-        );
-        $build['row-'.$counter][$i]['top']['top-bottom'] = array(
-          '#type' => 'markup',
-          '#prefix' => '<div class="group-div-top-title">',
-          '#markup' => $title,
-          '#suffix' => '</div>',
-        );
-        $build['row-'.$counter][$i]['bottom'] = array(
-          '#type' => 'markup',
-          '#prefix' => '<div class="row group-div-bottom">',
-          '#suffix' => '</div>',
-        );
-        $build['row-'.$counter][$i]['bottom']['bottom-left'] = array(
-          '#type' => 'markup',
-          '#prefix' => '<div class="span7 group-div-bottom-left">',
-          '#markup' => implode(' ', $adminimages),
-          '#suffix' => '</div>',
-        );
-        if($nodeschunk[$i]->ed_field_group_state[LANGUAGE_NONE][0]['value']){
-          $build['row-' . $counter][$i]['bottom']['bottom-right'] = array(
-              '#type' => 'markup',
-              '#prefix' => '<button type="button" class="btn btn-success">',
-              '#markup' => l(t('Join'), 'group/node/' . $nodeschunk[$i]->nid . '/subscribe/og_user_node'),
-              '#suffix' => '</button>',
-          );
-        }
+	
+	  $counter = 1;
+	
+	  $build['row-grid'] = array(
+			  '#type' => 'markup',
+			  '#prefix' => '<div class="row grid">',
+			  '#suffix' => '</div>',
+	  );
+	  
+    foreach($nodes as $node){
+	    
+	    if(isset($node->nid)){
+		
+		      $build['row-grid']['row-'.$node->nid] = array(
+		        '#type' => 'markup',
+		        '#prefix' => '<div class="col-xs-12 col-sm-4 col-md-3 col-lg-3">',
+		        '#suffix' => '</div>',
+		      );
+ 
+        
+	        $query = new EntityFieldQuery();
+	        $query->entityCondition('entity_type', 'user')
+	            ->fieldCondition('og_user_node', 'target_id', $node->nid, '=');
+	        $results = $query->execute();
+	        $uids = array_keys($results['user']);
+	        $groupnode = node_load($node->nid);
+	        $groupadmins = _ed_cluster_get_group_admins($groupnode, TRUE);
+	        $adminimages = array();
+	        foreach($groupadmins as $groupadmin){
+	          $admin = user_load($groupadmin);
+	          if($admin->picture){
+	            $adminimages[] =l('<img src="'.image_style_url('thumbnail', $admin->picture->uri).'" title="'.$admin->ed_field_full_name[LANGUAGE_NONE][0]['safe_value'].'" />', 'user/'.$admin->uid, array('html' => TRUE));
+	          }else{
+	            $adminimages[] =l('<img src="'.$GLOBALS['base_url'].'/'.path_to_theme().'/images/user_icon_default.png" title="'.$admin->ed_field_full_name[LANGUAGE_NONE][0]['safe_value'].'"/>', 'user/'.$admin->uid, array('html' => TRUE));
+	          }
+	        }
+	        if($node->group_access[LANGUAGE_NONE][0]['value']){
+	          $title = l($node->title, 'node/'.$node->nid).' <p class="private-group-title">'.t('Private Group').'</p>';
+	        }else{
+	          $title = l($node->title, 'node/'.$node->nid).' <p class="open-group-title">'.t('Open Group').'</p>';
+	        }
+	        $build['row-grid']['row-'.$node->nid][$counter] = array(
+	          '#type' => 'markup',
+	          '#prefix' => '<div class="item">',
+	          '#suffix' => '</div>',
+	        );
+	        $build['row-grid']['row-'.$node->nid][$counter]['list-item'] = array(
+	          '#type' => 'markup',
+	          '#prefix' => '<div class="product-list__item">',
+	          '#suffix' => '</div>',
+	        );
+	        $build['row-grid']['row-'.$node->nid][$counter]['list-item']['list-img'] = array(
+	          '#type' => 'markup',
+	          '#prefix' => '<figure class="product-list__img">',
+		        '#markup' => !empty($node->ed_field_featured_image) ? l('<img src="'.image_style_url('medium', $node->ed_field_featured_image[LANGUAGE_NONE][0]['uri']).'">', 'node/'.$node->nid, array('html' => TRUE)):l('<img src="'.$GLOBALS['base_url'].'/'.path_to_theme().'/images/icons/ed_group_icon_default.png">', 'node/'.$node->nid, array('html' => true)),
+		        '#suffix' => '</figure>',
+	        );
+		      $build['row-grid']['row-'.$node->nid][$counter]['list-item']['list-content'] = array(
+	          '#type' => 'markup',
+	          '#prefix' => '<div class="product-list__content"><h3 class="product-list__title">',
+	          '#markup' => $title,
+	          '#suffix' => '</h3></div>',
+	        );
+		      $build['row-grid']['row-'.$node->nid][$counter]['list-item']['list-item-info'] = array(
+	          '#type' => 'markup',
+	          '#prefix' => '<div class="product-list__item-info">',
+	          '#suffix' => '</div>',
+	        );
+//		      $build['row-'.$node->nid][$counter]['list-item']['list-item-info']['admins'] = array(
+//	          '#type' => 'markup',
+//	          '#prefix' => '<p class="item-info__text-01">',
+//	          '#markup' => implode(' ', $adminimages),
+//	          '#suffix' => '</p>',
+//	        );
+//	        if($node->ed_field_group_state[LANGUAGE_NONE][0]['value']){
+//	          $build['row-' . $counter][$i]['bottom']['bottom-right'] = array(
+//	              '#type' => 'markup',
+//	              '#prefix' => '<button type="button" class="btn btn-success">',
+//	              '#markup' => l(t('Join'), 'group/node/' . $nodeschunk[$i]->nid . '/subscribe/og_user_node'),
+//	              '#suffix' => '</button>',
+//	          );
+//	        }
 
       }
-      }
+      
       $counter++;
     }
     $content['clusters'] = $build;
