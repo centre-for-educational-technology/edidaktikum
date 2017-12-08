@@ -864,145 +864,151 @@ function ed_all_groups_listing(){
   $remove_user_groups = TRUE;
   $og_groups = ed_cluster_get_clusters($sql_order, $remove_user_groups, false);
   if (!empty($og_groups)) {
-    $nodes = node_load_multiple($og_groups);
+	  $nodes = node_load_multiple($og_groups);
 	
-	  $counter = 1;
-	  $row = 1;
-	
-	  $build['row-grid'] = array(
-			  '#type' => 'markup',
-			  '#prefix' => '<div class="row grid">',
-			  '#suffix' => '</div>',
-	  );
-	
-	  $build['row-grid']['row-'.$row] = array(
-			  '#type' => 'markup',
-			  '#prefix' => '<div class="row">',
-			  '#suffix' => '</div>',
-	  );
-	
-	  $lastNode = end($nodes);
 	  
-    foreach($nodes as $node){
-	    
-		    if(isset($node->nid)){
-			    
-			
-			    $query = new EntityFieldQuery();
-	        $query->entityCondition('entity_type', 'user')
-	            ->fieldCondition('og_user_node', 'target_id', $node->nid, '=');
-	        $results = $query->execute();
-	        $uids = array_keys($results['user']);
-	        $groupnode = node_load($node->nid);
-	        $groupadmins = _ed_cluster_get_group_admins($groupnode, TRUE);
-	        $adminimages = array();
-	        foreach($groupadmins as $groupadmin){
-	          $admin = user_load($groupadmin);
-	          if($admin->picture){
-	            $adminimages[] =l('<img src="'.image_style_url('thumbnail', $admin->picture->uri).'" title="'.$admin->ed_field_full_name[LANGUAGE_NONE][0]['safe_value'].'" />', 'user/'.$admin->uid, array('html' => TRUE));
-	          }else{
-	            $adminimages[] =l('<img src="'.$GLOBALS['base_url'].'/'.path_to_theme().'/images/user_icon_default.png" title="'.$admin->ed_field_full_name[LANGUAGE_NONE][0]['safe_value'].'"/>', 'user/'.$admin->uid, array('html' => TRUE));
-	          }
-	        }
-	        if($node->group_access[LANGUAGE_NONE][0]['value']){
-	          $title = l($node->title, 'node/'.$node->nid).' <p class="private-group-title">'.t('Private Group').'</p>';
-	        }else{
-	          $title = l($node->title, 'node/'.$node->nid).' <p class="open-group-title">'.t('Open Group').'</p>';
-	        }
-	        $build['row-grid']['row-'.$row]['node-'.$node->nid] = array(
-	          '#type' => 'markup',
-	          '#prefix' => '<div class="col-xs-12 col-sm-4 col-md-3 col-lg-3"><div class="item">',
-	          '#suffix' => '</div></div>',
-	        );
-	        $build['row-grid']['row-'.$row]['node-'.$node->nid]['list-item'] = array(
-	          '#type' => 'markup',
-	          '#prefix' => '<div class="product-list__item">',
-	          '#suffix' => '</div>',
-	        );
-	        $build['row-grid']['row-'.$row]['node-'.$node->nid]['list-item']['list-img'] = array(
-	          '#type' => 'markup',
-	          '#prefix' => '<figure class="product-list__img">',
-		        '#markup' => !empty($node->ed_field_featured_image) ? l('<img src="'.image_style_url('medium', $node->ed_field_featured_image[LANGUAGE_NONE][0]['uri']).'">', 'node/'.$node->nid, array('html' => TRUE)):l('<img src="'.$GLOBALS['base_url'].'/'.path_to_theme().'/images/icons/ed_group_icon_default.png">', 'node/'.$node->nid, array('html' => true)),
-		        '#suffix' => '</figure>',
-	        );
-		      $build['row-grid']['row-'.$row]['node-'.$node->nid]['list-item']['list-content'] = array(
-	          '#type' => 'markup',
-	          '#prefix' => '<div class="product-list__content"><h3 class="product-list__title">',
-	          '#markup' => $title,
-	          '#suffix' => '</h3></div>',
-	        );
-			   
-			
-			    if($node->ed_field_group_state[LANGUAGE_NONE][0]['value']){
-				    $build['row-grid']['row-'.$row]['node-'.$node->nid]['list-item']['list-content-admins'] = array(
-						    '#type' => 'markup',
-						    '#prefix' => '<div class="product-list__content admins">',
-						    '#suffix' => '</div>',
-				    );
-				    $build['row-grid']['row-'.$row]['node-'.$node->nid]['list-item']['list-content-admins']['admins'] = array(
-						    '#type' => 'markup',
-						    '#prefix' => '<p class="item-info__text-01">',
-						    '#markup' => implode(' ', $adminimages),
-						    '#suffix' => '</p>',
-				    );
-				
-				    $build['row-grid']['row-'.$row]['node-'.$node->nid]['list-item']['list-item-info'] = array(
-						    '#type' => 'markup',
-						    '#prefix' => '<div class="product-list__item-info">',
-						    '#suffix' => '</div>',
-				    );
-				
-				    
-				    $build['row-grid']['row-'.$row]['node-'.$node->nid]['list-item']['list-item-info']['button'] = array(
-						    '#type' => 'markup',
-						    '#markup' => l(t('Join'), 'group/node/' . $node->nid . '/subscribe/og_user_node', array('attributes' => array('class' => 'btn btn-success'))),
-				    );
-			    }else{
-				
-				    $build['row-grid']['row-'.$row]['node-'.$node->nid]['list-item']['list-item-info'] = array(
-						    '#type' => 'markup',
-						    '#prefix' => '<div class="product-list__item-info">',
-						    '#suffix' => '</div>',
-				    );
-				    
-				    $build['row-grid']['row-'.$row]['node-'.$node->nid]['list-item']['list-item-info']['admins'] = array(
-						    '#type' => 'markup',
-						    '#prefix' => '<p class="item-info__text-01">',
-						    '#markup' => implode(' ', $adminimages),
-						    '#suffix' => '</p>',
-				    );
-				
-				 
-				
-				
-				
-			    }
-			    
-	        
-			 
-			    if($counter %4 == 0 && $node != $lastNode) {
-				    $row++;
-				    
-				    $build['row-grid']['row-'.$row] = array(
-						    '#type' => 'markup',
-						    '#prefix' => '<div class="row">',
-						    '#suffix' => '</div>',
-				    );
-			    }
-			
-			    $counter++;
-			
-		    }
-	   
-    }
 
-    $content['clusters'] = $build;
+    $content['clusters'] = ed_generate_grid_of_groups($nodes);
     $content['pager'] = array(
       '#theme' => 'pager',
     );
 
   }
   return $content;
+}
+
+
+function ed_generate_grid_of_groups($nodes){
+	$counter = 1;
+	$row = 1;
+	
+	$build['row-grid'] = array(
+			'#type' => 'markup',
+			'#prefix' => '<div class="row grid">',
+			'#suffix' => '</div>',
+	);
+	
+	$build['row-grid']['row-'.$row] = array(
+			'#type' => 'markup',
+			'#prefix' => '<div class="row">',
+			'#suffix' => '</div>',
+	);
+	
+	$lastNode = end($nodes);
+	
+	foreach($nodes as $node){
+		
+		if(isset($node->nid)){
+			
+			
+			$query = new EntityFieldQuery();
+			$query->entityCondition('entity_type', 'user')
+					->fieldCondition('og_user_node', 'target_id', $node->nid, '=');
+			$results = $query->execute();
+			$uids = array_keys($results['user']);
+			$groupnode = node_load($node->nid);
+			$groupadmins = _ed_cluster_get_group_admins($groupnode, TRUE);
+			$adminimages = array();
+			foreach($groupadmins as $groupadmin){
+				$admin = user_load($groupadmin);
+				if($admin->picture){
+					$adminimages[] =l('<img src="'.image_style_url('thumbnail', $admin->picture->uri).'" title="'.$admin->ed_field_full_name[LANGUAGE_NONE][0]['safe_value'].'" />', 'user/'.$admin->uid, array('html' => TRUE));
+				}else{
+					$adminimages[] =l('<img src="'.$GLOBALS['base_url'].'/'.path_to_theme().'/images/user_icon_default.png" title="'.$admin->ed_field_full_name[LANGUAGE_NONE][0]['safe_value'].'"/>', 'user/'.$admin->uid, array('html' => TRUE));
+				}
+			}
+			if($node->group_access[LANGUAGE_NONE][0]['value']){
+				$title = l($node->title, 'node/'.$node->nid).' <p class="private-group-title">'.t('Private Group').'</p>';
+			}else{
+				$title = l($node->title, 'node/'.$node->nid).' <p class="open-group-title">'.t('Open Group').'</p>';
+			}
+			$build['row-grid']['row-'.$row]['node-'.$node->nid] = array(
+					'#type' => 'markup',
+					'#prefix' => '<div class="col-xs-12 col-sm-4 col-md-3 col-lg-3"><div class="item">',
+					'#suffix' => '</div></div>',
+			);
+			$build['row-grid']['row-'.$row]['node-'.$node->nid]['list-item'] = array(
+					'#type' => 'markup',
+					'#prefix' => '<div class="product-list__item">',
+					'#suffix' => '</div>',
+			);
+			$build['row-grid']['row-'.$row]['node-'.$node->nid]['list-item']['list-img'] = array(
+					'#type' => 'markup',
+					'#prefix' => '<figure class="product-list__img">',
+					'#markup' => !empty($node->ed_field_featured_image) ? l('<img src="'.image_style_url('medium', $node->ed_field_featured_image[LANGUAGE_NONE][0]['uri']).'">', 'node/'.$node->nid, array('html' => TRUE)):l('<img src="'.$GLOBALS['base_url'].'/'.path_to_theme().'/images/icons/ed_group_icon_default.png">', 'node/'.$node->nid, array('html' => true)),
+					'#suffix' => '</figure>',
+			);
+			$build['row-grid']['row-'.$row]['node-'.$node->nid]['list-item']['list-content'] = array(
+					'#type' => 'markup',
+					'#prefix' => '<div class="product-list__content"><h3 class="product-list__title">',
+					'#markup' => $title,
+					'#suffix' => '</h3></div>',
+			);
+			
+			
+			if($node->ed_field_group_state[LANGUAGE_NONE][0]['value']){
+				$build['row-grid']['row-'.$row]['node-'.$node->nid]['list-item']['list-content-admins'] = array(
+						'#type' => 'markup',
+						'#prefix' => '<div class="product-list__content admins">',
+						'#suffix' => '</div>',
+				);
+				$build['row-grid']['row-'.$row]['node-'.$node->nid]['list-item']['list-content-admins']['admins'] = array(
+						'#type' => 'markup',
+						'#prefix' => '<p class="item-info__text-01">',
+						'#markup' => implode(' ', $adminimages),
+						'#suffix' => '</p>',
+				);
+				
+				$build['row-grid']['row-'.$row]['node-'.$node->nid]['list-item']['list-item-info'] = array(
+						'#type' => 'markup',
+						'#prefix' => '<div class="product-list__item-info">',
+						'#suffix' => '</div>',
+				);
+				
+				
+				$build['row-grid']['row-'.$row]['node-'.$node->nid]['list-item']['list-item-info']['button'] = array(
+						'#type' => 'markup',
+						'#markup' => l(t('Join'), 'group/node/' . $node->nid . '/subscribe/og_user_node', array('attributes' => array('class' => 'btn btn-success'))),
+				);
+			}else{
+				
+				$build['row-grid']['row-'.$row]['node-'.$node->nid]['list-item']['list-item-info'] = array(
+						'#type' => 'markup',
+						'#prefix' => '<div class="product-list__item-info">',
+						'#suffix' => '</div>',
+				);
+				
+				$build['row-grid']['row-'.$row]['node-'.$node->nid]['list-item']['list-item-info']['admins'] = array(
+						'#type' => 'markup',
+						'#prefix' => '<p class="item-info__text-01">',
+						'#markup' => implode(' ', $adminimages),
+						'#suffix' => '</p>',
+				);
+				
+				
+				
+				
+				
+			}
+			
+			
+			
+			if($counter %4 == 0 && $node != $lastNode) {
+				$row++;
+				
+				$build['row-grid']['row-'.$row] = array(
+						'#type' => 'markup',
+						'#prefix' => '<div class="row">',
+						'#suffix' => '</div>',
+				);
+			}
+			
+			$counter++;
+			
+		}
+		
+	}
+	return $build;
 }
 
 function ed_generate_group_create_buttons(&$content){
