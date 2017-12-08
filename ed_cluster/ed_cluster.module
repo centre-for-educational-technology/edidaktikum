@@ -735,6 +735,9 @@ function ed_cluster_my_listing_page() {
 //    uasort($mygroupallnodes, function($a, $b){
 //      return strncasecmp(trim($a->title), trim($b->title), 15);
 //    });
+	
+
+
 
     $nids = array();
     foreach($mygroupallnodes as $mygroupnode){
@@ -839,12 +842,19 @@ function ed_cluster_my_listing_page() {
       $counter++;
     }
 
-    $build['pager'] = array(
-      '#theme' => 'pager',
-      '#element' => 1,
-      );
+//    $build['pager'] = array(
+//      '#theme' => 'pager',
+//      '#element' => 1,
+//      );
     //dpm($chunks);
-    $content['clusters'] = $build;
+	
+	  //XXX Bootstrap 3 integration
+	  $content['clusters'] = ed_generate_grid_of_groups($nodes);
+	  $content['pager'] = array(
+			  '#theme' => 'pager',
+			  '#element' => 1,
+	  );
+    //$content['clusters'] = $build;
 
     return $content;
 
@@ -878,6 +888,7 @@ function ed_all_groups_listing(){
 }
 
 
+//XXX this grid has a bug when only 1 or 2 items are in the row
 function ed_generate_grid_of_groups($nodes){
 	$counter = 1;
 	$row = 1;
@@ -946,7 +957,7 @@ function ed_generate_grid_of_groups($nodes){
 			);
 			
 			
-			if($node->ed_field_group_state[LANGUAGE_NONE][0]['value']){
+			if($node->ed_field_group_state[LANGUAGE_NONE][0]['value'] || og_is_member('node', $node->nid)){
 				$build['row-grid']['row-'.$row]['node-'.$node->nid]['list-item']['list-content-admins'] = array(
 						'#type' => 'markup',
 						'#prefix' => '<div class="product-list__content admins">',
@@ -965,11 +976,20 @@ function ed_generate_grid_of_groups($nodes){
 						'#suffix' => '</div>',
 				);
 				
+				if(! og_is_member('node', $node->nid)){
+					$build['row-grid']['row-'.$row]['node-'.$node->nid]['list-item']['list-item-info']['button'] = array(
+							'#type' => 'markup',
+							'#markup' => l(t('Join'), 'group/node/' . $node->nid . '/subscribe/og_user_node', array('attributes' => array('class' => 'btn btn-success btn-lg'))),
+					);
+				}else{
+					$build['row-grid']['row-'.$row]['node-'.$node->nid]['list-item']['list-item-info']['button'] = array(
+							'#type' => 'markup',
+							'#markup' => l(t('Leave'), 'group/node/'.$node->nid.'/unsubscribe', array('attributes' => array('class' => 'btn btn-danger btn-lg'))),
+					);
+				}
 				
-				$build['row-grid']['row-'.$row]['node-'.$node->nid]['list-item']['list-item-info']['button'] = array(
-						'#type' => 'markup',
-						'#markup' => l(t('Join'), 'group/node/' . $node->nid . '/subscribe/og_user_node', array('attributes' => array('class' => 'btn btn-success'))),
-				);
+				
+			
 			}else{
 				
 				$build['row-grid']['row-'.$row]['node-'.$node->nid]['list-item']['list-item-info'] = array(
@@ -1174,7 +1194,10 @@ function ed_cluster_my_inactive_listing_page(){
       $counter++;
 
     }
-    $content['clusters'] = $build;
+	  //XXX Bootstrap 3 integration
+	  $content['clusters'] = ed_generate_grid_of_groups($nodes);
+	  
+//    $content['clusters'] = $build;
     $content['pager'] = array(
         '#theme' => 'pager',
     );
