@@ -735,6 +735,9 @@ function ed_cluster_my_listing_page() {
 //    uasort($mygroupallnodes, function($a, $b){
 //      return strncasecmp(trim($a->title), trim($b->title), 15);
 //    });
+	
+
+
 
     $nids = array();
     foreach($mygroupallnodes as $mygroupnode){
@@ -1191,7 +1194,10 @@ function ed_cluster_my_inactive_listing_page(){
       $counter++;
 
     }
-    $content['clusters'] = $build;
+	  //XXX Bootstrap 3 integration
+	  $content['clusters'] = ed_generate_grid_of_groups($nodes);
+	  
+//    $content['clusters'] = $build;
     $content['pager'] = array(
         '#theme' => 'pager',
     );
