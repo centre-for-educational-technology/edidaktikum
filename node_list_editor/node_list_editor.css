@@ -1,0 +1,96 @@
+.taxonomy_item {
+	display:inline-block;
+}
+
+.taxonomy_item select {
+	margin-right:5px;
+}
+
+.taxonomy_item[data-root] {
+	display:block;
+}
+
+.edf_mini_button {
+	display:inline-block;
+	background-color:rgb(190,190,190);
+	border-radius:100px;
+	width:21px;
+	height:21px;
+	vertical-align:center;
+	padding-left:3px;
+	padding-top:1px;
+	margin:5px;
+	box-sizing:border-box;
+	cursor:pointer;
+	color:white;
+}
+
+.edf_mini_button:hover {
+	background-color:rgb(220,220,220);
+}
+
+
+.node_list_editor .taxonomy_list {
+	box-sizing:border-box;
+	border: 2px solid #dce4ec;
+	border-radius:6px;
+	margin-bottom:10px;
+	padding:6px;
+	width:100%;
+}
+
+.node_list_editor .form {
+	width:100%;
+	overflow:hidden;
+}
+
+.node_list_editor .taxonomy_list .title {
+	color:rgb(169,185,186);
+}
+
+.node_list_editor .text_area textarea {
+	box-sizing:border-box;
+	max-width:100%;
+	min-width:100%;
+}
+
+.node_list_editor .text input {
+	border: 2px solid #dce4ec;
+	border-radius:6px;
+	margin-bottom:10px;
+	padding:6px;
+}
+
+.node_list_editor .tabber {
+	width:100%;
+	border-bottom: 2px solid #dce4ec;
+	margin-bottom:10px;
+}
+
+.node_list_editor .tabber .tab {
+	display:inline-block;
+	color:rgb(169,185,186);
+	cursor:pointer;
+	border: 2px solid #dce4ec;
+	padding:5px;
+	border-radius:4px 4px 0px 0px;
+	margin-bottom:-2px;
+	background-color:white;
+}
+
+.node_list_editor .tabber .tab[data-active] {
+	border-bottom:2px solid white;
+}
+
+.node_list_editor .tabber .tab:hover {
+
+}
+
+.node_list_editor .form {
+	max-height:500px;
+	transition:max-height 0.2s;
+}
+
+.node_list_editor[data-empty] .form {
+	max-height:0px;
+}

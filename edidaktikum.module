@@ -1391,4 +1391,35 @@ function ed_get_answer($task_id, $uid, $b_content = false, $group_members = fals
   return $answer;
 }
 
+function ed_get_taxonomy_tree($vid) {
+    $q = db_select("taxonomy_term_data", "td");
+    $q->fields("td", ["tid", "name", "weight"]);
+    $q->condition("format", "plain_text");
+    $q->condition("vid", $vid);
+    $q->join("taxonomy_term_hierarchy", "h", "h.tid = td.tid");
+    $q->fields("h", ["parent"]);
+    $nodes = $q->execute()->fetchAll(PDO::FETCH_ASSOC);
+    unset($q);
+    usort($nodes, function($a, $b) { 
+      if ($a["parent"] == $b["parent"]) {
+        return (intval($a["weight"]) - intval($b["weight"]));
+      } else {
+        return (intval($a["parent"]) - intval($b["parent"]));
+      }
+    });
+
+
+    $root = ["tid" => "0", "name" => "", "children" => []];
+    $map = ["0" =>& $root];
+
+    foreach ($nodes as &$node) {
+      $n = ["tid" => $node["tid"], "name" => $node["name"], "children" => []];
+      $map[$node["parent"]]["children"] []=& $n;
+      $map[$node["tid"]] =& $n;
+      unset($n);
+    }
+
+    return $root;
+}
+
 

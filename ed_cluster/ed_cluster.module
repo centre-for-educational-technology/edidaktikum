@@ -927,7 +927,6 @@ function ed_cluster_my_listing_page() {
   }
 }
 
-
 function ed_all_groups_listing(){
   drupal_set_title(t('All Groups'));
   $content = array();
@@ -2675,6 +2674,7 @@ function ed_cluster_form_alter(&$form, &$form_state, $form_id) {
     // Group types related
 
 
+
 	  $form['ed_field_group_type']['#weight'] = -7;
 	  $form['ed_field_course_code']['#weight'] = -6;
 	  $form['ed_field_university']['#weight'] = 2;
@@ -2683,11 +2683,8 @@ function ed_cluster_form_alter(&$form, &$form_state, $form_id) {
 	  $form['ed_field_excerpt']['#weight'] = 5;
 	  $form['ed_field_content']['#weight'] = 6;
 	  $form['ed_field_course_aim']['#weight'] = 7;
-	  $form['ed_field_learning_outcomes']['#weight'] = 8;
-	  $form['ed_field_category']['#weight'] = 9;
-	  $form['ed_field_assessment_method']['#weight'] = 10;
-	  $form['group_access']['#weight'] = 11;
-	  $form['ed_field_featured_image']['#weight'] = 12;
+	  $form['group_access']['#weight'] = 8;
+	  $form['ed_field_featured_image']['#weight'] = 9;
 
 
 	  if(isset($form['#node']->ed_field_group_type)){
@@ -2732,6 +2729,107 @@ function ed_cluster_form_alter(&$form, &$form_state, $form_id) {
       array_push($form['#submit'], 'ed_cluster_redirect_after_submit');
 
     }
+  }
+
+  //  learning outcomes
+  if (array_key_exists('ed_field_learning_outcome_ref', $form)) {
+    //  load outcomes
+    $outcomes = [];
+    if (array_key_exists("und", $form["#entity"]->ed_field_learning_outcome_ref)) {
+      for ($i = 0; $i < count($form["#entity"]->ed_field_learning_outcome_ref["und"]); $i++) {
+        $lo_id = $form["#entity"]->ed_field_learning_outcome_ref["und"][$i]["target_id"];
+        $outcome = node_load($lo_id);
+
+        $competences = [];
+        foreach ($outcome->ed_field_category["und"] as $tid_container) {
+          $competences []=  $tid_container["tid"];
+        }
+        $outcomes []= [
+          "name" => $outcome->title,
+          "description" => $outcome->ed_field_learning_outcomes["und"][0]["value"],
+          "assessment_method" => $outcome->ed_field_assessment_method["und"][0]["value"],
+          "competences" => $competences
+        ];
+      }
+    }
+
+    //  add widget
+    drupal_add_js(drupal_get_path('module', 'edidaktikum') . '/node_list_editor/node_list_editor.js');
+    drupal_add_css(drupal_get_path('module', 'edidaktikum') . '/node_list_editor/node_list_editor.css');
+
+    $form["ed_field_learning_outcome_ref"] = [
+        "#type" => "textfield",
+        "#title" => t("Learning outcomes"),
+        "#default_value" => "",
+        "#prefix" => '<div data-node_list_editor = \'[
+          {
+            "title" : "",
+            "description" : "Name",
+            "type" : "name",
+            "name" : "name",
+            "default" : "Õppeväljund"
+          },
+          {
+            "title" : "",
+            "description" : "Description",
+            "type" : "text_area",
+            "name" : "description"
+          }, {
+            "title" : "Competence",
+            "description" : "",
+            "type" : "taxonomy_list",
+            "taxonomy_tree" : ' . json_encode(ed_get_taxonomy_tree(2)) . ',
+            "name" : "competences"
+          }, {
+            "title" : "",
+            "description" : "Assessment method",
+            "type" : "text_area",
+            "name" : "assessment_method"
+          }
+        ]\' data-node_list_data = \'' . json_encode($outcomes) . '\'>',
+        "#suffix" => "</div>"
+    ];
+
+    $form['#submit'] []= "ed_cluster_form_submit_learning_outcomes";
+  }
+  
+}
+
+function ed_cluster_form_submit_learning_outcomes($form, &$form_state) {
+  global $user;
+  $learning_outcomes = json_decode($form_state["input"]["learning_outcomes_json"]);
+  $nid = $form["nid"]["#value"];
+
+  //  delete old
+  if (array_key_exists("und", $form["#entity"]->ed_field_learning_outcome_ref)) {
+    for ($i = 0; $i < count($form["#entity"]->ed_field_learning_outcome_ref["und"]); $i++) {
+      $lo_id = $form["#entity"]->ed_field_learning_outcome_ref["und"][$i]["target_id"];
+      node_delete($lo_id);
+    }
+  }
+  
+  //  add new
+  $form_state["values"]["ed_field_learning_outcome_ref"]["und"] = [];
+  foreach ($learning_outcomes as &$outcome) {
+    $node = new stdClass();
+    $node->title = $outcome->name;
+    $node->body = "";
+    $node->ed_field_learning_outcomes["und"][0]["value"] = $outcome->description;
+    $node->ed_field_assessment_method["und"][0]["value"]  = $outcome->assessment_method;
+    $node->ed_field_category["und"]  = [];
+    foreach ($outcome->competences as $tid) {
+      $node->ed_field_category["und"] []= ["tid" => $tid];
+    }
+    $node->uid = $user->uid;
+    $node->name = $user->name;
+    $node->type = "ed_learning_outcome";
+    $node->status = 1;
+    $node->promote = 0;
+    $node = node_submit($node);
+    node_save($node);
+    $form_state["values"]["ed_field_learning_outcome_ref"]["und"] []= ["target_id" => $node->nid];
+
+    unset($outcome);
   }
 }
 
