@@ -2712,9 +2712,8 @@ function ed_cluster_form_alter(&$form, &$form_state, $form_id) {
 		  $form['ed_field_curriculum']['und']['#access'] = 0;
 		  $form['ed_field_study_year']['und']['#access'] = 0;
 		  $form['ed_field_course_code']['und']['#access'] = 0;
-		  $form['ed_field_learning_outcomes']['und']['#access'] = 0;
-		  $form['ed_field_category']['und']['#access'] = 0;
-		  $form['ed_field_assessment_method']['und']['#access'] = 0;
+
+		  $form['ed_field_learning_outcome_ref']['und']['#access'] = 0;
 	  }
 
   }
@@ -2732,10 +2731,10 @@ function ed_cluster_form_alter(&$form, &$form_state, $form_id) {
   }
 
   //  learning outcomes
-  if (array_key_exists('ed_field_learning_outcome_ref', $form)) {
+  if (array_key_exists('ed_field_learning_outcome_ref', $form) && $group_type != 3) {
     //  load outcomes
     $outcomes = [];
-    if (array_key_exists("und", $form["#entity"]->ed_field_learning_outcome_ref)) {
+    if (property_exists($form["#entity"], "ed_field_learning_outcome_ref") && array_key_exists("und", $form["#entity"]->ed_field_learning_outcome_ref)) {
       for ($i = 0; $i < count($form["#entity"]->ed_field_learning_outcome_ref["und"]); $i++) {
         $lo_id = $form["#entity"]->ed_field_learning_outcome_ref["und"][$i]["target_id"];
         $outcome = node_load($lo_id);
@@ -2801,7 +2800,7 @@ function ed_cluster_form_submit_learning_outcomes($form, &$form_state) {
   $nid = $form["nid"]["#value"];
 
   //  delete old
-  if (array_key_exists("und", $form["#entity"]->ed_field_learning_outcome_ref)) {
+  if (property_exists($form["#entity"], "ed_field_learning_outcome_ref") && array_key_exists("und", $form["#entity"]->ed_field_learning_outcome_ref)) {
     for ($i = 0; $i < count($form["#entity"]->ed_field_learning_outcome_ref["und"]); $i++) {
       $lo_id = $form["#entity"]->ed_field_learning_outcome_ref["und"][$i]["target_id"];
       node_delete($lo_id);
