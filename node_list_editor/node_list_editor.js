@@ -161,6 +161,13 @@
 				this.current_item = this.add_item();
 			}.bind(this));
 
+			this.el_del = build("div", "button delete", this.el_form, "Delete");
+			this.el_del.addEventListener("click", function() {
+				this.rem_item(this.current_item);
+				if (this.items.length > 0) this.current_item = this.items[0];
+				else this.current_item = undefined;
+			}.bind(this));
+
 			var data = JSON.parse(el.getAttribute("data-node_list_data"));
 			for (var i = 0; i < data.length; i++) {
 				this.add_item(data[i]);
@@ -177,28 +184,34 @@
 			}
 
 			this._current_item = item;
-			this.el.removeAttribute("data-empty");
-			item.el.setAttribute("data-active", "");
 
-			//	Form
-			for (var i = 0; i < this.structure.length; i++) {
-				var field = this.structure[i];
-				switch(field.type) {
-					case "text_area":
-						field.el.value = item[field.name];
-						break;
-					case "taxonomy_list":
-						field.el.innerHTML = "";
-						for (var j = 0; j < item[field.name].length; j++) {
-							var tx = this.add_taxonomy_item(field);
-							tx.value = item[field.name][j];
-						}
-						break;
-					case "name":
-						field.el.value = item[field.name];
-						break;
+			if (item === undefined) {
+				this.el.setAttribute("data-empty", "");
+			} else {
+				this.el.removeAttribute("data-empty");
+				item.el.setAttribute("data-active", "");
+
+				//	Form
+				for (var i = 0; i < this.structure.length; i++) {
+					var field = this.structure[i];
+					switch(field.type) {
+						case "text_area":
+							field.el.value = item[field.name];
+							break;
+						case "taxonomy_list":
+							field.el.innerHTML = "";
+							for (var j = 0; j < item[field.name].length; j++) {
+								var tx = this.add_taxonomy_item(field);
+								tx.value = item[field.name][j];
+							}
+							break;
+						case "name":
+							field.el.value = item[field.name];
+							break;
+					}
 				}
 			}
+
 		}
 
 		create_value() {
@@ -228,6 +241,11 @@
 			}
 			
 			return name + " " + (biggest + 1);
+		}
+
+		rem_item(item) {
+			this.items.splice(this.items.indexOf(item), 1);
+			this.el_tabber.removeChild(item.el);
 		}
 
 		add_item(data) {

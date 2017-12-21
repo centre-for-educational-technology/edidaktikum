@@ -40,8 +40,24 @@
 }
 
 .node_list_editor .form {
+	position:relative;
 	width:100%;
 	overflow:hidden;
+}
+
+.node_list_editor .button {
+	color:rgb(169,185,186);
+	cursor:pointer;
+	border: 2px solid #dce4ec;
+	padding:5px;
+	border-radius:8px;
+	display:inline-block;
+}
+
+.node_list_editor .delete {
+	position:absolute;
+	right:0px;
+	top:0px;
 }
 
 .node_list_editor .taxonomy_list .title {
@@ -59,6 +75,7 @@
 	border-radius:6px;
 	margin-bottom:10px;
 	padding:6px;
+	color:#95a5a6;
 }
 
 .node_list_editor .tabber {
