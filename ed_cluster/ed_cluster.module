@@ -2766,7 +2766,7 @@ function ed_cluster_form_alter(&$form, &$form_state, $form_id) {
             "description" : "Name",
             "type" : "name",
             "name" : "name",
-            "default" : "Õppeväljund"
+            "default" : "Õpiväljund"
           },
           {
             "title" : "",
