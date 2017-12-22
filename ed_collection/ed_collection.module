@@ -164,9 +164,38 @@ function ed_collection_listing_page() {
     );
     $content['pager']['collections'] = $build;
   }
+	
+	
+	$pager = theme('pager', array("quantity" => 5));
+	
+	$output =  theme('ed_collection', array(
+			'nodes' => $nodes,
+					)
+	);
+	
+	$output = $output . $pager;
+	return $output;
+ 
   
-  return $content;
+//  return $content;
 }
+
+function edidaktikum_theme_bs3_theme()
+{
+	$path = drupal_get_path('module', 'ed_collection');
+	kpr('efde');
+
+	return array(
+			'ed_collection' => array(
+					'template' => 'templates/ed_collection',
+					'variables' => array('nodes' => null),
+			),
+	);
+}
+
+
+
+
 
 
 /**
