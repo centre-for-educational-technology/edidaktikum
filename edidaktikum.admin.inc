@@ -115,6 +115,27 @@ function edidaktikum_faq_page_admin_form() {
 }
 
 
+/**
+ * eDidaktikum Privacy Policy admin page.
+ */
+function edidaktikum_pp_page_admin_form() {
+	$form = array();
+	$pp_text = variable_get('ed_pp_page_text', '');
+	$form['ed_pp_page_text'] = array(
+			'#type' => 'text_format',
+			'#title' => t('Privacy Policy page text'),
+			'#default_value' => (is_array($pp_text) && isset($pp_text['value'])) ? $pp_text['value'] : $pp_text,
+			'#description' => t('Text to display on Privacy Policy page.'),
+			'#required' => FALSE,
+	);
+	if (is_array($pp_text) && isset($pp_text['format'])) {
+		$form['ed_pp_page_text']['#format'] = $pp_text['format'];
+	}
+	
+	return system_settings_form($form);
+}
+
+
 function edidaktikum_promoted_resources_page_admin_form(){
   $form = array();
   $nids = ed_get_promoted_resources();

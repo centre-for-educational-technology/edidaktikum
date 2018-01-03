@@ -103,6 +103,17 @@ function edidaktikum_menu() {
     'type' => MENU_NORMAL_ITEM,
     'weight' => 2,
   );
+	
+	$items['admin/config/edidaktikum/pp-page'] = array(
+			'title' => 'eDidaktikum Privacy Policy page',
+			'description' => 'Configure edidaktikum Privacy Policy page.',
+			'page callback' => 'drupal_get_form',
+			'page arguments' => array('edidaktikum_pp_page_admin_form'),
+			'access arguments' => array('access administration pages'),
+			'file' => 'edidaktikum.admin.inc',
+			'type' => MENU_NORMAL_ITEM,
+			'weight' => 2,
+	);
 
   $items['admin/config/edidaktikum/promoted-news'] = array(
     'title' => 'eDidaktikum Promoted News',
@@ -180,6 +191,14 @@ function edidaktikum_menu() {
     'weight' => -25,
     'menu_name' => 'user-menu',
   );
+	$items['privacy-policy'] = array(
+			'title' => 'Privacy Policy',
+			'page callback' => 'edidaktikum_pp_page',
+			'access callback' => TRUE,
+			'file' => 'edidaktikum.pages.inc',
+			'weight' => -25,
+			'menu_name' => 'main-menu',
+	);
   $items['node/%/edidaktikum/action/like'] = array(
     'page callback' => 'edidaktikum_node_like',
     'page arguments' => array(1),

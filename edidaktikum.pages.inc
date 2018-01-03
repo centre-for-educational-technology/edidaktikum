@@ -165,30 +165,62 @@ function edidaktikum_contact_page() {
  * eDidaktikum FAQ page.
  */
 function edidaktikum_faq_page() {
-  drupal_goto('https://edidaktikum.uservoice.com');
-  /*drupal_set_title(t('FAQ'));
-  
-  $content['faq'] = array(
-    '#type' => 'container',
-    '#attributes' => array(
-      'id' => 'faq',
-    ),
-  );
-  $content['faq']['faq-text'] = array(
-    '#type' => 'container',
-    '#attributes' => array(
-      'id' => 'faq-text',
-    ),
-  );
-  $faq_text = variable_get('ed_faq_page_text', '');
-  if (is_array($faq_text)) {
-    $faq_text = check_markup($faq_text['value'], $faq_text['format']);
-  }
-  $content['faq']['faq-text']['text'] = array(
-    '#type' => 'markup',
-    '#markup' => $faq_text,
-  );
+	drupal_goto('https://edidaktikum.uservoice.com');
+	/*drupal_set_title(t('FAQ'));
+	
+	$content['faq'] = array(
+		'#type' => 'container',
+		'#attributes' => array(
+			'id' => 'faq',
+		),
+	);
+	$content['faq']['faq-text'] = array(
+		'#type' => 'container',
+		'#attributes' => array(
+			'id' => 'faq-text',
+		),
+	);
+	$faq_text = variable_get('ed_faq_page_text', '');
+	if (is_array($faq_text)) {
+		$faq_text = check_markup($faq_text['value'], $faq_text['format']);
+	}
+	$content['faq']['faq-text']['text'] = array(
+		'#type' => 'markup',
+		'#markup' => $faq_text,
+	);
 
-  return $content;*/
+	return $content;*/
+}
+
+
+/**
+ * eDidaktikum Privacy Policy page.
+ */
+function edidaktikum_pp_page() {
+
+	drupal_set_title(t('Privacy Policy'));
+	
+	$content['pp'] = array(
+		'#type' => 'container',
+		'#attributes' => array(
+			'id' => 'pp',
+		),
+	);
+	$content['pp']['pp-text'] = array(
+		'#type' => 'container',
+		'#attributes' => array(
+			'id' => 'pp-text',
+		),
+	);
+	$pp_text = variable_get('ed_pp_page_text', '');
+	if (is_array($pp_text)) {
+		$pp_text = check_markup($pp_text['value'], $pp_text['format']);
+	}
+	$content['pp']['pp-text']['text'] = array(
+		'#type' => 'markup',
+		'#markup' => $pp_text,
+	);
+
+	return $content;
 }
 
