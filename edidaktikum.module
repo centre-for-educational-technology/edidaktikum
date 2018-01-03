@@ -197,7 +197,7 @@ function edidaktikum_menu() {
 			'access callback' => TRUE,
 			'file' => 'edidaktikum.pages.inc',
 			'weight' => -25,
-			'menu_name' => 'main-menu',
+			'menu_name' => 'user-menu',
 	);
   $items['node/%/edidaktikum/action/like'] = array(
     'page callback' => 'edidaktikum_node_like',
