@@ -365,7 +365,7 @@ function edidaktikum_update_7104(&$sandbox){
 /**
 * Add supervisor role
 */
-function edidaktikum_update_7185(&$sandbox) {
+function edidaktikum_update_7105(&$sandbox) {
 	$translatable_variables = array('ed_pp_page_text');
 	$variable_realm_list_language = variable_get('variable_realm_list_language', array());
 	if (!empty($variable_realm_list_language)) {
