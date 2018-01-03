@@ -358,14 +358,14 @@ function edidaktikum_update_7103(&$sandbox){
 /**
  * Create ed_field_group_state field
  */
-function edidaktikum_update_7114(&$sandbox){
+function edidaktikum_update_7104(&$sandbox){
   edidaktikum_create_field_group_state();
 }
 
 /**
-* Add supervisor role
+* Add ed_pp_page_text as a translatable variable
 */
-function edidaktikum_update_7105(&$sandbox) {
+function edidaktikum_update_7114(&$sandbox) {
 	$translatable_variables = array('ed_pp_page_text');
 	$variable_realm_list_language = variable_get('variable_realm_list_language', array());
 	if (!empty($variable_realm_list_language)) {
