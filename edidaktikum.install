@@ -252,7 +252,7 @@ function edidaktikum_create_field_category() {
  * Updates translatable variables list to include our own.
  */
 function edidaktikum_set_translatable_variables() {
-  $translatable_varibles = array('ed_home_page_intro_image_url', 'ed_home_page_intro_text', 'ed_home_page_tour_text', 'ed_contact_page_contacts_text', 'ed_contact_page_logos_text', 'ed_faq_page_text');
+  $translatable_varibles = array('ed_home_page_intro_image_url', 'ed_home_page_intro_text', 'ed_home_page_tour_text', 'ed_contact_page_contacts_text', 'ed_contact_page_logos_text', 'ed_faq_page_text', 'ed_pp_page_text');
   $variable_realm_list_language = variable_get('variable_realm_list_language', array());
 
   if (!empty($variable_realm_list_language)) {
@@ -366,18 +366,15 @@ function edidaktikum_update_7104(&$sandbox){
 * Add supervisor role
 */
 function edidaktikum_update_7105(&$sandbox) {
-    if (user_role_load_by_name('supervisor') !== FALSE) return;
-    $administrator = user_role_load_by_name('administrator');
-
-    $supervisor = new stdClass();
-    $supervisor->name = 'supervisor';
-    $supervisor->weight = $administrator->weight;
-
-    //  increment administrator weight
-    $administrator->weight = (int) $administrator->weight + 1;
-    user_role_save($administrator);
-
-    user_role_save($supervisor);
+	$translatable_variables = array('ed_pp_page_text');
+	$variable_realm_list_language = variable_get('variable_realm_list_language', array());
+	if (!empty($variable_realm_list_language)) {
+		$variable_realm_list_language = array_merge($variable_realm_list_language, $translatable_variables);
+	}
+	else {
+		$variable_realm_list_language = $translatable_variables;
+	}
+	variable_set('variable_realm_list_language', $variable_realm_list_language);
 }
 
 

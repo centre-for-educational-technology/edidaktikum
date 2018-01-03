@@ -920,7 +920,156 @@ function ed_cluster_update_7108(&$sandbox){
 	
 }
 
+/**
+ * Learning outcomes restructure
+ */
+function ed_cluster_update_7109(&$sandbox){
+
+	//	create new content type 'learning_outcome'
+
+	$type = array(
+		'type' => 'ed_learning_outcome',
+		'name' => t('Learning Outcome'),
+		'base' => 'node_content',
+		'custom' => FALSE,
+		'modified' => FALSE,
+		'locked' => TRUE,
+		'has_title' => TRUE,
+		'title_label' => t('Title'),
+		'module' => 'ed_cluster',
+	);
+	$type = node_type_set_defaults($type);
+	node_type_save($type);
+
+	//	add field instances to learning_outcome
+
+	field_create_instance([
+		'field_name' => 'ed_field_category',
+		'entity_type' => 'node',
+		'bundle' => 'ed_learning_outcome',
+		'label' => t('Standardized competence outcome'),
+		'widget' => [
+			'type' => 'term_reference_tree',
+			'settings' => [ 'start_minimized' => TRUE ]
+		]
+	]);
+
+	field_create_instance([
+		'field_name' => 'ed_field_learning_outcomes',
+		'entity_type' => 'node',
+		'bundle' => 'ed_learning_outcome',
+		'label' => t('Description')
+	]);
+	
+	field_create_instance([
+		'field_name' => 'ed_field_assessment_method',
+		'entity_type' => 'node',
+		'bundle' => 'ed_learning_outcome',
+		'label' => t('Assessment description')
+	]);
+	
+	//	add learning_outcome reference field to clusters
+
+	field_create_field([
+	    'field_name' => 'ed_field_learning_outcome_ref',
+	    'type' => 'entityreference',
+	    'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+	    'settings' => [
+	      'target_type' => 'node',
+	      'handler_settings' => ['target_bundles' => ['ed_learning_outcome']]
+    	]
+    ]);
+
+    field_create_instance([
+		'field_name' => 'ed_field_learning_outcome_ref',
+		'entity_type' => 'node',
+		'bundle' => 'ed_cluster',
+		'label' => t('Learning Outcomes'),
+		'widget' => [
+			'settings' => [ 'rows' => 1 ]
+		],
+		'display' => [
+			'default' => [ 'label' => 'hidden' ],
+			'featured' => [ 'label' => 'hidden', ]
+		]
+	]);
+
+	//  find existing clusters with learning outcome data defined
+
+	$q = db_select("node", "n");
+	$q->condition("n.type", "ed_cluster");
+	$q->fields("n", ["nid", "uid"]);
+	$q->leftJoin("field_data_ed_field_category", "fc", "fc.entity_id = n.nid");
+	$q->addField("fc", "entity_id", "fc_entity_id");
+	$q->leftJoin("field_data_ed_field_assessment_method", "fa", "fa.entity_id = n.nid");
+	$q->addField("fa", "entity_id", "fa_entity_id");
+	$q->leftJoin("field_data_ed_field_learning_outcomes", "fl", "fl.entity_id = n.nid");
+	$q->addField("fl", "entity_id", "fl_entity_id");
+	$nodes = $q->execute()->fetchAll(PDO::FETCH_ASSOC);
+	unset($q);
+	$nodes = ed_util_array_concentrate_member($nodes, "nid", "fc_entity_id");
+
+	//  create new learning outcome nodes, reassign field data to new nodes and add learning outcome ref to cluster nodes
+
+	foreach($nodes as &$node) {
+	if (empty($node["fc_entity_id"]) && $node["fa_entity_id"] == NULL && $node["fl_entity_id"] == NULL) continue;
+
+	$lo = new stdClass();
+	$lo->title = "Õpiväljund 1";
+	$lo->type = "ed_learning_outcome";
+	$lo->language = LANGUAGE_NONE;
+	$lo->uid = $node["uid"];
+	$lo->status = 1;
+	$lo->promote = 0;
+	$lo->comment = 0;
+	$lo = node_submit($lo);
+	node_save($lo);
+
+	if (!empty($node["fc_entity_id"])) {
+		$q = db_update("field_data_ed_field_category");
+		$q->condition("entity_id", $node["nid"], "=");
+		$q->fields(["entity_id" => $lo->nid]);
+		$q->execute();
+		unset($q);
+	}
+
+	if ($node["fa_entity_id"] != NULL) {
+		$q = db_update("field_data_ed_field_assessment_method");
+		$q->condition("entity_id", $node["nid"], "=");
+		$q->fields(["entity_id" => $lo->nid]);
+		$q->execute();
+		unset($q);
+	}
+
+	if ($node["fl_entity_id"] != NULL) {
+		$q = db_update("field_data_ed_field_learning_outcomes");
+		$q->condition("entity_id", $node["nid"], "=");
+		$q->fields(["entity_id" => $lo->nid]);
+		$q->execute();
+		unset($q);
+	}
+
+	$q = db_insert("field_data_ed_field_learning_outcome_ref");
+	$q->fields([
+		"entity_type" => "node",
+		"bundle" => "ed_learning_outcome",
+		"deleted" => 0,
+		"entity_id" => $node["nid"],
+		"revision_id" => $node["nid"],
+		"language" => LANGUAGE_NONE,
+		"delta" => 0,
+		"ed_field_learning_outcome_ref_target_id" => $lo->nid
+	]);
+	debug($node);
+	debug($lo);
+	debug($q->execute());
+
+	}
+
+	//  remove fields from cluster
+	field_delete_instance(field_info_instance("node", "ed_field_category" , "ed_cluster"), FALSE);
+	field_delete_instance(field_info_instance("node", "ed_field_assessment_method" , "ed_cluster"), FALSE);
+	field_delete_instance(field_info_instance("node", "ed_field_learning_outcomes" , "ed_cluster"), FALSE);
 
 
-
-
+}

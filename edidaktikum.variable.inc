@@ -49,6 +49,13 @@ function edidaktikum_variable_info($options) {
     'required' => FALSE,
     'group' => 'edidaktikum_settings',
   );
+	$variables['ed_pp_page_text'] = array(
+			'type' => 'string',
+			'title' => t('Privacy Policy page text', array(), $options),
+			'description' => t('Text to display on Privacy Policy page.', array(), $options),
+			'required' => FALSE,
+			'group' => 'edidaktikum_settings',
+	);
   $variables['ed_home_page_intro_notification_message'] = array(
     'type' => 'string',
     'title' => t('Message to be displayed on front page', array(), $options),
