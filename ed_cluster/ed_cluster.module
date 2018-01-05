@@ -2756,38 +2756,21 @@ function ed_cluster_form_alter(&$form, &$form_state, $form_id) {
     drupal_add_js(drupal_get_path('module', 'edidaktikum') . '/node_list_editor/node_list_editor.js');
     drupal_add_css(drupal_get_path('module', 'edidaktikum') . '/node_list_editor/node_list_editor.css');
 
+    $nle_data = [
+      ["title" => "", "description" => "Name", "type" => "name", "name" => "name", "default" => "Õpiväljund"],
+      ["title" => "", "description" => "Description", "type" => "text_area", "name" => "description"],
+      ["title" => "Competence", "description" => "", "type" => "taxonomy_list", "taxonomy_tree" => ed_get_taxonomy_tree(2), "name" => "competences"],
+      ["title" => "", "description" => "Assessment method", "type" => "text_area", "name" => "assessment_method"]
+    ];
+
     $form["ed_field_learning_outcome_ref"] = [
         "#type" => "textfield",
         "#title" => t("Learning outcomes"),
         "#default_value" => "",
-        "#prefix" => '<div data-node_list_editor = \'[
-          {
-            "title" : "",
-            "description" : "Name",
-            "type" : "name",
-            "name" : "name",
-            "default" : "Õpiväljund"
-          },
-          {
-            "title" : "",
-            "description" : "Description",
-            "type" : "text_area",
-            "name" : "description"
-          }, {
-            "title" : "Competence",
-            "description" : "",
-            "type" : "taxonomy_list",
-            "taxonomy_tree" : ' . json_encode(ed_get_taxonomy_tree(2)) . ',
-            "name" : "competences"
-          }, {
-            "title" : "",
-            "description" : "Assessment method",
-            "type" : "text_area",
-            "name" : "assessment_method"
-          }
-        ]\' data-node_list_data = \'' . json_encode($outcomes) . '\'>',
+        "#prefix" => '<div data-node_list_editor = "' . base64_encode(json_encode($nle_data)) . '" data-node_list_data = "' . base64_encode(json_encode($outcomes)) . '">',
         "#suffix" => "</div>"
     ];
+
 
     $form['#submit'] []= "ed_cluster_form_submit_learning_outcomes";
   }
