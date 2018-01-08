@@ -344,10 +344,19 @@
 
 	addEventListener("load", function() {
 
-
+		var attributes_in_b64 = ["data-node_list_editor", "data-node_list_data"];
 		var node_list_editors = document.querySelectorAll("[data-node_list_editor]");
 		for (var i = 0; i < node_list_editors.length; i++) {
 			var el = node_list_editors[i];
+
+			//	decode data vars
+			for (var j = 0; j < attributes_in_b64.length; j++) {
+				var attr_name = attributes_in_b64[j];
+				if (el.hasAttribute(attr_name)) el.setAttribute(attr_name, atob(el.getAttribute(attr_name)));
+			}
+			
+
+			//	create		
 			new node_list_editor(el);
 		}
 
