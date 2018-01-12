@@ -154,36 +154,34 @@ function ed_collection_listing_page() {
     );
   }
   
-  $nids = ed_collection_get_published_collections();
-  if(!empty($nids)){
-    $nodes = node_load_multiple($nids);    
-    $build = node_view_multiple($nodes);
-    $build['pager'] = array(
-      '#theme' => 'pager',
-      '#weight' => 5,
-    );
-    $content['pager']['collections'] = $build;
-  }
+  $nodes = ed_collection_get_published_collections();
+
 	
 	
-	$pager = theme('pager', array("quantity" => 5));
+	$pager = theme('pager');
 	
 	$output =  theme('ed_collection', array(
-			'nodes' => $nodes,
-					)
+					'nodes' => $nodes,
+			)
 	);
 	
+	
 	$output = $output . $pager;
+	
 	return $output;
- 
-  
-//  return $content;
+	
+	
+	
+
+
+	//return $content;
+	
+	
 }
 
 function edidaktikum_theme_bs3_theme()
 {
 	$path = drupal_get_path('module', 'ed_collection');
-	kpr('efde');
 
 	return array(
 			'ed_collection' => array(
@@ -257,18 +255,22 @@ function ed_collection_get_user_collections() {
  */
 function ed_collection_get_published_collections() {
   $query = db_select('node', 'n')
-    ->extend('PagerDefault')
     ->fields('n', array('nid'))
     ->condition('n.type', 'ed_collection')
     ->condition('n.status', 1)
     ->addTag('node_access')
-    ->range()
-    ->orderBy('n.created', 'DESC')
-    ->limit(ed_get_paging_nr());
+    ->range();
+	
+	$query = $query->extend('PagerDefault')->limit(ed_get_paging_nr());
+	
+	$result = $query->execute()->fetchCol();
+	
+	$nodes = node_load_multiple($result);
 
-  $nids = $query->execute()->fetchCol();
-  return $nids;
+  return $nodes;
 }
+
+
 
 /**
  * Implements hook_ctools_plugin_api().
