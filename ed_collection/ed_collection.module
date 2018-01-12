@@ -192,10 +192,6 @@ function edidaktikum_theme_bs3_theme()
 }
 
 
-
-
-
-
 /**
  * Collections dashboard listing page.
  */
@@ -255,22 +251,18 @@ function ed_collection_get_user_collections() {
  */
 function ed_collection_get_published_collections() {
   $query = db_select('node', 'n')
+    ->extend('PagerDefault')
     ->fields('n', array('nid'))
     ->condition('n.type', 'ed_collection')
     ->condition('n.status', 1)
     ->addTag('node_access')
-    ->range();
-	
-	$query = $query->extend('PagerDefault')->limit(ed_get_paging_nr());
-	
-	$result = $query->execute()->fetchCol();
-	
-	$nodes = node_load_multiple($result);
+    ->range()
+    ->orderBy('n.created', 'DESC')
+    ->limit(ed_get_paging_nr());
 
-  return $nodes;
+  $nids = $query->execute()->fetchCol();
+  return $nids;
 }
-
-
 
 /**
  * Implements hook_ctools_plugin_api().
