@@ -2759,7 +2759,7 @@ function ed_cluster_form_alter(&$form, &$form_state, $form_id) {
     $nle_data = [
       ["title" => "", "description" => "Name", "type" => "name", "name" => "name", "default" => "Õpiväljund"],
       ["title" => "", "description" => "Description", "type" => "text_area", "name" => "description"],
-      ["title" => "Competence", "description" => "", "type" => "taxonomy_list", "taxonomy_tree" => ed_get_taxonomy_tree(2), "name" => "competences"],
+      ["title" => "Competence", "description" => "", "type" => "taxonomy_list", "taxonomy_tree" => ed_get_taxonomy_tree(7), "name" => "competences"],
       ["title" => "", "description" => "Assessment method", "type" => "text_area", "name" => "assessment_method"]
     ];
 
