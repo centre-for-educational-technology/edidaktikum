@@ -155,7 +155,13 @@ function ed_collection_listing_page() {
   }
   
   $nodes = ed_collection_get_published_collections();
-
+	if(!empty($nodes)){
+		$build = node_view_multiple($nodes);
+		
+		$content['pager_table'] = $build;
+		$content['pager_pager'] = array('#theme' => 'pager');
+		
+	}
 	
 	
 	$pager = theme('pager');
