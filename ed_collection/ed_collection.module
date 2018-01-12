@@ -155,7 +155,13 @@ function ed_collection_listing_page() {
   }
   
   $nodes = ed_collection_get_published_collections();
-
+	if(!empty($nodes)){
+		$build = node_view_multiple($nodes);
+		
+		$content['pager_table'] = $build;
+		$content['pager_pager'] = array('#theme' => 'pager');
+		
+	}
 	
 	
 	$pager = theme('pager');
@@ -190,6 +196,10 @@ function edidaktikum_theme_bs3_theme()
 			),
 	);
 }
+
+
+
+
 
 
 /**
@@ -251,18 +261,22 @@ function ed_collection_get_user_collections() {
  */
 function ed_collection_get_published_collections() {
   $query = db_select('node', 'n')
-    ->extend('PagerDefault')
     ->fields('n', array('nid'))
     ->condition('n.type', 'ed_collection')
     ->condition('n.status', 1)
     ->addTag('node_access')
-    ->range()
-    ->orderBy('n.created', 'DESC')
-    ->limit(ed_get_paging_nr());
+    ->range();
+	
+	$query = $query->extend('PagerDefault')->limit(ed_get_paging_nr());
+	
+	$result = $query->execute()->fetchCol();
+	
+	$nodes = node_load_multiple($result);
 
-  $nids = $query->execute()->fetchCol();
-  return $nids;
+  return $nodes;
 }
+
+
 
 /**
  * Implements hook_ctools_plugin_api().

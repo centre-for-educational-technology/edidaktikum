@@ -244,23 +244,3 @@ function edidaktikum_schools_page() {
 	);
 }
 
-
-
-/**
- * eDidaktikum For schools page.
- */
-function edidaktikum_schools_page() {
-
-	drupal_set_title(t('Koolile'));
-	
-	ob_start();
-	include drupal_get_path('theme',$GLOBALS['theme']).'/custom_pages/for-schools.php';
-	$echoed_content = ob_get_clean();
-	
-	
-	return array
-	(
-			'#markup' => $echoed_content,
-	);
-}
-

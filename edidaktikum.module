@@ -200,6 +200,14 @@ function edidaktikum_menu() {
     'weight' => -25,
     'menu_name' => 'user-menu',
   );
+	$items['privacy'] = array(
+			'title' => 'Privacy Policy',
+			'page callback' => 'edidaktikum_pp_page',
+			'access callback' => TRUE,
+			'file' => 'edidaktikum.pages.inc',
+			'weight' => -25,
+			'menu_name' => 'user-menu',
+	);
   $items['node/%/edidaktikum/action/like'] = array(
     'page callback' => 'edidaktikum_node_like',
     'page arguments' => array(1),
@@ -225,6 +233,7 @@ function edidaktikum_menu() {
 
   return $items;
 }
+
 
 function edidaktikum_node_delete_page($groups, $deletedtitle){
   
@@ -262,7 +271,7 @@ function testimeee($gid, $string = ''){
   $group_members_ids = og_get_group_members_properties(node_load($gid), array(), 'members', 'node');
   $group_members = user_load_multiple($group_members_ids);
   
-  $array = drupal_explode_tags($string);  
+  $array = drupal_explode_tags($string);
   $last_string = trim(array_pop($array));
   
   $allmembers = array();
@@ -283,7 +292,7 @@ function testimeee($gid, $string = ''){
       $userobj = user_load($uid);
       if (strpos($account, ',') !== FALSE || strpos($account, '"') !== FALSE) {
         $n = '"' . str_replace('"', '""', $userobj->name) . '"';
-      }     
+      }
       $matches[$prefix . $userobj->name] = check_plain($account);
     }
   
@@ -347,9 +356,9 @@ function edidaktikum_node_view($node, $view_mode, $langcode){
         '#markup' => '<img src="'.$imgpath.'"/>',
         '#prefix' => '<div class="cover-image">',
         '#suffix' => '</div>',
-      );   
+      );
       
-    }        
+    }
   }
 }
 
@@ -435,7 +444,7 @@ function _ed_get_sorting_options($form_state){
   );
   $form['submit'] = array(
     '#type' => 'submit',
-    '#value' => t('Sort'),    
+    '#value' => t('Sort'),
   );
   return $form;
 }
@@ -493,9 +502,9 @@ function ed_get_sorting_type(&$content){
  */
 function edidaktikum_form_alter(&$form, $form_state, $form_id) {
   if($form_id=='views_exposed_form'){
-    if($form_state['view']->name == 'og_members_admin'){      
+    if($form_state['view']->name == 'og_members_admin'){
       $form['uid']['#autocomplete_path'] = 'edidaktikum/autocomplete/from/group/'.$form_state['view']->args[1];
-    }  
+    }
   }
   
   // If not a blog post, then student can only set Group content visibility to private
@@ -538,15 +547,15 @@ function edidaktikum_form_alter(&$form, $form_state, $form_id) {
 function edidaktikum_field_attach_submit($entity_type, $entity, $form, &$form_state){
   if(isset($entity->ed_field_category) && $entity->ed_field_category){
     $parentArray = array();
-    $parents = array(); 
-    foreach($entity->ed_field_category[LANGUAGE_NONE] as $ta){    
+    $parents = array();
+    foreach($entity->ed_field_category[LANGUAGE_NONE] as $ta){
       _check_for_parents($ta['tid'], $parentArray);
     }
     if (is_array($parentArray) && sizeof($parentArray) > 0) {
       foreach ($parentArray as $stid) {
         if(!in_array(array('tid' => $stid), $entity->ed_field_category[LANGUAGE_NONE])){
           array_push($entity->ed_field_category[LANGUAGE_NONE], array('tid' => $stid));
-        }        
+        }
       }
     }
   }
@@ -555,7 +564,7 @@ function edidaktikum_field_attach_submit($entity_type, $entity, $form, &$form_st
 function _check_for_parents($tid, &$parentArray){
   $parent = taxonomy_get_parents($tid);
   if(!empty($parent)) {
-    $parent = reset($parent);    
+    $parent = reset($parent);
     array_push($parentArray, $parent->tid);
     _check_for_parents($parent->tid, $parentArray);
   }
@@ -621,7 +630,7 @@ function edidaktikum_user_view_alter(&$build) {
       $build['ed_field_full_name'][0]['#markup'] = '<a href="mailto:'.$build['#account']->mail.'?subject=eDidaktikum e-mail">'.$build['#account']->mail.'</a>';
     }
     if(!isset($build['ed_user_view_email'])){
-      
+    
     }
     if (isset($build['og_user_node']) && is_array($build['og_user_node']) && !empty($build['og_user_node']) && !empty($build['og_user_node']['#items'])) {
       $items_nodes = node_load_multiple(array_map(function ($item) {
@@ -746,7 +755,7 @@ function _edidaktikum_node_delete_redirect($form, &$form_state) {
     $form_state['redirect'] = $redirect_url;
   }*/
   if (!empty($form['#node']->og_group_ref[LANGUAGE_NONE])) {
-    $groups = array();    
+    $groups = array();
     foreach($form['#node']->og_group_ref[LANGUAGE_NONE] as $group){
       array_push($groups, $group['target_id']);
     }
@@ -1037,7 +1046,7 @@ function edidaktikum_views_query_alter(&$view, &$query){
 //  used for arrays of keyed arrays
 //  concentrates a member of the keyed arrays into an array
 //  useful for things like left joined sql results
-//  example: 
+//  example:
 //    ed_util_array_concentrate_member([ ['id' => 1, 'value' => 1], ['id' => 1, 'value' => 2] ], 'id', 'value')
 //    returns: ['id' => 1, 'value' => [1, 2]];
 function ed_util_array_concentrate_members($arr, $primary_key, $concentrate_keys) {
@@ -1047,10 +1056,10 @@ function ed_util_array_concentrate_members($arr, $primary_key, $concentrate_keys
   foreach($arr as &$item) {
     $key = $item[$primary_key];
 
-    if (!isset($map[$key])) {  
+    if (!isset($map[$key])) {
       foreach($concentrate_keys as &$concentrate_key) {
         $item[$concentrate_key] = empty($item[$concentrate_key]) ? [] : [ $item[$concentrate_key] ];
-      }      
+      }
       $ret []=& $item;
       $map[$key] =& $item;
     } else {
@@ -1072,7 +1081,7 @@ function ed_util_array_concentrate_members($arr, $primary_key, $concentrate_keys
 //  used for arrays of keyed arrays
 //  concentrates a member of the keyed arrays into an array
 //  useful for things like left joined sql results
-//  example: 
+//  example:
 //    ed_util_array_concentrate_member([ ['id' => 1, 'value' => 1], ['id' => 1, 'value' => 2] ], 'id', 'value')
 //    returns: ['id' => 1, 'value' => [1, 2]];
 function ed_util_array_concentrate_member($arr, $primary_key, $concentrate_key) {
@@ -1082,7 +1091,7 @@ function ed_util_array_concentrate_member($arr, $primary_key, $concentrate_key) 
   foreach($arr as &$item) {
     $key = $item[$primary_key];
 
-    if (!isset($map[$key])) {   
+    if (!isset($map[$key])) {
       $item[$concentrate_key] = empty($item[$concentrate_key]) ? [] : [ $item[$concentrate_key] ];
       $ret []=& $item;
       $map[$key] =& $item;
@@ -1143,7 +1152,7 @@ function ed_get_group_members($gid, $b_full_name = false, $b_roles = false, $b_s
   $q = db_select('og_membership', 'ogm');
   $q->condition('ogm.gid', $gid);
   $q->condition('ogm.entity_type', 'user');
-  $q->join('users', 'u', 'u.uid = ogm.etid AND u.status = 1'); 
+  $q->join('users', 'u', 'u.uid = ogm.etid AND u.status = 1');
   $q->fields('u', ['uid']);
 
   //  optionally with full names
@@ -1171,7 +1180,7 @@ function ed_get_group_members($gid, $b_full_name = false, $b_roles = false, $b_s
       }
     }
     
-    if (count($missing) > 0) {      
+    if (count($missing) > 0) {
       $members_with_datas = db_query('SELECT uid, data FROM users WHERE uid IN (:uids)', [':uids' => $missing])->fetchAll(PDO::FETCH_ASSOC);
       foreach ($members_with_datas as &$member_with_data) {
         $data = unserialize($member_with_data['data']);
@@ -1188,12 +1197,12 @@ function ed_get_group_members($gid, $b_full_name = false, $b_roles = false, $b_s
 
   //  order
   if ($b_full_name) {
-    usort($members, function($a, $b) { 
+    usort($members, function($a, $b) {
       return strnatcasecmp( $a['ed_field_full_name_value'], $b['ed_field_full_name_value'] );
     });
   }
 
-  //  fetch roles 
+  //  fetch roles
   if ($b_roles) {
 
     //  get group creator id
@@ -1209,7 +1218,7 @@ function ed_get_group_members($gid, $b_full_name = false, $b_roles = false, $b_s
     $q->fields('ogr', ['rid', 'name']);
     $tmp = $q->execute()->fetchAll(PDO::FETCH_ASSOC);
     unset($q);
-    foreach ($tmp as $role) $og_role_names[$role['rid']] = $role['name']; 
+    foreach ($tmp as $role) $og_role_names[$role['rid']] = $role['name'];
 
     //  process members
     foreach($members as &$member) {
@@ -1224,7 +1233,7 @@ function ed_get_group_members($gid, $b_full_name = false, $b_roles = false, $b_s
 
       //  or if creator
       if ($member['uid'] == $creator_uid) array_push($member['roles'], OG_ADMINISTRATOR_ROLE);
-    }   
+    }
   }
 
   //  roll up
@@ -1324,7 +1333,7 @@ function ed_is_task_applicable($task, $member) {
         }
       }
     }
-  } 
+  }
 
   return $applicable;
 }
@@ -1334,7 +1343,7 @@ function ed_is_task_applicable($task, $member) {
 //  $uid: the user id
 //  $b_content: optionally adds answer content ['content']
 //  $group_members: optionally adds answer status and comment ['status', 'grade']
-//  if provided with the output of ed_get_group_members with roles 
+//  if provided with the output of ed_get_group_members with roles
 function ed_get_answer($task_id, $uid, $b_content = false, $group_members = false) {
 
   //  find answer id from task id and user id
@@ -1359,7 +1368,7 @@ function ed_get_answer($task_id, $uid, $b_content = false, $group_members = fals
 
   //  process
   if ($b_content) {
-    $answer['content'] = $answer['ed_field_content_value']; 
+    $answer['content'] = $answer['ed_field_content_value'];
     unset($answer['ed_field_content_value']);
   }
 
@@ -1409,6 +1418,37 @@ function ed_get_answer($task_id, $uid, $b_content = false, $group_members = fals
   }
 
   return $answer;
+}
+
+function ed_get_taxonomy_tree($vid) {
+    $q = db_select("taxonomy_term_data", "td");
+    $q->fields("td", ["tid", "name", "weight"]);
+    $q->condition("format", "plain_text");
+    $q->condition("vid", $vid);
+    $q->join("taxonomy_term_hierarchy", "h", "h.tid = td.tid");
+    $q->fields("h", ["parent"]);
+    $nodes = $q->execute()->fetchAll(PDO::FETCH_ASSOC);
+    unset($q);
+    usort($nodes, function($a, $b) {
+      if ($a["parent"] == $b["parent"]) {
+        return (intval($a["weight"]) - intval($b["weight"]));
+      } else {
+        return (intval($a["parent"]) - intval($b["parent"]));
+      }
+    });
+
+
+    $root = ["tid" => "0", "name" => "", "children" => []];
+    $map = ["0" =>& $root];
+
+    foreach ($nodes as &$node) {
+      $n = ["tid" => $node["tid"], "name" => $node["name"], "children" => []];
+      $map[$node["parent"]]["children"] []=& $n;
+      $map[$node["tid"]] =& $n;
+      unset($n);
+    }
+
+    return $root;
 }
 
 
