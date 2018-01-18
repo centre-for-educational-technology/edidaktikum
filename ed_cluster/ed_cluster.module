@@ -362,7 +362,7 @@ function ed_cluster_search_page($form, &$form_state){
     '#size' => 60,
 	  '#attributes' => array(
 			  'class' => array('reply-form__name'),
-			  'placeholder' => t('Find...'),
+			  'placeholder' => t('Search'),
 	  ),
   );
   $form['form_container']['submit_button'] = array(
@@ -718,6 +718,9 @@ function ed_generate_grid_of_groups($nodes){
 	$counter = 1;
 	$row = 1;
 	
+	drupal_add_js('jQuery(document).ready(function(){
+        jQuery(".group").matchHeight();
+        });','inline');
 	
 	$build['row-'.$row] = array(
 			'#type' => 'markup',
