@@ -138,7 +138,8 @@ function ed_collection_menu() {
  */
 function ed_collection_listing_page() {
   drupal_add_css('.page-collections .node-ed-collection .single-publishing-status { display: none; }', $option['type'] = 'inline');
-  $content = array();
+	
+	$content = array();
 
   if ( ed_collection_teacher_or_admin_is_logged_in() ) {
     $content['add-new-container'] = array(
@@ -162,7 +163,9 @@ function ed_collection_listing_page() {
 		$content['pager_pager'] = array('#theme' => 'pager');
 		
 	}
-	
+	drupal_add_js('jQuery(document).ready(function(){
+        jQuery(".collection").matchHeight();
+        });','inline');
 	
 	$pager = theme('pager');
 	

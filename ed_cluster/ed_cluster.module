@@ -821,7 +821,7 @@ function ed_generate_grid_of_groups($nodes){
 				
 					$build['row-'.$row]['node-'.$node->nid]['button'] = array(
 							'#type' => 'markup',
-							'#markup' => '<a href="'.'group/node/' . $node->nid . '/unsubscribe'.'"><button class="price-btn" type="button">'.t('Leave').'</button></a>'
+							'#markup' => '<a href="'.'group/node/' . $node->nid . '/unsubscribe'.'"><button class="price-btn leave-group" type="button">'.t('Leave').'</button></a>'
 					);
 				
 				}
