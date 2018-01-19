@@ -608,6 +608,11 @@ function ed_task_listing_for_students($test, $node){
                 $tmp_data['data'] = t('Answered, Rejected');
                 $tmp_data['title'] = t('Rejected');
               break;
+              case('checked'):
+                $tmp_data['class'] = 'checked';
+                $tmp_data['data'] = t('Answered, Checked');
+                $tmp_data['title'] = t('Checked');
+              break;
               case('unchecked'):
                 $tmp_data['class'] = 'unchecked';
                 $tmp_data['data'] = t('Answered, Unchecked');
@@ -2015,6 +2020,11 @@ function ed_task_manager($test, $node) {
           case 'accepted':
             $cell['class'] = 'answered';
             $cell['title'] = t('Accepted');
+            break;
+
+          case 'checked':
+            $cell['class'] = 'checked';
+            $cell['title'] = t('Checked');
             break;
 
           case 'rejected':

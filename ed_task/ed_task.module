@@ -269,6 +269,11 @@ function ed_task_listing_page() {
             $tmp_data['data'] = t('Answered, Rejected');
             $tmp_data['title'] = t('Rejected');                
           break;
+          case('checked'):
+            $tmp_data['class'] = 'checked';
+            $tmp_data['data'] = t('Answered, Checked');
+            $tmp_data['title'] = t('Checked');
+          break;
           case('unchecked'):
           default:
             $tmp_data['class'] = 'unchecked';
