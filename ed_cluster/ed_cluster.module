@@ -1099,7 +1099,7 @@ function ed_listing_from_group($filler, $gnode, $type){
     if($type != 'ed_q_portfolio') {
       $content['add-new-container']['add-new-link'] = array(
           '#type' => 'markup',
-          '#markup' => l(t('Add new'), 'node/add/' . $type_dashed, array('query' => array('og_group_ref' => $gnode->nid, 'destination' => $destination))),
+          '#markup' => l(t('Add new'), 'node/add/' . $type_dashed, array('query' => array('og_group_ref' => $gnode->nid, 'destination' => $destination), 'attributes' => array('class' => 'btn btn-success'))),
       );
     }
   }
@@ -1165,7 +1165,15 @@ function ed_cluster_preprocess_node(&$vars) {
       $vars['display_submitted'] = FALSE;
       $vars['classes_array'] []= 'node-dashboard';
     }
-
+	
+	  drupal_add_js(drupal_get_path('module', 'edidaktikum') . '/js/ed_likes.js', 'file');
+	  drupal_add_js(drupal_get_path('module', 'edidaktikum') . '/js/ed_share.js', 'file');
+	
+	  if($vars['view_mode'] == 'full'){
+		  $vars['theme_hook_suggestions'][] = 'node__ed_cluster';
+	  }
+    
+	 
     if ('teaser' === $vars['view_mode'] && isset($vars['group_access'][LANGUAGE_NONE][0]['value']) && 1 == $vars['group_access'][LANGUAGE_NONE][0]['value']) {
       $vars['classes_array'][] = 'ed-group-private';
     }

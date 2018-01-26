@@ -1273,10 +1273,11 @@ function ed_filter_admins(&$members) {
 //  $b_due_date: optionally adds due dates ['due_date']
 //  $b_study_group: optionally adds study groups ['study_groups']
 //  $b_targeted_members: optionally adds targeted members ['targeted_member_ids']
-function ed_get_group_tasks($gid, $b_due_date = false, $b_study_groups = false, $b_targeted_members = false) {
+function ed_get_group_tasks($gid, $b_due_date = false, $b_study_groups = false, $b_targeted_members = false, $desc = false) {
   //  get group tasks
   $q = db_select('og_membership', 'ogm');
   $q->condition('ogm.gid', $gid);
+  if($desc) $q->orderBy('ogm.created', 'DESC' );
   $q->condition('ogm.entity_type', 'node');
   $q->join('node', 'n', 'n.nid = ogm.etid AND n.type = \'ed_task\' AND n.status = 1');
   $q->fields('n', ['nid', 'title']);
@@ -1460,3 +1461,37 @@ function ed_get_taxonomy_tree($vid) {
 }
 
 
+function ed_get_group_bookmarks($gid) {
+	//  get group bookmarks
+	$q = db_select('og_membership', 'ogm');
+	$q->condition('ogm.gid', $gid);
+	$q->condition('ogm.entity_type', 'node');
+	$q->orderBy('ogm.created', 'DESC' );
+	$q->join('node', 'n', 'n.nid = ogm.etid AND n.type = \'ed_bookmark\' AND n.status = 1');
+	$q->fields('n', ['nid', 'title']);
+	
+	$q->join('field_data_ed_bookmark_url', 'dd', 'dd.entity_id = ogm.etid');
+	$q->fields('dd', ['ed_bookmark_url_value']);
+	
+	$bookmarks = $q->execute()->fetchAll(PDO::FETCH_ASSOC);
+	
+	$bookmarks = ed_util_rename_key_of_arrays($bookmarks, 'ed_bookmark_url_value', 'url');
+	
+	return $bookmarks;
+}
+
+
+function ed_get_group_files($gid) {
+	//  get group files
+	$q = db_select('og_membership', 'ogm');
+	$q->condition('ogm.gid', $gid);
+	$q->condition('ogm.entity_type', 'node');
+	$q->orderBy('ogm.created', 'DESC' );
+	$q->join('node', 'n', 'n.nid = ogm.etid AND n.type = \'ed_files\' AND n.status = 1');
+	$q->fields('n', ['nid', 'title']);
+
+	
+	$files = $q->execute()->fetchAll(PDO::FETCH_ASSOC);
+
+	return $files;
+}
