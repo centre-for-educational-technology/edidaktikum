@@ -791,7 +791,7 @@ function ed_generate_grid_of_groups($nodes){
 				);
 			}
 			
-			if($node->ed_field_group_state[LANGUAGE_NONE][0]['value'] || og_is_member('node', $node->nid)){
+		
 //				$build['row-grid']['row-'.$row]['node-'.$node->nid]['list-item']['list-content-admins'] = array(
 //						'#type' => 'markup',
 //						'#prefix' => '<div class="product-list__content admins">',
@@ -810,21 +810,21 @@ function ed_generate_grid_of_groups($nodes){
 //						'#suffix' => '</div>',
 //				);
 				
-				if(! og_is_member('node', $node->nid)){
-					
-					$build['row-'.$row]['node-'.$node->nid]['button'] = array(
-							'#type' => 'markup',
-							'#markup' => '<a href="'.'group/node/' . $node->nid . '/subscribe/og_user_node'.'"><button class="price-btn" type="button">'.t('Join').'</button></a>'
-					);
-				}
-				}else{
+		
+			
+			
+			if(!(og_is_member('node', $node->nid)) && $node->ed_field_group_state[LANGUAGE_NONE][0]['value']){
 				
-					$build['row-'.$row]['node-'.$node->nid]['button'] = array(
-							'#type' => 'markup',
-							'#markup' => '<a href="'.'group/node/' . $node->nid . '/unsubscribe'.'"><button class="price-btn leave-group" type="button">'.t('Leave').'</button></a>'
-					);
-				
-				}
+				$build['row-'.$row]['node-'.$node->nid]['button'] = array(
+						'#type' => 'markup',
+						'#markup' => '<a href="'.'group/node/' . $node->nid . '/subscribe/og_user_node'.'"><button class="price-btn" type="button">'.t('Join').'</button></a>'
+				);
+			}else{
+				$build['row-'.$row]['node-'.$node->nid]['button'] = array(
+						'#type' => 'markup',
+						'#markup' => '<a href="'.'group/node/' . $node->nid . '/unsubscribe'.'"><button class="price-btn leave-group" type="button">'.t('Leave').'</button></a>'
+				);
+			}
 				
 				
 			
@@ -1170,7 +1170,7 @@ function ed_cluster_preprocess_node(&$vars) {
 	  drupal_add_js(drupal_get_path('module', 'edidaktikum') . '/js/ed_share.js', 'file');
 	
 	  if($vars['view_mode'] == 'full'){
-		  $vars['theme_hook_suggestions'][] = 'node__ed_cluster';
+		  $vars['theme_hook_suggestions'][] = 'node__ed_cluster_full';
 	  }
     
 	 
@@ -2566,6 +2566,7 @@ function ed_cluster_form_alter(&$form, &$form_state, $form_id) {
       ["title" => "", "description" => "Assessment method", "type" => "text_area", "name" => "assessment_method"]
     ];
 
+    // @todo When saving node, this part causes Notice: Undefined index: #language in locale_field_entity_form_submit() (line 438 of /Applications/MAMP/htdocs/edidaktikum/modules/locale/locale.module).
     $form["ed_field_learning_outcome_ref"] = [
         "#type" => "textfield",
         "#title" => t("Learning outcomes"),
