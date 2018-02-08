@@ -114,15 +114,15 @@ function edidaktikum_menu() {
 			'type' => MENU_NORMAL_ITEM,
 			'weight' => 2,
 	);
-	$items['for-schools'] = array(
-			'title' => 'Koolile',
-			'page callback' => 'edidaktikum_schools_page',
-			'access callback' => TRUE,
-			'file' => 'edidaktikum.pages.inc',
-			'weight' => 25,
-			'menu_name' => 'main-menu',
-			'type' => MENU_NORMAL_ITEM,
-	);
+//	$items['for-schools'] = array(
+//			'title' => 'Koolile',
+//			'page callback' => 'edidaktikum_schools_page',
+//			'access callback' => TRUE,
+//			'file' => 'edidaktikum.pages.inc',
+//			'weight' => 25,
+//			'menu_name' => 'main-menu',
+//			'type' => MENU_NORMAL_ITEM,
+//	);
 
   $items['admin/config/edidaktikum/promoted-news'] = array(
     'title' => 'eDidaktikum Promoted News',

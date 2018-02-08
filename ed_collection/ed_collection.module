@@ -145,7 +145,7 @@ function ed_collection_listing_page() {
     $content['add-new-container'] = array(
       '#type' => 'container',
       '#attributes' => array(
-        'class' => array('ed-add-new-node', 'ed-add-new-ed-collection'),
+        'class' => array('btn-success'),
       ),
     );
     $content['add-new-container']['add-new-collection'] = array(
@@ -216,7 +216,7 @@ function ed_collection_dashboard_listing_page(){
   $content['add-new-container'] = array(
     '#type' => 'container',
     '#attributes' => array(
-      'class' => array('ed-add-new-node', 'ed-add-new-ed-collection'),
+      'class' => array('btn-success'),
     ),
   );
   $content['add-new-container']['add-new-collection'] = array(
