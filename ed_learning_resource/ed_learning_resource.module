@@ -229,7 +229,7 @@ function ed_learning_resource_preprocess_node(&$vars){
 	  drupal_add_js(drupal_get_path('module', 'edidaktikum') . '/js/ed_share.js', 'file');
 	
 	  if($vars['view_mode'] == 'full'){
-		  $vars['theme_hook_suggestions'][] = 'node__ed_learning_resource';
+		  $vars['theme_hook_suggestions'][] = 'node__ed_learning_resource_full';
 	  }
   }
 }

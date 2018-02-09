@@ -1495,3 +1495,20 @@ function ed_get_group_files($gid) {
 
 	return $files;
 }
+
+
+
+function ed_get_group_learning_resources($gid){
+	//  get group learning resources
+	$q = db_select('og_membership', 'ogm');
+	$q->condition('ogm.gid', $gid);
+	$q->condition('ogm.entity_type', 'node');
+	$q->orderBy('ogm.created', 'DESC' );
+	$q->join('node', 'n', 'n.nid = ogm.etid AND n.type = \'ed_learning_resource\' AND n.status = 1');
+	$q->fields('n', ['nid', 'title']);
+	
+	
+	$learning_resources = $q->execute()->fetchAll(PDO::FETCH_ASSOC);
+	
+	return $learning_resources;
+}
