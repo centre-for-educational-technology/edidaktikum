@@ -53,5 +53,6 @@
 
 .ed_filter_tasks {
     margin-top: 52px;
-	margin-bottom: 15px !important;
+	margin-bottom: 10px !important;
+	margin-left: 15px;
 }
