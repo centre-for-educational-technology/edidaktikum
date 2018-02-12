@@ -10,7 +10,7 @@
                             type: 'POST',
                             success: function(response) {
                                 if (true == response.success) {
-                                    $(e.currentTarget).parent().find('span.ed-likes-count').html(Drupal.t('@count likes', { '@count': response.count }));
+                                    $(e.currentTarget).parent().find('span.count').html( response.count);
                                 }
                             }
                         });

@@ -359,6 +359,9 @@ function ed_answer_mail($key, &$message, $params){
       case 'rejected':
         $action = t('rejected');
         break;
+      case 'checked':
+        $action = t('checked');
+        break;
       case 'unchecked':
       default:
         $action = t('commented');

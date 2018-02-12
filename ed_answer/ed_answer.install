@@ -307,6 +307,7 @@ function _ed_answer_status_list(){
       'unchecked' => t('Unchecked'), 
       'rejected' => t('Rejected'), 
       'accepted' => t('Accepted'),
+      'checked' => t('Checked'),
     );
   return $statuses;
 }
@@ -411,6 +412,15 @@ function ed_answer_update_7113(&$sandbox) {
 	
 }
 
+/**
+ * Add checked value to ed_answer_status field
+ */
+function ed_answer_update_7115(&$sandbox) {
+  $info = field_info_field('ed_answer_status');
+  $values = &$info['settings']['allowed_values'];
+  $values['checked'] = 'Checked';
+  field_update_field($info);
+}
 
 /**
  * Add na value to ed_answer_status field
