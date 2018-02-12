@@ -1722,7 +1722,7 @@ function ed_task_manager($test, $node) {
     'add-new' => [
       '#type' => 'markup',
       '#markup' => l(t('Add new'), 'node/add/ed-task',
-        [ 'attributes' => [],
+        [ 'attributes' =>[ 'class' => ['btn btn-success']],
           'query' => [
             'og_group_ref' => $node->nid,
             'destination' => _ed_cluster_destination_for_group_node_type($node, 'ed_task')
