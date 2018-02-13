@@ -822,12 +822,12 @@ function ed_generate_grid_of_groups($nodes){
 				
 				$build['row-'.$row]['node-'.$node->nid]['button'] = array(
 						'#type' => 'markup',
-						'#markup' => '<a href="'.'group/node/' . $node->nid . '/subscribe/og_user_node'.'"><button class="price-btn" type="button">'.t('Join').'</button></a>'
+						'#markup' => '<a href="'.url('group/node/' . $node->nid . '/subscribe/og_user_node').'"><button class="price-btn" type="button">'.t('Join').'</button></a>'
 				);
 			}else if(og_is_member('node', $node->nid)){
 				$build['row-'.$row]['node-'.$node->nid]['button'] = array(
 						'#type' => 'markup',
-						'#markup' => '<a href="'.'group/node/' . $node->nid . '/unsubscribe'.'"><button class="price-btn leave-group" type="button">'.t('Leave').'</button></a>'
+						'#markup' => '<a href="'.url('group/node/' . $node->nid . '/unsubscribe').'"><button class="price-btn leave-group" type="button">'.t('Leave').'</button></a>'
 				);
 			}
 				
