@@ -265,12 +265,18 @@ function ed_dashboard_discover_page($form, &$form_state, $tag = '') {
     '#default_value' => $tag,
     '#size' => 60,
     '#maxlength' => 128,
+		  '#attributes' => array(
+				  'class' => array('reply-form__name'),
+				  'placeholder' => t('Search'),
+		  ),
   );
 
+
   $form['buttons']['submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Search'),
     '#name' => 'op-search',
+	  '#type' => 'submit',
+	  '#value' => t('Search'),
+	  '#attributes'=>array('style'=>"display:none"),
   );
 
   if (!empty($tag)) {
