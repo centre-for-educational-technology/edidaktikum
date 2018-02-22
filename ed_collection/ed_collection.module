@@ -138,22 +138,7 @@ function ed_collection_menu() {
  */
 function ed_collection_listing_page() {
   drupal_add_css('.page-collections .node-ed-collection .single-publishing-status { display: none; }', $option['type'] = 'inline');
-	
-	$content = array();
-
-  if ( ed_collection_teacher_or_admin_is_logged_in() ) {
-    $content['add-new-container'] = array(
-      '#type' => 'container',
-      '#attributes' => array(
-        'class' => array('btn-success'),
-      ),
-    );
-    $content['add-new-container']['add-new-collection'] = array(
-      '#type' => 'link',
-      '#title' => t('Add new collection'),
-      '#href' => 'node/add/ed-collection',
-    );
-  }
+  
   
   $nodes = ed_collection_get_published_collections();
 	if(!empty($nodes)){
@@ -211,36 +196,37 @@ function edidaktikum_theme_bs3_theme()
 function ed_collection_dashboard_listing_page(){
   menu_tree_set_path('main-menu', 'dashboard');
   drupal_add_css('.page-dashboard-collection .node-ed-collection .single-creator { display: none; }', $option['type'] = 'inline');
-  $content = array();
-
-  $content['add-new-container'] = array(
-    '#type' => 'container',
-    '#attributes' => array(
-      'class' => array('btn-success'),
-    ),
-  );
-  $content['add-new-container']['add-new-collection'] = array(
-    '#type' => 'link',
-    '#title' => t('Add new collection'),
-    '#href' => 'node/add/ed-collection',
-  );
-  
-  $nids = ed_collection_get_user_collections();
-  if(!empty($nids)){
-    $nodes = node_load_multiple($nids);    
-    $build = node_view_multiple($nodes);
-    $build['pager'] = array(
-      '#theme' => 'pager',
-      '#weight' => 5,
-    );
-    $content['pager']['collections'] = $build;
-  }
-  
-  return $content;
+	
+	
+	$nodes = ed_collection_get_user_collections();
+	if(!empty($nodes)){
+		$build = node_view_multiple($nodes);
+		
+		$content['pager_table'] = $build;
+		$content['pager_pager'] = array('#theme' => 'pager');
+		
+	}
+	drupal_add_js('jQuery(document).ready(function(){
+        jQuery(".collection").matchHeight();
+        });','inline');
+	
+	$pager = theme('pager');
+	
+	$output =  theme('ed_collection', array(
+					'nodes' => $nodes,
+			)
+	);
+	
+	
+	$output = $output . $pager;
+	
+	return $output;
+	
+	
 }
 
 /**
- * User collections ids.
+ * User collections nodes.
  * Support pagination
  */
 function ed_collection_get_user_collections() {
@@ -253,13 +239,17 @@ function ed_collection_get_user_collections() {
     ->range()
     ->orderBy('n.created', 'DESC')
     ->limit(ed_get_paging_nr());
-
-  $nids = $query->execute()->fetchCol();
-  return $nids;
+	
+	$result = $query->execute()->fetchCol();
+	
+	$nodes = node_load_multiple($result);
+	
+	return $nodes;
+ 
 }
 
 /**
- * Published collections ids.
+ * Published collections nodes.
  * Support pagination
  */
 function ed_collection_get_published_collections() {

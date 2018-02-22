@@ -448,7 +448,7 @@ function ed_task_node_view($node, $view_mode, $langcode) {
       }
 
       $options = array(
-        'attributes' => array(),
+        'attributes' => array('class' => 'btn btn-success price-btn'),
         'query' => array(
           'field_ref_to_task' => $node->nid,
         ),
@@ -458,7 +458,7 @@ function ed_task_node_view($node, $view_mode, $langcode) {
         $node->content['ed_task_asjandus'] = array(
           '#type' => 'item',
           '#title' => t(''),
-          '#markup' => l(t('Edit'), 'node/'.  _get_answer_from_task($node->nid).'/edit'),
+          '#markup' => l(t('Edit'), 'node/'.  _get_answer_from_task($node->nid).'/edit', array('attributes'=> array('class' => 'btn btn-success price-btn'))),
           '#prefix' => '<div class="answer edit-answer">',
           '#suffix' => '</div>',
         );        
