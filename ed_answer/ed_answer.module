@@ -101,6 +101,8 @@ function ed_answer_form_alter(&$form, &$form_state, $form_id){
     if (empty($form['#node']->nid)) {
       drupal_set_title(t('Create Answer'));
     }
+	
+	  drupal_add_library('system','ui.slider');
 
     if(isset($form['#node']->field_ref_to_task)){      
       $reftotask = $form['#node']->field_ref_to_task['und'][0]['target_id'];
@@ -178,7 +180,37 @@ function ed_answer_form_alter(&$form, &$form_state, $form_id){
       $test[] = taxonomy_term_load($term['#options']['entity']->tid);
     }
     $term_nr = 0;
-    $form['#attached']['js'][] = drupal_get_path('module', 'ed_answer') . '/ed_answer_js.js';
+	
+	
+    if (!empty($form['#node']->ed_field_difficulty_feedb)){
+	    $initial_difficulty_feedb = $form['#node']->ed_field_difficulty_feedb[LANGUAGE_NONE][0]['value'];
+	    
+    }else{
+	    $initial_difficulty_feedb = 1;
+    }
+	
+	  if (!empty($form['#node']->ed_field_satisf_feedb)){
+		  $initial_satisf_feedb = $form['#node']->ed_field_satisf_feedb[LANGUAGE_NONE][0]['value'];
+		
+	  }else{
+		  $initial_satisf_feedb = 3;
+	  }
+	
+	  if (!empty($form['#node']->ed_field_time_eff_feedb)){
+		  $initial_time_eff_feedb = $form['#node']->ed_field_time_eff_feedb[LANGUAGE_NONE][0]['value'];
+		
+	  }else{
+		  $initial_time_eff_feedb = 1;
+	  }
+	
+	  $settings = array('initial_difficulty_feedb' => $initial_difficulty_feedb, 'initial_satisf_feedb' => $initial_satisf_feedb, 'initial_time_eff_feedb' => $initial_time_eff_feedb);
+   
+	
+	  drupal_add_js(array('ed_answer' => $settings), array('type' => 'setting'));
+	  drupal_add_js(drupal_get_path('module', 'ed_answer') . '/ed_answer_js.js');
+	
+
+    //$form['#attached']['js'][] = drupal_get_path('module', 'ed_answer') . '/ed_answer_js.js';
     $form['ed_answer_task_cat'] = array(
       '#tree' => TRUE,
       '#type' => 'fieldset',
