@@ -163,6 +163,12 @@ function ed_answer_install() {
   ed_answer_add_og_audience();
 	
 	ed_answer_node_add_field_g_drive_file();
+	
+	ed_answer_node_add_field_difficulty_feedb();
+	
+	ed_answer_node_add_time_eff_feedb();
+	
+	ed_answer_node_add_field_satisf_feedb();
 }
 
 function ed_answer_add_og_audience() {
@@ -213,6 +219,147 @@ function ed_answer_node_add_field_g_drive_file() {
 }
 
 
+/**
+ * Creates and adds difficulty_feedb field
+ */
+function ed_answer_node_add_field_difficulty_feedb() {
+	$field_name = 'ed_field_difficulty_feedb';
+	if (!field_info_field($field_name)) {
+		$field = array(
+				'field_name' => $field_name,
+				'type' => 'list_integer',
+				'cardinality' => 1,
+				'settings' => array(
+						'allowed_values' => array(
+								1 => '',
+								2 => '',
+								3 => '',
+								4 => '',
+						),
+				),
+			
+		);
+		field_create_field($field);
+	}
+	
+	
+	if (!field_info_instance('node', 'ed_field_difficulty_feedb', 'ed_answer')) {
+		$instance = array(
+				'field_name' => $field_name,
+				'entity_type' => 'node',
+				'bundle' => 'ed_answer',
+				'label' => t('Raskusaste'),
+				'description' => t("1 – Lihtne ülesanne; 4 – Keeruline ülesanne"),
+				'default_value' => null,
+				'required' => TRUE,
+				'weight' => '-1',
+				'widget' => array(
+						'active' => 1,
+						'module' => 'options',
+						'settings' => array(),
+						'type' => 'options_buttons'
+				),
+		);
+		field_create_instance($instance);
+	}
+	
+}
+
+
+/**
+ * Creates and adds satisf_feedb field
+ */
+function ed_answer_node_add_field_satisf_feedb() {
+	$field_name = 'ed_field_satisf_feedb';
+	if (!field_info_field($field_name)) {
+		$field = array(
+				'field_name' => $field_name,
+				'type' => 'list_integer',
+				'cardinality' => array(1),
+				'settings' => array(
+						'allowed_values' => array(
+								1 => '',
+								2 => '',
+								3 => '',
+								4 => '',
+						),
+				),
+		
+		);
+		field_create_field($field);
+	}
+	
+	
+	if (!field_info_instance('node', 'ed_field_satisf_feedb', 'ed_answer')) {
+		$instance = array(
+				'field_name' => $field_name,
+				'entity_type' => 'node',
+				'bundle' => 'ed_answer',
+				'label' => t('Rahuolu'),
+				'description' => '',
+				'default_value' => null,
+				'required' => TRUE,
+				'widget' => array(
+						'active' => 3,
+						'module' => 'options',
+						'settings' => array(),
+						'type' => 'options_buttons'
+				),
+		);
+		field_create_instance($instance);
+	}
+	
+}
+
+
+
+/**
+ * Creates and adds time_eff_feedb field
+ */
+function ed_answer_node_add_time_eff_feedb() {
+	$field_name = 'ed_field_time_eff_feedb';
+	if (!field_info_field($field_name)) {
+		$field = array(
+				'field_name' => $field_name,
+				'type' => 'list_integer',
+				'cardinality' => 1,
+				'settings' => array(
+						'allowed_values' => array(
+								1 => '',
+								2 => '',
+								3 => '',
+								4 => '',
+						),
+				),
+		
+		);
+		field_create_field($field);
+	}
+	
+	
+	if (!field_info_instance('node', 'ed_field_time_eff_feedb', 'ed_answer')) {
+		$instance = array(
+				'field_name' => $field_name,
+				'entity_type' => 'node',
+				'bundle' => 'ed_answer',
+				'label' => t('Aeg/Pingutus'),
+				'description' => t("1 – Oli lihtne, ei võtnud palju aega; 4 – Oli raske, võttis palju aega"),
+				'default_value' => null,
+				'required' => TRUE,
+				'widget' => array(
+						'active' => 1,
+						'module' => 'options',
+						'settings' => array(),
+						'type' => 'options_buttons'
+				),
+		);
+		field_create_instance($instance);
+	}
+	
+}
+
+
+
 function ed_answer_uninstall() {
   $result = db_select('node','n')
     ->fields('n', array('nid'))
@@ -228,6 +375,14 @@ function ed_answer_uninstall() {
 
 
   field_delete_field('field_ref_to_task');
+	
+	field_delete_field('ed_g_drive_file');
+	
+	field_delete_field('ed_field_difficulty_feedb');
+	
+	field_delete_field('ed_field_satisf_feedb');
+	
+	field_delete_field('ed_field_time_eff_feedb');
 
 
   $instances = field_info_instances('node', 'ed_answer');
@@ -440,3 +595,21 @@ function ed_answer_update_7115(&$sandbox) {
 //  field_update_field($info);
 //
 //}
+
+
+/**
+ * Create and add feedback related fields to ed_answer
+ */
+function ed_answer_update_7116(&$sandbox) {
+	
+
+	ed_answer_node_add_field_difficulty_feedb();
+	
+	ed_answer_node_add_time_eff_feedb();
+	
+	ed_answer_node_add_field_satisf_feedb();
+	
+	
+	
+}
+
