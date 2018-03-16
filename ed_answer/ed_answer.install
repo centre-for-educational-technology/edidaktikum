@@ -163,6 +163,12 @@ function ed_answer_install() {
   ed_answer_add_og_audience();
 	
 	ed_answer_node_add_field_g_drive_file();
+	
+	ed_answer_node_add_field_difficulty_feedb();
+	
+	ed_answer_node_add_time_eff_feedb();
+	
+	ed_answer_node_add_field_satisf_feedb();
 }
 
 function ed_answer_add_og_audience() {
@@ -369,6 +375,14 @@ function ed_answer_uninstall() {
 
 
   field_delete_field('field_ref_to_task');
+	
+	field_delete_field('ed_g_drive_file');
+	
+	field_delete_field('ed_field_difficulty_feedb');
+	
+	field_delete_field('ed_field_satisf_feedb');
+	
+	field_delete_field('ed_field_time_eff_feedb');
 
 
   $instances = field_info_instances('node', 'ed_answer');
@@ -586,7 +600,7 @@ function ed_answer_update_7115(&$sandbox) {
 /**
  * Create and add feedback related fields to ed_answer
  */
-function ed_answer_update_7116(&$sandbox) {
+function ed_answer_update_7117(&$sandbox) {
 	
 
 	ed_answer_node_add_field_difficulty_feedb();
