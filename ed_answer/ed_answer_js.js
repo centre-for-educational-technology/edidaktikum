@@ -46,8 +46,7 @@
             //
 
             // Get the options for this slider
-            //XXX FOR SOME INSTANCES NEED TO USE .uiSlider INSTEAD OF .slider
-            var opt = $(this).data().slider.options;
+            var opt = $(this).data().uiSlider.options;
 
             // Get the number of possible values
             var vals = opt.max - opt.min;
@@ -89,8 +88,7 @@
           //
 
           // Get the options for this slider
-          //XXX FOR SOME INSTANCES NEED TO USE .uiSlider INSTEAD OF .slider
-          var opt = $(this).data().slider.options;
+          var opt = $(this).data().uiSlider.options;
 
           // Get the number of possible values
           var vals = opt.max - opt.min;
