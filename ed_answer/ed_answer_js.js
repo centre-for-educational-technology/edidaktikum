@@ -46,6 +46,8 @@
             //
 
             // Get the options for this slider
+            console.log($(this).data());
+            
             var opt = $(this).data().uiSlider.options;
 
             // Get the number of possible values
