@@ -600,7 +600,7 @@ function ed_answer_update_7115(&$sandbox) {
 /**
  * Create and add feedback related fields to ed_answer
  */
-function ed_answer_update_7117(&$sandbox) {
+function ed_answer_update_7116(&$sandbox) {
 	
 
 	ed_answer_node_add_field_difficulty_feedb();
