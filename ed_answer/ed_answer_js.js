@@ -4,13 +4,36 @@
       $('.category-container', context).find('a').wrap('<li />');
       $('.competence-container', context).find('a').wrap('<li />');
 
+      var initial_difficulty_feedb = 1;
+      var initial_time_eff_feedb = 1;
+      var initial_satisf_feedb = 4;
+
+      try{
+        initial_difficulty_feedb = Drupal.settings.ed_answer.initial_difficulty_feedb
+      }catch(e){
+
+      }
+
+      try{
+        initial_time_eff_feedb = Drupal.settings.ed_answer.initial_time_eff_feedb
+      }catch(e){
+
+      }
+
+      try{
+        initial_satisf_feedb = Drupal.settings.ed_answer.initial_satisf_feedb
+      }catch(e){
+
+      }
+
+
 
       $("#edit-ed-field-difficulty-feedb-und").each(function() {
         var radios = $(this).find(":radio");
         $("<div id='slider'></div>").slider({
           min: parseInt(radios.first().val(), 10),
           max: parseInt(radios.last().val(), 10),
-          value: Drupal.settings.ed_answer.initial_difficulty_feedb,
+          value: initial_difficulty_feedb,
           slide: function(event, ui) {
             radios.filter("[value=" + ui.value + "]").click();
           }
@@ -52,7 +75,7 @@
         $("<div id='slider'></div>").slider({
           min: parseInt(radios.first().val(), 10),
           max: parseInt(radios.last().val(), 10),
-          value: Drupal.settings.ed_answer.initial_time_eff_feedb,
+          value: initial_time_eff_feedb,
           slide: function(event, ui) {
             radios.filter("[value=" + ui.value + "]").click();
           }
@@ -89,9 +112,8 @@
 
 
 
-      var selected_satisf = Drupal.settings.ed_answer.initial_satisf_feedb;
 
-      $("#edit-ed-field-satisf-feedb-und:radio[value="+selected_satisf+"]").hover(function() {
+      $("#edit-ed-field-satisf-feedb-und:radio[value="+initial_satisf_feedb+"]").hover(function() {
         $(this).css("filter","grayscale(0)")
       });
 

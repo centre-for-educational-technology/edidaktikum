@@ -242,8 +242,8 @@ function ed_answer_node_add_field_difficulty_feedb() {
 				'field_name' => $field_name,
 				'entity_type' => 'node',
 				'bundle' => 'ed_answer',
-				'label' => t('Raskuste tase'),
-				'description' => '',
+				'label' => t('Raskusaste'),
+				'description' => t("1 – Lihtne ülesanne; 4 – Keeruline ülesanne"),
 				'default_value' => null,
 				'required' => TRUE,
 				'weight' => '-1',
@@ -269,12 +269,13 @@ function ed_answer_node_add_field_satisf_feedb() {
 		$field = array(
 				'field_name' => $field_name,
 				'type' => 'list_integer',
-				'cardinality' => 1,
+				'cardinality' => array(1),
 				'settings' => array(
 						'allowed_values' => array(
 								1 => '',
 								2 => '',
 								3 => '',
+								4 => '',
 						),
 				),
 		
@@ -336,7 +337,7 @@ function ed_answer_node_add_time_eff_feedb() {
 				'entity_type' => 'node',
 				'bundle' => 'ed_answer',
 				'label' => t('Aeg/Pingutus'),
-				'description' => '',
+				'description' => t("1 – Oli lihtne, ei võtnud palju aega; 4 – Oli raske, võttis palju aega"),
 				'default_value' => null,
 				'required' => TRUE,
 				'widget' => array(
@@ -583,15 +584,10 @@ function ed_answer_update_7115(&$sandbox) {
 
 
 /**
- * Create and add ed_field_difficulty_feedb field to ed_answer
+ * Create and add feedback related fields to ed_answer
  */
-function ed_answer_update_7174(&$sandbox) {
+function ed_answer_update_7116(&$sandbox) {
 	
-	field_delete_instance('ed_field_difficulty_feedb');
-	field_delete_field('ed_field_difficulty_feedb');
-	
-	field_delete_instance('ed_field_satisf_feedb');
-	field_delete_field('ed_field_satisf_feedb');
 
 	ed_answer_node_add_field_difficulty_feedb();
 	
