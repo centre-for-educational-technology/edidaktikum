@@ -51,6 +51,19 @@
 	text-decoration: none;
 }
 
+.checked {
+    background-color: #84bfeb;
+}
+
+.checked a {
+    display: block;
+    text-decoration: none;
+}
+
+.checked a:hover {
+    text-decoration: none;
+}
+
 .ed_filter_tasks {
     margin-top: 52px;
 	margin-bottom: 10px !important;
