@@ -6,7 +6,7 @@
  */
 class HTMLPurifier_Filter_EdIframe extends HTMLPurifier_Filter
 {
-    public $name = 'MyIframe';
+    public $name = 'edIframe';
 
     /**
      *
@@ -17,8 +17,8 @@ class HTMLPurifier_Filter_EdIframe extends HTMLPurifier_Filter
      */
     public function preFilter($html, $config, $context)
     {
-        $html = preg_replace('#<iframe#i', '<img class="MyIframe"', $html);
-        $html = preg_replace('#</iframe>#i', '</img>', $html);
+        $html = preg_replace('#<iframe#i', '<img class="edIframe"', $html);
+	      $html = preg_replace('/width="(.*?)"/i', 'width="' . 750 .'"', $html);
         return $html;
     }
 
@@ -31,7 +31,7 @@ class HTMLPurifier_Filter_EdIframe extends HTMLPurifier_Filter
      */
     public function postFilter($html, $config, $context)
     {
-        $post_regex = '#<img class="MyIframe"([^>]+?)>#';
+        $post_regex = '#<img class="edIframe"([^>]+?)>#';
         return preg_replace_callback($post_regex, array($this, 'postFilterCallback'), $html);
     }
 
@@ -42,6 +42,8 @@ class HTMLPurifier_Filter_EdIframe extends HTMLPurifier_Filter
      */
     protected function postFilterCallback($matches)
     {
+    	
+    	error_log(print_r($matches, true));
 
         // // Domain Whitelist
         $match = preg_match('#https?://www.youtube(-nocookie)?.com/|player\.vimeo\.com/video/|edpuzzle\.com/embed/|www\.google(?:-nocookie)?\.com/maps/|www\.slideshare(?:-nocookie)?\.net/|docs\.google(?:-nocookie)?\.com/|www\.powtoon(?:-nocookie)?\.com/embed/|onedrive\.live(?:-nocookie)?\.com/|app\.emaze(?:-nocookie)?\.com/|storybird(?:-nocookie)?\.com/books/|e\.issuu\.com/#', $matches[1]);
