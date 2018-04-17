@@ -49,6 +49,11 @@ function ed_dashboard_menu() {
     'type' => MENU_CALLBACK,
     'access callback' => 'user_is_logged_in',
   );
+	$items['dashboard/student'] = array(
+			'page callback' => 'ed_dashboard_get_student_dashboard',
+			'type' => MENU_CALLBACK,
+			'access callback' => 'user_is_logged_in',
+	);
   $items['dashboard/student_activity'] = [
     'title' => t('Student activity'),
     'access callback' => 'ed_current_user_is_administrator_or_supervisor',
@@ -187,37 +192,174 @@ function ed_dashboard_page() {
   menu_tree_set_path('main-menu', 'dashboard');
  
   $content = array();
+	
+	drupal_add_css(drupal_get_path('module', 'ed_dashboard').'/css/bootstrap-table.min.css');
+	drupal_add_js(drupal_get_path('module', 'ed_dashboard') . '/js/bootstrap-table.min.js', 'file');
+	
+	
+	drupal_add_js(drupal_get_path('module', 'ed_dashboard') . '/js/ed_dashboard_student.js');
 
-  $group_nids = _ed_dashboard_get_current_user_groups();
-  if (!empty($group_nids)) {
-    $groups = node_load_multiple($group_nids);
-  }
-
-  if (!empty($groups)) {
-    $content['groups-listing'] = node_view_multiple($groups, 'dashboard');
+//  $group_nids = _ed_dashboard_get_current_user_groups();
+//  if (!empty($group_nids)) {
+//    $groups = node_load_multiple($group_nids);
+//  }
+//
+//  if (!empty($groups)) {
+//    $content['groups-listing'] = node_view_multiple($groups, 'dashboard');
+//
+//
+//    foreach ($content['groups-listing']['nodes'] as $node){
+//      if (isset($node['#node']->picture)) {
+//        //Hide user picture
+//        $node['#node']->picture = ['#printed' => false];
+//      }
+//    }
+//    $content['groups-listing']['pager'] = array(
+//      '#theme' => 'pager',
+//      '#weight' => 5,
+//    );
+//
+//  } else {
+//    $content['groups-not-found'] = array(
+//      '#type' => 'markup',
+//      '#prefix' => '<div class="ed-message ed-message-notice">',
+//      '#markup' => t('Hi! Nothing to show here at the moment. Join some group to see latest updates from it.'),
+//      '#suffix' => '</div>',
+//    );
+//  }
 	
 	
-    foreach ($content['groups-listing']['nodes'] as $node){
-      if (isset($node['#node']->picture)) {
-        //Hide user picture
-        $node['#node']->picture = ['#printed' => false];
-      }
-    }
-    $content['groups-listing']['pager'] = array(
-      '#theme' => 'pager',
-      '#weight' => 5,
-    );
+	$this_semester_months = _ed_get_months_of_current_semester();
+	$this_semester_months_markup = '';
+	foreach ($this_semester_months as $key=>$value){
+		$this_semester_months_markup.='<th data-field="'.$key.'">'.$value.'</th>';
+	}
 	
-  } else {
-    $content['groups-not-found'] = array(
+	$content['student_dashboard'] = array(
       '#type' => 'markup',
-      '#prefix' => '<div class="ed-message ed-message-notice">',
-      '#markup' => t('Hi! Nothing to show here at the moment. Join some group to see latest updates from it.'),
-      '#suffix' => '</div>',
+      '#prefix' => '<table id="table" data-toggle="table" data-url="'.url("/dashboard/student/").'">',
+      '#markup' => '<thead>
+	    <tr>
+	        <th data-field="group">'.t("Group").'</th>'.$this_semester_months_markup.'
+	    </tr>
+	    </thead>',
+      '#suffix' => '</table>',
     );
-  }
 
-  return $content; 
+  return $content;
+}
+
+
+/**
+ * Student dashboard api
+ */
+function ed_dashboard_get_student_dashboard(){
+	
+	$response = array(
+			'success' => false,
+	);
+	
+	
+	$my_groups = array_values(og_get_groups_by_user());
+	
+	
+	
+	$my_groups = array_values($my_groups[0]);
+	
+	
+	$months_in_this_semester = array_keys(_ed_get_months_of_current_semester());
+	
+	
+	
+	
+	$my_groups_names_tasks = array();
+	
+	if(!empty($my_groups)){
+		foreach ($my_groups as $my_group){
+			
+			//error_log(print_r($my_group, true));
+			
+			$months_tasks = array();
+			
+			
+			foreach ($months_in_this_semester as $month){
+				$group_tasks = _ed_get_group_tasks_for_month_year($my_group, $month, date('Y'));
+				
+				$months_tasks[$month] = $group_tasks;
+			
+			}
+			
+			//Add group title
+			$wrapper = entity_metadata_wrapper('node', $my_group);
+			$group_name = $wrapper->title->value();
+			$months_tasks['group'] = $group_name;
+		
+			
+			
+			array_push($my_groups_names_tasks, $months_tasks);
+			
+		}
+		
+	}
+	
+	
+	
+	
+	//error_log(print_r($my_groups_names, true));
+	$response['success'] = true;
+	$response['data'] = $my_groups_names_tasks;
+	
+	
+	return drupal_json_output($response);
+	
+}
+
+
+
+function _ed_get_group_tasks_for_month_year($gid, $month, $year){
+	
+	$year_month = $year.'-'.$month;
+	
+	$date = date_parse_from_format ("Y-m" ,  $year_month);
+	$num = cal_days_in_month(CAL_GREGORIAN, $date['month'], $date['year']);
+	$first_minute = mktime(0, 0, 0, $date['month'], 1, $date['year']);
+	$last_minute = mktime(23, 59, 59, $date['month'], $num, $date['year']);
+	
+	
+	$query = db_select('node', 'n');
+	$query->join('og_membership', 'ogm', "n.nid = ogm.etid AND ogm.entity_type = 'node'");
+	$query->fields('n', array('nid'))
+			->condition('ogm.gid', $gid)
+			->condition('n.nid', $gid, '!=')
+			->condition('n.type', 'ed_task')
+			->condition('n.created', array($first_minute, $last_minute), 'BETWEEN')
+			->addTag('node_access')
+			->orderBy('n.sticky', 'DESC');
+	$query->distinct();
+	$result = $query->execute()->fetchCol();
+	return $result;
+}
+
+
+/**
+ * Return a list of the months in this semester
+ */
+function _ed_get_months_of_current_semester(){
+	
+	$current_month = format_date(time(), 'medium','n');
+	
+
+	
+	if($current_month >= 2 || $current_month <= 7){
+		//Second semester, Feb-Jul
+		return array(2 => t('February'), 3 => t('March'), 4 => t('April'), 5 => t('May'), 6 => t('June'), 7 => t('July'));
+		
+	
+	}else if($current_month == 1 || $current_month > 7){
+		//First semester, Aug-Jan
+		return array(8 => t('August'), 9 => t('September'), 10 => t('October'), 11 => t('November'), 12 => t('December'), 1 => t('January'));
+	}
+
 }
 
 /**
