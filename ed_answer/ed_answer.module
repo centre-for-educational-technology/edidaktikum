@@ -96,6 +96,8 @@ function ed_answer_node_view($node, $view_mode, $langcode){
 function ed_add_js_to_answer_form($form_element, &$form_state) {
 	drupal_add_library('system','ui.slider');
 	
+	//To get the field value of the existing node use
+	//$form_element['#node']->ed_field_difficulty_feedb);
 	
 	if(!empty($form_state['values']['ed_field_difficulty_feedb'])){
 		$initial_difficulty_feedb = $form_state['values']['ed_field_difficulty_feedb'][LANGUAGE_NONE];
