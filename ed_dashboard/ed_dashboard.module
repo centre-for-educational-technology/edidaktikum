@@ -49,6 +49,16 @@ function ed_dashboard_menu() {
     'type' => MENU_CALLBACK,
     'access callback' => 'user_is_logged_in',
   );
+	$items['dashboard/student'] = array(
+			'page callback' => 'ed_dashboard_get_student_dashboard',
+			'type' => MENU_CALLBACK,
+			'access callback' => 'user_is_logged_in',
+	);
+	$items['dashboard/student/rating'] = array(
+			'page callback' => 'ed_dashboard_get_task_rating',
+			'type' => MENU_CALLBACK,
+			'access callback' => 'user_is_logged_in',
+	);
   $items['dashboard/student_activity'] = [
     'title' => t('Student activity'),
     'access callback' => 'ed_current_user_is_administrator_or_supervisor',
@@ -57,6 +67,8 @@ function ed_dashboard_menu() {
     'menu_name' => 'ed-dashboard-menu',
     'type' => MENU_NORMAL_ITEM
   ];
+  
+  
 
   return $items;
 }
@@ -187,37 +199,447 @@ function ed_dashboard_page() {
   menu_tree_set_path('main-menu', 'dashboard');
  
   $content = array();
-
-  $group_nids = _ed_dashboard_get_current_user_groups();
-  if (!empty($group_nids)) {
-    $groups = node_load_multiple($group_nids);
-  }
-
-  if (!empty($groups)) {
-    $content['groups-listing'] = node_view_multiple($groups, 'dashboard');
+	
+	drupal_add_css(drupal_get_path('module', 'ed_dashboard').'/css/bootstrap-table.min.css');
+	drupal_add_js(drupal_get_path('module', 'ed_dashboard') . '/js/bootstrap-table.min.js', 'file');
+	drupal_add_js(drupal_get_path('module', 'ed_dashboard') . '/js/snap.svg-min.js', 'file');
 	
 	
-    foreach ($content['groups-listing']['nodes'] as $node){
-      if (isset($node['#node']->picture)) {
-        //Hide user picture
-        $node['#node']->picture = ['#printed' => false];
-      }
-    }
-    $content['groups-listing']['pager'] = array(
-      '#theme' => 'pager',
-      '#weight' => 5,
-    );
-	
-  } else {
-    $content['groups-not-found'] = array(
-      '#type' => 'markup',
-      '#prefix' => '<div class="ed-message ed-message-notice">',
-      '#markup' => t('Hi! Nothing to show here at the moment. Join some group to see latest updates from it.'),
-      '#suffix' => '</div>',
-    );
-  }
+	drupal_add_js(drupal_get_path('module', 'ed_dashboard') . '/js/ed_dashboard_student.js');
 
-  return $content; 
+//  $group_nids = _ed_dashboard_get_current_user_groups();
+//  if (!empty($group_nids)) {
+//    $groups = node_load_multiple($group_nids);
+//  }
+//
+//  if (!empty($groups)) {
+//    $content['groups-listing'] = node_view_multiple($groups, 'dashboard');
+//
+//
+//    foreach ($content['groups-listing']['nodes'] as $node){
+//      if (isset($node['#node']->picture)) {
+//        //Hide user picture
+//        $node['#node']->picture = ['#printed' => false];
+//      }
+//    }
+//    $content['groups-listing']['pager'] = array(
+//      '#theme' => 'pager',
+//      '#weight' => 5,
+//    );
+//
+//  } else {
+//    $content['groups-not-found'] = array(
+//      '#type' => 'markup',
+//      '#prefix' => '<div class="ed-message ed-message-notice">',
+//      '#markup' => t('Hi! Nothing to show here at the moment. Join some group to see latest updates from it.'),
+//      '#suffix' => '</div>',
+//    );
+//  }
+
+	
+	
+	$group_nids = _ed_dashboard_get_current_user_groups();
+	if (!empty($group_nids)) {
+		
+		if(!empty(ed_get_groups_by_user_no_subgroups())){
+			
+			$this_semester_months = _ed_get_months_of_current_semester();
+			$this_semester_months_markup = '';
+			foreach ($this_semester_months as $key=>$value){
+				$this_semester_months_markup.='<th data-field="'.$key.'">'.$value.'</th>';
+			}
+			
+			$content['student_dashboard']['charts']['done'] = array(
+					'#type' => 'markup',
+					'#markup' => '<div class="col-md-4"><h2 class="text-center">'.t("Tehtud tööd").'</h2><svg id="animated-chart-done" class="animated-chart" viewbox="0 0 100 100">
+			  <circle cx="50" cy="50" r="45"/>
+			  <path id="progress-done" stroke-linecap="round" stroke-width="5" stroke="#fff" fill="none"
+			        d="M50 10
+			           a 40 40 0 0 1 0 80
+			           a 40 40 0 0 1 0 -80">
+			  </path>
+			  <text id="count-done" x="50" y="50" text-anchor="middle" dy="7" font-size="20">0%</text>
+			</svg></div>',
+			);
+			
+			$content['student_dashboard']['charts']['success'] = array(
+					'#type' => 'markup',
+					'#markup' => '<div class="col-md-4"><h2 class="text-center">'.t("Edukuse määr").'</h2><svg id="animated-chart-success" class="animated-chart" viewbox="0 0 100 100">
+			  <circle cx="50" cy="50" r="45"/>
+			  <path id="progress-success" stroke-linecap="round" stroke-width="5" stroke="#fff" fill="none"
+			        d="M50 10
+			           a 40 40 0 0 1 0 80
+			           a 40 40 0 0 1 0 -80">
+			  </path>
+			  <text id="count-success" x="50" y="50" text-anchor="middle" dy="7" font-size="20">0%</text>
+			</svg></div>',
+			
+			);
+			
+			
+			$content['student_dashboard']['charts']['satisfaction'] = array(
+					'#type' => 'markup',
+					'#markup' => '<div class="col-md-4"><h2 class="text-center">'.t("Rahulolu määr").'</h2><svg id="animated-chart-satisfaction" class="animated-chart" viewbox="0 0 100 100">
+			  <circle cx="50" cy="50" r="45"/>
+			  <path id="progress-satisfaction" stroke-linecap="round" stroke-width="5" stroke="#fff" fill="none"
+			        d="M50 10
+			           a 40 40 0 0 1 0 80
+			           a 40 40 0 0 1 0 -80">
+			  </path>
+			  <text id="count-satisfaction" x="50" y="50" text-anchor="middle" dy="7" font-size="20">0%</text>
+			</svg></div>',
+			
+			);
+			
+			$content['student_dashboard']['table'] = array(
+					'#type' => 'markup',
+					'#prefix' => '<table id="student-dash-table" data-toggle="table" data-url="'.url("/dashboard/student/").'">',
+					'#markup' => '<thead>
+	    <tr>
+	        <th data-field="group">'.t("Group").'</th>'.$this_semester_months_markup.'
+	    </tr>
+	    </thead>',
+					'#suffix' => '</table>',
+			);
+			
+			
+		}else{
+			$groups = node_load_multiple($group_nids);
+			
+			if (!empty($groups)) {
+				$content['groups-listing'] = node_view_multiple($groups, 'dashboard');
+				
+				
+				foreach ($content['groups-listing']['nodes'] as $node){
+					if (isset($node['#node']->picture)) {
+						//Hide user picture
+						$node['#node']->picture = ['#printed' => false];
+					}
+				}
+				$content['groups-listing']['pager'] = array(
+						'#theme' => 'pager',
+						'#weight' => 5,
+				);
+				
+			}
+		}
+		
+		
+		
+	}else {
+		$content['groups-not-found'] = array(
+				'#type' => 'markup',
+				'#prefix' => '<div class="ed-message ed-message-notice">',
+				'#markup' => t('Hi! Nothing to show here at the moment. Join some group to see latest updates from it.'),
+				'#suffix' => '</div>',
+		);
+	}
+	
+
+  return $content;
+}
+
+
+/**
+ * Student dashboard api
+ */
+function ed_dashboard_get_student_dashboard(){
+	
+	$response = array(
+			'success' => false,
+	);
+	
+	
+	$my_groups = array_values(ed_get_groups_by_user_no_subgroups());
+	
+	
+	
+	
+	$months_in_this_semester = array_keys(_ed_get_months_of_current_semester());
+	
+	$total_tasks = 0;
+	$tasks_accepted = 0;
+	$tasks_answered = 0;
+	$satisfaction_rate = 0;
+	$tasks_submitted = 0;
+	
+	$my_groups_names_tasks = array();
+	
+	if(!empty($my_groups)){
+		foreach ($my_groups as $my_group){
+			
+			//error_log(print_r($my_group, true));
+			
+			$months_tasks = array();
+			
+			//  get members and separate out admins
+			$members = ed_get_group_members($my_group, true, true, true);
+			$admins = ed_filter_admins($members);
+			
+			
+			foreach ($months_in_this_semester as $month){
+				$group_tasks = _ed_get_group_tasks_for_month_year($my_group, $month, date('Y'));
+		
+				$group_tasks_markup = '';
+				
+				foreach ($group_tasks as $key=>$group_task){
+					$total_tasks++;
+					
+				
+					$answer = ed_get_answer($group_task, $GLOBALS['user']->uid, false, $admins);
+					
+		
+					
+					switch($answer['status']) {
+						case 'unanswered':
+							$group_tasks_markup .= "<a href='".url('node/'.$group_task)."' data-toggle='popover' data-title='".t('Tudengite hinnang')."' task=".$group_task." data-trigger='hover' data-poload='".url("/dashboard/student/rating")."'><button type='button' class='btn btn-danger btn-circle'></button></a>";
+							break;
+						
+						case 'unchecked':
+							$group_tasks_markup .= "<a href='".url('node/'.$group_task)."' data-toggle='popover' data-title='".t('Tudengite hinnang')."' task=".$group_task." data-trigger='hover' data-poload='".url("/dashboard/student/rating")."'><button type='button' class='btn btn-warning unchecked btn-circle'></button>";
+							$satisfaction_rate+=_ed_get_average_satisfaction_for_task($answer['nid']);
+							$tasks_answered++;
+							$tasks_submitted++;
+							break;
+						
+						case 'accepted':
+							$group_tasks_markup .= "<a href='".url('node/'.$group_task)."' data-toggle='popover' data-title='".t('Tudengite hinnang')."' task=".$group_task." data-trigger='hover' data-poload='".url("/dashboard/student/rating")."'><button type='button' class='btn btn-success btn-circle'></button>";
+							$group_tasks[$key] = array('status' => 'accepted');
+							$satisfaction_rate+=_ed_get_average_satisfaction_for_task($answer->nid);
+							$tasks_accepted++;
+							$tasks_submitted++;
+							break;
+						
+						case 'checked':
+							$group_tasks_markup .= "<a href='".url('node/'.$group_task)."' data-toggle='popover' data-title='".t('Tudengite hinnang')."' task=".$group_task." data-trigger='hover' data-poload='".url("/dashboard/student/rating")."'><button type='button' class='btn btn-primary btn-circle'></button>";
+							$satisfaction_rate+=_ed_get_average_satisfaction_for_task($answer->nid);
+							$tasks_submitted++;
+							break;
+						
+						case 'rejected':
+							$group_tasks_markup .= "<a href='".url('node/'.$group_task)."' data-toggle='popover' data-title='".t('Tudengite hinnang')."' task=".$group_task." data-trigger='hover' data-poload='".url("/dashboard/student/rating")."'><button type='button' class='btn btn-warning btn-circle'></button>";
+							$group_tasks[$key] = array('status' => 'rejected');
+							$satisfaction_rate+=_ed_get_average_satisfaction_for_task($answer->nid);
+							$tasks_submitted++;
+							break;
+						
+					}
+					
+				}
+				
+				
+				
+				$months_tasks[$month] = $group_tasks_markup;
+			
+			}
+			
+			//Add group title
+			$wrapper = entity_metadata_wrapper('node', $my_group);
+			$group_name = $wrapper->title->value();
+			$months_tasks['group'] = $group_name;
+		
+			
+			
+			array_push($my_groups_names_tasks, $months_tasks);
+			
+		}
+		
+	}
+	
+	
+
+	
+	$response['success'] = true;
+	$response['data'] = $my_groups_names_tasks;
+	if($total_tasks>0){
+		$response['stats'] = array('tasks_accepted' => $tasks_accepted*100/$total_tasks, 'tasks_answered' => $tasks_answered*100/$total_tasks, 'satisfaction_rate' => $satisfaction_rate/$tasks_submitted);
+	}else{
+		$response['stats'] = array('tasks_accepted' => 0, 'tasks_answered' => 0, 'satisfaction_rate' => 0);
+	}
+	
+	
+	
+	return drupal_json_output($response);
+	
+}
+
+
+
+function _ed_get_average_satisfaction_for_task($answer_id){
+
+	$rating=0;
+	
+	$wrapper = entity_metadata_wrapper('node', $answer_id);
+	
+	$difficulty = $wrapper->ed_field_difficulty_feedb->value()*100/4;
+	$time_eff = $wrapper->ed_field_time_eff_feedb->value()*100/4;
+	$satisfaction = $wrapper->ed_field_satisf_feedb->value()*100/4;
+	
+	$rating += ($difficulty+$time_eff+$satisfaction)/3;
+	
+	return $rating;
+}
+
+
+/*
+ * Used by student dashboard, excludes inactive groups, subgroups
+ * groups where current user is a creator or manager
+ */
+function ed_get_groups_by_user_no_subgroups() {
+	global $user;
+	$usergroups = og_get_groups_by_user();
+	
+	$query = db_select('node', 'n')
+			->fields('n', array('nid'))
+			->condition('n.status', 1);
+	
+	//Exclude inactive groups
+	$exclude_query = new EntityFieldQuery();
+	$exclude_query->entityCondition('entity_type', 'node')
+			->entityCondition('bundle', 'ed_cluster')
+			->fieldCondition('ed_field_group_state', 'value', 0);
+	$exclude_result = $exclude_query->execute();
+	$excluded = array_keys($exclude_result['node']);
+	if ( $excluded ) {
+		$query->condition('n.nid', $excluded, 'NOT IN');
+	}
+	
+	
+	if($usergroups){
+		$query->condition('n.nid', $usergroups['node'], 'in');
+	}
+	$query->condition('n.type', 'ed_cluster');
+	$query->orderBy('TRIM(title)', 'ASC');
+	
+	
+	$nids = $query->execute()->fetchCol();
+	
+	//Exclude groups where current user is a group creator or manager
+	foreach ($nids as $key=>$nid){
+		$wrapper = entity_metadata_wrapper('node', $nid);
+	
+		if($user->uid == $wrapper->value()->uid){
+			unset($nids[$key]);
+		}
+		if(in_array(OG_ADMINISTRATOR_ROLE, og_get_user_roles('node', $nid, $user->uid, FALSE))){
+			unset($nids[$key]);
+		}
+		
+	}
+	
+	return $nids;
+}
+
+
+
+
+/**
+ * Get task rating used in student dashboard
+ */
+function ed_dashboard_get_task_rating(){
+	
+	$response = array(
+			'success' => false,
+	);
+	
+	$rating = 0;
+	
+	$answers_count = 0;
+	
+	
+	if(isset($_POST['task_id'])){
+		$answers = _get_all_answers_to_task($_POST['task_id']);
+		
+		
+		
+		if(!empty($answers)){
+			
+			foreach ($answers as $answer){
+				
+				$answers_count++;
+				
+				$rating += _ed_get_average_satisfaction_for_task( $answer->nid);
+	
+			}
+			
+			$response['rating'] = $rating/$answers_count;
+			
+		}else{
+			$response['rating'] = 0;
+		}
+	}else{
+		$response['rating'] = 0;
+	}
+	
+
+	
+	
+	
+	$response['success'] = true;
+	
+	return drupal_json_output($response);
+}
+
+
+
+function _get_all_answers_to_task($task){
+	$query = db_select('node', 'n');
+	$query->join('field_data_field_ref_to_task', 'b', 'n.nid = b.entity_id');
+	$query->fields('n', array('nid'))
+			->condition('n.type', 'ed_answer');
+	$query->condition('b.field_ref_to_task_target_id', $task);
+	
+	$result = $query->execute()->fetchAll();
+	return $result;
+}
+
+
+
+
+function _ed_get_group_tasks_for_month_year($gid, $month, $year){
+	
+	$year_month = $year.'-'.$month;
+	
+	$date = date_parse_from_format ("Y-m" ,  $year_month);
+	$num = cal_days_in_month(CAL_GREGORIAN, $date['month'], $date['year']);
+	$first_minute = mktime(0, 0, 0, $date['month'], 1, $date['year']);
+	$last_minute = mktime(23, 59, 59, $date['month'], $num, $date['year']);
+	
+	
+	$query = db_select('node', 'n');
+	$query->join('og_membership', 'ogm', "n.nid = ogm.etid AND ogm.entity_type = 'node'");
+	$query->fields('n', array('nid'))
+			->condition('ogm.gid', $gid)
+			->condition('n.nid', $gid, '!=')
+			->condition('n.type', 'ed_task')
+			->condition('n.created', array($first_minute, $last_minute), 'BETWEEN')
+			->addTag('node_access')
+			->orderBy('n.sticky', 'DESC');
+	$query->distinct();
+	$result = $query->execute()->fetchCol();
+	return $result;
+}
+
+
+/**
+ * Return a list of the months in this semester
+ */
+function _ed_get_months_of_current_semester(){
+	
+	$current_month = format_date(time(), 'medium','n');
+	
+
+	
+	if($current_month >= 2 || $current_month <= 7){
+		//Second semester, Feb-Jul
+		return array(2 => t('February'), 3 => t('March'), 4 => t('April'), 5 => t('May'), 6 => t('June'), 7 => t('July'));
+		
+	
+	}else if($current_month == 1 || $current_month > 7){
+		//First semester, Aug-Jan
+		return array(8 => t('August'), 9 => t('September'), 10 => t('October'), 11 => t('November'), 12 => t('December'), 1 => t('January'));
+	}
+
 }
 
 /**
