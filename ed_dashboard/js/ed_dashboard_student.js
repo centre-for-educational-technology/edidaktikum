@@ -4,7 +4,17 @@
 
 
 
+
+      $('#student-dash-table').bootstrapTable({
+        formatLoadingMessage: function () {
+          return Drupal.t('Loading')+'...';
+        }
+
+      });
+
+
       $('#student-dash-table').on('load-success.bs.table', function (e, data) {
+
 
         $tasks_answered = data.stats.tasks_answered;
 
@@ -125,7 +135,7 @@
                 "</div>    ");
             }
           });
-          return '<div id="'+ div_id +'">Loading...</div>';
+          return '<div id="'+ div_id +'">'+Drupal.t('Loading')+'...</div>';
         }
 
       });
