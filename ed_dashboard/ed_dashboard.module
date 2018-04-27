@@ -241,7 +241,9 @@ function ed_dashboard_page() {
 	$group_nids = _ed_dashboard_get_current_user_groups();
 	if (!empty($group_nids)) {
 		
-		if(!empty(ed_get_groups_by_user_no_subgroups())){
+		$check_groups = ed_get_groups_by_user_no_subgroups();
+		
+		if(!empty($check_groups)){
 			
 			$this_semester_months = _ed_get_months_of_current_semester();
 			$this_semester_months_markup = '';
