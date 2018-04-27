@@ -253,7 +253,7 @@ function ed_dashboard_page() {
 			
 			$content['student_dashboard']['charts']['done'] = array(
 					'#type' => 'markup',
-					'#markup' => '<div class="col-md-4"><h2 class="text-center">'.t("Tehtud tööd").'</h2><svg id="animated-chart-done" class="animated-chart" viewbox="0 0 100 100">
+					'#markup' => '<div class="col-md-4"><h4 class="text-center">'.t("Esitatud ülesanded").'</h4><svg id="animated-chart-done" class="animated-chart" viewbox="0 0 100 100">
 			  <circle cx="50" cy="50" r="45"/>
 			  <path id="progress-done" stroke-linecap="round" stroke-width="5" stroke="#fff" fill="none"
 			        d="M50 10
@@ -266,7 +266,7 @@ function ed_dashboard_page() {
 			
 			$content['student_dashboard']['charts']['success'] = array(
 					'#type' => 'markup',
-					'#markup' => '<div class="col-md-4"><h2 class="text-center">'.t("Edukuse määr").'</h2><svg id="animated-chart-success" class="animated-chart" viewbox="0 0 100 100">
+					'#markup' => '<div class="col-md-4"><h4 class="text-center">'.t("Edukuse määr").'</h4><svg id="animated-chart-success" class="animated-chart" viewbox="0 0 100 100">
 			  <circle cx="50" cy="50" r="45"/>
 			  <path id="progress-success" stroke-linecap="round" stroke-width="5" stroke="#fff" fill="none"
 			        d="M50 10
@@ -281,7 +281,7 @@ function ed_dashboard_page() {
 			
 			$content['student_dashboard']['charts']['satisfaction'] = array(
 					'#type' => 'markup',
-					'#markup' => '<div class="col-md-4"><h2 class="text-center">'.t("Rahulolu määr").'</h2><svg id="animated-chart-satisfaction" class="animated-chart" viewbox="0 0 100 100">
+					'#markup' => '<div class="col-md-4"><h4 class="text-center">'.t("Rahulolu ülesannetega").'</h4><svg id="animated-chart-satisfaction" class="animated-chart" viewbox="0 0 100 100">
 			  <circle cx="50" cy="50" r="45"/>
 			  <path id="progress-satisfaction" stroke-linecap="round" stroke-width="5" stroke="#fff" fill="none"
 			        d="M50 10
@@ -449,12 +449,18 @@ function ed_dashboard_get_student_dashboard(){
 	}
 	
 	
-
-	
 	$response['success'] = true;
 	$response['data'] = $my_groups_names_tasks;
+	
+	if($tasks_submitted>0){
+		$satisfaction_rate = $satisfaction_rate/$tasks_submitted;
+	}else{
+		$satisfaction_rate = 0;
+	}
+	
+	
 	if($total_tasks>0){
-		$response['stats'] = array('tasks_accepted' => $tasks_accepted*100/$total_tasks, 'tasks_answered' => $tasks_answered*100/$total_tasks, 'satisfaction_rate' => $satisfaction_rate/$tasks_submitted);
+		$response['stats'] = array('tasks_accepted' => $tasks_accepted*100/$total_tasks, 'tasks_answered' => $tasks_answered*100/$total_tasks, 'satisfaction_rate' => $satisfaction_rate);
 	}else{
 		$response['stats'] = array('tasks_accepted' => 0, 'tasks_answered' => 0, 'satisfaction_rate' => 0);
 	}
