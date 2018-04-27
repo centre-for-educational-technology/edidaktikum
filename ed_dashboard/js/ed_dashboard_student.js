@@ -6,10 +6,11 @@
 
       $('#student-dash-table').on('load-success.bs.table', function (e, data) {
 
+        $tasks_answered = data.stats.tasks_answered;
 
-        $tasks_answered = Math.round(30);
+        $tasks_accepted = data.stats.tasks_accepted;
 
-        $tasks_accepted = Math.round(80);
+        $satisfaction_rate = data.stats.satisfaction_rate;
 
         //
         // $('svg.circular-chart.orange text.percentage').text($tasks_answered+'%');
@@ -69,7 +70,7 @@
 
 
         //Chart animation satisfaction rate
-        $('svg#animated-chart-satisfaction text').text($tasks_accepted+'%');
+        $('svg#animated-chart-satisfaction text').text($satisfaction_rate+'%');
 
         var count_satisfaction = $(('#count-satisfaction'));
         $({ Counter: 0 }).animate({ Counter: count_satisfaction.text() }, {
@@ -84,7 +85,7 @@
         var progress_satisfaction = s_satisfaction.select('#progress-satisfaction');
 
         progress_satisfaction.attr({strokeDasharray: '0, 251.2'});
-        Snap.animate(0,251.2*$tasks_accepted/100, function( value ) {
+        Snap.animate(0,251.2*$satisfaction_rate/100, function( value ) {
           progress_satisfaction.attr({ 'stroke-dasharray':value+',251.2'});
         }, 5000);
 
