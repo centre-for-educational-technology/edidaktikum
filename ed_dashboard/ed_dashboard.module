@@ -390,10 +390,11 @@ function ed_dashboard_get_student_dashboard(){
 				
 					$answer = ed_get_answer($group_task, $GLOBALS['user']->uid, false, $admins);
 					
-		
+					
 					
 					switch($answer['status']) {
 						case 'unanswered':
+							
 							$group_tasks_markup .= "<a href='".url('node/'.$group_task)."' data-toggle='popover' data-title='".t('Tudengite hinnang')."' task=".$group_task." data-trigger='hover' data-poload='".url("/dashboard/student/rating")."'><button type='button' class='btn btn-danger btn-circle'></button></a>";
 							break;
 						
@@ -419,7 +420,9 @@ function ed_dashboard_get_student_dashboard(){
 							break;
 						
 						case 'rejected':
+							
 							$group_tasks_markup .= "<a href='".url('node/'.$group_task)."' data-toggle='popover' data-title='".t('Tudengite hinnang')."' task=".$group_task." data-trigger='hover' data-poload='".url("/dashboard/student/rating")."'><button type='button' class='btn btn-warning btn-circle'></button>";
+							
 							$group_tasks[$key] = array('status' => 'rejected');
 							$satisfaction_rate+=_ed_get_average_satisfaction_for_task($answer->nid);
 							$tasks_submitted++;
@@ -474,16 +477,29 @@ function ed_dashboard_get_student_dashboard(){
 
 
 function _ed_get_average_satisfaction_for_task($answer_id){
-
-	$rating=0;
+	
+	$difficulty = 0;
+	$time_eff = 0;
+	$satisfaction = 0;
 	
 	$wrapper = entity_metadata_wrapper('node', $answer_id);
 	
-	$difficulty = $wrapper->ed_field_difficulty_feedb->value()*100/4;
-	$time_eff = $wrapper->ed_field_time_eff_feedb->value()*100/4;
-	$satisfaction = $wrapper->ed_field_satisf_feedb->value()*100/4;
+
+	if($wrapper->__isset('ed_field_difficulty_feedb')){
+		$difficulty = $wrapper->ed_field_difficulty_feedb->value()*100/4;
+	}
 	
-	$rating += ($difficulty+$time_eff+$satisfaction)/3;
+	if($wrapper->__isset('ed_field_time_eff_feedb')){
+		$time_eff = $wrapper->ed_field_time_eff_feedb->value()*100/4;
+	}
+	
+	if($wrapper->__isset('ed_field_satisf_feedb')){
+		$satisfaction = $wrapper->ed_field_satisf_feedb->value()*100/4;
+	}
+	
+	
+	
+	$rating = ($difficulty+$time_eff+$satisfaction)/3;
 	
 	return $rating;
 }
