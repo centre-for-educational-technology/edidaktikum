@@ -395,7 +395,7 @@ function ed_dashboard_get_student_dashboard(){
 					switch($answer['status']) {
 						case 'unanswered':
 							
-							$group_tasks_markup .= "<a href='".url('node/'.$group_task)."' data-toggle='popover' data-title='".t('Tudengite hinnang')."' task=".$group_task." data-trigger='hover' data-poload='".url("/dashboard/student/rating")."'><button type='button' class='btn btn-danger btn-circle'></button></a>";
+							$group_tasks_markup .= "<a href='".url('node/'.$group_task)."' data-toggle='popover' data-title='".t('Tudengite hinnang')."' task=".$group_task." data-trigger='hover' data-poload='".url("/dashboard/student/rating")."'><button type='button' class='btn btn-default btn-circle'></button></a>";
 							break;
 						
 						case 'unchecked':
@@ -421,7 +421,7 @@ function ed_dashboard_get_student_dashboard(){
 						
 						case 'rejected':
 							
-							$group_tasks_markup .= "<a href='".url('node/'.$group_task)."' data-toggle='popover' data-title='".t('Tudengite hinnang')."' task=".$group_task." data-trigger='hover' data-poload='".url("/dashboard/student/rating")."'><button type='button' class='btn btn-warning btn-circle'></button>";
+							$group_tasks_markup .= "<a href='".url('node/'.$group_task)."' data-toggle='popover' data-title='".t('Tudengite hinnang')."' task=".$group_task." data-trigger='hover' data-poload='".url("/dashboard/student/rating")."'><button type='button' class='btn btn-danger btn-circle'></button>";
 							
 							$group_tasks[$key] = array('status' => 'rejected');
 							$satisfaction_rate+=_ed_get_average_satisfaction_for_task($answer->nid);
