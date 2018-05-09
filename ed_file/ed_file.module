@@ -26,7 +26,7 @@ function ed_file_menu() {
 function ed_file_views_api() {
   return array(
     'api' => 3,
-    'path' => drupal_get_path('module', 'ed_file') . '/includes/views',  
+    'path' => drupal_get_path('module', 'ed_file') . '/includes/views',
   );
 }
 
@@ -38,8 +38,8 @@ function ed_file_menu_breadcrumb_alter(&$active_trail, $item) {
   $folder = null;
   if (isset($query_parameters['folder'])) {
     $folder = $query_parameters['folder'];
-  } 
-  
+  }
+
   if (!drupal_is_front_page()) {
     $end = end($active_trail);
     if ($item['href'] == $end['href']) {
@@ -131,7 +131,7 @@ function ed_file_field_extra_fields(){
       'weight' => 10,
     ),
   );
-  
+
   return $extra;
 }
 
@@ -146,13 +146,13 @@ function ed_file_listing_page() {
   $folder = null;
   if (isset($query_parameters['folder'])) {
     $folder_id = $query_parameters['folder'];
-    $folder = node_load($folder_id);  
-  } 
+    $folder = node_load($folder_id);
+  }
   $url_parameters = array();
-  if ($folder) { 
+  if ($folder) {
     $url_parameters = array('query' => array('ed_file_folder_ref' => $folder->nid));
   }
-  
+
   $content = array();
 
   $add_file_url = l(t('file'), 'node/add/ed-file', $url_parameters);
@@ -181,7 +181,7 @@ function ed_file_listing_page() {
       'data' => t('Title'),
       'field' => 'n.title',
       'sort' => 'asc',
-    ), 
+    ),
     array(
       'data' => t('Type'),
     ),
@@ -238,7 +238,7 @@ function ed_file_get_type($node) {
     $full_node = node_load($nid);
     $file_upload_field = field_get_items('node', $full_node, 'ed_file_field_file_upload');
     $mimetype = $file_upload_field[0]['filemime'];
-    return $mimetype; 
+    return $mimetype;
   }
   return "";
 }
@@ -259,7 +259,7 @@ function ed_file_get_all_files_and_folders($header, $no_limit=false) {
   $folder_id = null;
   if (isset($query_parameters['folder'])) {
     $folder_id = $query_parameters['folder'];
-  } 
+  }
 
   global $user;
   if($no_limit) {
@@ -284,8 +284,8 @@ function ed_file_get_all_files_and_folders($header, $no_limit=false) {
 
   $query->leftJoin('field_data_ed_file_folder_ref', 'folder', 'n.nid = folder.entity_id');
   $query->condition('folder.ed_file_folder_ref_target_id', $folder_id);
- 
-  $results = $query->fields('n', array('nid', 'title', 'type', 'changed'))->orderByHeader($header)->execute(); 
+
+  $results = $query->fields('n', array('nid', 'title', 'type', 'changed'))->orderByHeader($header)->execute();
   return $results;
   $nids = $query->execute()->fetchCol();
   return $nids;
@@ -381,3 +381,17 @@ function ed_file_ctools_plugin_api() {
   }
 }
 
+/**
+ * Implements hook_node_access().
+ */
+function ed_file_node_access($node, $op, $account) {
+  $type = is_string($node) ? $node : $node->type;
+
+  if ('ed_file' == $type && 'view' == $op) {
+    if (!(bool) $account->uid) {
+      return NODE_ACCESS_DENY;
+    }
+  }
+
+  return NODE_ACCESS_IGNORE;
+}
