@@ -383,18 +383,18 @@ function ed_cluster_search_page($form, &$form_state){
         '#suffix' => '</div>',
       );
     }else{
-	
+
 	    $nodes = node_load_multiple($nids);
-	    
-	
+
+
 	    $form['listing'] = ed_generate_grid_of_groups($nodes);
 	    $form['pager'] = array(
 			    '#theme' => 'pager',
 	    );
-	
+
     }
-    
-    
+
+
   }else{
     $form['listing'] = ed_all_groups_listing();
     drupal_set_title(t('Search for a group'));
@@ -657,7 +657,7 @@ function ed_cluster_my_listing_page() {
 //    uasort($mygroupallnodes, function($a, $b){
 //      return strncasecmp(trim($a->title), trim($b->title), 15);
 //    });
-	
+
 
 
 
@@ -678,7 +678,7 @@ function ed_cluster_my_listing_page() {
 //      '#element' => 1,
 //      );
     //dpm($chunks);
-	
+
 	  //XXX Bootstrap 3 integration
 	  $content['clusters'] = ed_generate_grid_of_groups($nodes);
 	  $content['pager'] = array(
@@ -706,8 +706,8 @@ function ed_all_groups_listing(){
   $og_groups = ed_cluster_get_clusters($sql_order, $remove_user_groups, false);
   if (!empty($og_groups)) {
     $nodes = node_load_multiple($og_groups);
-	
-	  
+
+
 
     $content['clusters'] = ed_generate_grid_of_groups($nodes);
     $content['pager'] = array(
@@ -722,23 +722,23 @@ function ed_all_groups_listing(){
 function ed_generate_grid_of_groups($nodes){
 	$counter = 1;
 	$row = 1;
-	
+
 	drupal_add_js('jQuery(document).ready(function(){
         jQuery(".group").matchHeight();
         });','inline');
-	
+
 	$build['row-'.$row] = array(
 			'#type' => 'markup',
 			'#prefix' => '<div class="row">',
 			'#suffix' => '</div>',
 	);
-	
-	
+
+
 	foreach($nodes as $node){
-		
+
 		if(isset($node->nid)){
-			
-			
+
+
 			$query = new EntityFieldQuery();
 			$query->entityCondition('entity_type', 'user')
 					->fieldCondition('og_user_node', 'target_id', $node->nid, '=');
@@ -778,11 +778,11 @@ function ed_generate_grid_of_groups($nodes){
 					'#markup' => $title,
 					'#suffix' => '</h3>',
 			);
-			
-			
-			
+
+
+
 			if($node->group_access[LANGUAGE_NONE][0]['value']){
-			
+
 				$build['row-'.$row]['node-'.$node->nid]['status'] = array(
 						'#type' => 'markup',
 						'#markup' => '<a class="product-list__category padding-bottom-10" href="'.'node/'.$node->nid.'">'.t('Private Group').' <i class="fa fa-lock" aria-hidden="true"></i></a>',
@@ -795,8 +795,8 @@ function ed_generate_grid_of_groups($nodes){
 						'#suffix' => '<br>',
 				);
 			}
-			
-		
+
+
 //				$build['row-grid']['row-'.$row]['node-'.$node->nid]['list-item']['list-content-admins'] = array(
 //						'#type' => 'markup',
 //						'#prefix' => '<div class="product-list__content admins">',
@@ -814,12 +814,12 @@ function ed_generate_grid_of_groups($nodes){
 //						'#prefix' => '<div class="product-list__item-info">',
 //						'#suffix' => '</div>',
 //				);
-				 
-		
-			
-			
+
+
+
+
 			if(!(og_is_member('node', $node->nid)) && $node->ed_field_group_state[LANGUAGE_NONE][0]['value']){
-				
+
 				$build['row-'.$row]['node-'.$node->nid]['button'] = array(
 						'#type' => 'markup',
 						'#markup' => '<a href="'.url('group/node/' . $node->nid . '/subscribe/og_user_node').'"><button class="price-btn" type="button">'.t('Join').'</button></a>'
@@ -830,13 +830,13 @@ function ed_generate_grid_of_groups($nodes){
 						'#markup' => '<a href="'.url('group/node/' . $node->nid . '/unsubscribe').'"><button class="price-btn leave-group" type="button">'.t('Leave').'</button></a>'
 				);
 			}
-				
-				
-			
+
+
+
 			}
-			
-			
-			
+
+
+
 //			if($counter %4 == 0 && $node != $lastNode) {
 //				$row++;
 //
@@ -846,11 +846,11 @@ function ed_generate_grid_of_groups($nodes){
 //						'#suffix' => '</div>',
 //				);
 //			}
-			
+
 			$counter++;
-			
-		
-		
+
+
+
 	}
 	return $build;
 }
@@ -892,7 +892,7 @@ function ed_generate_group_create_buttons(&$content){
 			'#type' => 'item',
 			'#title' => t(''),
 			'#markup' => l(t('New Degree Studies type group'), 'node/add/ed-cluster', $options_type1),
-	
+
 	);
 	$content['new-group-buttons']['add-new-type-2'] = array(
 			'#type' => 'item',
@@ -904,7 +904,7 @@ function ed_generate_group_create_buttons(&$content){
 			'#title' => t(''),
 			'#markup' => l(t('New Project-based Learning/Other type group'), 'node/add/ed-cluster', $options_type3),
 	);
-	
+
 	return $content;
 }
 
@@ -1020,7 +1020,7 @@ function ed_cluster_my_inactive_listing_page(){
     }
 	  //XXX Bootstrap 3 integration
 	  $content['clusters'] = ed_generate_grid_of_groups($nodes);
-	  
+
 //    $content['clusters'] = $build;
     $content['pager'] = array(
         '#theme' => 'pager',
@@ -1130,18 +1130,22 @@ function ed_listing_from_group($filler, $gnode, $type){
 
   //$content_nids = _ed_get_group_content_by_type($gnode->nid, $type);
   $nodes = node_load_multiple($content_nids);
-  $build = node_view_multiple($nodes);
-  $build['pager'] = array(
-    '#theme' => 'pager',
-    '#weight' => 5,
-  );
+
   $content['listing'] = array(
     '#type' => 'container',
     '#attributes' => array(
       'class' => array('ed-group-content-listing'),
     ),
   );
-  $content['listing']['content'] = $build;
+
+  if ($nodes) {
+    $build = node_view_multiple($nodes);
+    $build['pager'] = array(
+      '#theme' => 'pager',
+      '#weight' => 5,
+    );
+    $content['listing']['content'] = $build;
+  }
 
   return $content;
 }
@@ -1170,15 +1174,15 @@ function ed_cluster_preprocess_node(&$vars) {
       $vars['display_submitted'] = FALSE;
       $vars['classes_array'] []= 'node-dashboard';
     }
-	
+
 	  drupal_add_js(drupal_get_path('module', 'edidaktikum') . '/js/ed_likes.js', 'file');
 	  drupal_add_js(drupal_get_path('module', 'edidaktikum') . '/js/ed_share.js', 'file');
-	
+
 	  if($vars['view_mode'] == 'full'){
 		  $vars['theme_hook_suggestions'][] = 'node__ed_cluster_full';
 	  }
-    
-	 
+
+
     if ('teaser' === $vars['view_mode'] && isset($vars['group_access'][LANGUAGE_NONE][0]['value']) && 1 == $vars['group_access'][LANGUAGE_NONE][0]['value']) {
       $vars['classes_array'][] = 'ed-group-private';
     }
@@ -2588,7 +2592,7 @@ function ed_cluster_form_alter(&$form, &$form_state, $form_id) {
 
     $form['#submit'] []= "ed_cluster_form_submit_learning_outcomes";
   }
-  
+
 }
 
 function ed_cluster_form_submit_learning_outcomes($form, &$form_state) {
@@ -2603,7 +2607,7 @@ function ed_cluster_form_submit_learning_outcomes($form, &$form_state) {
       node_delete($lo_id);
     }
   }
-  
+
   //  add new
   $form_state["values"]["ed_field_learning_outcome_ref"]["und"] = [];
   foreach ($learning_outcomes as &$outcome) {
