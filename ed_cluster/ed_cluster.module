@@ -1356,12 +1356,12 @@ function ed_cluster_node_view($node, $view_mode, $langcode){
 
         // sort users alphabetically in js since hook_views_default_views_alter doesn't provide enough flexibility to sort by data inside a blob
         drupal_add_js('jQuery(document).ready(function(){
-         var og_members_container = document.querySelector(".view-og-members .view-content");
+         var og_members_container = document.querySelector(".widget.tags-cloud .tags-cloud__list");
          var og_members_sortable = [];
          for (var i = 0; i < og_members_container.childNodes.length; i++) {
             var node = og_members_container.childNodes[i];
             if (typeof node.innerHTML === "undefined") continue;
-            og_members_sortable.push({"inner" : node.innerHTML, "name" : node.innerText});
+            og_members_sortable.push({"inner" : node.innerHTML, "name" : node.childNodes[0].innerText});
          }
          og_members_sortable.sort(function(a,b){return (a.name>b.name) ? 1 : ((b.name > a.name) ? -1 : 0);});
          var og_members_used = 0;
