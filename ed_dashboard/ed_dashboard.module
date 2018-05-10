@@ -298,7 +298,7 @@ function ed_dashboard_page() {
 					'#prefix' => '<table id="student-dash-table" data-toggle="table" data-url="'.url("/dashboard/student/").'">',
 					'#markup' => '<thead>
 	    <tr>
-	        <th data-field="group">'.t("Group").'</th>'.$this_semester_months_markup.'
+	        <th data-field="group" data-formatter="nameFormatter">'.t("Group").'</th>'.$this_semester_months_markup.'
 	    </tr>
 	    </thead>',
 					'#suffix' => '</table>',
@@ -441,7 +441,7 @@ function ed_dashboard_get_student_dashboard(){
 			//Add group title
 			$wrapper = entity_metadata_wrapper('node', $my_group);
 			$group_name = $wrapper->title->value();
-			$months_tasks['group'] = $group_name;
+			$months_tasks['group'] = [$group_name, $my_group];
 		
 			
 			

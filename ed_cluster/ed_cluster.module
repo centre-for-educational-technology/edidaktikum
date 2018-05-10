@@ -2512,7 +2512,9 @@ function ed_cluster_form_alter(&$form, &$form_state, $form_id) {
 		  $form['ed_field_group_type']['und'][0]['value']['#default_value'] = $group_type;
 
 	  }
-
+	
+	  $form['ed_field_group_type']['#attributes']['style'][] = 'display:none';
+	  
 
 	  //Disabling the field causes it losing its value after any ajax call from this page (disabled in css instead)
 	  //$form['ed_field_group_type']['und']['#disabled'] = true;
