@@ -298,7 +298,7 @@ function ed_dashboard_page() {
 					'#prefix' => '<table id="student-dash-table" data-toggle="table" data-url="'.url("/dashboard/student/").'">',
 					'#markup' => '<thead>
 	    <tr>
-	        <th data-field="group">'.t("Group").'</th>'.$this_semester_months_markup.'
+	        <th data-field="group" data-formatter="nameFormatter">'.t("Group").'</th>'.$this_semester_months_markup.'
 	    </tr>
 	    </thead>',
 					'#suffix' => '</table>',
@@ -399,32 +399,32 @@ function ed_dashboard_get_student_dashboard(){
 							break;
 						
 						case 'unchecked':
-							$group_tasks_markup .= "<a href='".url('node/'.$group_task)."' data-toggle='popover' data-title='".t('Tudengite hinnang')."' task=".$group_task." data-trigger='hover' data-poload='".url("/dashboard/student/rating")."'><button type='button' class='btn btn-warning unchecked btn-circle'></button>";
+							$group_tasks_markup .= "<a href='".url('node/'.$answer['nid'])."' data-toggle='popover' data-title='".t('Tudengite hinnang')."' task=".$group_task." data-trigger='hover' data-poload='".url("/dashboard/student/rating")."'><button type='button' class='btn btn-warning unchecked btn-circle'></button>";
 							$satisfaction_rate+=_ed_get_average_satisfaction_for_task($answer['nid']);
 							$tasks_answered++;
 							$tasks_submitted++;
 							break;
 						
 						case 'accepted':
-							$group_tasks_markup .= "<a href='".url('node/'.$group_task)."' data-toggle='popover' data-title='".t('Tudengite hinnang')."' task=".$group_task." data-trigger='hover' data-poload='".url("/dashboard/student/rating")."'><button type='button' class='btn btn-success btn-circle'></button>";
+							$group_tasks_markup .= "<a href='".url('node/'.$answer['nid'])."' data-toggle='popover' data-title='".t('Tudengite hinnang')."' task=".$group_task." data-trigger='hover' data-poload='".url("/dashboard/student/rating")."'><button type='button' class='btn btn-success btn-circle'></button>";
 							$group_tasks[$key] = array('status' => 'accepted');
-							$satisfaction_rate+=_ed_get_average_satisfaction_for_task($answer->nid);
+							$satisfaction_rate+=_ed_get_average_satisfaction_for_task($answer['nid']);
 							$tasks_accepted++;
 							$tasks_submitted++;
 							break;
 						
 						case 'checked':
-							$group_tasks_markup .= "<a href='".url('node/'.$group_task)."' data-toggle='popover' data-title='".t('Tudengite hinnang')."' task=".$group_task." data-trigger='hover' data-poload='".url("/dashboard/student/rating")."'><button type='button' class='btn btn-primary btn-circle'></button>";
-							$satisfaction_rate+=_ed_get_average_satisfaction_for_task($answer->nid);
+							$group_tasks_markup .= "<a href='".url('node/'.$answer['nid'])."' data-toggle='popover' data-title='".t('Tudengite hinnang')."' task=".$group_task." data-trigger='hover' data-poload='".url("/dashboard/student/rating")."'><button type='button' class='btn btn-primary btn-circle'></button>";
+							$satisfaction_rate+=_ed_get_average_satisfaction_for_task($answer['nid']);
 							$tasks_submitted++;
 							break;
 						
 						case 'rejected':
 							
-							$group_tasks_markup .= "<a href='".url('node/'.$group_task)."' data-toggle='popover' data-title='".t('Tudengite hinnang')."' task=".$group_task." data-trigger='hover' data-poload='".url("/dashboard/student/rating")."'><button type='button' class='btn btn-danger btn-circle'></button>";
+							$group_tasks_markup .= "<a href='".url('node/'.$answer['nid'])."' data-toggle='popover' data-title='".t('Tudengite hinnang')."' task=".$group_task." data-trigger='hover' data-poload='".url("/dashboard/student/rating")."'><button type='button' class='btn btn-danger btn-circle'></button>";
 							
 							$group_tasks[$key] = array('status' => 'rejected');
-							$satisfaction_rate+=_ed_get_average_satisfaction_for_task($answer->nid);
+							$satisfaction_rate+=_ed_get_average_satisfaction_for_task($answer['nid']);
 							$tasks_submitted++;
 							break;
 						
@@ -441,7 +441,7 @@ function ed_dashboard_get_student_dashboard(){
 			//Add group title
 			$wrapper = entity_metadata_wrapper('node', $my_group);
 			$group_name = $wrapper->title->value();
-			$months_tasks['group'] = $group_name;
+			$months_tasks['group'] = [$group_name, $my_group];
 		
 			
 			

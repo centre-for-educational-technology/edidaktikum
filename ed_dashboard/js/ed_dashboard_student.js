@@ -1,16 +1,22 @@
+//Group name formatter for table
+function nameFormatter(value) {
+
+  return '<a href="'+Drupal.settings.basePath +'node/' + value[1] + '">' + value[0] + '</a>';
+}
+
+
 (function ($) {
   Drupal.behaviors.ed_dashboard_student = {
     attach: function(context, settings) {
 
 
-
-
       $('#student-dash-table').bootstrapTable({
         formatLoadingMessage: function () {
           return Drupal.t('Loading')+'...';
-        }
+        },
 
       });
+
 
 
       $('#student-dash-table').on('load-success.bs.table', function (e, data) {
@@ -22,17 +28,6 @@
 
         $satisfaction_rate = data.stats.satisfaction_rate;
 
-        //
-        // $('svg.circular-chart.orange text.percentage').text($tasks_answered+'%');
-        //
-        // $('svg.circular-chart.orange path.circle').attr("stroke-dasharray", $tasks_answered+", 100");
-        //
-
-        // $('svg.circular-chart.green text.percentage').text($tasks_accepted+'%');
-        //
-        // $('svg.circular-chart.green path.circle').attr("stroke-dasharray", $tasks_accepted+", 100");
-        //
-        //
 
 
         //Chart animation tasks done
@@ -140,23 +135,6 @@
 
       });
 
-
-// $.ajax({
-//   url: Drupal.settings.basePath + Drupal.settings.pathPrefix + 'dashboard/student',
-//   dataType: 'json',
-//   type: 'POST',
-//   success: function(response) {
-//     if (true == response.success) {
-//
-//
-//       $('#table').bootstrapTable({
-//         data: response.data
-//       });
-//
-//
-//     }
-//   }
-// });
 
 }
 };

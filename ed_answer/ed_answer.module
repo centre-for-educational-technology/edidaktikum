@@ -87,7 +87,7 @@ function ed_answer_node_view($node, $view_mode, $langcode){
     }elseif ('teaser' == $view_mode) {
       $teaser = true;
       $node->title = ed_answer_get_answer_title($node, $teaser);
-      
+
     }
   }
 }
@@ -95,39 +95,39 @@ function ed_answer_node_view($node, $view_mode, $langcode){
 
 function ed_add_js_to_answer_form($form_element, &$form_state) {
 	drupal_add_library('system','ui.slider');
-	
+
 	//To get the field value of the existing node use
 	//$form_element['#node']->ed_field_difficulty_feedb);
-	
+
 	if(!empty($form_state['values']['ed_field_difficulty_feedb'])){
 		$initial_difficulty_feedb = $form_state['values']['ed_field_difficulty_feedb'][LANGUAGE_NONE];
-		
+
 	}else{
 		$initial_difficulty_feedb = 1;
 	}
-	
+
 	if(!empty($form_state['values']['ed_field_satisf_feedb'])){
 		$initial_satisf_feedb = $form_state['values']['ed_field_satisf_feedb'][LANGUAGE_NONE];
 	}else{
 		$initial_satisf_feedb = 4;
 	}
-	
+
 	if(!empty($form_state['values']['ed_field_time_eff_feedb'])){
 		$initial_time_eff_feedb = $form_state['values']['ed_field_time_eff_feedb'][LANGUAGE_NONE];
 	}else{
 		$initial_time_eff_feedb = 1;
 	}
-	
-	
+
+
 	$settings = array('initial_difficulty_feedb' => $initial_difficulty_feedb, 'initial_satisf_feedb' => $initial_satisf_feedb, 'initial_time_eff_feedb' => $initial_time_eff_feedb);
-	
-	
+
+
 	drupal_add_js(array('ed_answer' => $settings), array('type' => 'setting'));
 	drupal_add_js(drupal_get_path('module', 'ed_answer') . '/ed_answer_js.js');
-	
-	
+
+
 	return $form_element;
-	
+
 }
 
 /**
@@ -139,13 +139,13 @@ function ed_answer_form_alter(&$form, &$form_state, $form_id){
     if (empty($form['#node']->nid)) {
       drupal_set_title(t('Create Answer'));
     }
-    
-	
-	
-	  $form['#after_build'] = array('ed_add_js_to_answer_form');
-	
 
-    if(isset($form['#node']->field_ref_to_task)){      
+
+
+	  $form['#after_build'] = array('ed_add_js_to_answer_form');
+
+
+    if(isset($form['#node']->field_ref_to_task)){
       $reftotask = $form['#node']->field_ref_to_task['und'][0]['target_id'];
     }
     else{
@@ -221,13 +221,13 @@ function ed_answer_form_alter(&$form, &$form_state, $form_id){
       $test[] = taxonomy_term_load($term['#options']['entity']->tid);
     }
     $term_nr = 0;
-    
-	  
-	  
+
+
+
 	  $form['ed_field_difficulty_feedb']['#prefix'] = '<div role="alert" class="alert alert-info feedback-notice"> '.t('Tagasiside ei ole isikustatud').'</div>';
 	  $form['ed_field_difficulty_feedb'][LANGUAGE_NONE]['#default_value'] = 1;
 	  $form['ed_field_time_eff_feedb'][LANGUAGE_NONE]['#default_value'] = 1;
-    
+
     $form['ed_answer_task_cat'] = array(
       '#tree' => TRUE,
       '#type' => 'fieldset',
@@ -329,14 +329,14 @@ function ed_answer_form_alter(&$form, &$form_state, $form_id){
   }else if($form_id == 'comment_node_ed_answer_form'){
     $isgadmin = ed_answer_is_group_manager($form['#node']->og_group_ref[LANGUAGE_NONE][0]['target_id']);
     if(!$isgadmin){
-      $form['ed_answer_status']['#access'] = FALSE;   
-      $form['ed_answer_grade']['#access'] = FALSE; 
+      $form['ed_answer_status']['#access'] = FALSE;
+      $form['ed_answer_grade']['#access'] = FALSE;
     }else{
       $form['#submit'][] = 'ed_answer_redirect_to_taskmanager';
     }
 
     $form['ed_answer_grade']['und']['#prefix'] = $form['ed_answer_grade']['und']['#prefix'] . "<div data-grade_limiter>";
-    $form['ed_answer_grade']['und']['#suffix'] = "</div>" . $form['ed_answer_grade']['und']['#suffix']; 
+    $form['ed_answer_grade']['und']['#suffix'] = "</div>" . $form['ed_answer_grade']['und']['#suffix'];
 
   }
 
@@ -370,7 +370,7 @@ function _ed_answer_get_user_comments($nid){
 function ed_answer_comment_insert($comment){
   if($comment->node_type=='comment_node_ed_answer'){
 
-    /*  I'm assuming this code was the old way of determining the actionable status on the dashboard which ended up bugged with the introduction of multiple teachers. 
+    /*  I'm assuming this code was the old way of determining the actionable status on the dashboard which ended up bugged with the introduction of multiple teachers.
 
     $usercomments = comment_load_multiple(_ed_answer_get_user_comments($comment->nid));
     foreach($usercomments as $usercomment){
@@ -379,20 +379,20 @@ function ed_answer_comment_insert($comment){
     }
     */
 
-    $node = node_load($comment->nid); 
-    $task = node_load($node->field_ref_to_task[LANGUAGE_NONE][0]['target_id']);   
+    $node = node_load($comment->nid);
+    $task = node_load($node->field_ref_to_task[LANGUAGE_NONE][0]['target_id']);
     $recipient = user_load($node->uid);
     $teacher = user_load($comment->uid);
     $teacher_fullname = edidaktikum_get_full_name_for_user_account($teacher);
     $language = user_preferred_language($recipient);
     $params = array(
       'fullname' => $teacher_fullname,
-      'taskname' => $task->title,      
+      'taskname' => $task->title,
       'answerurl' => url('node/' . $node->nid, array('absolute' => TRUE)),
       'status' => $comment->ed_answer_status[LANGUAGE_NONE][0]['value'],
     );
     drupal_mail('ed_answer', 'answer_status_modified', $recipient->mail, $language, $params, EDIDAKTIKUM_NO_REPLY_EMAIL, TRUE);
-  }  
+  }
 }
 
 /**
@@ -400,8 +400,8 @@ function ed_answer_comment_insert($comment){
  */
 function ed_answer_mail($key, &$message, $params){
   if ('answer_status_modified' == $key)  {
-    $options = array('langcode' => $message['language']->language);    
-    switch($params['status']){      
+    $options = array('langcode' => $message['language']->language);
+    switch($params['status']){
       case 'accepted':
         $action = t('accepted');
         break;
@@ -443,7 +443,7 @@ function ed_answer_check_tid_parents($tid){
   $result = $query->execute()->fetchCol();
   return $result[0];
 }
- 
+
 
 
 function ed_answer_check_tid_parent($tid){
@@ -481,6 +481,10 @@ function ed_answer_node_access($node, $op, $account) {
       if (!$task) {
         return NODE_ACCESS_DENY;
       }
+    }
+  } else if ('ed_answer' == $type && 'view' == $op) {
+    if (!(bool) $account->uid) {
+      return NODE_ACCESS_DENY;
     }
   }
 
@@ -544,7 +548,7 @@ function ed_answer_comment_view_alter(&$build){
   $gid = $build['#node']->og_group_ref[LANGUAGE_NONE][0]['target_id'];
   $group = node_load($gid);
   $admins = _ed_cluster_get_group_admins($group, true);
-  if(!empty($build['comment_body'])){	  
+  if(!empty($build['comment_body'])){
     if(!in_array($build['comment_body']['#object']->uid, $admins)){
       $build['ed_answer_status']['#access'] = FALSE;
 
@@ -555,11 +559,11 @@ function ed_answer_comment_view_alter(&$build){
 function ed_answer_node_update($node){
   if($node->type == 'ed_answer'){
     $comments = comment_load_multiple(comment_get_thread($node, COMMENT_MODE_FLAT, 100));
-    foreach($comments as $comment){      
+    foreach($comments as $comment){
       if($comment->ed_answer_status[LANGUAGE_NONE][0]['value'] == 'rejected'){
         $comment->ed_answer_status[LANGUAGE_NONE][0]['value'] = 'unchecked';
         comment_save($comment);
       }
-    }    
+    }
   }
 }

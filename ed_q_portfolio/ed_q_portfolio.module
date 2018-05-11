@@ -921,6 +921,7 @@ function _ed_q_portfolio_field_level_list(){
   foreach($results as $term) {
     $options[$term->tid] = t($term->name);
   }
+  asort($options);
   return $options;
 }
 

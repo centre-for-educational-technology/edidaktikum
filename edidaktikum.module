@@ -18,7 +18,7 @@ define('EDIDAKTIKUM_NO_REPLY_EMAIL', 'no-reply@edidaktikum.ee');
 function edidaktikum_init() {
 	//Used by ed_g_drive Google Drive files integration
 	drupal_add_js('https://apis.google.com/js/api.js?onload=loadPicker', array('type' => 'external', 'defer' => 'defer'));
-	
+
 	$uservoice_api_key = variable_get('ed_uservoice_api_key');
   if (!empty($uservoice_api_key)) {
     global $language;
@@ -103,7 +103,7 @@ function edidaktikum_menu() {
     'type' => MENU_NORMAL_ITEM,
     'weight' => 2,
   );
-	
+
 	$items['admin/config/edidaktikum/pp-page'] = array(
 			'title' => 'eDidaktikum Privacy Policy page',
 			'description' => 'Configure edidaktikum Privacy Policy page.',
@@ -244,12 +244,12 @@ function edidaktikum_menu() {
 
 
 function edidaktikum_node_delete_page($groups, $deletedtitle){
-  
+
   $content = array();
   parse_str($groups, $groupsarray);
 
   $groups = node_load_multiple($groupsarray);
-  
+
   drupal_set_title($deletedtitle);
   $content['delete-page'] = array(
     '#type' => 'markup',
@@ -269,7 +269,7 @@ function edidaktikum_node_delete_page($groups, $deletedtitle){
       '#suffix' => '</li>',
     );
   }
-  
+
   return $content;
 }
 
@@ -278,10 +278,10 @@ function testimeee($gid, $string = ''){
   //used some code from Views module.
   $group_members_ids = og_get_group_members_properties(node_load($gid), array(), 'members', 'node');
   $group_members = user_load_multiple($group_members_ids);
-  
+
   $array = drupal_explode_tags($string);
   $last_string = trim(array_pop($array));
-  
+
   $allmembers = array();
   foreach($group_members as $member) {
     $allmembers[$member->uid] = check_plain($member->ed_field_full_name[LANGUAGE_NONE][0]['safe_value']);
@@ -292,7 +292,7 @@ function testimeee($gid, $string = ''){
       $result[$uid] = check_plain($name);
     }
   }
-  
+
   $matches = array();
   $prefix = count($array) ? implode(', ', $array) . ', ' : '';
   foreach ($result as $uid => $account) {
@@ -303,7 +303,7 @@ function testimeee($gid, $string = ''){
       }
       $matches[$prefix . $userobj->name] = check_plain($account);
     }
-  
+
   drupal_json_output($matches);
 }
 
@@ -357,7 +357,7 @@ function edidaktikum_node_view($node, $view_mode, $langcode){
   if(in_array($node->type, $typestochange) && $view_mode=='teaser'){
     if(!empty($node->ed_field_featured_image)){
       $imgpath = image_style_url('thumbnail', $node->ed_field_featured_image[LANGUAGE_NONE][0]['uri']);
-      
+
       $node->content['cover-image'] = array(
         '#type' => 'markup',
         '#weight' => 55,
@@ -365,7 +365,7 @@ function edidaktikum_node_view($node, $view_mode, $langcode){
         '#prefix' => '<div class="cover-image">',
         '#suffix' => '</div>',
       );
-      
+
     }
   }
 }
@@ -376,15 +376,15 @@ function edidaktikum_node_view($node, $view_mode, $langcode){
  * This is done since hook_node_view never gets called if the node is rendered by Ctools.
  */
 function edidaktikum_ctools_render_alter($info, $page, $context) {
-  
-  
+
+
   $node = node_load($context['args'][0]);
-  
+
   if(!empty($node) && $node->status==0){
     $nodetype = node_type_get_type($node);
-    
+
     $markup = '<p class="unpublished-warning">'.t('@type <b>@title</b> has been created, but not published. At the moment, only you can see it.', array('@type' => $nodetype->name, '@title' => $node->title)).'</p>';
-    
+
     drupal_set_message($markup);
   }
 }
@@ -459,7 +459,7 @@ function _ed_get_sorting_options($form_state){
 
 
 function _ed_get_sorting_options_submit($form, &$form_state) {
-  
+
   $sortorder = $form_state['values']['select'];
   switch($sortorder){
     case t('Latest First'):
@@ -514,7 +514,7 @@ function edidaktikum_form_alter(&$form, $form_state, $form_id) {
       $form['uid']['#autocomplete_path'] = 'edidaktikum/autocomplete/from/group/'.$form_state['view']->args[1];
     }
   }
-  
+
   // If not a blog post, then student can only set Group content visibility to private
   // Remove any other options from the node edit form
   if (!empty($form['#node_edit_form']) && isset($form['group_content_access'])) {
@@ -638,7 +638,7 @@ function edidaktikum_user_view_alter(&$build) {
       $build['ed_field_full_name'][0]['#markup'] = '<a href="mailto:'.$build['#account']->mail.'?subject=eDidaktikum e-mail">'.$build['#account']->mail.'</a>';
     }
     if(!isset($build['ed_user_view_email'])){
-    
+
     }
     if (isset($build['og_user_node']) && is_array($build['og_user_node']) && !empty($build['og_user_node']) && !empty($build['og_user_node']['#items'])) {
       $items_nodes = node_load_multiple(array_map(function ($item) {
@@ -674,7 +674,7 @@ function edidaktikum_user_view_alter(&$build) {
     if (isset($build['hybridauth_identities'])) {
       unset($build['hybridauth_identities']);
     }
-    
+
   }
 }
 
@@ -683,7 +683,7 @@ function edidaktikum_user_view_alter(&$build) {
  */
 function _edidaktikum_node_delete_redirect($form, &$form_state) {
   // Check if group set and grab first group URL
-  
+
   /*
   if (!empty($form['#node']->og_group_ref[LANGUAGE_NONE])) {
     $group_url = url('node/' . $form['#node']->og_group_ref[LANGUAGE_NONE][0]['target_id'], array('absolute' => TRUE));
@@ -757,7 +757,7 @@ function _edidaktikum_node_delete_redirect($form, &$form_state) {
         }
         break;
   }
-  
+
   // Force redirect if $redirect_url not empty
   if (!empty($redirect_url)) {
     $form_state['redirect'] = $redirect_url;
@@ -1029,7 +1029,7 @@ function ed_get_likes($nid){
       ->fields('enl', array('uid'))
       ->condition('enl.nid', $nid)
       ->countQuery()->execute()->fetchField();
-  
+
   return $likescount;
 }
 
@@ -1043,7 +1043,7 @@ function ed_get_views($nid){
   }else{
     return 0;
   }
-  
+
 }
 /*
 function edidaktikum_views_query_alter(&$view, &$query){
@@ -1187,7 +1187,7 @@ function ed_get_group_members($gid, $b_full_name = false, $b_roles = false, $b_s
         $missing []= $member['uid'];
       }
     }
-    
+
     if (count($missing) > 0) {
       $members_with_datas = db_query('SELECT uid, data FROM users WHERE uid IN (:uids)', [':uids' => $missing])->fetchAll(PDO::FETCH_ASSOC);
       foreach ($members_with_datas as &$member_with_data) {
@@ -1469,14 +1469,14 @@ function ed_get_group_bookmarks($gid) {
 	$q->orderBy('ogm.created', 'DESC' );
 	$q->join('node', 'n', 'n.nid = ogm.etid AND n.type = \'ed_bookmark\' AND n.status = 1');
 	$q->fields('n', ['nid', 'title']);
-	
+
 	$q->join('field_data_ed_bookmark_url', 'dd', 'dd.entity_id = ogm.etid');
 	$q->fields('dd', ['ed_bookmark_url_value']);
-	
+
 	$bookmarks = $q->execute()->fetchAll(PDO::FETCH_ASSOC);
-	
+
 	$bookmarks = ed_util_rename_key_of_arrays($bookmarks, 'ed_bookmark_url_value', 'url');
-	
+
 	return $bookmarks;
 }
 
@@ -1490,7 +1490,7 @@ function ed_get_group_files($gid) {
 	$q->join('node', 'n', 'n.nid = ogm.etid AND n.type = \'ed_files\' AND n.status = 1');
 	$q->fields('n', ['nid', 'title']);
 
-	
+
 	$files = $q->execute()->fetchAll(PDO::FETCH_ASSOC);
 
 	return $files;
@@ -1506,9 +1506,61 @@ function ed_get_group_learning_resources($gid){
 	$q->orderBy('ogm.created', 'DESC' );
 	$q->join('node', 'n', 'n.nid = ogm.etid AND n.type = \'ed_learning_resource\' AND n.status = 1');
 	$q->fields('n', ['nid', 'title']);
-	
-	
+
+
 	$learning_resources = $q->execute()->fetchAll(PDO::FETCH_ASSOC);
-	
+
 	return $learning_resources;
+}
+
+/**
+ * Implements hook_query_node_access_alter().
+ *
+ * Used module "Node View Permissions" as a base for implementation logic
+ */
+function edidaktikum_query_node_access_alter(QueryAlterableInterface $query) {
+   global $user;
+
+  // Read meta-data from query, if provided.
+  if (!$account = $query->getMetaData('account')) {
+    $account = $user;
+  }
+  if (!$op = $query->getMetaData('op')) {
+    $op = 'view';
+  }
+
+  // If $account can bypass node access, or there are no node access modules,
+  // or the operation is 'view' and the $acount has a global view grant (i.e.,
+  // a view grant for node ID 0), we don't need to alter the query.
+  if (user_access('bypass node access', $account)) {
+    return;
+  }
+
+  //if viewing the node, deny anonymous access to certain types
+  if ($op == 'view' && !(bool)$user->uid) {
+    $tables = $query->getTables();
+    // @see _node_query_node_access_alter().
+    $node_table_alias = FALSE;
+    foreach ($tables as $alias => $table) {
+      if ($table['table'] == 'node') {
+        $node_table_alias = $alias;
+        break;
+      }
+    }
+
+    if (!$node_table_alias) {
+      //The array internal pointer should be reset before getting the first key bacause it can be NULL here.
+      reset($tables);
+      // If the query has 'node_access' meta tag, we can assume that there should be a nid field.
+      $query->join('node', 'n', 'n.nid = ' . key($tables) . '.nid');
+      $node_table_alias = 'n';
+    }
+
+    if ($node_table_alias) {
+      $alias = $node_table_alias;
+      $query->condition("$alias.type", 'ed_blog', '<>');
+      $query->condition("$alias.type", 'ed_answer', '<>');
+      $query->condition("$alias.type", 'ed_file', '<>');
+    }
+  }
 }
