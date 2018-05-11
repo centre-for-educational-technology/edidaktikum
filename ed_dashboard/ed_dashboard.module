@@ -399,32 +399,32 @@ function ed_dashboard_get_student_dashboard(){
 							break;
 						
 						case 'unchecked':
-							$group_tasks_markup .= "<a href='".url('node/'.$group_task)."' data-toggle='popover' data-title='".t('Tudengite hinnang')."' task=".$group_task." data-trigger='hover' data-poload='".url("/dashboard/student/rating")."'><button type='button' class='btn btn-warning unchecked btn-circle'></button>";
+							$group_tasks_markup .= "<a href='".url('node/'.$answer['nid'])."' data-toggle='popover' data-title='".t('Tudengite hinnang')."' task=".$group_task." data-trigger='hover' data-poload='".url("/dashboard/student/rating")."'><button type='button' class='btn btn-warning unchecked btn-circle'></button>";
 							$satisfaction_rate+=_ed_get_average_satisfaction_for_task($answer['nid']);
 							$tasks_answered++;
 							$tasks_submitted++;
 							break;
 						
 						case 'accepted':
-							$group_tasks_markup .= "<a href='".url('node/'.$group_task)."' data-toggle='popover' data-title='".t('Tudengite hinnang')."' task=".$group_task." data-trigger='hover' data-poload='".url("/dashboard/student/rating")."'><button type='button' class='btn btn-success btn-circle'></button>";
+							$group_tasks_markup .= "<a href='".url('node/'.$answer['nid'])."' data-toggle='popover' data-title='".t('Tudengite hinnang')."' task=".$group_task." data-trigger='hover' data-poload='".url("/dashboard/student/rating")."'><button type='button' class='btn btn-success btn-circle'></button>";
 							$group_tasks[$key] = array('status' => 'accepted');
-							$satisfaction_rate+=_ed_get_average_satisfaction_for_task($answer->nid);
+							$satisfaction_rate+=_ed_get_average_satisfaction_for_task($answer['nid']);
 							$tasks_accepted++;
 							$tasks_submitted++;
 							break;
 						
 						case 'checked':
-							$group_tasks_markup .= "<a href='".url('node/'.$group_task)."' data-toggle='popover' data-title='".t('Tudengite hinnang')."' task=".$group_task." data-trigger='hover' data-poload='".url("/dashboard/student/rating")."'><button type='button' class='btn btn-primary btn-circle'></button>";
-							$satisfaction_rate+=_ed_get_average_satisfaction_for_task($answer->nid);
+							$group_tasks_markup .= "<a href='".url('node/'.$answer['nid'])."' data-toggle='popover' data-title='".t('Tudengite hinnang')."' task=".$group_task." data-trigger='hover' data-poload='".url("/dashboard/student/rating")."'><button type='button' class='btn btn-primary btn-circle'></button>";
+							$satisfaction_rate+=_ed_get_average_satisfaction_for_task($answer['nid']);
 							$tasks_submitted++;
 							break;
 						
 						case 'rejected':
 							
-							$group_tasks_markup .= "<a href='".url('node/'.$group_task)."' data-toggle='popover' data-title='".t('Tudengite hinnang')."' task=".$group_task." data-trigger='hover' data-poload='".url("/dashboard/student/rating")."'><button type='button' class='btn btn-danger btn-circle'></button>";
+							$group_tasks_markup .= "<a href='".url('node/'.$answer['nid'])."' data-toggle='popover' data-title='".t('Tudengite hinnang')."' task=".$group_task." data-trigger='hover' data-poload='".url("/dashboard/student/rating")."'><button type='button' class='btn btn-danger btn-circle'></button>";
 							
 							$group_tasks[$key] = array('status' => 'rejected');
-							$satisfaction_rate+=_ed_get_average_satisfaction_for_task($answer->nid);
+							$satisfaction_rate+=_ed_get_average_satisfaction_for_task($answer['nid']);
 							$tasks_submitted++;
 							break;
 						
