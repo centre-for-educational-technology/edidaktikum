@@ -1566,3 +1566,15 @@ function edidaktikum_query_node_access_alter(QueryAlterableInterface $query) {
     }
   }
 }
+
+/**
+ * Implements hook_hybridauth_user_insert().
+ */
+function edidaktikum_hybridauth_user_insert($account, $data) {
+	$wrapper = entity_metadata_wrapper('user', $account->uid);
+
+	if (!$wrapper->ed_field_full_name->value()) {
+		$wrapper->ed_field_full_name->set($data['displayName']);
+		$wrapper->save();
+	}
+}
