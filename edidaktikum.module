@@ -1160,6 +1160,7 @@ function ed_get_group_members($gid, $b_full_name = false, $b_roles = false, $b_s
   $q = db_select('og_membership', 'ogm');
   $q->condition('ogm.gid', $gid);
   $q->condition('ogm.entity_type', 'user');
+	$q->condition('ogm.state', 1, '=');
   $q->join('users', 'u', 'u.uid = ogm.etid AND u.status = 1');
   $q->fields('u', ['uid']);
 
@@ -1277,7 +1278,6 @@ function ed_get_group_tasks($gid, $b_due_date = false, $b_study_groups = false, 
   //  get group tasks
   $q = db_select('og_membership', 'ogm');
   $q->condition('ogm.gid', $gid);
-  if($desc) $q->orderBy('ogm.created', 'DESC' );
   $q->condition('ogm.entity_type', 'node');
   $q->join('node', 'n', 'n.nid = ogm.etid AND n.type = \'ed_task\' AND n.status = 1');
   $q->fields('n', ['nid', 'title']);
@@ -1286,6 +1286,7 @@ function ed_get_group_tasks($gid, $b_due_date = false, $b_study_groups = false, 
   if ($b_due_date) {
     $q->join('field_data_ed_task_due_date', 'dd', 'dd.entity_id = ogm.etid');
     $q->fields('dd', ['ed_task_due_date_value']);
+		$q->orderBy('dd.ed_task_due_date_value', ($desc) ? 'DESC' : 'ASC');
   }
 
   //  optionally with study groups
@@ -1300,6 +1301,7 @@ function ed_get_group_tasks($gid, $b_due_date = false, $b_study_groups = false, 
     $q->fields('tm', ['ed_field_to_group_member_target_id']);
   }
 
+	if($desc) $q->orderBy('ogm.created', 'DESC');
 
   $tasks = $q->execute()->fetchAll(PDO::FETCH_ASSOC);
 
@@ -1563,4 +1565,16 @@ function edidaktikum_query_node_access_alter(QueryAlterableInterface $query) {
       $query->condition("$alias.type", 'ed_file', '<>');
     }
   }
+}
+
+/**
+ * Implements hook_hybridauth_user_insert().
+ */
+function edidaktikum_hybridauth_user_insert($account, $data) {
+	$wrapper = entity_metadata_wrapper('user', $account->uid);
+
+	if (!$wrapper->ed_field_full_name->value()) {
+		$wrapper->ed_field_full_name->set($data['displayName']);
+		$wrapper->save();
+	}
 }
