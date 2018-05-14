@@ -1860,7 +1860,7 @@ function ed_task_manager($test, $node) {
     '#theme' => 'table',
     '#rows' => $rows,
     '#header' => $headers,
-    '#attributes' => array('data-averaging_table' => t("Average"), 'data-sticky_headers' => '')
+    '#attributes' => array('data-averaging_table' => t("Average"), 'data-sticky_headers' => '', 'class' => array('table-bordered'))
   );
 
   return $content;
@@ -2514,7 +2514,7 @@ function ed_cluster_form_alter(&$form, &$form_state, $form_id) {
 	  }
 	
 	  $form['ed_field_group_type']['#attributes']['style'][] = 'display:none';
-	  
+
 
 	  //Disabling the field causes it losing its value after any ajax call from this page (disabled in css instead)
 	  //$form['ed_field_group_type']['und']['#disabled'] = true;
