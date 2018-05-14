@@ -1160,6 +1160,7 @@ function ed_get_group_members($gid, $b_full_name = false, $b_roles = false, $b_s
   $q = db_select('og_membership', 'ogm');
   $q->condition('ogm.gid', $gid);
   $q->condition('ogm.entity_type', 'user');
+	$q->condition('ogm.state', 1, '=');
   $q->join('users', 'u', 'u.uid = ogm.etid AND u.status = 1');
   $q->fields('u', ['uid']);
 
