@@ -1,18 +1,17 @@
 .answered{
-    background-color: #63b463;
+    background-color: #1abc9c;
 }
 .answered a {
 	display: block;
 	text-decoration: none;
+	color: white;
 }
 .answered a:hover {
 	text-decoration: none;
+	color: white;
 }
-.unanswered{
-    color: red;
-}
-.can-not-be-answered {
-	background-color: #666;
+.na{
+	background-color: #d7d7d7;
 }
 
 .rejected{
@@ -25,27 +24,29 @@
 .rejected a {
 	display: block;
 	text-decoration: none;
+	color: #303638;
 }
 .rejected a:hover {
 	text-decoration: none;
-}
-.unchecked{
-    
+	color: #303638;
 }
 .unchecked a {
 	display: block;
 	text-decoration: none;
+	color: #303638;
 }
 .unchecked a:hover {
 	text-decoration: none;
+	color: #303638;
 }
 
 .accepted{
-    background-color: #63b463;
+    background-color: #1abc9c;
 }
 .accpeted a {
 	display: block;
 	text-decoration: none;
+	color: white;
 }
 .accepted a:hover {
 	text-decoration: none;
@@ -53,15 +54,18 @@
 
 .checked {
     background-color: #84bfeb;
+	color: white;
 }
 
 .checked a {
     display: block;
     text-decoration: none;
+	color: white;
 }
 
 .checked a:hover {
     text-decoration: none;
+	color: white;
 }
 
 .ed_filter_tasks {

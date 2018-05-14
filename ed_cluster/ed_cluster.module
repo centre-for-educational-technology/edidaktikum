@@ -1860,7 +1860,7 @@ function ed_task_manager($test, $node) {
     '#theme' => 'table',
     '#rows' => $rows,
     '#header' => $headers,
-    '#attributes' => array('data-averaging_table' => t("Average"), 'data-sticky_headers' => '')
+    '#attributes' => array('data-averaging_table' => t("Average"), 'data-sticky_headers' => '', 'class' => array('table-bordered'))
   );
 
   return $content;
@@ -2209,6 +2209,7 @@ function _get_users_in_group($gid) {
   $query
     ->condition('u.uid', 0, '<>')
     ->condition('u.status', 1, '=')
+    ->condition('ogm.state', 1, '=')
     ->fields('u', array('uid', 'name'))
     ->join('og_membership', 'ogm', "ogm.gid = :gid AND u.uid = ogm.etid AND ogm.entity_type = 'user'", array(':gid' => $gid));
   $result = $query->execute()->fetchCol();
@@ -2512,9 +2513,9 @@ function ed_cluster_form_alter(&$form, &$form_state, $form_id) {
 		  $form['ed_field_group_type']['und'][0]['value']['#default_value'] = $group_type;
 
 	  }
-	
+
 	  $form['ed_field_group_type']['#attributes']['style'][] = 'display:none';
-	  
+
 
 	  //Disabling the field causes it losing its value after any ajax call from this page (disabled in css instead)
 	  //$form['ed_field_group_type']['und']['#disabled'] = true;
