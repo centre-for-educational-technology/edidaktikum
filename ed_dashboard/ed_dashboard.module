@@ -514,46 +514,50 @@ function _ed_get_average_satisfaction_for_task($answer_id){
 function ed_get_groups_by_user_no_subgroups() {
 	global $user;
 	$usergroups = og_get_groups_by_user();
+
+  if($usergroups){
 	
-	$query = db_select('node', 'n')
-			->fields('n', array('nid'))
-			->condition('n.status', 1);
-	
-	//Exclude inactive groups
-	$exclude_query = new EntityFieldQuery();
-	$exclude_query->entityCondition('entity_type', 'node')
-			->entityCondition('bundle', 'ed_cluster')
-			->fieldCondition('ed_field_group_state', 'value', 0);
-	$exclude_result = $exclude_query->execute();
-	$excluded = array_keys($exclude_result['node']);
-	if ( $excluded ) {
-		$query->condition('n.nid', $excluded, 'NOT IN');
-	}
-	
-	
-	if($usergroups){
-		$query->condition('n.nid', $usergroups['node'], 'in');
-	}
-	$query->condition('n.type', 'ed_cluster');
-	$query->orderBy('TRIM(title)', 'ASC');
-	
-	
-	$nids = $query->execute()->fetchCol();
-	
-	//Exclude groups where current user is a group creator or manager
-	foreach ($nids as $key=>$nid){
-		$wrapper = entity_metadata_wrapper('node', $nid);
-	
-		if($user->uid == $wrapper->value()->uid){
-			unset($nids[$key]);
-		}
-		if(in_array(OG_ADMINISTRATOR_ROLE, og_get_user_roles('node', $nid, $user->uid, FALSE))){
-			unset($nids[$key]);
-		}
-		
-	}
-	
-	return $nids;
+    $query = db_select('node', 'n')
+        ->fields('n', array('nid'))
+        ->condition('n.status', 1);
+
+    //Exclude inactive groups
+    $exclude_query = new EntityFieldQuery();
+    $exclude_query->entityCondition('entity_type', 'node')
+        ->entityCondition('bundle', 'ed_cluster')
+        ->fieldCondition('ed_field_group_state', 'value', 0);
+    $exclude_result = $exclude_query->execute();
+    $excluded = array_keys($exclude_result['node']);
+    if ( $excluded ) {
+      $query->condition('n.nid', $excluded, 'NOT IN');
+    }
+
+
+
+      $query->condition('n.nid', $usergroups['node'], 'in');
+
+    $query->condition('n.type', 'ed_cluster');
+    $query->orderBy('TRIM(title)', 'ASC');
+
+
+    $nids = $query->execute()->fetchCol();
+
+    //Exclude groups where current user is a group creator or manager
+    foreach ($nids as $key=>$nid){
+      $wrapper = entity_metadata_wrapper('node', $nid);
+
+      if($user->uid == $wrapper->value()->uid){
+        unset($nids[$key]);
+      }
+      if(in_array(OG_ADMINISTRATOR_ROLE, og_get_user_roles('node', $nid, $user->uid, FALSE))){
+        unset($nids[$key]);
+      }
+
+    }
+    return $nids;
+  }
+	return false;
+
 }
 
 

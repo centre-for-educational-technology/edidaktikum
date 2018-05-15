@@ -1305,18 +1305,29 @@ function ed_get_group_tasks($gid, $b_due_date = false, $b_study_groups = false, 
 
   $tasks = $q->execute()->fetchAll(PDO::FETCH_ASSOC);
 
+  $concentrate_keys = [];
   if ($b_study_groups) {
+
     $tasks = ed_util_rename_key_of_arrays($tasks, 'ed_task_field_study_group_value', 'study_groups');
-    $tasks = ed_util_array_concentrate_member($tasks, 'nid', 'study_groups');
+    $concentrate_keys[] = 'study_groups';
+    //$tasks = ed_util_array_concentrate_member($tasks, 'nid', 'study_groups');
+
   }
 
   if ($b_targeted_members) {
+
     $tasks = ed_util_rename_key_of_arrays($tasks, 'ed_field_to_group_member_target_id', 'targeted_member_ids');
-    $tasks = ed_util_array_concentrate_member($tasks, 'nid', 'targeted_member_ids');
+    $concentrate_keys[] = 'targeted_member_ids';
+    // $tasks = ed_util_array_concentrate_member($tasks, 'nid', 'targeted_member_ids');
+
+  }
+
+  if(!empty($concentrate_keys)){
+
+    $tasks = ed_util_array_concentrate_members($tasks, 'nid', $concentrate_keys);
   }
 
   if ($b_due_date) $tasks = ed_util_rename_key_of_arrays($tasks, 'ed_task_due_date_value', 'due_date');
-
 
   return $tasks;
 }
@@ -1335,13 +1346,15 @@ function ed_is_task_applicable($task, $member) {
         break;
       }
     }
+  }
 
-    if (count($task['targeted_member_ids']) > 0) {
-      foreach($task['targeted_member_ids'] as $tid) {
-        if ($tid == $member['uid']) {
-          $applicable = true;                                     //  included if member is targeted
-          break;
-        }
+  if (count($task['targeted_member_ids']) > 0) {
+    foreach($task['targeted_member_ids'] as $tid) {
+      if ($tid == $member['uid']) {
+        $applicable = true;                                     //  included if member is targeted
+        break;
+      }else{
+        $applicable = false;
       }
     }
   }
