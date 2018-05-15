@@ -668,13 +668,14 @@ function _ed_get_user_unanswered_tasks_count($account) {
   static $count;
   if (isset($count)) {
     return $count;
-  }
+}
 
   $unanswered_or_rejected = 0;
-  $groups = $my_groups = array_values(ed_get_groups_by_user_no_subgroups());
+  $groups = ed_get_groups_by_user_no_subgroups();
 
   if(!empty($groups)){
     foreach ($groups as $my_group){
+      $groups = array_values($groups);
       //  get members and separate out admins
       // that is needed to get the statutes for answers
       $members = ed_get_group_members($my_group, true, true, true);
