@@ -110,7 +110,7 @@ function edidaktikum_create_vocabulary() {
 /**
  * Creates a term and assigns that to a vocabulary. Term data is provided as an
  * array that may hold an additional array of subterms.
- * 
+ *
  * @param $vid
  *   A vocabulary ID.
  * @param $single
@@ -377,4 +377,62 @@ function edidaktikum_update_7114(&$sandbox) {
 	variable_set('variable_realm_list_language', $variable_realm_list_language);
 }
 
+/**
+ * Fill ed_field_full_name for all usrs that have none set, only applicable to ones with hybridauth origins
+ */
+function edidaktikum_update_7115(&$sandbox) {
+  // Initialize batch
+  if (!isset($sandbox['total'])) {
+    $query = db_select('users', 'u')
+      ->fields('u',['uid',]);
+    $query->innerJoin('hybridauth_identity', 'h', 'h.uid = u.uid');
+    $query->leftJoin('field_data_ed_field_full_name', 'fn', 'fn.entity_id = u.uid');
+    $query->isNull('fn.ed_field_full_name_value');
 
+    $total = $query
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+
+    $sandbox['total'] = $total;
+    $sandbox['progress'] = 0;
+    $sandbox['updated'] = 0;
+
+    if (empty($sandbox['total'])) {
+      $sandbox['#finished'] = 1;
+      return t('No users with empty full names exist in the database.');
+    }
+  }
+
+  $query = db_select('users', 'u')
+    ->fields('u', ['uid',])
+    ->range(0, 10);
+  $query->innerJoin('hybridauth_identity', 'h', 'h.uid = u.uid');
+  $query->leftJoin('field_data_ed_field_full_name', 'fn', 'fn.entity_id = u.uid');
+  $query->isNull('fn.ed_field_full_name_value');
+
+
+  $uids = $query
+    ->execute()
+    ->fetchCol();
+
+  if (!empty($uids)) {
+    $users = user_load_multiple($uids);
+
+    foreach ($users as $user) {
+      $wrapper = entity_metadata_wrapper('user', $user->uid);
+      $wrapper->ed_field_full_name->set($user->data['hybridauth']['displayName']);
+      $wrapper->save();
+      $sandbox['updated'] += 1;
+    }
+  }
+
+  // Increment and check progress
+  $sandbox['progress'] += count($uids);
+  if (empty($uids) || $sandbox['progress'] >= $sandbox['total']) {
+    $sandbox['#finished'] = 1;
+    return t('Updated @updated users out of @count with missing full names.', ['@count' => $sandbox['progress'], '@updated' => $sandbox['updated'],]);
+  } else {
+    $sandbox['#finished'] = $sandbox['progress'] / $sandbox['total'];
+  }
+}
