@@ -1818,7 +1818,8 @@ function ed_task_manager($test, $node) {
             $cell['class'] = 'unchecked';
             $cell['title'] = t('Unchecked');
 	          //Check if it is late submission - if submitted on the due date or later
-            if (format_date($answer['changed'], 'short') > format_date($task['due_date'], 'short')) $cell['data'] = '!&nbsp;';
+            if ((int)$answer['changed'] > (int)$task['due_date']) $cell['data'] = '!&nbsp;';
+            
             break;
 
           case 'accepted':
