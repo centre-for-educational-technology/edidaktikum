@@ -12,7 +12,7 @@
 function edidaktikum_home_page() {
 
   drupal_set_title('');
-  
+
   $content['intro-text']['text'] = array(
     '#type' => 'markup',
     '#markup' => '<div class="login-intro-text">'.variable_get('ed_home_page_intro_text', '').'</div>',
@@ -31,13 +31,13 @@ function edidaktikum_home_page() {
       'id' => 'intro',
     ),
   );
-  
+
   $content['intro']['image'] = array(
     '#type' => 'markup',
     '#markup' => '<div id="img"></div>',
   );
 
-  
+
   $content['intro']['intro-text'] = array(
     '#type' => 'container',
     '#attributes' => array(
@@ -167,7 +167,7 @@ function edidaktikum_contact_page() {
 function edidaktikum_faq_page() {
 	drupal_goto('https://edidaktikum.uservoice.com');
 	/*drupal_set_title(t('FAQ'));
-	
+
 	$content['faq'] = array(
 		'#type' => 'container',
 		'#attributes' => array(
@@ -199,7 +199,7 @@ function edidaktikum_faq_page() {
 function edidaktikum_pp_page() {
 
 	drupal_set_title(t('Privacy Policy'));
-	
+
 	$content['pp'] = array(
 		'#type' => 'container',
 		'#attributes' => array(
@@ -231,16 +231,7 @@ function edidaktikum_pp_page() {
  */
 function edidaktikum_schools_page() {
 
-	drupal_set_title(t('Koolile'));
-	
-	ob_start();
-	include drupal_get_path('theme',$GLOBALS['theme']).'/custom_pages/for-schools.php';
-	$echoed_content = ob_get_clean();
-	
-	
-	return array
-	(
-			'#markup' => $echoed_content,
-	);
-}
+	drupal_set_title(t('Schools'));
 
+  return [];
+}

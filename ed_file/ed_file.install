@@ -431,3 +431,17 @@ function ed_file_update_7103(&$sandbox){
   field_update_instance($instance);
 }
 
+
+/**
+ * Fix EntityReference args related bug
+ */
+function ed_file_update_7104(&$sandbox) {
+
+  $field = field_info_field('ed_file_folder_ref');
+
+  $field['settings']['handler_settings']['view']['args'] = array();
+  field_update_field($field);
+
+
+
+}

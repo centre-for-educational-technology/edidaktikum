@@ -265,3 +265,18 @@ function ed_collection_delete_ed_collection_node_type() {
   }  
 }
 
+
+
+/**
+ * Fix EntityReference args related bug
+ */
+function ed_collection_update_7100(&$sandbox) {
+
+  $field = field_info_field('ed_collection_field_items');
+
+  $field['settings']['handler_settings']['view']['args'] = array();
+  field_update_field($field);
+
+
+
+}
