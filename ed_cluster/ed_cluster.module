@@ -1819,7 +1819,7 @@ function ed_task_manager($test, $node) {
             $cell['title'] = t('Unchecked');
 	          //Check if it is late submission - if submitted on the due date or later
             if ((int)$answer['changed'] > (int)$task['due_date']) $cell['data'] = '!&nbsp;';
-            
+
             break;
 
           case 'accepted':
@@ -2577,10 +2577,12 @@ function ed_cluster_form_alter(&$form, &$form_state, $form_id) {
     drupal_add_js(drupal_get_path('module', 'edidaktikum') . '/node_list_editor/node_list_editor.js');
     drupal_add_css(drupal_get_path('module', 'edidaktikum') . '/node_list_editor/node_list_editor.css');
 
+    // Code assumes that corresponding taxonomy vocabulary does exist
+    $competenceVocabulary = taxonomy_vocabulary_machine_name_load('ed_competence_voc');
     $nle_data = [
       ["title" => "", "description" => "Name", "type" => "name", "name" => "name", "default" => "Õpiväljund"],
       ["title" => "", "description" => "Description", "type" => "text_area", "name" => "description"],
-      ["title" => "Competence", "description" => "", "type" => "taxonomy_list", "taxonomy_tree" => ed_get_taxonomy_tree(7), "name" => "competences"],
+      ["title" => "Competence", "description" => "", "type" => "taxonomy_list", "taxonomy_tree" => ed_get_taxonomy_tree($competenceVocabulary->vid), "name" => "competences"],
       ["title" => "", "description" => "Assessment method", "type" => "text_area", "name" => "assessment_method"]
     ];
 
