@@ -2591,13 +2591,13 @@ function ed_cluster_form_alter(&$form, &$form_state, $form_id) {
       ["title" => "", "description" => "Assessment method", "type" => "text_area", "name" => "assessment_method"]
     ];
 
-    // @todo When saving node, this part causes Notice: Undefined index: #language in locale_field_entity_form_submit() (line 438 of /Applications/MAMP/htdocs/edidaktikum/modules/locale/locale.module).
     $form["ed_field_learning_outcome_ref"] = [
         "#type" => "textfield",
         "#title" => t("Learning outcomes"),
         "#default_value" => "",
         "#prefix" => '<div data-node_list_editor = "' . base64_encode(json_encode($nle_data)) . '" data-node_list_data = "' . base64_encode(json_encode($outcomes)) . '">',
-        "#suffix" => "</div>"
+        "#suffix" => "</div>",
+        "#language" => LANGUAGE_NONE,
     ];
 
 
