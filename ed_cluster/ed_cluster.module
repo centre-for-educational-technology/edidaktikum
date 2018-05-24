@@ -2770,6 +2770,39 @@ function ed_cluster_get_groups_members_ajax() {
 }
 
 /**
+ * Returns competence ids for groups or an empty array
+ * @param  array $groups An array with group identifiers
+ * @return array         An array with competence identifiers
+ */
+function ed_cluster_get_groups_competences_ids($groups) {
+  $ids = [];
+
+  if (!empty($groups)) {
+    $query = db_select('field_data_ed_field_category', 'c');
+    $query->innerJoin('field_data_ed_field_learning_outcome_ref', 'lor', 'lor.ed_field_learning_outcome_ref_target_id  = c.entity_id');
+    $query
+      ->distinct()
+      ->condition('c.entity_type', 'node')
+      ->condition('c.bundle', 'ed_learning_outcome')
+      ->condition('c.deleted', 0)
+      ->condition('lor.entity_type', 'node')
+      ->condition('lor.bundle', 'ed_cluster')
+      ->condition('lor.deleted', 0)
+      ->condition('lor.entity_id', $groups)
+      ->fields('c', ['ed_field_category_tid']);
+    $result = $query->execute()->fetchAll();
+
+    if ($result) {
+      foreach ($result as $single) {
+        $ids []= $single->ed_field_category_tid;
+      }
+    }
+  }
+
+  return $ids;
+}
+
+/**
  * AJAX endpoint for getting competences of certain groups.
  * Responds with an object that has applicable competence identifiers wihin a
  * key "competences", defaults to an empty array.
@@ -2792,25 +2825,7 @@ function ed_cluster_get_groups_competences_ajax() {
   }
 
   if (!empty($groups)) {
-    $query = db_select('field_data_ed_field_category', 'c');
-    $query->innerJoin('field_data_ed_field_learning_outcome_ref', 'lor', 'lor.ed_field_learning_outcome_ref_target_id  = c.entity_id');
-    $query
-      ->distinct()
-      ->condition('c.entity_type', 'node')
-      ->condition('c.bundle', 'ed_learning_outcome')
-      ->condition('c.deleted', 0)
-      ->condition('lor.entity_type', 'node')
-      ->condition('lor.bundle', 'ed_cluster')
-      ->condition('lor.deleted', 0)
-      ->condition('lor.entity_id', $groups)
-      ->fields('c', ['ed_field_category_tid']);
-    $result = $query->execute()->fetchAll();
-
-    if ($result) {
-      foreach ($result as $single) {
-        $data['competences'] []= $single->ed_field_category_tid;
-      }
-    }
+    $data['competences'] = ed_cluster_get_groups_competences_ids($groups);
   }
   drupal_json_output($data);
 }

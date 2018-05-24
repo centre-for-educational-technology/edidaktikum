@@ -545,6 +545,32 @@ function ed_task_form_alter(&$form, &$form_state, $form_id) {
 
     $form['#attached']['js'][] = drupal_get_path('module', 'ed_task') . '/ed_task_js.js';
     $form['#attached']['css'][] = drupal_get_path('module', 'ed_task') . '/ed_task_css.css';
+    $form['#submit'] []= 'ed_task_form_submit_competence';
+  }
+}
+
+/**
+ * A callback function that would deals with field ed_field_competence
+ * @param  array $form       Form data
+ * @param  array $form_state Form state data (reference)
+ * @return void
+ */
+function ed_task_form_submit_competence($form, &$form_state) {
+  // Make sure to remove any selected competences that do not belong to the ones
+  // present for the selected groups
+  if (!empty($form_state['values']['ed_field_competence'][LANGUAGE_NONE])) {
+    $groups = [];
+    if (!empty($form_state['values']['og_group_ref'][LANGUAGE_NONE])) {
+      $groups = array_map(function($single) {
+        return $single['target_id'];
+      }, $form_state['values']['og_group_ref'][LANGUAGE_NONE]);
+    }
+    $allowedCompetences = ed_cluster_get_groups_competences_ids($groups);
+
+    $filteredCompetences = array_filter($form_state['values']['ed_field_competence'][LANGUAGE_NONE], function($single) use ($allowedCompetences) {
+      return in_array($single['tid'], $allowedCompetences);
+    });
+    $form_state['values']['ed_field_competence'][LANGUAGE_NONE] = array_values($filteredCompetences);
   }
 }
 
