@@ -56,10 +56,10 @@ function ed_task_listing_page() {
   drupal_add_css(drupal_get_path('module', 'ed_cluster').'/task_manager.css');
   //XXX do not use global $user
   global $user;
-  
-  $account = user_load($user->uid);  
+
+  $account = user_load($user->uid);
   $groups = og_get_entity_groups();
-  
+
   if(empty($groups)){
     $content['groups-not-found'] = array(
       '#type' => 'markup',
@@ -68,7 +68,7 @@ function ed_task_listing_page() {
       '#suffix' => '</div>',
     );
     return $content;
-  }else{ 
+  }else{
     $content = array();
     $table_suffix = 1;
 
@@ -96,7 +96,7 @@ function ed_task_listing_page() {
 
 
     if ( !empty($nodes) ) {
-      foreach($nodes as $node) {      
+      foreach($nodes as $node) {
         if(isset($node->{ED_FIELD_TO_GROUP_MEMBER}['und']['0']['target_id']) && !isset($node->{ED_FIELD_TO_GROUP_MEMBER}['und']['1']['target_id'])) {
           $owner = user_load($node->{ED_FIELD_TO_GROUP_MEMBER}['und']['0']['target_id']);
           $username = ", ".$owner->name;
@@ -122,7 +122,7 @@ function ed_task_listing_page() {
             'title' => l($node->title, 'node/' . $node->nid),
             'shared_to' => t(l($group_title, 'node/' . $shared_to).$username),
             //'due_date' => format_date($datehelp, 'custom','d/m/Y'),
-            'due_date' => format_date($due_date_field[0]['value'],'custom','d/m/Y'),          
+            'due_date' => format_date($due_date_field[0]['value'],'custom','d/m/Y'),
           ),
         );
       }
@@ -138,7 +138,7 @@ function ed_task_listing_page() {
 
 
     $per_page = ed_get_paging_nr();
-    $touser = _ed_get_tasks_to_user();  
+    $touser = _ed_get_tasks_to_user();
     if(!empty($touser)){
       foreach($touser as $key => $value){
         $tousernids[] = (string)$key;
@@ -179,7 +179,7 @@ function ed_task_listing_page() {
     }
 
 
-    $tasknodes = node_load_multiple($tasknidstouser); 
+    $tasknodes = node_load_multiple($tasknidstouser);
     //  attatch status;
     foreach($tasknodes as $key => &$tasknode) {
       if (_is_task_answered($tasknode->nid)) {
@@ -210,32 +210,32 @@ function ed_task_listing_page() {
       if ($b->ed_status == 'rejected') $b_score = 2;
       if ($b->ed_status == 'unanswered') $b_score = 1;
 
-      if ($a_score != $b_score) return $b_score - $a_score;  
+      if ($a_score != $b_score) return $b_score - $a_score;
       return $a->ed_task_due_date[LANGUAGE_NONE][0]['value'] - $b->ed_task_due_date[LANGUAGE_NONE][0]['value'];
     });
 
     $tasknodessorted = $tasknodes;
 
-    
-    
-    
+
+
+
     foreach($tasknodessorted as $key => $tasknode){
       if(!ed_task_can_user_answer_task($tasknode, $user)){
         unset($tasknodessorted[$key]);
       }
     }
-    
+
     $current_page = pager_default_initialize(count($tasknodessorted), $per_page, 2);
-    
+
     $chunks = array_chunk($tasknodessorted, $per_page, TRUE);
 
     //attach answered data
     foreach($chunks[$current_page] as &$tasknode) {
-      $answer_nid = _ed_get_answer_nid($user->uid, $tasknode->nid); 
+      $answer_nid = _ed_get_answer_nid($user->uid, $tasknode->nid);
       $tasknode->is_answered = !empty($answer_nid);
       if ($tasknode->is_answered) $tasknode->answer_nid = $answer_nid[0];
       unset($tasknode);
-    }; 
+    };
 
     foreach($chunks[$current_page] as $tasknode){
       $shared_to_arr = array();
@@ -243,7 +243,7 @@ function ed_task_listing_page() {
         foreach($tasknode->og_group_ref[LANGUAGE_NONE] as $targetgroup){
           $group_title = _ed_get_group_name_from_id($targetgroup['target_id']);
           $shared_to_arr[] = l($group_title, 'node/' . $targetgroup['target_id']);
-        }      
+        }
 
       } else {
         $shared_to_arr = '';
@@ -254,10 +254,10 @@ function ed_task_listing_page() {
       $shared_to_arr = implode(', ', $shared_to_arr);
 
       $tmp_data = array('data' => '', 'class' => '');
-      if($tasknode->is_answered){                          
+      if($tasknode->is_answered){
         $status = _ed_check_if_accepted($tasknode->answer_nid);
         $status_last = _ed_last_status($status);
-       
+
         switch($status ? $status_last : 'invalid'){
           case('accepted'):
             $tmp_data['class'] = 'answered';
@@ -267,7 +267,7 @@ function ed_task_listing_page() {
           case('rejected'):
             $tmp_data['class'] = 'rejected';
             $tmp_data['data'] = t('Answered, Rejected');
-            $tmp_data['title'] = t('Rejected');                
+            $tmp_data['title'] = t('Rejected');
           break;
           case('checked'):
             $tmp_data['class'] = 'checked';
@@ -277,7 +277,7 @@ function ed_task_listing_page() {
           case('unchecked'):
           default:
             $tmp_data['class'] = 'unchecked';
-            $tmp_data['data'] = t('Answered, Unchecked'); 
+            $tmp_data['data'] = t('Answered, Unchecked');
             $tmp_data['title'] = t('Unchecked');
           break;
         }
@@ -285,7 +285,7 @@ function ed_task_listing_page() {
         $grade = _ed_get_last_grade($tasknode->answer_nid);
         $grade_str = $grade == 0 ? "" : t(', Graded ') . $grade;
         $tmp_data['data'] = l($tmp_data['data'] . $grade_str, 'node/' . $tasknode->answer_nid, array('html' => TRUE));
-             
+
       }else{
         $tmp_data['class'] = 'unanswered';
         $tmp_data['data'] = t('Not Answered');
@@ -298,18 +298,18 @@ function ed_task_listing_page() {
           }
         }
       }
-      
+
       $rows2[] = array(
           'data' => array(
             'title' => l($tasknode->title, 'node/' . $tasknode->nid),
             'group' => $shared_to_arr,
             'due_date' => format_date($tasknode->ed_task_due_date[LANGUAGE_NONE][0]['value'],'custom','d/m/Y'),
-            'status' => $tmp_data,          
+            'status' => $tmp_data,
           ),
         );
     }
 
-  
+
   //@TODO: There are so many things wrong right here ..
 
     $content[$table_type.'-2'] = array(
@@ -442,7 +442,7 @@ function ed_task_node_view($node, $view_mode, $langcode) {
           );
         }
       }
-      
+
       if (!ed_task_can_user_answer_task($node, $acc)) {
         break;
       }
@@ -453,7 +453,7 @@ function ed_task_node_view($node, $view_mode, $langcode) {
           'field_ref_to_task' => $node->nid,
         ),
       );
-      
+
       if(_is_task_answered($node->nid)){
         $node->content['ed_task_asjandus'] = array(
           '#type' => 'item',
@@ -461,10 +461,10 @@ function ed_task_node_view($node, $view_mode, $langcode) {
           '#markup' => l(t('Edit'), 'node/'.  _get_answer_from_task($node->nid).'/edit', array('attributes'=> array('class' => 'btn btn-success price-btn'))),
           '#prefix' => '<div class="answer edit-answer">',
           '#suffix' => '</div>',
-        );        
+        );
         break;
       }
-      
+
       else{
         $node->content['ed_task_asjandus'] = array(
           '#type' => 'item',
@@ -512,7 +512,7 @@ function _get_answer_from_task($task){
     ->condition('n.uid', $acc->uid)
     ->condition('n.type', 'ed_answer');
   $query->condition('b.field_ref_to_task_target_id', $task);
-  
+
   $result = $query->execute()->fetchAll();
   return $result['0']->nid;
 }
@@ -545,6 +545,32 @@ function ed_task_form_alter(&$form, &$form_state, $form_id) {
 
     $form['#attached']['js'][] = drupal_get_path('module', 'ed_task') . '/ed_task_js.js';
     $form['#attached']['css'][] = drupal_get_path('module', 'ed_task') . '/ed_task_css.css';
+    $form['#submit'] []= 'ed_task_form_submit_competence';
+  }
+}
+
+/**
+ * A callback function that would deals with field ed_field_competence
+ * @param  array $form       Form data
+ * @param  array $form_state Form state data (reference)
+ * @return void
+ */
+function ed_task_form_submit_competence($form, &$form_state) {
+  // Make sure to remove any selected competences that do not belong to the ones
+  // present for the selected groups
+  if (!empty($form_state['values']['ed_field_competence'][LANGUAGE_NONE])) {
+    $groups = [];
+    if (!empty($form_state['values']['og_group_ref'][LANGUAGE_NONE])) {
+      $groups = array_map(function($single) {
+        return $single['target_id'];
+      }, $form_state['values']['og_group_ref'][LANGUAGE_NONE]);
+    }
+    $allowedCompetences = ed_cluster_get_groups_competences_ids($groups);
+
+    $filteredCompetences = array_filter($form_state['values']['ed_field_competence'][LANGUAGE_NONE], function($single) use ($allowedCompetences) {
+      return in_array($single['tid'], $allowedCompetences);
+    });
+    $form_state['values']['ed_field_competence'][LANGUAGE_NONE] = array_values($filteredCompetences);
   }
 }
 
@@ -571,7 +597,7 @@ function _is_task_answered($task_nid){
   $query->fields('n', array('nid'))
       ->condition('b.field_ref_to_task_target_id', $task_nid)
       ->condition('n.uid', $acc->uid);
-  
+
   $result = $query->execute()->fetchAll();
   if(empty($result)){
     //return t('Unanswered');
@@ -642,7 +668,7 @@ function _ed_get_group_tasks(){
     ->condition('og.gid', $helper, "IN");
   $result = $query->execute()->fetchCol();
   return $result;
-  
+
 
 }
 
@@ -655,10 +681,10 @@ function _ed_last_status($statuses) {
 }
 
 /**
- * Returns count of unanswered tasks for a user. 
- * 
+ * Returns count of unanswered tasks for a user.
+ *
  * UPDATE: returns the sum of unanswered and rejected tasks for a user.
- * 
+ *
  * @param $account
  *   User account
  * @return int
@@ -912,3 +938,12 @@ function ed_task_can_user_answer_task(&$node, &$account) {
   return FALSE;
 }
 
+/**
+ * Implements hook_field_widget_alter().
+ */
+function ed_task_field_widget_form_alter(&$element, &$form_state, $context) {
+  if ((!empty($element['#field_name']) && 'ed_field_competence' == $element['#field_name']) && (!empty($element['#entity']->type) && 'ed_task' === $element['#entity']->type)) {
+    $element['#attached']['css'][] = drupal_get_path('module', 'ed_task') . '/css/field_competence.css';
+    $element['#attached']['js'][] = drupal_get_path('module', 'ed_task') . '/js/field_competence.js';
+  }
+}

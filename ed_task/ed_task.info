@@ -7,5 +7,6 @@ files[] = ed_task.install
 files[] = ed_task.module
 
 dependencies[] = edidaktikum
+dependencies[] = ed_cluster
 dependencies[] = entityreference
 dependencies[] = ed_competence_voc
