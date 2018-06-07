@@ -1596,19 +1596,20 @@ function edidaktikum_hybridauth_user_insert($account, $data) {
  */
 function edidaktikum_form_user_register_form_alter(&$form, &$form_state, $form_id) {
 	if ( user_is_anonymous() ) {
-		$form['policy_agreement'] = [
+		$form['#attached']['js'][] = drupal_get_path('module', 'edidaktikum') . '/js/ed_site_policy_agreement.js';
+		$form['site_policy_agreement'] = [
 			'#type' => 'container',
 			'#weight' => 10,
 		];
-		$form['policy_agreement']['label'] = [
+		$form['site_policy_agreement']['label'] = [
 			'#type' => 'item',
 			'#title' => t('Site policy agreement'),
 		];
-		$form['policy_agreement']['privacy_policy'] = [
+		$form['site_policy_agreement']['privacy_policy'] = [
 			'#type' => 'markup',
 			'#markup' => l(t('Privacy Policy'), 'privacy', ['attributes' => ['target' => '_blank',],]),
 		];
-		$form['policy_agreement']['checkbox'] = [
+		$form['site_policy_agreement']['policy_agreement'] = [
 			'#type' => 'checkbox',
 			'#title' => t('I understand and agree'),
 			'#required' => TRUE,
