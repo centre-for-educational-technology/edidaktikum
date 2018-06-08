@@ -26,6 +26,11 @@ function ed_learning_resource_install() {
   }
   ed_learning_resource_add_og_audience();
 	ed_learning_resource_node_add_field_g_drive_file();
+  ed_learning_resource_node_add_field_excerpt();
+  ed_learning_resource_node_add_field_trailer_url();
+  ed_learning_resource_node_add_field_video_url();
+  ed_learning_resource_node_add_field_training_url();
+  ed_learning_resource_node_add_field_video_resource_ref();
 }
 
 function ed_learning_resource_add_og_audience() {
@@ -129,7 +134,7 @@ function ed_learning_resource_node_add_field_study_area() {
  * Creates and adds study area field
  */
 function ed_learning_resource_node_add_field_assets_distribution() {
-	
+
 	if(!field_info_field('ed_field_assets_distribution')){
 		$field = array(
 				'field_name' => 'ed_field_assets_distribution',
@@ -144,7 +149,7 @@ function ed_learning_resource_node_add_field_assets_distribution() {
 		);
 		field_create_field($field);
 	}
-	
+
 	if(!field_info_instance('node', 'ed_field_assets_distribution', 'ed_learning_resource')){
 		$instance = array(
 				'field_name' => 'ed_field_assets_distribution',
@@ -167,6 +172,200 @@ function ed_learning_resource_node_add_field_assets_distribution() {
 		field_create_instance($instance);
 	}
 }
+
+
+/**
+ * Adds excerpt field
+ */
+function ed_learning_resource_node_add_field_excerpt() {
+  $field_name = 'ed_field_excerpt';
+  $field = field_info_field($field_name);
+  if (!empty($field) && !field_info_instance('node', $field_name, 'ed_learning_resource')) {
+    $instance = array(
+        'field_name' => $field_name,
+        'entity_type' => 'node',
+        'bundle' => 'ed_learning_resource',
+        'label' => t('Excerpt'),
+        'description' => '',
+        'required' => false,
+        'display' => array(
+            'teaser' => array(
+                'label' => 'hidden',
+                'type' => 'text_trimmed',
+            ),
+        ),
+    );
+    field_create_instance($instance);
+  }
+}
+
+
+
+/**
+ * Creates and adds trailer url field
+ */
+function ed_learning_resource_node_add_field_trailer_url() {
+
+  if(!field_info_field('ed_field_trailer_url')){
+    $field = array(
+        'field_name' => 'ed_field_trailer_url',
+        'label' => t('Treileri viide'),
+        'type' => 'text',
+        'cardinality' => 1,
+        'foreign keys' => array(),
+    );
+    field_create_field($field);
+  }
+
+  if(!field_info_instance('node', 'ed_field_trailer_url', 'ed_learning_resource')){
+    $instance = array(
+        'field_name' => 'ed_field_trailer_url',
+        'label' => t('Treileri viide'),
+        'description' => t('Näiteks: https://youtu.be/ALZHF5U...'),
+        'required' => false,
+        'entity_type' => 'node',
+        'bundle' => 'ed_learning_resource',
+        'display' => array(
+            'teaser' => array(
+                'label' => 'hidden',
+                'type' => 'text_trimmed',
+            ),
+        ),
+
+    );
+    field_create_instance($instance);
+  }
+}
+
+
+
+/**
+ * Creates and adds video url field
+ */
+function ed_learning_resource_node_add_field_video_url() {
+
+  if(!field_info_field('ed_field_video_url')){
+    $field = array(
+        'field_name' => 'ed_field_video_url',
+        'label' => t('Viide videole'),
+        'type' => 'text',
+        'cardinality' => 1,
+        'foreign keys' => array(),
+    );
+    field_create_field($field);
+  }
+
+  if(!field_info_instance('node', 'ed_field_video_url', 'ed_learning_resource')){
+    $instance = array(
+        'field_name' => 'ed_field_video_url',
+        'label' => t('Viide videole'),
+        'description' => t('Näiteks: https://youtu.be/ALZHF5U...'),
+        'required' => false,
+        'entity_type' => 'node',
+        'bundle' => 'ed_learning_resource',
+        'display' => array(
+            'teaser' => array(
+                'label' => 'hidden',
+                'type' => 'text_trimmed',
+            ),
+        ),
+
+    );
+    field_create_instance($instance);
+  }
+}
+
+
+
+/**
+ * Creates and adds training url field
+ */
+function ed_learning_resource_node_add_field_training_url() {
+
+  if(!field_info_field('ed_field_training_url')){
+    $field = array(
+        'field_name' => 'ed_field_training_url',
+        'label' => t('Viide koolituse regamisvormile'),
+        'type' => 'text',
+        'cardinality' => 1,
+        'foreign keys' => array(),
+    );
+    field_create_field($field);
+  }
+
+  if(!field_info_instance('node', 'ed_field_training_url', 'ed_learning_resource')){
+    $instance = array(
+        'field_name' => 'ed_field_training_url',
+        'label' => t('Viide koolituse regamisvormile'),
+        'description' => '',
+        'required' => false,
+        'entity_type' => 'node',
+        'bundle' => 'ed_learning_resource',
+        'display' => array(
+            'teaser' => array(
+                'label' => 'hidden',
+                'type' => 'text_trimmed',
+            ),
+        ),
+
+    );
+    field_create_instance($instance);
+  }
+}
+
+
+
+/**
+ * Creates and adds ed_field_resource_ref
+ */
+function ed_learning_resource_node_add_field_video_resource_ref() {
+
+  if(!field_info_field('ed_field_video_resource_ref')){
+    $field = array(
+        'field_name' => 'ed_field_video_resource_ref',
+        'type' => 'entityreference',
+        'module' => 'entityreference',
+        'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+        'entity_types' => array('node'),
+
+        'settings' => array(
+            'target_type' => 'node',
+            'handler' => 'views',
+            'handler_settings' => array(
+                'view' => array(
+                    'view_name' => 'ed_learning_resource_items',
+                    'display_name' => 'entityreference',
+                    'args' => array(),
+                ),
+            ),
+        ),
+    );
+    field_create_field($field);
+  }
+
+  if(!field_info_instance('node', 'ed_field_video_resource_ref', 'ed_learning_resource')){
+    $instance = array(
+        'field_name' => 'ed_field_video_resource_ref',
+        'entity_type' => 'node',
+        'bundle' => 'ed_learning_resource',
+        'label' => t('Metoodilised Leheküljed ja Muu Maailma Kogemuse tüübi materjalid mis saab seostada Video klotsiga'),
+        'description' => '',
+        'required' => FALSE,
+        'widget' => array(
+            'type' => 'options_select',
+        ),
+        'display' => array(
+            'default' => array(
+                'type' => 'entityreference_entity_view',
+            ),
+        ),
+    );
+    field_create_instance($instance);
+  }
+
+
+}
+
 
 
 /**
@@ -199,6 +398,48 @@ function ed_learning_resource_node_add_field_g_drive_file() {
 		);
 		field_create_instance($instance);
 	}
+}
+
+
+
+/**
+ * Creates and adds ed_field_resource_type field if not exists.
+ */
+function ed_learning_resource_node_add_field_resource_type() {
+  $field_name = 'ed_field_resource_type';
+  if (!field_info_field($field_name)) {
+    $field = array(
+        'field_name' => $field_name,
+        'type' => 'number_integer',
+        'entity_types' => array('node'),
+        'cardinality' => 1,
+        'locked' => false,
+    );
+    field_create_field($field);
+  }
+
+  if (!empty($field) && !field_info_instance('node', $field, 'ed_learning_resource')) {
+    $instance = array(
+        'field_name' => $field_name,
+        'entity_type' => 'node',
+        'bundle' => 'ed_learning_resource',
+        'required' => true,
+        'label' => t('Materjali tüüp'),
+        'description' => t('1 - Tavaline; 2 - Video klots'),
+        'widget' => array(
+            'type' => 'radio',
+            'settings' => array(
+                'display_label' => TRUE,
+            ),
+        ),
+
+        'display' => array(
+            'default' => array('type' => 'hidden'),
+            'teaser' => array('type' => 'hidden')
+        )
+    );
+    field_create_instance($instance);
+  }
 }
 
 
@@ -286,3 +527,82 @@ function ed_learning_resource_update_7104(&$sandbox) {
 	ed_learning_resource_node_add_field_g_drive_file();
 	
 }
+
+
+/**
+ * Adds video material type related fields
+ */
+//function ed_learning_resource_update_7119(&$sandbox) {
+//
+////  field_delete_field('ed_field_trailer_url');
+////  field_delete_instance('ed_field_trailer_url');
+////
+////  field_delete_field('ed_field_video_url');
+////  field_delete_instance('ed_field_video_url');
+////
+////
+////  ed_learning_resource_node_add_field_trailer_url();
+////  ed_learning_resource_node_add_field_video_url();
+//
+//
+//
+////  ed_learning_resource_node_add_field_excerpt();
+////  ed_learning_resource_node_add_field_training_url();
+//
+//
+//  field_delete_field('ed_field_resource_ref');
+//  field_delete_instance('ed_field_resource_ref');
+//
+//
+//  ed_learning_resource_node_add_field_resource_ref();
+//
+//}
+
+
+
+
+/**
+ * Adds video material type related fields
+ */
+function ed_learning_resource_update_7105(&$sandbox) {
+
+  ed_learning_resource_node_add_field_trailer_url();
+  ed_learning_resource_node_add_field_video_url();
+
+  ed_learning_resource_node_add_field_excerpt();
+  ed_learning_resource_node_add_field_training_url();
+
+  ed_learning_resource_node_add_field_video_resource_ref();
+
+  ed_learning_resource_node_add_field_resource_type();
+
+}
+
+/**
+ * Populate ed_field_resource_type with default value 1
+ */
+function ed_learning_resource_update_7106(&$sandbox) {
+
+  // Get all nodes of 'ed_learning_resource' type, populate the field with a value of '1' - default type.
+  $groups = db_query("SELECT nid, vid FROM {node} WHERE type = 'ed_learning_resource'")->fetchAllAssoc('nid');
+  foreach ($groups as $nid => $values) {
+    $fields = array(
+        'entity_type' => 'node',
+        'bundle' => 'ed_learning_resource',
+        'deleted' => 0,
+        'entity_id' => $values->nid,
+        'revision_id' => $values->vid,
+        'language' => LANGUAGE_NONE,
+        'delta' => 0,
+        'ed_field_resource_type_value' => 1,
+    );
+    db_insert('field_data_ed_field_resource_type')
+        ->fields($fields)
+        ->execute();
+    db_insert('field_revision_ed_field_resource_type')
+        ->fields($fields)
+        ->execute();
+  }
+
+}
+

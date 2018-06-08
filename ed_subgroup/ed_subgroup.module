@@ -34,83 +34,84 @@ function ed_subgroup_ctools_plugin_api() {
   }
 }
 
-function ed_subgroup_menu(){
-  $items['node/%node/news'] = array(
-    'title' => t('News'),
-    'page callback' => 'ed_listing_from_group',
-    'access callback' => 'ed_subgroup_content_listing_access',    
-    'page arguments' => array('node', 1, 'ed_news'),
-    'access arguments' => array('node', 1, 'ed_news'),
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 50,
-  );
-  $items['node/%node/task-manager'] = array(
-    'title' => t('Task Manager'),
-    'page callback' => 'ed_task_manager',    
-    'access callback' => 'ed_task_manager_access',
-    'page arguments' => array('node', 1),
-    'access arguments' => array('node', 1),
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 50,
-  );
-  $items['node/%node/event'] = array(
-    'title' => t('Events'),
-    'page callback' => 'ed_listing_from_group',    
-    'access callback' => 'ed_subgroup_content_listing_access',     
-    'page arguments' => array('node', 1, 'ed_event'),
-    'access arguments' => array('node', 1, 'ed_event'),
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 50,
-  );
-  $items['node/%node/blog'] = array(
-    'title' => t('Posts'),
-    'page callback' => 'ed_listing_from_group',
-    'access callback' => 'ed_subgroup_content_listing_access',
-    'page arguments' => array('node', 1, 'ed_blog'),
-    'access arguments' => array('node', 1, 'ed_blog'),
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 50,
-  );
-  $items['node/%node/learning-resource'] = array(
-    'title' => t('Learning Resources'),
-    'page callback' => 'ed_listing_from_group',    
-    'access callback' => 'ed_subgroup_content_listing_access',    
-    'page arguments' => array('node', 1, 'ed_learning_resource'),
-    'access arguments' => array('node', 1, 'ed_learning_resource'),
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 50,
-  );
-  $items['node/%node/forum'] = array(
-    'title' => t('Discussion Board'),
-    'page callback' => 'ed_listing_from_group',    
-    'access callback' => 'ed_subgroup_content_listing_access',    
-    'page arguments' => array('node', 1, 'ed_forum'),
-    'access arguments' => array('node', 1, 'ed_forum'),
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 50,
-  );
-  
-  $items['node/%node/bookmark'] = array(
-    'title' => t('Bookmarks'),
-    'page callback' => 'ed_listing_from_group',
-    'access callback' => 'ed_subgroup_content_listing_access',
-    'page arguments' => array('node', 1, 'ed_bookmark'),
-    'access arguments' => array('node', 1, 'ed_bookmark'),
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 50,
-  );
-  $items['node/%node/file'] = array(
-    'title' => t('Files'),
-    'page callback' => 'ed_listing_from_group',
-    'access callback' => 'ed_subgroup_content_listing_access',
-    'page arguments' => array('node', 1, 'ed_file'),
-    'access arguments' => array('node', 1, 'ed_file'),
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 50,
-  );
-  
-  return $items;
-}
+//XXX This overrides ed_cluster_menu
+//function ed_subgroup_menu(){
+//  $items['node/%node/news'] = array(
+//    'title' => t('News'),
+//    'page callback' => 'ed_listing_from_group',
+//    'access callback' => 'ed_subgroup_content_listing_access',
+//    'page arguments' => array('node', 1, 'ed_news'),
+//    'access arguments' => array('node', 1, 'ed_news'),
+//    'type' => MENU_LOCAL_TASK,
+//    'weight' => 50,
+//  );
+//  $items['node/%node/task-manager'] = array(
+//    'title' => t('Task Manager'),
+//    'page callback' => 'ed_task_manager',
+//    'access callback' => 'ed_task_manager_access',
+//    'page arguments' => array('node', 1),
+//    'access arguments' => array('node', 1),
+//    'type' => MENU_LOCAL_TASK,
+//    'weight' => 50,
+//  );
+//  $items['node/%node/event'] = array(
+//    'title' => t('Events'),
+//    'page callback' => 'ed_listing_from_group',
+//    'access callback' => 'ed_subgroup_content_listing_access',
+//    'page arguments' => array('node', 1, 'ed_event'),
+//    'access arguments' => array('node', 1, 'ed_event'),
+//    'type' => MENU_LOCAL_TASK,
+//    'weight' => 50,
+//  );
+//  $items['node/%node/blog'] = array(
+//    'title' => t('Posts'),
+//    'page callback' => 'ed_listing_from_group',
+//    'access callback' => 'ed_subgroup_content_listing_access',
+//    'page arguments' => array('node', 1, 'ed_blog'),
+//    'access arguments' => array('node', 1, 'ed_blog'),
+//    'type' => MENU_LOCAL_TASK,
+//    'weight' => 50,
+//  );
+//  $items['node/%node/learning-resource'] = array(
+//    'title' => t('Learning Resources'),
+//    'page callback' => 'ed_listing_from_group',
+//    'access callback' => 'ed_subgroup_content_listing_access',
+//    'page arguments' => array('node', 1, 'ed_learning_resource'),
+//    'access arguments' => array('node', 1, 'ed_learning_resource'),
+//    'type' => MENU_LOCAL_TASK,
+//    'weight' => 50,
+//  );
+//  $items['node/%node/forum'] = array(
+//    'title' => t('Discussion Board'),
+//    'page callback' => 'ed_listing_from_group',
+//    'access callback' => 'ed_subgroup_content_listing_access',
+//    'page arguments' => array('node', 1, 'ed_forum'),
+//    'access arguments' => array('node', 1, 'ed_forum'),
+//    'type' => MENU_LOCAL_TASK,
+//    'weight' => 50,
+//  );
+//
+//  $items['node/%node/bookmark'] = array(
+//    'title' => t('Bookmarks'),
+//    'page callback' => 'ed_listing_from_group',
+//    'access callback' => 'ed_subgroup_content_listing_access',
+//    'page arguments' => array('node', 1, 'ed_bookmark'),
+//    'access arguments' => array('node', 1, 'ed_bookmark'),
+//    'type' => MENU_LOCAL_TASK,
+//    'weight' => 50,
+//  );
+//  $items['node/%node/file'] = array(
+//    'title' => t('Files'),
+//    'page callback' => 'ed_listing_from_group',
+//    'access callback' => 'ed_subgroup_content_listing_access',
+//    'page arguments' => array('node', 1, 'ed_file'),
+//    'access arguments' => array('node', 1, 'ed_file'),
+//    'type' => MENU_LOCAL_TASK,
+//    'weight' => 50,
+//  );
+//
+//  return $items;
+//}
 
 function ed_subgroup_content_listing_access($filler, $gnode, $type){
   $is_group = _ed_is_nid_subgroup($gnode->nid);  

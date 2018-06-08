@@ -125,9 +125,9 @@ function ed_cluster_menu() {
   );
   $items['node/%node/learning-resource'] = array(
     'title' => t('Learning Resources'),
-    'page callback' => 'ed_listing_from_group',
+    'page callback' => 'ed_learning_resource_listing_from_group',
     'access callback' => 'ed_group_content_listing_access',
-    'page arguments' => array('node', 1, 'ed_learning_resource'),
+    'page arguments' => array(1),
     'access arguments' => array('node', 1, 'ed_learning_resource'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 50,
@@ -1056,43 +1056,27 @@ function ed_cluster_og_ui_get_group_admin_alter(&$data, $gid){
 
 
 function ed_group_content_listing_access($filler, $gnode, $type){
-  $is_group = _ed_is_nid_group($gnode->nid);
-
   if($gnode->type=='ed_subgroup'&&$type=='ed_subgroup'){
     return false;
   }
 
-  return $is_group;
+  return node_access('view', $gnode);
 }
 
 /*
  * Check if this is group Hindajad and enable Qualifications Portfolio tab
  */
 function ed_group_assessors_ed_q_portfolio_listing_access($filler, $gnode, $type){
-  $is_group = _ed_is_nid_group($gnode->nid);
 
-  if($gnode->type=='ed_subgroup'&&$type=='ed_subgroup'){
+  if(!($gnode->title=='Hindajad')){
     return false;
   }
 
-  if(!($gnode->title=='Hindajad')){
-    $is_group = false;
-  }
-
-  return $is_group;
+  return ed_group_content_listing_access($filler, $gnode, $type);
 }
 
 function ed_listing_from_group($filler, $gnode, $type){
-  menu_tree_set_path('main-menu', 'clusters');
 
-  // Add settings used for group events calendar
-  if ('ed_event' == $type) {
-    drupal_add_js(array(
-      'edidaktikum' => array(
-        'ed_cluster_group_events_ajax_url' => "node/{$gnode->nid}/ajax/get/events",
-      ),
-    ), 'setting');
-  }
 
   $content = array();
 
@@ -1107,11 +1091,19 @@ function ed_listing_from_group($filler, $gnode, $type){
       ),
     );
     if($type != 'ed_q_portfolio') {
-      $content['add-new-container']['add-new-link'] = array(
-          '#type' => 'markup',
-          '#markup' => l(t('Add new'), 'node/add/' . $type_dashed, array('query' => array('og_group_ref' => $gnode->nid, 'destination' => $destination), 'attributes' => array('class' => 'btn btn-success'))),
-      );
+      if($type == 'ed_learning_resource') {
+        $content = ed_generate_resource_create_buttons($content);
+      }else{
+        $content['add-new-container']['add-new-link'] = array(
+            '#type' => 'markup',
+            '#markup' => l(t('Add new'), 'node/add/' . $type_dashed, array('query' => array('og_group_ref' => $gnode->nid, 'destination' => $destination), 'attributes' => array('class' => 'btn btn-success'))),
+        );
+      }
+
+
     }
+
+
   }
 
   // This override will display both ed_blog and ed_answer
@@ -2341,18 +2333,6 @@ function _ed_cluster_is_groups_admin_or_creator($uid, $groups) {
 }
 
 
-function _ed_is_nid_group($nid){
-  $query = db_select('node', 'n')
-    ->fields('n', array('nid'))
-    ->condition('n.type', array('ed_subgroup', 'ed_cluster'), 'IN')
-    ->condition('n.nid', $nid);
-  $nids = $query->execute()->fetchCol();
-  if(!empty($nids)){
-    return true;
-  }
-  return false;
-
-}
 
 
 function _ed_cluster_search_for_clusters($searchstring){
