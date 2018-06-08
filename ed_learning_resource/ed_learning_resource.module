@@ -134,6 +134,14 @@ function ed_learning_resource_menu() {
 //    'menu_name' => 'main-menu',
 //    'type' => MENU_NORMAL_ITEM,
 //  );
+  $items['video-bricks'] = array(
+      'title' => t('Video Bricks'),
+      'page callback' => 'ed_learning_resource_video_bricks_listing_page',
+      'access callback' => TRUE,
+      'weight' => 10,
+//      'menu_name' => 'main-menu',
+//      'type' => MENU_NORMAL_ITEM,
+  );
   $items['resources'] = array(
     'title' => t('Learning Resources'),
     'page callback' => 'ed_learning_resource_listing',
@@ -162,34 +170,119 @@ function ed_learning_resource_menu() {
   return $items;
 }
 
-function ed_learning_resource_listing(){
-  $content = array();  
-  if(node_access('create', 'ed_learning_resource')){
-    $content['add-new'] = array(
-      '#type' => 'link',
-      '#title' => t('Add new learning resource'),
-      '#href' => 'node/add/ed-learning-resource',
-      '#prefix' => '<div class="ed-add-new-node ed-add-new-learning-resource">',
-      '#suffix' => '</div>',
-    );
-  }
-  $content['sorting'] = drupal_get_form('_ed_get_sorting_options');
-  
-  $sql_order = ed_get_sorting_type($content);
+/**
+ * Implements hook_views_api().
+ */
+function ed_learning_resource_views_api() {
+  return array(
+      'api' => 3,
+      'path' => drupal_get_path('module', 'ed_learning_resource') . '/includes/views',
+  );
+}
 
-  $nids = _ed_get_learning_resources($sql_order);
-  if(!empty($nids)){
-    $nodes = node_load_multiple($nids);    
+function ed_learning_resource_listing_from_group($gnode){
+  drupal_add_js(drupal_get_path('module', 'edidaktikum') . '/js/ed_likes.js', 'file');
+
+  $content = array();
+  if(node_access('create', 'ed_learning_resource') && og_is_member('node', $gnode->nid)) {
+    $destination = _ed_cluster_destination_for_group_node_type($gnode, 'ed_learning_resource');
+
+    $content = ed_generate_resource_create_buttons($content, $gnode, $destination);
+
+    $content['sorting'] = drupal_get_form('_ed_get_sorting_options');
+
+    $sql_order = ed_get_sorting_type($content);
+
+    $nids = _ed_get_group_content_by_type($gnode->nid, 'ed_learning_resource', $sql_order);
+
+
+
+
+    $nodes = node_load_multiple($nids);
     $build = node_view_multiple($nodes);
     $build['pager'] = array(
-      '#theme' => 'pager',
-      '#weight' => 5,
+        '#theme' => 'pager',
+        '#weight' => 5,
     );
     $content['pager']['resources'] = $build;
+
+
+    drupal_add_js('jQuery(document).ready(function(){
+      jQuery(".collection").matchHeight();
+      });','inline');
+
+    $pager = theme('pager');
+
+    $output =  theme('ed_learning_resource', array(
+            'nodes' => $nodes,
+            'gnode' => $gnode
+        )
+    );
+
+    $output = $output . $pager;
+
+    return $output;
   }
-  
-  
+
+
+
   return $content;
+}
+
+
+function ed_learning_resource_video_bricks_listing_page(){
+  drupal_add_css('.page-collections .node-ed-collection .single-publishing-status { display: none; }', $option['type'] = 'inline');
+
+
+  $nodes = ed_learning_resource_get_video_bricks();
+  if(!empty($nodes)){
+    $build = node_view_multiple($nodes);
+
+    $content['pager_table'] = $build;
+    $content['pager_pager'] = array('#theme' => 'pager');
+
+  }
+  drupal_add_js('jQuery(document).ready(function(){
+        jQuery(".video-bricks").matchHeight();
+        });','inline');
+
+  $pager = theme('pager');
+
+  $output =  theme('video-bricks', array(
+          'nodes' => $nodes,
+      )
+  );
+
+
+  $output = $output . $pager;
+
+  return $output;
+
+  //return $content;
+}
+
+
+/**
+ * Published Video bricks type learning resource nodes.
+ * Support pagination
+ */
+function ed_learning_resource_get_video_bricks() {
+  $query = db_select('node', 'n');
+  $query->join('field_data_ed_field_resource_type', 'type', 'n.nid = type.entity_id');
+  $query->fields('n', array('nid'))
+      ->condition('n.type', 'ed_learning_resource')
+      ->condition('type.ed_field_resource_type_value', 2)
+      ->condition('n.status', 1)
+      ->addTag('node_access')
+      ->range();
+
+  $query = $query->extend('PagerDefault')->limit(ed_get_paging_nr());
+
+  $result = $query->execute()->fetchCol();
+
+  $nodes = node_load_multiple($result);
+
+  return $nodes;
 }
 
 
@@ -229,7 +322,12 @@ function ed_learning_resource_preprocess_node(&$vars){
 	  drupal_add_js(drupal_get_path('module', 'edidaktikum') . '/js/ed_share.js', 'file');
 	
 	  if($vars['view_mode'] == 'full'){
-		  $vars['theme_hook_suggestions'][] = 'node__ed_learning_resource_full';
+	    if($vars['node']->ed_field_resource_type[LANGUAGE_NONE][0]['value'] == 2){
+        $vars['theme_hook_suggestions'][] = 'node__ed_learning_resource_full_video';
+      }else{
+        $vars['theme_hook_suggestions'][] = 'node__ed_learning_resource_full';
+      }
+
 	  }
   }
 }
@@ -331,10 +429,88 @@ function ed_get_promoted_resources(){
  */
 function ed_learning_resource_form_alter(&$form, &$form_state, $form_id) {
   if ('ed_learning_resource_node_form' == $form_id) {
-    if (empty($form['#node']->nid)) {
-      drupal_set_title(t('Create Learning Resource'));
+
+
+
+    if(isset($form['#node']->ed_field_resource_type)){
+      $resource_type = $form['#node']->ed_field_resource_type[LANGUAGE_NONE][0]['value'];
     }
+    else {
+      $resource_type = $_GET['field_resource_type'];
+
+      $form['ed_field_resource_type']['und'][0]['value']['#default_value'] = $resource_type;
+
+    }
+
+
+
+    $form['ed_field_resource_type']['#attributes']['style'][] = 'display:none';
+
+
+
+    if($resource_type==2){
+      drupal_set_title(t('Create Video Brick Type Resource'));
+      $form['ed_learning_resource_authors']['und']['#access'] = 0;
+      $form['ed_field_to_group_member']['und']['#access'] = 0;
+      $form['ed_g_drive_file']['und']['#access'] = 0;
+
+
+    }else{
+      drupal_set_title(t('Create Learning Resource'));
+      $form['ed_field_training_url']['und']['#access'] = 0;
+      $form['ed_field_trailer_url']['und']['#access'] = 0;
+      $form['ed_field_video_url']['und']['#access'] = 0;
+      $form['ed_field_video_resource_ref']['und']['#access'] = 0;
+
+    }
+
   }
+}
+
+
+function ed_generate_resource_create_buttons(&$content, $gnode, $destination){
+  $options_type1 = array(
+      'attributes' => array(
+          'class' => 'btn btn-success new-group price-btn',
+          'role' => 'button'
+      ),
+      'query' => array(
+          'field_resource_type' => 1,
+          'og_group_ref' => $gnode->nid,
+          'destination' => $destination
+      ),
+  );
+  $options_type2 = array(
+      'attributes' => array(
+          'class' => 'btn btn-success new-group price-btn',
+          'role' => 'button'
+      ),
+      'query' => array(
+          'field_resource_type' => 2,
+          'og_group_ref' => $gnode->nid,
+          'destination' => $destination
+      ),
+  );
+
+  $content['new-resource-buttons'] = array(
+      '#type' => 'markup',
+      '#prefix' => '<div class="new-group-buttons">',
+      '#suffix' => '</div>',
+  );
+  $content['new-resource-buttons']['add-new-type-1'] = array(
+      '#type' => 'item',
+      '#title' => t(''),
+      '#markup' => l(t('New Learnng resource'), 'node/add/ed-learning-resource', $options_type1),
+
+  );
+  $content['new-resource-buttons']['add-new-type-2'] = array(
+      '#type' => 'item',
+      '#title' => t(''),
+      '#markup' => l(t('New Video brick type resource'), 'node/add/ed-learning-resource', $options_type2),
+  );
+
+
+  return $content;
 }
 
 /**
@@ -394,3 +570,55 @@ function ed_learning_resource_field_formatter_view($entity_type, $entity, $field
   return $element;
 }
 
+
+function ed_learning_resource_generate_youtube_iframe($url){
+
+  $result =  preg_replace("/\s*[a-zA-Z\/\/:\.]*youtu.be\/([a-zA-Z0-9\-_]+)([a-zA-Z0-9\/\*\-\_\?\&\;\%\=\.]*)/i","<iframe class='video_frame embed-responsive-item' width=\"420\" height=\"525\" src=\"//www.youtube.com/embed/$1\" frameborder=\"0\" allowfullscreen></iframe>",$url);
+
+  return $result;
+}
+
+
+
+function ed_learning_resource_get_related_res($node){
+
+  if(!empty($node->ed_field_video_resource_ref)){
+
+    $methodical_resources = array();
+    $best_practice_resources = array();
+
+    $resource_types = _ed_learning_resource_type_list();
+
+
+    $methodical_resource_tax_id = array_search('Metoodilised leheküljed', $resource_types);
+    $best_practice_tax_id = array_search('Muu maailma kogemus', $resource_types);
+
+
+    foreach ($node->ed_field_video_resource_ref[LANGUAGE_NONE] as $item){
+
+      $wrapper = entity_metadata_wrapper('node', $item['target_id']);
+
+
+      if($wrapper->ed_learning_resource_type->value() == $methodical_resource_tax_id){
+        //Methodical resource
+        $title = $wrapper->title->value();
+        $content = $wrapper->ed_field_content->value();
+
+        array_push($methodical_resources, array('nid' => $item['target_id'], 'title' => $title, 'content' => $content));
+
+      }elseif ($wrapper->ed_learning_resource_type->value() == $best_practice_tax_id){
+        //Best practice resource
+        $title = $wrapper->title->value();
+        $content = $wrapper->ed_field_content->value();
+
+        array_push($best_practice_resources, array('nid' => $item['target_id'], 'title' => $title, 'content' => $content));
+      }
+
+    }
+
+    return array('methodical_res' => $methodical_resources, 'best_practice' => $best_practice_resources);
+  }
+
+  return null;
+
+}

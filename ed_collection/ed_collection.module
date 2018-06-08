@@ -134,7 +134,7 @@ function ed_collection_menu() {
 }
 
 /**
- * Collections liting page.
+ * Collections listing page.
  */
 function ed_collection_listing_page() {
   drupal_add_css('.page-collections .node-ed-collection .single-publishing-status { display: none; }', $option['type'] = 'inline');
@@ -163,29 +163,10 @@ function ed_collection_listing_page() {
 	$output = $output . $pager;
 	
 	return $output;
-	
-	
-	
-
 
 	//return $content;
-	
-	
+
 }
-
-function edidaktikum_theme_bs3_theme()
-{
-	$path = drupal_get_path('module', 'ed_collection');
-
-	return array(
-			'ed_collection' => array(
-					'template' => 'templates/ed_collection',
-					'variables' => array('nodes' => null),
-			),
-	);
-}
-
-
 
 
 

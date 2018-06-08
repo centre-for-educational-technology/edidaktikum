@@ -125,9 +125,9 @@ function ed_cluster_menu() {
   );
   $items['node/%node/learning-resource'] = array(
     'title' => t('Learning Resources'),
-    'page callback' => 'ed_listing_from_group',
+    'page callback' => 'ed_learning_resource_listing_from_group',
     'access callback' => 'ed_group_content_listing_access',
-    'page arguments' => array('node', 1, 'ed_learning_resource'),
+    'page arguments' => array(1),
     'access arguments' => array('node', 1, 'ed_learning_resource'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 50,
@@ -1083,16 +1083,7 @@ function ed_group_assessors_ed_q_portfolio_listing_access($filler, $gnode, $type
 }
 
 function ed_listing_from_group($filler, $gnode, $type){
-  menu_tree_set_path('main-menu', 'clusters');
 
-  // Add settings used for group events calendar
-  if ('ed_event' == $type) {
-    drupal_add_js(array(
-      'edidaktikum' => array(
-        'ed_cluster_group_events_ajax_url' => "node/{$gnode->nid}/ajax/get/events",
-      ),
-    ), 'setting');
-  }
 
   $content = array();
 
@@ -1107,11 +1098,19 @@ function ed_listing_from_group($filler, $gnode, $type){
       ),
     );
     if($type != 'ed_q_portfolio') {
-      $content['add-new-container']['add-new-link'] = array(
-          '#type' => 'markup',
-          '#markup' => l(t('Add new'), 'node/add/' . $type_dashed, array('query' => array('og_group_ref' => $gnode->nid, 'destination' => $destination), 'attributes' => array('class' => 'btn btn-success'))),
-      );
+      if($type == 'ed_learning_resource') {
+        $content = ed_generate_resource_create_buttons($content);
+      }else{
+        $content['add-new-container']['add-new-link'] = array(
+            '#type' => 'markup',
+            '#markup' => l(t('Add new'), 'node/add/' . $type_dashed, array('query' => array('og_group_ref' => $gnode->nid, 'destination' => $destination), 'attributes' => array('class' => 'btn btn-success'))),
+        );
+      }
+
+
     }
+
+
   }
 
   // This override will display both ed_blog and ed_answer

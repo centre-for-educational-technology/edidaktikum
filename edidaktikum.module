@@ -1591,6 +1591,38 @@ function edidaktikum_hybridauth_user_insert($account, $data) {
 	}
 }
 
+function edidaktikum_get_short_content_or_excerpt($node){
+  if(!empty($node->ed_field_excerpt)){
+    return strlen( $node->ed_field_excerpt['und'][0]['safe_value']) > 150 ? substr( $node->ed_field_excerpt['und'][0]['safe_value'],0,150)."..." :  $node->ed_field_excerpt['und'][0]['safe_value'];
+  }else{
+    return strlen( $node->ed_field_content['und'][0]['safe_value']) > 250 ? substr( $node->ed_field_content['und'][0]['safe_value'],0,250)."..." :  $node->ed_field_content['und'][0]['safe_value'];
+  }
+}
+
+
+/**
+ * Implements hook_theme()
+ * Used by by module templates
+ */
+function edidaktikum_theme_bs3_theme()
+{
+
+  return array(
+      'ed_collection' => array(
+          'template' => 'templates/ed_collection',
+          'variables' => array('nodes' => null),
+      ),
+      'ed_learning_resource' => array(
+          'template' => 'templates/ed_learning_resource',
+          'variables' => array('nodes' => null),
+      ),
+      'video-bricks' => array(
+          'template' => 'templates/video-bricks',
+          'variables' => array('nodes' => null),
+      ),
+  );
+}
+
 /**
  * Implements hook_form_FORM_ID_alter().
  */
