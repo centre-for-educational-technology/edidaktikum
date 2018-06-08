@@ -184,49 +184,45 @@ function ed_learning_resource_listing_from_group($gnode){
   drupal_add_js(drupal_get_path('module', 'edidaktikum') . '/js/ed_likes.js', 'file');
 
   $content = array();
-  if(node_access('create', 'ed_learning_resource') && og_is_member('node', $gnode->nid)) {
-    $destination = _ed_cluster_destination_for_group_node_type($gnode, 'ed_learning_resource');
 
-    $content = ed_generate_resource_create_buttons($content, $gnode, $destination);
+  $destination = _ed_cluster_destination_for_group_node_type($gnode, 'ed_learning_resource');
 
-    $content['sorting'] = drupal_get_form('_ed_get_sorting_options');
+  $content = ed_generate_resource_create_buttons($content, $gnode, $destination);
 
-    $sql_order = ed_get_sorting_type($content);
+  $content['sorting'] = drupal_get_form('_ed_get_sorting_options');
 
-    $nids = _ed_get_group_content_by_type($gnode->nid, 'ed_learning_resource', $sql_order);
+  $sql_order = ed_get_sorting_type($content);
 
-
-
-
-    $nodes = node_load_multiple($nids);
-    $build = node_view_multiple($nodes);
-    $build['pager'] = array(
-        '#theme' => 'pager',
-        '#weight' => 5,
-    );
-    $content['pager']['resources'] = $build;
-
-
-    drupal_add_js('jQuery(document).ready(function(){
-      jQuery(".collection").matchHeight();
-      });','inline');
-
-    $pager = theme('pager');
-
-    $output =  theme('ed_learning_resource', array(
-            'nodes' => $nodes,
-            'gnode' => $gnode
-        )
-    );
-
-    $output = $output . $pager;
-
-    return $output;
-  }
+  $nids = _ed_get_group_content_by_type($gnode->nid, 'ed_learning_resource', $sql_order);
 
 
 
-  return $content;
+
+  $nodes = node_load_multiple($nids);
+  $build = node_view_multiple($nodes);
+  $build['pager'] = array(
+      '#theme' => 'pager',
+      '#weight' => 5,
+  );
+  $content['pager']['resources'] = $build;
+
+
+  drupal_add_js('jQuery(document).ready(function(){
+    jQuery(".collection").matchHeight();
+    });','inline');
+
+  $pager = theme('pager');
+
+  $output =  theme('ed_learning_resource', array(
+          'nodes' => $nodes,
+          'gnode' => $gnode
+      )
+  );
+
+  $output = $output . $pager;
+
+  return $output;
+
 }
 
 
