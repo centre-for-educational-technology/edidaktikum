@@ -32,7 +32,7 @@ function ed_cluster_to_group_member_page() {
   if (!empty($nodes)) {
     foreach ($nodes as $node) {
       $user = user_load($node->uid);
-      
+
       $node_title = edidaktikum_get_node_title($node);
       $shared_node_type_name = edidaktikum_get_node_type_name($node->type);
 
@@ -124,3 +124,127 @@ function ed_cluster_user_autocomplete($string = '') {
   drupal_json_output($matches);
 }
 
+/**
+ * Grouop file listing page handler.
+ * @param  object $gnode Group node object
+ * @return array         Page according to Form API
+ */
+function ed_cluster_file_listing_from_group($gnode) {
+  $content = [];
+  $type = 'ed_file';
+
+  if (node_access('create', $type) && og_is_member('node', $gnode->nid)) {
+    $destination = _ed_cluster_destination_for_group_node_type($gnode, $type);
+
+    $type_dashed = str_replace('_', '-', $type);
+    $content['add-new-container'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'class' => ['ed-add-new-node', 'ed-add-new-'.$type_dashed,],
+      ],
+    ];
+    $content['add-new-container']['add-new-link'] = [
+      '#type' => 'markup',
+      '#markup' => l(t('Add new'), 'node/add/' . $type_dashed,
+      [
+        'query' => [
+          'og_group_ref' => $gnode->nid,
+          'destination' => $destination,
+        ],
+        'attributes' => [
+          'class' => 'btn btn-success',
+          ]
+        ]
+      ),
+    ];
+  }
+
+  if (isset($gnode->ed_g_drive_file[LANGUAGE_NONE]) && is_array($gnode->ed_g_drive_file[LANGUAGE_NONE]) && count($gnode->ed_g_drive_file[LANGUAGE_NONE])) {
+    $header = [
+      [
+        'data' => '',
+      ],
+      [
+        'data' => t('Title'),
+      ],
+    ];
+    $rows = [];
+
+    $content['heading_g_drive'] = [
+      '#markup' => '<h3>' . t('Failid Google Drive-st') . '</h3>',
+    ];
+
+    foreach($gnode->ed_g_drive_file[LANGUAGE_NONE] as $single) {
+      $rows[] = [
+        'data' => [
+          'icon' => '<img src="' . $single['mime']. '" alt="icon">',
+          'title' => l($single['name'], $single['url'], [
+            'attributes' => [
+              'target' => '_blank',
+            ],
+          ]),
+        ],
+      ];
+    }
+
+    $content['table_g_drive'] = [
+      '#theme' => 'table',
+      '#attributes' => [
+        'class' => ['ed-g-drive-files-table',],
+      ],
+      '#rows' => $rows,
+      '#header' => $header,
+    ];
+  }
+
+  $header = [
+    [
+      'data' => t('Title'),
+      'field' => 'n.title',
+      'sort' => 'asc',
+    ],
+    [
+      'data' => t('Creator'),
+    ],
+    [
+      'data' => t('Changed'),
+      'field' => 'n.changed',
+      'sort' => 'desc',
+    ],
+  ];
+  $rows = [];
+
+  $content_nids = _ed_get_group_content_by_type_with_table_sort($gnode->nid, $type, $header);
+
+  if ($content_nids && is_array($content_nids) && count($content_nids) > 0) {
+    $nodes = node_load_multiple($content_nids);
+
+    foreach($nodes as $node) {
+      $creator = user_load($node->uid);
+      $rows[] = [
+        'data' => [
+          'title' => l($node->title, 'node/' . $node->nid),
+          'creator' => l(edidaktikum_get_full_name_for_user_account($creator), 'user/' . $creator->uid),
+          'changed' => format_date($node->changed, 'short'),
+        ],
+      ];
+    }
+  }
+
+  if (!empty($rows)) {
+    $content['heading_table'] = [
+      '#markup' => '<h3>' . t('Files') . '</h3>',
+    ];
+    $content['table'] = [
+      '#theme' => 'table',
+      '#attributes' => [
+        'class' => ['ed-files-table',],
+      ],
+      '#rows' => $rows,
+      '#header' => $header,
+    ];
+    $content['pager'] = ['#theme' => 'pager',];
+  }
+
+  return $content;
+}

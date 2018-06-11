@@ -153,12 +153,13 @@ function ed_cluster_menu() {
   );
   $items['node/%node/file'] = array(
     'title' => t('Files'),
-    'page callback' => 'ed_listing_from_group',
+    'page callback' => 'ed_cluster_file_listing_from_group',
     'access callback' => 'ed_group_content_listing_access',
-    'page arguments' => array('node', 1, 'ed_file'),
-    'access arguments' => array('node', 1, 'ed_file'),
+    'page arguments' => [1,],
+    'access arguments' => ['node', 1, 'ed_file',],
     'type' => MENU_LOCAL_TASK,
     'weight' => 50,
+    'file' => 'ed_cluster.pages.inc',
   );
   $items['clusters/get/groups_members'] = array(
     'page callback' => 'ed_cluster_get_groups_members_ajax',
@@ -1094,19 +1095,11 @@ function ed_listing_from_group($filler, $gnode, $type){
       ),
     );
     if($type != 'ed_q_portfolio') {
-      if($type == 'ed_learning_resource') {
-        $content = ed_generate_resource_create_buttons($content);
-      }else{
-        $content['add-new-container']['add-new-link'] = array(
-            '#type' => 'markup',
-            '#markup' => l(t('Add new'), 'node/add/' . $type_dashed, array('query' => array('og_group_ref' => $gnode->nid, 'destination' => $destination), 'attributes' => array('class' => 'btn btn-success'))),
-        );
-      }
-
-
+      $content['add-new-container']['add-new-link'] = array(
+        '#type' => 'markup',
+        '#markup' => l(t('Add new'), 'node/add/' . $type_dashed, array('query' => array('og_group_ref' => $gnode->nid, 'destination' => $destination), 'attributes' => array('class' => 'btn btn-success'))),
+      );
     }
-
-
   }
 
   // This override will display both ed_blog and ed_answer
@@ -1531,6 +1524,31 @@ function _ed_get_group_content_by_type($gid, $type, $order = 'DESC'){
   }
 
   $query->limit(ed_get_paging_nr());
+  $query->distinct();
+  $result = $query->execute()->fetchCol();
+  return $result;
+}
+
+/**
+ * Responds with node identifiers for group according to type provided,
+ * uses TableSort based on provided header data.
+ * @param  int    $gid    Group identifier
+ * @param  string $type   Node type
+ * @param  array  $header Table header
+ * @return array          Array of node identifiers
+ */
+function _ed_get_group_content_by_type_with_table_sort($gid, $type, $header){
+  $query = db_select('node', 'n');
+  $query->join('og_membership', 'ogm', "n.nid = ogm.etid AND ogm.entity_type = 'node'");
+  $query->fields('n', array('nid'))
+      ->condition('ogm.gid', $gid)
+      ->condition('n.nid', $gid, '!=')
+      ->condition('n.type', $type)
+      ->addTag('node_access')
+      ->extend('TableSort')
+      ->orderByHeader($header)
+      ->extend('PagerDefault')
+      ->limit(ed_get_paging_nr());
   $query->distinct();
   $result = $query->execute()->fetchCol();
   return $result;
