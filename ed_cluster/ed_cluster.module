@@ -1056,12 +1056,15 @@ function ed_cluster_og_ui_get_group_admin_alter(&$data, $gid){
 
 
 function ed_group_content_listing_access($filler, $gnode, $type){
-  if($gnode->type=='ed_subgroup'&&$type=='ed_subgroup'){
+  
+  if($gnode->type!='ed_cluster' && $gnode->type!='ed_subgroup'){
     return false;
   }
-
   return node_access('view', $gnode);
+
+
 }
+
 
 /*
  * Check if this is group Hindajad and enable Qualifications Portfolio tab
