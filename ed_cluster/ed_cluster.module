@@ -37,14 +37,14 @@ function ed_cluster_menu() {
     'type' => MENU_DEFAULT_LOCAL_TASK,
     //'page callback' => 'ed_all_groups_listing',
     'access callback' => TRUE,
-    'weight' => 5,
+    'weight' => 0,
   );
   $items['clusters/mygroups'] = array(
     'title' => t('My Groups'),
     'type' => MENU_LOCAL_TASK,
     'access callback' => 'user_is_logged_in',
     'page callback' => 'ed_cluster_my_listing_page',
-    'weight' => 0,
+    'weight' => 5,
   );
   $items['clusters/inactivegroups'] = array(
       'title' => t('Inactive Groups'),
@@ -1057,7 +1057,7 @@ function ed_cluster_og_ui_get_group_admin_alter(&$data, $gid){
 
 
 function ed_group_content_listing_access($filler, $gnode, $type){
-  
+
   if($gnode->type!='ed_cluster' && $gnode->type!='ed_subgroup'){
     return false;
   }
