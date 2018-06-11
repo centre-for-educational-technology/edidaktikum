@@ -171,7 +171,7 @@ function ed_cluster_file_listing_from_group($gnode) {
     $rows = [];
 
     $content['heading_g_drive'] = [
-      '#markup' => '<h3>' . t('Failid Google Drive-st') . '</h3>',
+      '#markup' => '<h3>' . t('Google Drive files') . '</h3>',
     ];
 
     foreach($gnode->ed_g_drive_file[LANGUAGE_NONE] as $single) {
