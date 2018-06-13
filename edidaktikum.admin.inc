@@ -7,27 +7,7 @@
 
 function edidaktikum_home_page_admin_form() {
   $form = array();
-//  $form['ed_home_page_intro_image_url'] = array(
-//    '#type' => 'textfield',
-//    '#title' => t('Home page intro image URL'),
-//    '#default_value' => variable_get('ed_home_page_intro_image_url', ''),
-//    '#description' => t("Intro image to display in home page."),
-//    '#required' => FALSE,
-//  );
-//  $form['ed_home_page_intro_text'] = array(
-//    '#type' => 'textarea',
-//    '#title' => t('Home page intro text'),
-//    '#default_value' => variable_get('ed_home_page_intro_text', ''),
-//    '#description' => t("Intro text to display in home page."),
-//    '#required' => FALSE,
-//  );
-//  $form['ed_home_page_tour_text'] = array(
-//    '#type' => 'textarea',
-//    '#title' => t('Home page tour text'),
-//    '#default_value' => variable_get('ed_home_page_tour_text', ''),
-//    '#description' => t("Tour text to display in home page."),
-//    '#required' => FALSE,
-//  );
+  
   $form['ed_home_page_intro_notification_message'] = array(
     '#type' => 'textarea',
     '#title' => t('Message to be displayed on front page'),
@@ -131,89 +111,8 @@ function edidaktikum_pp_page_admin_form() {
 	if (is_array($pp_text) && isset($pp_text['format'])) {
 		$form['ed_pp_page_text']['#format'] = $pp_text['format'];
 	}
-	
+
 	return system_settings_form($form);
-}
-
-
-function edidaktikum_promoted_resources_page_admin_form(){
-  $form = array();
-  $nids = ed_get_promoted_resources();
-  if(!$nids){
-    $form['form']['promoted_resources'] = array(
-      '#type' => 'markup',
-      '#markup' => '<h2>'.t('No Promoted Learning Resources Found').'</h2>',
-    );
-    return ($form);
-  }
-  $resources = node_load_multiple($nids);   //@todo Cancel everything if this is empty !!!!!!
-  $resourcenames = array();
-  foreach($resources as $resource){
-    $resourcenames[] = $resource->title." - ".$resource->name." - ".format_date($resource->created,'custom','d/m/Y');
-  }
-  $form['form']['promoted_resources'] = array(
-    '#type' => 'radios',
-    '#title' => t('Choose Learning Resource to display on front page'),
-    '#options' => $resourcenames,
-    '#default_value' => variable_get('promoted_resources'),
-  );
-
-  if (isset($nids[variable_get('promoted_resources')])) {
-    $setnid = $nids[variable_get('promoted_resources')];
-    variable_set('resource_to_front', $setnid);
-  }
-  
-  return system_settings_form($form);
-}
-
-function edidaktikum_promoted_events_page_admin_form(){
-  $form = array();
-  $nids = ed_get_promoted_by_node_type('ed_event');
-  if(!$nids){
-    $form['form']['promoted_events'] = array(
-      '#type' => 'markup',
-      '#markup' => '<h2>'.t('No Promoted Events Found').'</h2>',
-    );
-    return ($form);
-  }
-  $events = node_load_multiple($nids);   //@todo Cancel everything if this is empty !!!!!!
-  $options = array();
-  foreach($events as $event){
-    $options[$event->nid] = $event->title." - ".$event->name." - ".format_date($event->created,'custom','d/m/Y');
-  }
-  $form['form']['event_to_front'] = array(
-    '#type' => 'radios',
-    '#title' => t('Choose Event to display on front page'),
-    '#options' => $options,
-    '#default_value' => variable_get('event_to_front'),
-  );
-
-  return system_settings_form($form);
-}
-
-function edidaktikum_promoted_news_page_admin_form(){
-  $form = array();
-  $nids = ed_get_promoted_by_node_type('ed_news');
-  if(!$nids){
-    $form['form']['promoted_news'] = array(
-      '#type' => 'markup',
-      '#markup' => '<h2>'.t('No Promoted News Found').'</h2>',
-    );
-    return ($form);
-  }
-  $news = node_load_multiple($nids);   //@todo Cancel everything if this is empty !!!!!!
-  $options = array();
-  foreach($news as $single){
-    $options[$single->nid] = $single->title." - ".$single->name." - ".format_date($single->created,'custom','d/m/Y');
-  }
-  $form['form']['news_to_front'] = array(
-    '#type' => 'radios',
-    '#title' => t('Choose News to display on front page'),
-    '#options' => $options,
-    '#default_value' => variable_get('news_to_front'),
-  );
-
-  return system_settings_form($form);
 }
 
 function edidaktikum_configuration_page_admin_form(){
@@ -238,7 +137,7 @@ function edidaktikum_configuration_page_admin_form(){
     '#default_value' => variable_get('ed_uservoice_api_key'),
     '#required' => FALSE,
   );
-  
+
   return system_settings_form($form);
 }
 function edidaktikum_statistics_page_admin_form(){
@@ -358,4 +257,3 @@ function get_user_qt(){
 //
 //  return $query->countQuery()->execute()->fetchField();
 //}
-

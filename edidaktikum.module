@@ -103,7 +103,6 @@ function edidaktikum_menu() {
     'type' => MENU_NORMAL_ITEM,
     'weight' => 2,
   );
-
 	$items['admin/config/edidaktikum/pp-page'] = array(
 			'title' => 'eDidaktikum Privacy Policy page',
 			'description' => 'Configure edidaktikum Privacy Policy page.',
@@ -114,37 +113,6 @@ function edidaktikum_menu() {
 			'type' => MENU_NORMAL_ITEM,
 			'weight' => 2,
 	);
-
-  $items['admin/config/edidaktikum/promoted-news'] = array(
-    'title' => 'eDidaktikum Promoted News',
-    'description' => 'Choose front page News',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('edidaktikum_promoted_news_page_admin_form'),
-    'access arguments' => array('access administration pages'),
-    'file' => 'edidaktikum.admin.inc',
-    'type' => MENU_NORMAL_ITEM,
-    'weight' => 3,
-  );
-  $items['admin/config/edidaktikum/promoted-events'] = array(
-    'title' => 'eDidaktikum Promoted Events',
-    'description' => 'Choose front page Event',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('edidaktikum_promoted_events_page_admin_form'),
-    'access arguments' => array('access administration pages'),
-    'file' => 'edidaktikum.admin.inc',
-    'type' => MENU_NORMAL_ITEM,
-    'weight' => 4,
-  );
-  $items['admin/config/edidaktikum/promoted-resources'] = array(
-    'title' => 'eDidaktikum Promoted Resources',
-    'description' => 'Choose front page Learning Resource',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('edidaktikum_promoted_resources_page_admin_form'),
-    'access arguments' => array('access administration pages'),
-    'file' => 'edidaktikum.admin.inc',
-    'type' => MENU_NORMAL_ITEM,
-    'weight' => 5,
-  );
   $items['admin/config/edidaktikum/statistics'] = array(
     'title' => 'eDidaktikum Statistics',
     'description' => 'Statistics about the eDidaktikum web page',

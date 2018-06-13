@@ -252,7 +252,7 @@ function edidaktikum_create_field_category() {
  * Updates translatable variables list to include our own.
  */
 function edidaktikum_set_translatable_variables() {
-  $translatable_varibles = array('ed_home_page_intro_image_url', 'ed_home_page_intro_text', 'ed_home_page_tour_text', 'ed_contact_page_contacts_text', 'ed_contact_page_logos_text', 'ed_faq_page_text', 'ed_pp_page_text');
+  $translatable_varibles = array('ed_contact_page_contacts_text', 'ed_contact_page_logos_text', 'ed_faq_page_text', 'ed_pp_page_text');
   $variable_realm_list_language = variable_get('variable_realm_list_language', array());
 
   if (!empty($variable_realm_list_language)) {
