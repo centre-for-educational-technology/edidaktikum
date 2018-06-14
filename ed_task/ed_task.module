@@ -225,6 +225,8 @@ function ed_task_listing_page() {
       }
     }
 
+
+
     $current_page = pager_default_initialize(count($tasknodessorted), $per_page, 2);
 
     $chunks = array_chunk($tasknodessorted, $per_page, TRUE);
@@ -287,6 +289,7 @@ function ed_task_listing_page() {
         $tmp_data['data'] = l($tmp_data['data'] . $grade_str, 'node/' . $tasknode->answer_nid, array('html' => TRUE));
 
       }else{
+
         $tmp_data['class'] = 'unanswered';
         $tmp_data['data'] = t('Not Answered');
         $tmp_data['title'] = t('Not answered');
@@ -701,6 +704,7 @@ function _ed_get_user_unanswered_tasks_count($account) {
 
   if(!empty($groups)){
     foreach ($groups as $my_group){
+
       $groups = array_values($groups);
       //  get members and separate out admins
       // that is needed to get the statutes for answers
@@ -710,87 +714,87 @@ function _ed_get_user_unanswered_tasks_count($account) {
       $tasks = ed_get_group_tasks($my_group);
 
 
+      foreach ($tasks as $task) {
 
-      foreach ($tasks as $task){
-        $task = $task['nid'];
+        if(ed_task_can_user_answer_task($task, $account->uid)) {
 
-        $answer = ed_get_answer($task, $account->uid, false, $admins);
+          $task = $task['nid'];
 
+          $answer = ed_get_answer($task, $account->uid, false, $admins);
 
-        switch($answer['status']) {
-          case 'unanswered':
+          switch ($answer['status']) {
+            case 'unanswered':
 
-            //Check if it is a study group case
-            $wrapper = entity_metadata_wrapper('node', $task);
-            $task_study_groups = $wrapper->ed_task_field_study_group->raw();
+              //Check if it is a study group case
+              $wrapper = entity_metadata_wrapper('node', $task);
+              $task_study_groups = $wrapper->ed_task_field_study_group->raw();
 
-            //Check if it is a to user case
-            $is_to_user_task = false;
-            $task_to_group_member = $wrapper->ed_field_to_group_member->raw();
+              //Check if it is a to user case
+              $is_to_user_task = false;
+              $task_to_group_member = $wrapper->ed_field_to_group_member->raw();
 
-            if(!empty($task_to_group_member)){
+              if (!empty($task_to_group_member)) {
 
-              foreach ($task_to_group_member as $item){
+                foreach ($task_to_group_member as $item) {
 
-                if($item == $account->uid){
-                  $unanswered_or_rejected++;
-                  $is_to_user_task=true;
-                  break;
-                }else{
+                  if ($item == $account->uid) {
 
-                  $is_to_user_task=true;
-                }
-
-              }
-
-
-
-            }
-
-            if($is_to_user_task == false){
-              if(!empty($task_study_groups)){
-
-                //Get user study group field
-                $wrapper = entity_metadata_wrapper('user', $account->uid);
-                $user_study_group = $wrapper->ed_field_study_group->value();
-
-
-                if(isset($user_study_group)){
-                  if(in_array($user_study_group, $task_study_groups) == true ){
                     $unanswered_or_rejected++;
+                    $is_to_user_task = true;
+                    break;
+                  } else {
+
+                    $is_to_user_task = true;
                   }
 
                 }
 
-              }else{
-                $unanswered_or_rejected++;
-
-
               }
-            }
+
+              if ($is_to_user_task == false) {
+                if (!empty($task_study_groups)) {
+
+                  //Get user study group field
+                  $wrapper = entity_metadata_wrapper('user', $account->uid);
+                  $user_study_group = $wrapper->ed_field_study_group->value();
 
 
+                  if (isset($user_study_group)) {
+                    if (in_array($user_study_group, $task_study_groups) == true) {
 
-            break;
+                      $unanswered_or_rejected++;
+                    }
+
+                  }
+
+                } else {
+
+                  $unanswered_or_rejected++;
 
 
-          case 'rejected':
+                }
+              }
 
-            $unanswered_or_rejected++;
-            break;
+              break;
+
+            case 'rejected':
+
+              $unanswered_or_rejected++;
+              break;
+          }
+
         }
-
       }
 
     }
   }
 
-
-
   $count = $unanswered_or_rejected;
   return $count;
 
 }
+
+
 
 function ed_task_preprocess_page(&$variables){
   if(in_array('page__dashboard__tasks', $variables['theme_hook_suggestions'])){

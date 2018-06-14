@@ -1,0 +1,68 @@
+diff --git a/url.module b/url.module
+index 3f9eba6..2808a20 100644
+--- a/url.module
++++ b/url.module
+@@ -31,12 +31,63 @@ function url_field_info() {
+     ),
+     'default_widget' => 'url_external',
+     'default_formatter' => 'url_default',
++    'property_type' => 'url',
++    'property_callbacks' => array('url_property_callback'),
+   );
+ 
+   return $info;
+ }
+ 
+ /**
++ * Property callback for URL field.
++ */
++function url_property_callback(&$info, $entity_type, $field, $instance, $field_type) {
++  $name = $field['field_name'];
++  $property = &$info[$entity_type]['bundles'][$instance['bundle']]['properties'][$name];
++
++  $property['type'] = ($field['cardinality'] != 1) ? 'list<url>' : 'url';
++  $property['getter callback'] = 'entity_metadata_field_verbatim_get';
++  $property['setter callback'] = 'entity_metadata_field_verbatim_set';
++  $property['auto creation'] = 'url_default_values';
++  $property['property info'] = url_data_property_info();
++}
++
++/**
++ * Defines info for the properties of the URL field structure.
++ */
++function url_data_property_info($name = NULL) {
++  $properties = array();
++
++  $properties['value'] = array(
++    'type' => 'text',
++    'label' => t('URL'),
++    'description' => t('The URL string.'),
++    'setter callback' => 'entity_property_verbatim_set',
++  );
++  $properties['title'] = array(
++    'type' => 'text',
++    'label' => t('Title'),
++    'description' => t('The title of the URL.'),
++    'setter callback' => 'entity_property_verbatim_set',
++  );
++
++  return $properties;
++}
++
++/**
++ * Callback for setting default values on new entities.
++ */
++function url_default_values() {
++  $default_values = array(
++    'value' => '',
++    'title' => '',
++    'attributes' => array(),
++  );
++
++  return $default_values;
++}
++
++/**
+  * Implements hook_field_instance_settings_form().
+  */
+ function url_field_instance_settings_form($field, $instance) {

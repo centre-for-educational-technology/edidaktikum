@@ -210,7 +210,7 @@ function ed_learning_resource_node_add_field_trailer_url() {
     $field = array(
         'field_name' => 'ed_field_trailer_url',
         'label' => t('Treileri viide'),
-        'type' => 'text',
+        'type' => 'url',
         'cardinality' => 1,
         'foreign keys' => array(),
     );
@@ -225,13 +225,9 @@ function ed_learning_resource_node_add_field_trailer_url() {
         'required' => false,
         'entity_type' => 'node',
         'bundle' => 'ed_learning_resource',
-        'display' => array(
-            'teaser' => array(
-                'label' => 'hidden',
-                'type' => 'text_trimmed',
-            ),
+        'widget' => array(
+            'weight' => -10,
         ),
-
     );
     field_create_instance($instance);
   }
@@ -248,7 +244,7 @@ function ed_learning_resource_node_add_field_video_url() {
     $field = array(
         'field_name' => 'ed_field_video_url',
         'label' => t('Viide videole'),
-        'type' => 'text',
+        'type' => 'url',
         'cardinality' => 1,
         'foreign keys' => array(),
     );
@@ -263,11 +259,8 @@ function ed_learning_resource_node_add_field_video_url() {
         'required' => false,
         'entity_type' => 'node',
         'bundle' => 'ed_learning_resource',
-        'display' => array(
-            'teaser' => array(
-                'label' => 'hidden',
-                'type' => 'text_trimmed',
-            ),
+        'widget' => array(
+            'weight' => -10,
         ),
 
     );
@@ -286,7 +279,7 @@ function ed_learning_resource_node_add_field_training_url() {
     $field = array(
         'field_name' => 'ed_field_training_url',
         'label' => t('Viide koolituse regamisvormile'),
-        'type' => 'text',
+        'type' => 'url',
         'cardinality' => 1,
         'foreign keys' => array(),
     );
@@ -301,11 +294,42 @@ function ed_learning_resource_node_add_field_training_url() {
         'required' => false,
         'entity_type' => 'node',
         'bundle' => 'ed_learning_resource',
-        'display' => array(
-            'teaser' => array(
-                'label' => 'hidden',
-                'type' => 'text_trimmed',
-            ),
+        'widget' => array(
+            'weight' => -10,
+        ),
+
+    );
+    field_create_instance($instance);
+  }
+}
+
+
+/**
+ * Creates and adds url field for methodical resource or best practice type videos
+ */
+function ed_learning_resource_node_add_field_external_res_url() {
+
+  if(!field_info_field('ed_field_external_res_url')){
+    $field = array(
+        'field_name' => 'ed_field_external_res_url',
+        'label' => t('Viide välislehele (Metoodilised leheküljed ja Muu maailma kogemus)'),
+        'type' => 'url',
+        'cardinality' => 1,
+        'foreign keys' => array(),
+    );
+    field_create_field($field);
+  }
+
+  if(!field_info_instance('node', 'ed_field_external_res_url', 'ed_learning_resource')){
+    $instance = array(
+        'field_name' => 'ed_field_external_res_url',
+        'label' => t('Viide välislehele (Metoodilised leheküljed ja Muu maailma kogemus)'),
+        'description' => '',
+        'required' => false,
+        'entity_type' => 'node',
+        'bundle' => 'ed_learning_resource',
+        'widget' => array(
+            'weight' => -10,
         ),
 
     );
@@ -532,38 +556,6 @@ function ed_learning_resource_update_7104(&$sandbox) {
 /**
  * Adds video material type related fields
  */
-//function ed_learning_resource_update_7119(&$sandbox) {
-//
-////  field_delete_field('ed_field_trailer_url');
-////  field_delete_instance('ed_field_trailer_url');
-////
-////  field_delete_field('ed_field_video_url');
-////  field_delete_instance('ed_field_video_url');
-////
-////
-////  ed_learning_resource_node_add_field_trailer_url();
-////  ed_learning_resource_node_add_field_video_url();
-//
-//
-//
-////  ed_learning_resource_node_add_field_excerpt();
-////  ed_learning_resource_node_add_field_training_url();
-//
-//
-//  field_delete_field('ed_field_resource_ref');
-//  field_delete_instance('ed_field_resource_ref');
-//
-//
-//  ed_learning_resource_node_add_field_resource_ref();
-//
-//}
-
-
-
-
-/**
- * Adds video material type related fields
- */
 function ed_learning_resource_update_7105(&$sandbox) {
 
   ed_learning_resource_node_add_field_trailer_url();
@@ -604,5 +596,28 @@ function ed_learning_resource_update_7106(&$sandbox) {
         ->execute();
   }
 
+}
+
+
+/**
+ * Update fields related to Video bricks
+ * Add ed_learning_resource_node_add_field_external_res_url
+ */
+function ed_learning_resource_update_7107(&$sandbox) {
+
+  field_delete_field('ed_field_training_url');
+  field_delete_instance('ed_field_training_url');
+
+  field_delete_field('ed_field_video_url');
+  field_delete_instance('ed_field_video_url');
+
+  field_delete_field('ed_field_trailer_url');
+  field_delete_instance('ed_field_trailer_url');
+
+
+  ed_learning_resource_node_add_field_external_res_url();
+  ed_learning_resource_node_add_field_trailer_url();
+  ed_learning_resource_node_add_field_video_url();
+  ed_learning_resource_node_add_field_training_url();
 }
 

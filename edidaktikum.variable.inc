@@ -6,28 +6,6 @@
  */
 
 function edidaktikum_variable_info($options) {
-  $variables['ed_home_page_intro_image_url'] = array(
-    'type' => 'string',
-    'title' => t('Home page intro image URL', array(), $options),
-    'description' => t('Intro image to display in home page.', array(), $options),
-    'required' => FALSE,
-    'group' => 'edidaktikum_settings',
-  );
-  $variables['ed_home_page_intro_text'] = array(
-    'type' => 'text',
-    'title' => t('Home page intro text', array(), $options),
-    'description' => t('Intro text to display in home page.', array(), $options),
-    'required' => FALSE,
-    'group' => 'edidaktikum_settings',
-  );
-  $variables['ed_home_page_tour_text'] = array(
-    'type' => 'text',
-    'title' => t('Home page tour text', array(), $options),
-    'description' => t('Tour text to display in home page.', array(), $options),
-    'required' => FALSE,
-    'group' => 'edidaktikum_settings',
-  );
-
   $variables['ed_contact_page_contacts_text'] = array(
     'type' => 'text_format',
     'title' => t('Contact page contacts text', array(), $options),
@@ -106,4 +84,3 @@ function edidaktikum_variable_group_info() {
   );
   return $groups;
 }
-
