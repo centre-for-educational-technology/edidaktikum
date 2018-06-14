@@ -622,80 +622,42 @@ function ed_task_listing_for_students($test, $node){
   return $content;
 }
 
+/**
+ * Retruns a content of groups listing page for current user.
+ * @return array Array with page structure
+ */
 function ed_cluster_my_listing_page() {
-  $content = array();
-  $mygroups = og_get_entity_groups();
-  drupal_set_title(t('My Groups A-Z'));
+  drupal_set_title(t('My Groups'));
 
-  if(empty($mygroups)){
+  $content = [];
+
+  $content['sorting'] = drupal_get_form('_ed_get_sorting_options');
+  $sql_order = ed_get_sorting_type($content);
+
+  $groups = ed_cluster_get_current_user_clusters($sql_order);
+
+  if(node_access('create', 'ed_cluster')){
+    ed_cluster_attach_group_create_buttons($content);
+  }
+
+  if(empty($groups)){
     $content['groups-not-found'] = array(
       '#type' => 'markup',
       '#prefix' => '<div class="ed-message ed-message-notice">',
       '#markup' => t('Hi! Nothing to show here at the moment. Join some groups to see them here.'),
       '#suffix' => '</div>',
     );
-	  if(node_access('create', 'ed_cluster')){
-		  $content = ed_generate_group_create_buttons($content);
-	  }
-    return $content;
   }else{
-	  if(node_access('create', 'ed_cluster')){
-		  $content = ed_generate_group_create_buttons($content);
-	  }
-    $mygroups = $mygroups['node'];
-
-    $mygroupallnodes = node_load_multiple($mygroups);
-
-    foreach($mygroupallnodes as $key => $value){
-      if($value->type != 'ed_cluster'){
-        unset($mygroupallnodes[$key]);
-      }
-
-    }
-    //Sort groups by their state and then alphabetically by title
-    uasort($mygroupallnodes, function($a, $b){
-      if($a->ed_field_group_state[LANGUAGE_NONE][0] == $b->ed_field_group_state[LANGUAGE_NONE][0]){
-        return (strncasecmp(trim($a->title), trim($b->title), 15));
-      }
-      return ($a->ed_field_group_state[LANGUAGE_NONE][0] < $b->ed_field_group_state[LANGUAGE_NONE][0]);
-    });
-
-//    uasort($mygroupallnodes, function($a, $b){
-//      return strncasecmp(trim($a->title), trim($b->title), 15);
-//    });
-
-
-
-
-    $nids = array();
-    foreach($mygroupallnodes as $mygroupnode){
-      $nids[] = $mygroupnode->nid;
-    }
-    $mygroups = $nids;
     drupal_add_css(drupal_get_path('module', 'ed_cluster').'/group-listing.css');
-    $per_page = ed_get_grid_paging_nr();
-    $current_page = pager_default_initialize(count($mygroups), $per_page, 1);
-    $chunks = array_chunk($mygroups, $per_page, TRUE);
-    $nidsinpage = $chunks[$current_page];
-    $nodes = node_load_multiple($nidsinpage);
+    $nodes = node_load_multiple($groups);
 
-//    $build['pager'] = array(
-//      '#theme' => 'pager',
-//      '#element' => 1,
-//      );
-    //dpm($chunks);
-
-	  //XXX Bootstrap 3 integration
 	  $content['clusters'] = ed_generate_grid_of_groups($nodes);
 	  $content['pager'] = array(
 			  '#theme' => 'pager',
-			  '#element' => 1,
 	  );
-    //$content['clusters'] = $build;
-
-    return $content;
-
   }
+
+  return $content;
 }
 
 
@@ -705,7 +667,7 @@ function ed_all_groups_listing(){
   $content['sorting'] = drupal_get_form('_ed_get_sorting_options');
   $sql_order = ed_get_sorting_type($content);
   if(node_access('create', 'ed_cluster')){
-	  $content = ed_generate_group_create_buttons($content);
+    ed_cluster_attach_group_create_buttons($content);
   }
   drupal_add_css(drupal_get_path('module', 'ed_cluster').'/group-listing.css');
   $remove_user_groups = TRUE;
@@ -861,7 +823,12 @@ function ed_generate_grid_of_groups($nodes){
 	return $build;
 }
 
-function ed_generate_group_create_buttons(&$content){
+/**
+ * Attaches group create buttons to the provided page content structure.
+ * @param  array $content Page content structure
+ * @return void
+ */
+function ed_cluster_attach_group_create_buttons(&$content){
 	$options_type1 = array(
 			'attributes' => array(
 					'class' => 'btn btn-success new-group price-btn',
@@ -910,8 +877,6 @@ function ed_generate_group_create_buttons(&$content){
 			'#title' => t(''),
 			'#markup' => l(t('New Project-based Learning/Other type group'), 'node/add/ed-cluster', $options_type3),
 	);
-
-	return $content;
 }
 
 
@@ -921,7 +886,7 @@ function ed_cluster_my_inactive_listing_page(){
   $content['sorting'] = drupal_get_form('_ed_get_sorting_options');
   $sql_order = ed_get_sorting_type($content);
 	if(node_access('create', 'ed_cluster')){
-		$content = ed_generate_group_create_buttons($content);
+		ed_cluster_attach_group_create_buttons($content);
 	}
   drupal_add_css(drupal_get_path('module', 'ed_cluster').'/group-listing.css');
   $remove_user_groups = TRUE;
@@ -2453,6 +2418,36 @@ function ed_cluster_get_clusters($order, $remove_user_groups = FALSE, $inactive)
 
     return $nids;
   }
+}
+
+/**
+ * Returns paged ed_cluster nodes where current user is a member of.
+ * Applies the node_access check and make sure that membership status is active,
+ * also applies some more cheks (e.g. type of group and type of member entity).
+ * @param  string $order   Order to apply to the query being made
+ * @return array           Array of identifiers
+ */
+function ed_cluster_get_current_user_clusters($order) {
+  global $user;
+  $account = clone $user;
+
+  $query = db_select('node', 'n')
+    ->extend('PagerDefault')
+    ->fields('n', array('nid'))
+    ->condition('n.type', 'ed_cluster')
+    ->addTag('node_access');
+  $query->join('og_membership', 'ogm', "n.nid = ogm.gid AND ogm.entity_type = 'user' AND ogm.group_type = 'node' AND ogm.state = 1 AND ogm.field_name = 'og_user_node'");
+  $query->condition('ogm.etid', $account->uid);
+  if($order == 'title'){
+    $query->orderBy('TRIM(title)', 'ASC');
+  }else{
+    $query->orderBy('n.created', $order);
+  }
+  $query->limit(ed_get_grid_paging_nr());
+
+  $nids = $query->execute()->fetchCol();
+
+  return $nids;
 }
 
 /**
