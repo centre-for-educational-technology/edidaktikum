@@ -420,12 +420,28 @@ function ed_get_promoted_resources(){
   return FALSE;
 }
 
+
+function ed_add_js_to_learning_resource_form($form_element, &$form_state) {
+
+
+  drupal_add_js(array('ed_learning_resource' => _ed_learning_resource_get_methodical_and_practice_tax_ids()), array('type' => 'setting'));
+  drupal_add_js(drupal_get_path('module', 'ed_learning_resource') . '/ed_learning_resource_js.js');
+
+  return $form_element;
+
+}
+
 /**
  * Implements hook_form_alter().
  */
 function ed_learning_resource_form_alter(&$form, &$form_state, $form_id) {
   if ('ed_learning_resource_node_form' == $form_id) {
 
+
+
+    $form['#after_build'] = array('ed_add_js_to_learning_resource_form');
+
+    //drupal_add_js(drupal_get_path('module', 'ed_learning_resource') . '/ed_learning_resource_js.js', 'file');
 
 
     if(isset($form['#node']->ed_field_resource_type)){
@@ -457,6 +473,7 @@ function ed_learning_resource_form_alter(&$form, &$form_state, $form_id) {
       $form['ed_field_trailer_url']['und']['#access'] = 0;
       $form['ed_field_video_url']['und']['#access'] = 0;
       $form['ed_field_video_resource_ref']['und']['#access'] = 0;
+//      $form['ed_field_external_res_url']['#attributes']['style'][] = 'display:none';
 
     }
 
@@ -512,61 +529,78 @@ function ed_generate_resource_create_buttons(&$content, $gnode, $destination){
 /**
  * Implements gook_field_formatter_info().
  */
-function ed_learning_resource_field_formatter_info() {
-  return array(
-    'list_resource_type' => array(
-      'label' => t('Learning Resource Type'),
-      'field types' => array('list_integer'),
-    ),
-    'list_resource_language' => array(
-      'label' => t('Learning Resource Language'),
-      'field types' => array('list_integer'),
-    ),
-  );
-}
+//function ed_learning_resource_field_formatter_info() {
+////  return array(
+////    'list_resource_type' => array(
+////      'label' => t('Learning Resource Type'),
+////      'field types' => array('list_integer'),
+////    ),
+////    'list_resource_language' => array(
+////      'label' => t('Learning Resource Language'),
+////      'field types' => array('list_integer'),
+////    ),
+////      'ed_field_external_res_url_default' => array(
+////          'label' => t('Default'),
+////          'field types' => array('ed_field_external_res_url'),
+////      ),
+////  );
+////}
 
 /**
  * Implements hook_field_formatter_view().
  */
-function ed_learning_resource_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
-  $element = array();
+//function ed_learning_resource_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+//  $element = array();
+//
+//  switch ($display['type']) {
+//    case 'list_resource_type':
+//      $allowed_values = list_allowed_values($field, $instance, $entity_type, $entity);
+//      foreach ($items as $delta => $item) {
+//        if (isset($allowed_values[$item['value']])) {
+//          $output = field_filter_xss($allowed_values[$item['value']]);
+//          $output = l($output, 'resources/type/'. $item['value']);
+//        }
+//        else {
+//          // If no match was found in allowed values, fall back to the key.
+//          $output = field_filter_xss($item['value']);
+//        }
+//        $element[$delta] = array('#markup' => $output);
+//      }
+//      break;
+//
+//    case 'list_resource_language':
+//      $allowed_values = list_allowed_values($field, $instance, $entity_type, $entity);
+//      foreach ($items as $delta => $item) {
+//        if (isset($allowed_values[$item['value']])) {
+//          $output = field_filter_xss($allowed_values[$item['value']]);
+//          $output = l($output, 'resources/language/'. $item['value']);
+//        }
+//        else {
+//          // If no match was found in allowed values, fall back to the key.
+//          $output = field_filter_xss($item['value']);
+//        }
+//        $element[$delta] = array('#markup' => $output);
+//      }
+//      break;
+//
+//    case 'ed_field_external_res_url_default' :
+//      foreach ($items as $delta => $item) {
+//        if (isset($item['ed_field_external_res_url_value'])) {
+//          $item['ed_field_external_res_url_value'];
+//        }
+//      }
+//      break;
+//  }
+//
+//  return $element;
+//}
 
-  switch ($display['type']) {
-    case 'list_resource_type':
-      $allowed_values = list_allowed_values($field, $instance, $entity_type, $entity);
-      foreach ($items as $delta => $item) {
-        if (isset($allowed_values[$item['value']])) {
-          $output = field_filter_xss($allowed_values[$item['value']]);
-          $output = l($output, 'resources/type/'. $item['value']);
-        }
-        else {
-          // If no match was found in allowed values, fall back to the key.
-          $output = field_filter_xss($item['value']);
-        }
-        $element[$delta] = array('#markup' => $output);
-      }
-      break;
 
-    case 'list_resource_language':
-      $allowed_values = list_allowed_values($field, $instance, $entity_type, $entity);
-      foreach ($items as $delta => $item) {
-        if (isset($allowed_values[$item['value']])) {
-          $output = field_filter_xss($allowed_values[$item['value']]);
-          $output = l($output, 'resources/language/'. $item['value']);
-        }
-        else {
-          // If no match was found in allowed values, fall back to the key.
-          $output = field_filter_xss($item['value']);
-        }
-        $element[$delta] = array('#markup' => $output);
-      }
-      break;
-  }
-
-  return $element;
-}
-
-
+/**
+ * Generate YT iframe from link like youtu.be/...
+ * @param $url
+ * @return null|string|string[]
+ */
 function ed_learning_resource_generate_youtube_iframe($url){
 
   $result =  preg_replace("/\s*[a-zA-Z\/\/:\.]*youtu.be\/([a-zA-Z0-9\-_]+)([a-zA-Z0-9\/\*\-\_\?\&\;\%\=\.]*)/i","<iframe class='video_frame embed-responsive-item' width=\"420\" height=\"525\" src=\"//www.youtube.com/embed/$1\" frameborder=\"0\" allowfullscreen></iframe>",$url);
@@ -574,8 +608,26 @@ function ed_learning_resource_generate_youtube_iframe($url){
   return $result;
 }
 
+/**
+ * Get taxonomy values for the learning resource taxinony types "Metoodilised leheküljed" and "Muu maailma kogemus"
+ * @param $url
+ * @return null|string|string[]
+ */
+function _ed_learning_resource_get_methodical_and_practice_tax_ids(){
+  $resource_types = _ed_learning_resource_type_list();
+
+  $methodical_resource_tax_id = array_search('Metoodilised leheküljed', $resource_types);
+  $best_practice_tax_id = array_search('Muu maailma kogemus', $resource_types);
+
+  return array('methodical_resource_tax_id'=> $methodical_resource_tax_id, 'best_practice_tax_id' => $best_practice_tax_id);
+}
 
 
+/**
+ * Get contents of the linked "Metoodilised leheküljed" and "Muu maailma kogemus" resources
+ * @param $node
+ * @return array|null
+ */
 function ed_learning_resource_get_related_res($node){
 
   if(!empty($node->ed_field_video_resource_ref)){
@@ -599,15 +651,25 @@ function ed_learning_resource_get_related_res($node){
         //Methodical resource
         $title = $wrapper->title->value();
         $content = $wrapper->ed_field_content->value();
+        if($wrapper->__isset('ed_field_external_res_url')){
+          $url = $wrapper->ed_field_external_res_url->value()['value'];
+        }else{
+          $url = null;
+        }
 
-        array_push($methodical_resources, array('nid' => $item['target_id'], 'title' => $title, 'content' => $content));
+        array_push($methodical_resources, array('nid' => $item['target_id'], 'title' => $title, 'content' => $content, 'url' => $url));
 
       }elseif ($wrapper->ed_learning_resource_type->value() == $best_practice_tax_id){
         //Best practice resource
         $title = $wrapper->title->value();
         $content = $wrapper->ed_field_content->value();
+        if($wrapper->__isset('ed_field_external_res_url')){
+          $url = $wrapper->ed_field_external_res_url->value()['value'];
+        }else{
+          $url = null;
+        }
 
-        array_push($best_practice_resources, array('nid' => $item['target_id'], 'title' => $title, 'content' => $content));
+        array_push($best_practice_resources, array('nid' => $item['target_id'], 'title' => $title, 'content' => $content, 'url' => $url));
       }
 
     }
