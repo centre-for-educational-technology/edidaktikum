@@ -15,6 +15,9 @@ function ed_learning_resource_views_default_views() {
 }
 
 function _ed_learning_resource_items_view() {
+  $tax_ids = _ed_learning_resource_get_methodical_and_practice_tax_ids();
+
+
   $view = new view();
   $view->name = 'ed_learning_resource_items';
   $view->description = 'Learning Resources to be included in material type Video';
@@ -71,8 +74,8 @@ function _ed_learning_resource_items_view() {
   $handler->display->display_options['filters']['ed_learning_resource_type_value']['table'] = 'field_data_ed_learning_resource_type';
   $handler->display->display_options['filters']['ed_learning_resource_type_value']['field'] = 'ed_learning_resource_type_value';
   $handler->display->display_options['filters']['ed_learning_resource_type_value']['value'] = array(
-      11257 => '11257',
-      11258 => '11258',
+      $tax_ids['methodical_resource_tax_id'] => $tax_ids['methodical_resource_tax_id'],
+      $tax_ids['best_practice_tax_id'] => $tax_ids['best_practice_tax_id'],
   );
 
   /* Display: Entity Reference */
