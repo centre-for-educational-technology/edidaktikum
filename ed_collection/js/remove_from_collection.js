@@ -4,7 +4,7 @@
                     var modalElement = $('#remove-from-collection-modal'),
                         nid = modalElement.next('a').data('nid');
 
-                        
+
 
                     modalElement.find('button.btn-primary').on('click', function() {
                         var collectionsElement = modalElement.find('select[name="collections"]'),
@@ -31,7 +31,7 @@
                         });
                     });
 
-                    modalElement.on('shown', function() {
+                    modalElement.on('show.bs.modal', function() {
                         var that = this;
 
                         $.ajax({
@@ -52,11 +52,10 @@
                                 }
                             }
                         });
-                    }).on('hidden', function() {
+                    }).on('hidden.bs.modal', function() {
                         $(this).find('button.btn-primary').prop('disabled', true);
                         $(this).find('select[name="collections"]').remove();
                     });
                 }
     };
 })(jQuery);
-

@@ -29,7 +29,7 @@
                         });
                     });
 
-                    modalElement.on('shown', function() {
+                    modalElement.on('show.bs.modal', function() {
                         var that = this;
 
                         $.ajax({
@@ -50,11 +50,10 @@
                                 }
                             }
                         });
-                    }).on('hidden', function() {
+                    }).on('hidden.bs.modal', function() {
                         $(this).find('button.btn-primary').prop('disabled', true);
                         $(this).find('select[name="collections"]').remove();
                     });
                 }
     };
 })(jQuery);
-
