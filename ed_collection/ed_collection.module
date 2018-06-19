@@ -56,12 +56,12 @@ function ed_collection_node_view($node, $view_mode, $langcode){
  * Implement hook_preprocess_node()
  */
 function ed_collection_preprocess_node(&$variables) {
-  // XXX This will not work and needs a different logic and permission check
   if ($variables['view_mode'] === 'eref_contained'
-    && ed_collection_teacher_or_admin_is_logged_in()
+    && $variables['type'] === 'ed_learning_resource'
+    && node_access('update', $variables['node'])
   ) {
     drupal_add_js(drupal_get_path('module', 'ed_collection') . '/js/remove_from_collection.js', 'file');
-    $variables['content']['metadata']['#markup'] .= ' <a href="#" class="single-remove-from-collection" style="display:none;" data-nid="'
+    $variables['content']['metadata']['#markup'] .= ' <a href="#" class="single-remove-from-collection btn btn-success btn-sm" style="display:none;" data-nid="'
       . $variables['nid']
       . '">'
       . '<i class="fa fa-minus-square-o"></i> '
@@ -631,7 +631,7 @@ function ed_collection_remove_item_from_collection($item_nid, $collection_nid) {
       $wrapper->ed_collection_field_items->set($current_value);
       $wrapper->save();
     } else {
-      $response['message'] = 'Item already in collection.';
+      $response['message'] = 'Item not in collection.';
     }
 
     $response['success'] = true;
