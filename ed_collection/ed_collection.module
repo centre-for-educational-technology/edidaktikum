@@ -70,7 +70,8 @@ function ed_collection_preprocess_node(&$variables) {
   }
 
   if (ed_collection_teacher_or_admin_is_logged_in() && module_exists('ed_learning_resource') && $variables['view_mode'] === 'full' && $variables['type'] === 'ed_learning_resource') {
-    drupal_add_js(drupal_get_path('module', 'ed_collection') . '/js/add_to_collections.js', 'file');
+    drupal_add_js(drupal_get_path('module', 'ed_collection') . '/js/add_or_remove_from_collections.js', 'file');
+
     $variables['add_to_collections_modal'] =
       '<div id="add-to-collection-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="add-to-collection-label" aria-hidden="true">'
       . '<div class="modal-dialog">'
@@ -88,9 +89,8 @@ function ed_collection_preprocess_node(&$variables) {
         . '</div>' // .modal-content
       . '</div>' // .modal-dialog
       . '</div>' // .modal
-      .'<a href="#add-to-collection-modal" data-toggle="modal" data-nid="' . $variables['nid'] . '"><i class="fa fa-plus-square-o"></i> ' . t('Add to collection') . '</a>';
+      .'<a href="#add-to-collection-modal" data-toggle="modal" data-nid="' . $variables['nid'] . '" class="btn btn-success btn-sm"><i class="fa fa-plus-square-o" aria-hidden="true"></i> ' . t('Add to collection') . '</a>';
 
-    drupal_add_js(drupal_get_path('module', 'ed_collection') . '/js/remove_from_collection.js', 'file');
     $variables['remove_from_collection_modal'] =
       '<div id="remove-from-collection-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="remove-from-collection-label" aria-hidden="true">'
       . '<div class="modal-dialog">'
@@ -108,7 +108,7 @@ function ed_collection_preprocess_node(&$variables) {
         . '</div>' // .modal-content
       . '</div>' // .modal-dialog
       . '</div>' // .modal
-      .'<a href="#remove-from-collection-modal" data-toggle="modal" data-nid="' . $variables['nid'] . '"><i class="fa fa-minus-square-o"></i> ' . t('Remove from collection') . '</a>';
+      .'<a href="#remove-from-collection-modal" data-toggle="modal" data-nid="' . $variables['nid'] . '" class="btn btn-success btn-sm"><i class="fa fa-minus-square-o" aria-hidden="true"></i> ' . t('Remove from collection') . '</a>';
   }
 }
 
@@ -461,8 +461,8 @@ function ed_collection_load_user_collections($nid) {
 }
 
 /**
- * Deals with ajax callback to remove item to collections.
- * Removes item to collection if items is part of it.
+ * Deals with ajax callback to remove an item from collections.
+ * Removes an item from selected collections where item is present.
  */
 function ed_collection_remove_from_collections($nid) {
   $response = array(
