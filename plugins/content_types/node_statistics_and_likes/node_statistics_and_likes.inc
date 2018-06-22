@@ -42,7 +42,7 @@ function edidaktikum_node_statistics_and_likes_content_type_render($subtype, $co
   $content['statistics']['views'] = array(
     '#type' => 'markup',
     '#prefix' => '<div class="ed-node-statistics-views">',
-    '#markup' => '<i class="fa fa-eye"></i>' . t('@totalcount views (@daycount today)', array('@totalcount' => $node_views_counter['totalcount'], '@daycount' => $node_views_counter['daycount'])),
+    '#markup' => t('@totalcount views (@daycount today)', array('@totalcount' => $node_views_counter['totalcount'], '@daycount' => $node_views_counter['daycount'])),
     '#suffix' => '</div>',
   );
 
@@ -79,9 +79,9 @@ function edidaktikum_node_statistics_and_likes_content_type_render($subtype, $co
 
   if (user_is_logged_in()) {
     drupal_add_js(drupal_get_path('module', 'edidaktikum') . '/js/ed_likes.js', 'file');
-    $content['statistics']['likes']['#markup'] = '<a href="#" data-id="' . $node->nid . '"><i class="fa fa-heart"></i></a>' . $content['statistics']['likes']['#markup'];
+    $content['statistics']['likes']['#markup'] = '<a href="#" class="blog-post__likes" style="float:none" data-id="' . $node->nid . '">' . $content['statistics']['likes']['#markup'].'</a>';
   } else {
-    $content['statistics']['likes']['#markup'] = '<i class="fa fa-heart"></i>' . $content['statistics']['likes']['#markup'];
+    $content['statistics']['likes']['#markup'] = '<a href="#" class="blog-post__likes" style="float:none"' . $content['statistics']['likes']['#markup'].'</a>';
   }
 
   $module = 'edidaktikum';

@@ -13,7 +13,7 @@ function ed_collection_node_view($node, $view_mode, $langcode){
     // TODO Use some default image if not provided
     if(!empty($node->ed_field_featured_image)){
       $imgpath = image_style_url('thumbnail', $node->ed_field_featured_image[LANGUAGE_NONE][0]['uri']);
-      
+
       $node->content['cover-image'] = array(
         '#type' => 'markup',
         '#weight' => 5,
@@ -30,14 +30,14 @@ function ed_collection_node_view($node, $view_mode, $langcode){
     $views_count = ed_get_views($node->nid);
     $likes_count = ed_get_likes($node->nid);
     $username = edidaktikum_get_full_name_for_user_account($author);
-    
+
     $parts = array(
       '<span class="single-creator">' . l($username, 'user/'.$node->uid) . '</span>',
       '<span class="single-icon-holder"><i class="fa fa-file-text-o"> ' . $items_count . '</i></span>',
       '<span clss="single-icon-holder"><i class="fa fa-eye"> ' . $views_count . '</i></span>',
       '<span class="single-icon-holder"><i class="fa fa-heart"> ' . $likes_count . '</i></span>',
     );
-    
+
     if ( 1 === (int)$node->status ) {
         array_push($parts, '<span class="label label-info single-publishing-status">' . t('Published') . '</span>');
     }
@@ -57,15 +57,58 @@ function ed_collection_node_view($node, $view_mode, $langcode){
  */
 function ed_collection_preprocess_node(&$variables) {
   if ($variables['view_mode'] === 'eref_contained'
-    && ed_collection_teacher_or_admin_is_logged_in()
+    && $variables['type'] === 'ed_learning_resource'
+    && node_access('update', $variables['node'])
   ) {
     drupal_add_js(drupal_get_path('module', 'ed_collection') . '/js/remove_from_collection.js', 'file');
-    $variables['content']['metadata']['#markup'] .= ' <a href="#" class="single-remove-from-collection" style="display:none;" data-nid="'
+    $variables['content']['metadata']['#markup'] .= ' <a href="#" class="single-remove-from-collection btn btn-success btn-sm" style="display:none;" data-nid="'
       . $variables['nid']
       . '">'
       . '<i class="fa fa-minus-square-o"></i> '
       . t('Remove from Collection')
       . '</a>';
+  }
+
+  if (ed_collection_teacher_or_admin_is_logged_in() && module_exists('ed_learning_resource') && $variables['view_mode'] === 'full' && $variables['type'] === 'ed_learning_resource') {
+    drupal_add_js(drupal_get_path('module', 'ed_collection') . '/js/add_or_remove_from_collections.js', 'file');
+
+    $variables['add_to_collections_modal'] =
+      '<div id="add-to-collection-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="add-to-collection-label" aria-hidden="true">'
+      . '<div class="modal-dialog">'
+        . '<div class="modal-content">'
+          . '<div class="modal-header">'
+            . '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>'
+            . '<h4 id="add-to-collection-modal-label" class="modal-title">' . t('Add to collection') . '</h4>'
+          . '</div>' // .modal-header
+          . '<div class="modal-body">'
+          . '</div>' // .modal-body
+          . '<div class="modal-footer">'
+            . '<button class="btn" data-dismiss="modal" aria-hidden="true">' . t('Close') . '</button>'
+            . '<button class="btn btn-primary" disabled="disabled">' . t('Add to collection') . '</button>'
+          . '</div>' // .modal-footer
+        . '</div>' // .modal-content
+      . '</div>' // .modal-dialog
+      . '</div>' // .modal
+      .'<a href="#add-to-collection-modal" data-toggle="modal" data-nid="' . $variables['nid'] . '" class="btn btn-success btn-sm"><i class="fa fa-plus-square-o" aria-hidden="true"></i> ' . t('Add to collection') . '</a>';
+
+    $variables['remove_from_collection_modal'] =
+      '<div id="remove-from-collection-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="remove-from-collection-label" aria-hidden="true">'
+      . '<div class="modal-dialog">'
+        . '<div class="modal-content">'
+          . '<div class="modal-header">'
+            . '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>'
+            . '<h4 id="remove-from-collection-modal-label" class="modal-title">' . t('Remove from collection') . '</h4>'
+          . '</div>' // .modal-header
+          . '<div class="modal-body">'
+          . '</div>' // .modal-body
+          . '<div class="modal-footer">'
+            . '<button class="btn" data-dismiss="modal" aria-hidden="true">' . t('Close') . '</button>'
+            . '<button class="btn btn-primary" disabled="disabled">' . t('Remove from collection') . '</button>'
+          . '</div>' // .modal-footer
+        . '</div>' // .modal-content
+      . '</div>' // .modal-dialog
+      . '</div>' // .modal
+      .'<a href="#remove-from-collection-modal" data-toggle="modal" data-nid="' . $variables['nid'] . '" class="btn btn-success btn-sm"><i class="fa fa-minus-square-o" aria-hidden="true"></i> ' . t('Remove from collection') . '</a>';
   }
 }
 
@@ -138,30 +181,30 @@ function ed_collection_menu() {
  */
 function ed_collection_listing_page() {
   drupal_add_css('.page-collections .node-ed-collection .single-publishing-status { display: none; }', $option['type'] = 'inline');
-  
-  
+
+
   $nodes = ed_collection_get_published_collections();
 	if(!empty($nodes)){
 		$build = node_view_multiple($nodes);
-		
+
 		$content['pager_table'] = $build;
 		$content['pager_pager'] = array('#theme' => 'pager');
-		
+
 	}
 	drupal_add_js('jQuery(document).ready(function(){
         jQuery(".collection").matchHeight();
         });','inline');
-	
+
 	$pager = theme('pager');
-	
+
 	$output =  theme('ed_collection', array(
 					'nodes' => $nodes,
 			)
 	);
-	
-	
+
+
 	$output = $output . $pager;
-	
+
 	return $output;
 
 	//return $content;
@@ -177,33 +220,33 @@ function ed_collection_listing_page() {
 function ed_collection_dashboard_listing_page(){
   menu_tree_set_path('main-menu', 'dashboard');
   drupal_add_css('.page-dashboard-collection .node-ed-collection .single-creator { display: none; }', $option['type'] = 'inline');
-	
-	
+
+
 	$nodes = ed_collection_get_user_collections();
 	if(!empty($nodes)){
 		$build = node_view_multiple($nodes);
-		
+
 		$content['pager_table'] = $build;
 		$content['pager_pager'] = array('#theme' => 'pager');
-		
+
 	}
 	drupal_add_js('jQuery(document).ready(function(){
         jQuery(".collection").matchHeight();
         });','inline');
-	
+
 	$pager = theme('pager');
-	
+
 	$output =  theme('ed_collection', array(
 					'nodes' => $nodes,
 			)
 	);
-	
-	
+
+
 	$output = $output . $pager;
-	
+
 	return $output;
-	
-	
+
+
 }
 
 /**
@@ -220,13 +263,13 @@ function ed_collection_get_user_collections() {
     ->range()
     ->orderBy('n.created', 'DESC')
     ->limit(ed_get_paging_nr());
-	
+
 	$result = $query->execute()->fetchCol();
-	
+
 	$nodes = node_load_multiple($result);
-	
+
 	return $nodes;
- 
+
 }
 
 /**
@@ -240,18 +283,17 @@ function ed_collection_get_published_collections() {
     ->condition('n.status', 1)
     ->addTag('node_access')
     ->range();
-	
+
 	$query = $query->extend('PagerDefault')->limit(ed_get_paging_nr());
-	
+
 	$result = $query->execute()->fetchCol();
-	
+
 	$nodes = node_load_multiple($result);
 
   return $nodes;
 }
 
-
-
+// XXX Need to check if this hook is needed or not
 /**
  * Implements hook_ctools_plugin_api().
  */
@@ -259,15 +301,6 @@ function ed_collection_ctools_plugin_api() {
   list($module, $api) = func_get_args();
   if ($module == "page_manager" && $api == "pages_default") {
     return array("version" => "1");
-  }
-}
-
-/**
- * Implements hook_ctools_plugin_directory().
- */
-function ed_collection_ctools_plugin_directory($module, $plugin) {
-  if(('content_types' == $plugin && 'ctools' == $module)) {
-    return 'plugins/' . $plugin;
   }
 }
 
@@ -428,8 +461,8 @@ function ed_collection_load_user_collections($nid) {
 }
 
 /**
- * Deals with ajax callback to remove item to collections.
- * Removes item to collection if items is part of it.
+ * Deals with ajax callback to remove an item from collections.
+ * Removes an item from selected collections where item is present.
  */
 function ed_collection_remove_from_collections($nid) {
   $response = array(
@@ -588,7 +621,7 @@ function ed_collection_remove_item_from_collection($item_nid, $collection_nid) {
     $response['message'] = 'Not allowed to update collection.';
     return drupal_json_output($response);
   }
-  
+
   try {
     $wrapper = entity_metadata_wrapper('node', $collection);
     $current_value = $wrapper->ed_collection_field_items->raw();
@@ -598,7 +631,7 @@ function ed_collection_remove_item_from_collection($item_nid, $collection_nid) {
       $wrapper->ed_collection_field_items->set($current_value);
       $wrapper->save();
     } else {
-      $response['message'] = 'Item already in collection.';
+      $response['message'] = 'Item not in collection.';
     }
 
     $response['success'] = true;
@@ -626,16 +659,17 @@ function ed_collection_ctools_render_alter(&$info, &$page, &$context) {
     $can_update_collection = node_access('update', $collection);
     $setting = array('ed_collection' => array('collectionNid' => $nid, 'canUpdate' => $can_update_collection));
     drupal_add_js($setting, 'setting');
-    
-    if(!empty($context['contexts']['argument_entity_id:node_1']->data->ed_field_cover_image)){      
+
+    // XXX Element #header no longer exists, this code no longer seems to be needed
+    if(!empty($context['contexts']['argument_entity_id:node_1']->data->ed_field_cover_image)){
       $imguri = $context['contexts']['argument_entity_id:node_1']->data->ed_field_cover_image[LANGUAGE_NONE][0]['uri'];
-      $imgurl = file_create_url($imguri);    
+      $imgurl = file_create_url($imguri);
       drupal_add_css('.node-type-ed-collection #header {background: white url('.$imgurl.') no-repeat;}',$option['type'] = 'inline');
     }else{
-      $themepath = drupal_get_path('theme',$GLOBALS['theme']);    
-      $defaultimagepath = $themepath.'/images/portfolio_bg.jpg';    
+      $themepath = drupal_get_path('theme',$GLOBALS['theme']);
+      $defaultimagepath = $themepath.'/images/portfolio_bg.jpg';
       $defimageurl = file_create_url($defaultimagepath);
-      drupal_add_css('.node-type-ed-collection #header {background: white url('.$defimageurl.') no-repeat;}',$option['type'] = 'inline');  
+      drupal_add_css('.node-type-ed-collection #header {background: white url('.$defimageurl.') no-repeat;}',$option['type'] = 'inline');
     }
   }
 }
@@ -658,4 +692,3 @@ function ed_collection_field_attach_submit($entity_type, $entity, $form, &$form_
     }
   }
 }
-

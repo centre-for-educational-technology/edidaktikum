@@ -52,9 +52,10 @@ function ed_task_menu(){
 }
 
 function ed_task_listing_page() {
+
   menu_tree_set_path('main-menu', 'dashboard');
   drupal_add_css(drupal_get_path('module', 'ed_cluster').'/task_manager.css');
-  //XXX do not use global $user
+
   global $user;
 
   $account = user_load($user->uid);
@@ -69,9 +70,11 @@ function ed_task_listing_page() {
     );
     return $content;
   }else{
+    //There are groups, build the table
     $content = array();
     $table_suffix = 1;
 
+    //Create button
     if (node_access('create', 'ed_task')) {
       $content['add-new-container'] = array(
         '#type' => 'container',
@@ -90,10 +93,8 @@ function ed_task_listing_page() {
 
 
 
-
-    // Tasks that are made by the logged in user.
+    // Build table of tasks that are made by the logged in user
     $nodes = _ed_get_cur_user_tasks();
-
 
     if ( !empty($nodes) ) {
       foreach($nodes as $node) {
@@ -109,7 +110,6 @@ function ed_task_listing_page() {
           $username = '';
         }
 
-        //$datehelp = strtotime($node->ed_task_due_date['und']['0']['value']);
         if( isset($node->og_group_ref['und']['0']['target_id']) ){
           $shared_to = $node->og_group_ref['und']['0']['target_id'];
         } else {
@@ -121,7 +121,6 @@ function ed_task_listing_page() {
           'data' => array(
             'title' => l($node->title, 'node/' . $node->nid),
             'shared_to' => t(l($group_title, 'node/' . $shared_to).$username),
-            //'due_date' => format_date($datehelp, 'custom','d/m/Y'),
             'due_date' => format_date($due_date_field[0]['value'],'custom','d/m/Y'),
           ),
         );
@@ -136,18 +135,18 @@ function ed_task_listing_page() {
     }
 
 
-
+    //Build assigned to user table
     $per_page = ed_get_paging_nr();
     $touser = _ed_get_tasks_to_user();
+
     if(!empty($touser)){
       foreach($touser as $key => $value){
         $tousernids[] = (string)$key;
       }
     }
 
-    $togroups = _ed_get_group_tasks();
-
-
+    //Only active groups are considered
+    $togroups = _ed_get_active_group_tasks();
 
     //Check study group permissions
     foreach($togroups as $key => $togroup_task){
@@ -170,7 +169,7 @@ function ed_task_listing_page() {
 
     }
 
-
+    //Merge to user and to user group tasks
     if(isset($tousernids)){
       $tasknidstouser = array_merge($tousernids, $togroups);
       $tasknidstouser = array_unique($tasknidstouser);
@@ -179,28 +178,48 @@ function ed_task_listing_page() {
     }
 
 
+    //Make an array of task objects
     $tasknodes = node_load_multiple($tasknidstouser);
-    //  attatch status;
-    foreach($tasknodes as $key => &$tasknode) {
-      if (_is_task_answered($tasknode->nid)) {
-        $tmp_answer_nid = _ed_get_answer_nid($user->uid, $tasknode->nid);
-        $answernode = node_load($tmp_answer_nid[0]);
-        if ($answernode->status == 0) {
-          $tasknode->ed_status = "unanswered";
-        } else {
-          $status = _ed_check_if_accepted($tmp_answer_nid[0]);
-          if(empty($status)) {
-            $tasknode->ed_status = "unchecked";
-          } else {
-            $tasknode->ed_status = _ed_last_status($status);
+
+
+    //Attach status
+    foreach ($tasknodes as $key => &$tasknode){
+
+        if (_is_task_answered($tasknode->nid)) {
+
+          $tmp_answer_nid = _ed_get_answer_nid($account->uid, $tasknode->nid);
+          $tasknode->answer_nid = $tmp_answer_nid[0];
+
+          $answer_wrapper = entity_metadata_wrapper('node', $tmp_answer_nid[0]);
+          $answernode_status = $answer_wrapper->status->value();
+
+
+          if ($answernode_status == 0) {
+            $tasknode->ed_status = "unanswered";
+          }else {
+            $status = _ed_check_if_accepted($tmp_answer_nid[0]);
+            if(empty($status)) {
+              $tasknode->ed_status = "unchecked";
+            } else {
+              $tasknode->ed_status = _ed_last_status($status);
+            }
           }
+        } else {
+
+
+          if(ed_task_can_user_answer_task($tasknode, $account->uid)) {
+
+            $tasknode->ed_status = "unanswered";
+          }else{
+            unset($tasknodes[$key]);
+          }
+
         }
-      } else {
-        $tasknode->ed_status = "unanswered";
-      }
-      unset($tasknode);
+        unset($tasknode);
+
     }
 
+    //Sort tasks, so that unanswered and with earlier due date are up
     uasort($tasknodes, function($a, $b) {
       $a_score = 0;
       if ($a->ed_status == 'rejected') $a_score = 2;
@@ -216,49 +235,34 @@ function ed_task_listing_page() {
 
     $tasknodessorted = $tasknodes;
 
-
-
-
-    foreach($tasknodessorted as $key => $tasknode){
-      if(!ed_task_can_user_answer_task($tasknode, $user)){
-        unset($tasknodessorted[$key]);
-      }
-    }
-
-
-
     $current_page = pager_default_initialize(count($tasknodessorted), $per_page, 2);
 
     $chunks = array_chunk($tasknodessorted, $per_page, TRUE);
 
-    //attach answered data
-    foreach($chunks[$current_page] as &$tasknode) {
-      $answer_nid = _ed_get_answer_nid($user->uid, $tasknode->nid);
-      $tasknode->is_answered = !empty($answer_nid);
-      if ($tasknode->is_answered) $tasknode->answer_nid = $answer_nid[0];
-      unset($tasknode);
-    };
-
     foreach($chunks[$current_page] as $tasknode){
-      $shared_to_arr = array();
-      if( isset($tasknode->og_group_ref[LANGUAGE_NONE]['0']['target_id']) ){
-        foreach($tasknode->og_group_ref[LANGUAGE_NONE] as $targetgroup){
-          $group_title = _ed_get_group_name_from_id($targetgroup['target_id']);
-          $shared_to_arr[] = l($group_title, 'node/' . $targetgroup['target_id']);
-        }
 
-      } else {
+      $shared_to_arr = array();
+
+      $task_wrapper = entity_metadata_wrapper('node', $tasknode->nid);
+
+      if($task_wrapper->__isset('og_group_ref')){
+
+        $group_ref = $task_wrapper->og_group_ref->raw();
+
+        foreach ($group_ref as $targetgroup){
+
+          $group_title = _ed_get_group_name_from_id($targetgroup);
+          $shared_to_arr[] = l($group_title, 'node/' . $targetgroup);
+        }
+      }else {
         $shared_to_arr = '';
       }
-
-
 
       $shared_to_arr = implode(', ', $shared_to_arr);
 
       $tmp_data = array('data' => '', 'class' => '');
-      if($tasknode->is_answered){
-        $status = _ed_check_if_accepted($tasknode->answer_nid);
-        $status_last = _ed_last_status($status);
+      if($tasknode->ed_status != 'unanswered'){
+        $status_last = $tasknode->ed_status;
 
         switch($status ? $status_last : 'invalid'){
           case('accepted'):
@@ -294,7 +298,7 @@ function ed_task_listing_page() {
         $tmp_data['data'] = t('Not Answered');
         $tmp_data['title'] = t('Not answered');
         if (!empty($tasknode->{ED_FIELD_TO_GROUP_MEMBER}[LANGUAGE_NONE])) {
-          if (!in_array($user->uid, array_map(function($element) { return $element['target_id']; }, $tasknode->{ED_FIELD_TO_GROUP_MEMBER}[LANGUAGE_NONE]))) {
+          if (!in_array($account->uid, array_map(function($element) { return $element['target_id']; }, $tasknode->{ED_FIELD_TO_GROUP_MEMBER}[LANGUAGE_NONE]))) {
             $tmp_data['class'] = 'can-not-be-answered';
             $tmp_data['data'] = t('Can not be answered');
             $tmp_data['title'] = t('Can not be answered');
@@ -312,8 +316,6 @@ function ed_task_listing_page() {
         );
     }
 
-
-  //@TODO: There are so many things wrong right here ..
 
     $content[$table_type.'-2'] = array(
         '#theme' => 'table',
@@ -657,6 +659,7 @@ function _ed_get_tasks_specific_group($gid) {
   return $result;
 }
 
+
 function _ed_get_group_tasks(){
   $groups = og_get_groups_by_user();
   $helper = array();
@@ -666,14 +669,33 @@ function _ed_get_group_tasks(){
   $query = db_select('node','n');
   $query->join('og_membership', 'og','n.nid = og.etid');
   $query->fields('n', array('nid'))
-    ->addTag('node_access')
-    ->condition('n.type', 'ed_task')
-    ->condition('og.gid', $helper, "IN");
+      ->addTag('node_access')
+      ->condition('n.type', 'ed_task')
+      ->condition('og.gid', $helper, "IN");
   $result = $query->execute()->fetchCol();
   return $result;
 
 
 }
+
+
+function _ed_get_active_group_tasks(){
+  $groups = ed_get_groups_by_user_no_subgroups();
+  $helper = array();
+  foreach($groups as $gid) {
+    array_push($helper, $gid);
+  }
+  $query = db_select('node','n');
+  $query->join('og_membership', 'og','n.nid = og.etid');
+  $query->fields('n', array('nid'))
+      ->addTag('node_access')
+      ->condition('n.type', 'ed_task')
+      ->condition('og.gid', $helper, "IN");
+  $result = $query->execute()->fetchCol();
+  return $result;
+}
+
+
 
 /* Return last in status array that isn't unchecked */
 function _ed_last_status($statuses) {
@@ -703,7 +725,7 @@ function _ed_get_user_unanswered_tasks_count($account) {
   $groups = ed_get_groups_by_user_no_subgroups();
 
   if(!empty($groups)){
-    foreach ($groups as $my_group){
+    foreach ($groups as $my_group) {
 
       $groups = array_values($groups);
       //  get members and separate out admins
@@ -713,76 +735,80 @@ function _ed_get_user_unanswered_tasks_count($account) {
 
       $tasks = ed_get_group_tasks($my_group);
 
-
-      foreach ($tasks as $task) {
-
-        if(ed_task_can_user_answer_task($task, $account->uid)) {
-
-          $task = $task['nid'];
-
-          $answer = ed_get_answer($task, $account->uid, false, $admins);
-
-          switch ($answer['status']) {
-            case 'unanswered':
-
-              //Check if it is a study group case
-              $wrapper = entity_metadata_wrapper('node', $task);
-              $task_study_groups = $wrapper->ed_task_field_study_group->raw();
-
-              //Check if it is a to user case
-              $is_to_user_task = false;
-              $task_to_group_member = $wrapper->ed_field_to_group_member->raw();
-
-              if (!empty($task_to_group_member)) {
-
-                foreach ($task_to_group_member as $item) {
-
-                  if ($item == $account->uid) {
-
-                    $unanswered_or_rejected++;
-                    $is_to_user_task = true;
-                    break;
-                  } else {
-
-                    $is_to_user_task = true;
-                  }
-
-                }
-
-              }
-
-              if ($is_to_user_task == false) {
-                if (!empty($task_study_groups)) {
-
-                  //Get user study group field
-                  $wrapper = entity_metadata_wrapper('user', $account->uid);
-                  $user_study_group = $wrapper->ed_field_study_group->value();
+      if (!empty($tasks)) {
+        $task_nodes = node_load_multiple($tasks);
 
 
-                  if (isset($user_study_group)) {
-                    if (in_array($user_study_group, $task_study_groups) == true) {
+        foreach ($task_nodes as $task) {
+
+          if (ed_task_can_user_answer_task(node_load($task['nid']), $account->uid)) {
+
+            $task = $task['nid'];
+
+            $answer = ed_get_answer($task, $account->uid, false, $admins);
+
+            switch ($answer['status']) {
+              case 'unanswered':
+
+                //Check if it is a study group case
+                $wrapper = entity_metadata_wrapper('node', $task);
+                $task_study_groups = $wrapper->ed_task_field_study_group->raw();
+
+                //Check if it is a to user case
+                $is_to_user_task = false;
+                $task_to_group_member = $wrapper->ed_field_to_group_member->raw();
+
+                if (!empty($task_to_group_member)) {
+
+                  foreach ($task_to_group_member as $item) {
+
+                    if ($item == $account->uid) {
 
                       $unanswered_or_rejected++;
+                      $is_to_user_task = true;
+                      break;
+                    } else {
+
+                      $is_to_user_task = true;
                     }
 
                   }
 
-                } else {
-
-                  $unanswered_or_rejected++;
-
-
                 }
-              }
 
-              break;
+                if ($is_to_user_task == false) {
+                  if (!empty($task_study_groups)) {
 
-            case 'rejected':
+                    //Get user study group field
+                    $wrapper = entity_metadata_wrapper('user', $account->uid);
+                    $user_study_group = $wrapper->ed_field_study_group->value();
 
-              $unanswered_or_rejected++;
-              break;
+
+                    if (isset($user_study_group)) {
+                      if (in_array($user_study_group, $task_study_groups) == true) {
+
+                        $unanswered_or_rejected++;
+                      }
+
+                    }
+
+                  } else {
+
+                    $unanswered_or_rejected++;
+
+
+                  }
+                }
+
+                break;
+
+              case 'rejected':
+
+                $unanswered_or_rejected++;
+                break;
+            }
+
           }
-
         }
       }
 
@@ -924,6 +950,7 @@ function ed_task_can_user_answer_task(&$node, &$account) {
 
   // To group case
   if (!empty($node->og_group_ref[LANGUAGE_NONE])) {
+
     $group_ids = array_map(function($element) { return $element['target_id']; }, $node->og_group_ref[LANGUAGE_NONE]);
     // Task creator, group creator or admin is not allowed to answer
     if (($node->uid == $account->uid) || _ed_cluster_is_groups_admin_or_creator($account->uid, $group_ids)) {
