@@ -324,9 +324,36 @@ function ed_learning_resource_preprocess_node(&$vars){
         $vars['theme_hook_suggestions'][] = 'node__ed_learning_resource_full';
       }
 
-	  }
+	  }else if($vars['view_mode'] == 'eref_contained'){
+      $vars['theme_hook_suggestions'][] = 'node__ed_learning_resource_eref_contained';
+    }
   }
 }
+
+
+function ed_learning_resource_field_formatter_info() {
+  return array(
+      'my_formatter' => array(
+          'label' => t('Bold formatter'),
+          'field types' => array('ed_field_excerpt'),
+      ),
+  );
+}
+
+function ed_learning_resource_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  $settings = $display['settings'];
+  $element = array();
+
+  if ($display['type'] == 'my_formatter') {
+    foreach ($items as $delta => $item) {
+      $element[$delta] = array('#markup' => $item['value']);
+    }
+  }
+
+  return $element;
+}
+
+
 
 function _ed_get_vid() {
   $vocab = taxonomy_vocabulary_machine_name_load('ed_category');
