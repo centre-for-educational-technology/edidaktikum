@@ -736,10 +736,9 @@ function _ed_get_user_unanswered_tasks_count($account) {
       $tasks = ed_get_group_tasks($my_group);
 
       if (!empty($tasks)) {
-        $task_nodes = node_load_multiple($tasks);
 
 
-        foreach ($task_nodes as $task) {
+        foreach ($tasks as $task) {
 
           if (ed_task_can_user_answer_task(node_load($task['nid']), $account->uid)) {
 
