@@ -211,17 +211,9 @@ function ed_learning_resource_listing_from_group($gnode){
     jQuery(".collection").matchHeight();
     });','inline');
 
-  $pager = theme('pager');
 
-  $output =  theme('ed_learning_resource', array(
-          'nodes' => $nodes,
-          'gnode' => $gnode
-      )
-  );
 
-  $output = $output . $pager;
-
-  return $output;
+  return $content;
 
 }
 
