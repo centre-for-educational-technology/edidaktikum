@@ -137,13 +137,14 @@ function ed_task_listing_page() {
 
     //Build assigned to user table
     $per_page = ed_get_paging_nr();
-    $touser = _ed_get_tasks_to_user();
+    $touser = _ed_get_tasks_to_user_from_active_groups();
 
     if(!empty($touser)){
       foreach($touser as $key => $value){
         $tousernids[] = (string)$key;
       }
     }
+
 
     //Only active groups are considered
     $togroups = _ed_get_active_group_tasks();
@@ -207,7 +208,7 @@ function ed_task_listing_page() {
         } else {
 
 
-          if(ed_task_can_user_answer_task($tasknode, $account->uid)) {
+          if(ed_task_can_user_answer_task($tasknode, $account)) {
 
             $tasknode->ed_status = "unanswered";
           }else{
@@ -644,6 +645,25 @@ function _ed_get_tasks_to_user(){
   $nodes = node_load_multiple($result);
   return $nodes;
 }
+
+function _ed_get_tasks_to_user_from_active_groups(){
+  $acc = $GLOBALS['user'];
+  $query = db_select('node', 'n');
+  $query->join('field_data_ed_field_to_group_member', 'tu', 'n.nid = tu.entity_id');
+  $query->join('field_data_ed_field_group_state', 'gs', 'n.nid = gs.entity_id');
+  $query->fields('n', array('nid'))
+      ->addTag('node_access')
+      ->condition('n.type', 'ed_task')
+      ->condition('gs.ed_field_group_state_value', 1)
+      ->condition('tu.ed_field_to_group_member_target_id', $acc->uid);
+
+  $query = $query->extend('TableSort')->extend('PagerDefault')->limit(ed_get_paging_nr());
+
+  $result = $query->execute()->fetchCol();
+  $nodes = node_load_multiple($result);
+  return $nodes;
+}
+
 function _ed_get_tasks_specific_group($gid) {
   $query=db_select('node', 'n');
   $query->join('og_membership', 'og', 'n.nid = og.etid');
@@ -740,7 +760,9 @@ function _ed_get_user_unanswered_tasks_count($account) {
 
         foreach ($tasks as $task) {
 
-          if (ed_task_can_user_answer_task(node_load($task['nid']), $account->uid)) {
+          $task_node = node_load($task['nid']);
+
+          if (ed_task_can_user_answer_task($task_node, $account)) {
 
             $task = $task['nid'];
 
