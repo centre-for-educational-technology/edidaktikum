@@ -50,15 +50,47 @@ function _ed_event_node_edit_page_handler() {
       ),
   );
   $display = new panels_display();
-  $display->layout = 'twocol_stacked';
+  $display->layout = 'bootstrap_twocol_stacked';
   $display->layout_settings = array();
   $display->panel_settings = array(
       'style_settings' => array(
           'default' => NULL,
-          'top' => NULL,
-          'left' => NULL,
-          'right' => NULL,
-          'bottom' => NULL,
+          'top' => array(
+              'column_type' => 'col-lg',
+              'column_size' => '12',
+              'offset_type' => 'col-lg-offset',
+              'offset_size' => '0',
+          ),
+          'left' => array(
+              'column_type' => 'col-lg',
+              'column_size' => '8',
+              'offset_type' => 'col-lg-offset',
+              'offset_size' => '0',
+          ),
+          'right' => array(
+              'column_type' => 'col-lg',
+              'column_size' => '4',
+              'offset_type' => 'col-lg-offset',
+              'offset_size' => '0',
+          ),
+          'bottom' => array(
+              'column_type' => 'col-lg',
+              'column_size' => '12',
+              'offset_type' => 'col-lg-offset',
+              'offset_size' => '0',
+          ),
+      ),
+      'top' => array(
+          'style' => 'bootstrap_region',
+      ),
+      'left' => array(
+          'style' => 'bootstrap_region',
+      ),
+      'right' => array(
+          'style' => 'bootstrap_region',
+      ),
+      'bottom' => array(
+          'style' => 'bootstrap_region',
       ),
   );
   $display->cache = array();
@@ -494,6 +526,7 @@ function _ed_event_node_edit_page_handler() {
 
 
 
+
   return $handler;
 }
 
@@ -538,7 +571,12 @@ function _ed_event_node_view_page_handler() {
   $display->panel_settings = array(
       'style_settings' => array(
           'default' => NULL,
-          'top' => NULL,
+          'top' => array(
+              'column_type' => 'col-lg',
+              'column_size' => '12',
+              'offset_type' => 'col-lg-offset',
+              'offset_size' => '0',
+          ),
           'left' => array(
               'column_type' => 'col-lg',
               'column_size' => '8',
@@ -551,20 +589,15 @@ function _ed_event_node_view_page_handler() {
               'offset_type' => 'col-lg-offset',
               'offset_size' => '0',
           ),
-          'bottom' => array(
-              'column_type' => 'col-lg',
-              'column_size' => '8',
-              'offset_type' => 'col-lg-offset',
-              'offset_size' => '0',
-          ),
+          'bottom' => NULL,
+      ),
+      'top' => array(
+          'style' => 'bootstrap_region',
       ),
       'left' => array(
           'style' => 'bootstrap_region',
       ),
       'right' => array(
-          'style' => 'bootstrap_region',
-      ),
-      'bottom' => array(
           'style' => 'bootstrap_region',
       ),
   );
@@ -904,6 +937,7 @@ function _ed_event_node_view_page_handler() {
   $display->hide_title = PANELS_TITLE_FIXED;
   $display->title_pane = 'new-eb858b25-9457-4317-a3ac-968a686f98c7';
   $handler->conf['display'] = $display;
+
 
 
 
