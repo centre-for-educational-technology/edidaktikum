@@ -25,57 +25,83 @@
 
 }*/
 function _ed_bookmark_view_page_handler() {
-$handler = new stdClass();
-$handler->disabled = FALSE; /* Edit this to true to make a default handler disabled initially */
-$handler->api_version = 1;
-$handler->name = 'node_view_panel_ed_bookmark';
-$handler->task = 'node_view';
-$handler->subtask = '';
-$handler->handler = 'panel_context';
-$handler->weight = 6;
-$handler->conf = array(
-  'title' => 'Bookmark',
-  'no_blocks' => 0,
-  'pipeline' => 'standard',
-  'body_classes_to_remove' => '',
-  'body_classes_to_add' => '',
-  'css_id' => '',
-  'css' => '',
-  'contexts' => array(),
-  'relationships' => array(),
-  'access' => array(
-    'plugins' => array(
-      0 => array(
-        'name' => 'node_type',
-        'settings' => array(
-          'type' => array(
-            'ed_bookmark' => 'ed_bookmark',
+  $handler = new stdClass();
+  $handler->disabled = FALSE; /* Edit this to true to make a default handler disabled initially */
+  $handler->api_version = 1;
+  $handler->name = 'node_view_panel_context_5';
+  $handler->task = 'node_view';
+  $handler->subtask = '';
+  $handler->handler = 'panel_context';
+  $handler->weight = 6;
+  $handler->conf = array(
+      'title' => 'Bookmark',
+      'no_blocks' => 0,
+      'pipeline' => 'standard',
+      'body_classes_to_remove' => '',
+      'body_classes_to_add' => '',
+      'css_id' => '',
+      'css' => '',
+      'contexts' => array(),
+      'relationships' => array(),
+      'access' => array(
+          'plugins' => array(
+              0 => array(
+                  'name' => 'node_type',
+                  'settings' => array(
+                      'type' => array(
+                          'ed_bookmark' => 'ed_bookmark',
+                      ),
+                  ),
+                  'context' => 'argument_entity_id:node_1',
+                  'not' => FALSE,
+              ),
           ),
-        ),
-        'context' => 'argument_entity_id:node_1',
-        'not' => FALSE,
+          'logic' => 'and',
       ),
-    ),
-    'logic' => 'and',
-  ),
-);
-$display = new panels_display();
-$display->layout = 'twocol_stacked';
-$display->layout_settings = array();
-$display->panel_settings = array(
-  'style_settings' => array(
-    'default' => NULL,
-    'top' => NULL,
-    'left' => NULL,
-    'right' => NULL,
-    'bottom' => NULL,
-  ),
-);
-$display->cache = array();
-$display->title = '';
-$display->uuid = 'f687577b-18fd-4d91-83eb-771943bc5942';
-$display->content = array();
-$display->panels = array();
+  );
+  $display = new panels_display();
+  $display->layout = 'bootstrap_twocol_stacked';
+  $display->layout_settings = array();
+  $display->panel_settings = array(
+      'style_settings' => array(
+          'default' => NULL,
+          'top' => NULL,
+          'left' => array(
+              'column_type' => 'col-lg',
+              'column_size' => '8',
+              'offset_type' => 'col-lg-offset',
+              'offset_size' => '0',
+          ),
+          'right' => array(
+              'column_type' => 'col-lg',
+              'column_size' => '4',
+              'offset_type' => 'col-lg-offset',
+              'offset_size' => '0',
+          ),
+          'bottom' => array(
+              'column_type' => 'col-lg',
+              'column_size' => '8',
+              'offset_type' => 'col-lg-offset',
+              'offset_size' => '0',
+          ),
+      ),
+      'left' => array(
+          'style' => 'bootstrap_region',
+      ),
+      'right' => array(
+          'style' => 'bootstrap_region',
+      ),
+      'bottom' => array(
+          'style' => 'bootstrap_region',
+      ),
+  );
+  $display->cache = array();
+  $display->title = '';
+  $display->uuid = 'f687577b-18fd-4d91-83eb-771943bc5942';
+  $display->storage_type = 'page_manager';
+  $display->storage_id = 'node_view_panel_context_5';
+  $display->content = array();
+  $display->panels = array();
   $pane = new stdClass();
   $pane->pid = 'new-0913ff04-2a68-44fd-b42f-4829c4a4db98';
   $pane->panel = 'bottom';
@@ -84,14 +110,14 @@ $display->panels = array();
   $pane->shown = TRUE;
   $pane->access = array();
   $pane->configuration = array(
-    'anon_links' => 0,
-    'context' => 'argument_entity_id:node_1',
-    'override_title' => 0,
-    'override_title_text' => '',
+      'anon_links' => 0,
+      'context' => 'argument_entity_id:node_1',
+      'override_title' => 0,
+      'override_title_text' => '',
   );
   $pane->cache = array();
   $pane->style = array(
-    'settings' => NULL,
+      'settings' => NULL,
   );
   $pane->css = array();
   $pane->extras = array();
@@ -108,15 +134,15 @@ $display->panels = array();
   $pane->shown = TRUE;
   $pane->access = array();
   $pane->configuration = array(
-    'mode' => '1',
-    'comments_per_page' => '50',
-    'context' => 'argument_entity_id:node_1',
-    'override_title' => 0,
-    'override_title_text' => '',
+      'mode' => '1',
+      'comments_per_page' => '50',
+      'context' => 'argument_entity_id:node_1',
+      'override_title' => 0,
+      'override_title_text' => '',
   );
   $pane->cache = array();
   $pane->style = array(
-    'settings' => NULL,
+      'settings' => NULL,
   );
   $pane->css = array();
   $pane->extras = array();
@@ -133,22 +159,22 @@ $display->panels = array();
   $pane->shown = TRUE;
   $pane->access = array();
   $pane->configuration = array(
-    'label' => 'title',
-    'formatter' => 'url_default',
-    'delta_limit' => 0,
-    'delta_offset' => '0',
-    'delta_reversed' => FALSE,
-    'formatter_settings' => array(
-      'trim_length' => '80',
-      'nofollow' => 0,
-    ),
-    'context' => 'argument_entity_id:node_1',
-    'override_title' => 0,
-    'override_title_text' => '',
+      'label' => 'title',
+      'formatter' => 'url_default',
+      'delta_limit' => 0,
+      'delta_offset' => '0',
+      'delta_reversed' => FALSE,
+      'formatter_settings' => array(
+          'trim_length' => '80',
+          'nofollow' => 0,
+      ),
+      'context' => 'argument_entity_id:node_1',
+      'override_title' => 0,
+      'override_title_text' => '',
   );
   $pane->cache = array();
   $pane->style = array(
-    'settings' => NULL,
+      'settings' => NULL,
   );
   $pane->css = array();
   $pane->extras = array();
@@ -165,19 +191,19 @@ $display->panels = array();
   $pane->shown = TRUE;
   $pane->access = array();
   $pane->configuration = array(
-    'label' => 'title',
-    'formatter' => 'list_default',
-    'delta_limit' => 0,
-    'delta_offset' => '0',
-    'delta_reversed' => FALSE,
-    'formatter_settings' => array(),
-    'context' => 'argument_entity_id:node_1',
-    'override_title' => 0,
-    'override_title_text' => '',
+      'label' => 'title',
+      'formatter' => 'list_default',
+      'delta_limit' => 0,
+      'delta_offset' => '0',
+      'delta_reversed' => FALSE,
+      'formatter_settings' => array(),
+      'context' => 'argument_entity_id:node_1',
+      'override_title' => 0,
+      'override_title_text' => '',
   );
   $pane->cache = array();
   $pane->style = array(
-    'settings' => NULL,
+      'settings' => NULL,
   );
   $pane->css = array();
   $pane->extras = array();
@@ -194,13 +220,13 @@ $display->panels = array();
   $pane->shown = TRUE;
   $pane->access = array();
   $pane->configuration = array(
-    'context' => 'argument_entity_id:node_1',
-    'override_title' => 1,
-    'override_title_text' => '',
+      'context' => 'argument_entity_id:node_1',
+      'override_title' => 1,
+      'override_title_text' => '',
   );
   $pane->cache = array();
   $pane->style = array(
-    'settings' => NULL,
+      'settings' => NULL,
   );
   $pane->css = array();
   $pane->extras = array();
@@ -217,14 +243,14 @@ $display->panels = array();
   $pane->shown = TRUE;
   $pane->access = array();
   $pane->configuration = array(
-    'link' => 1,
-    'context' => 'argument_entity_id:node_1',
-    'override_title' => 0,
-    'override_title_text' => '',
+      'link' => 1,
+      'context' => 'argument_entity_id:node_1',
+      'override_title' => 0,
+      'override_title_text' => '',
   );
   $pane->cache = array();
   $pane->style = array(
-    'settings' => NULL,
+      'settings' => NULL,
   );
   $pane->css = array();
   $pane->extras = array();
@@ -241,14 +267,14 @@ $display->panels = array();
   $pane->shown = TRUE;
   $pane->access = array();
   $pane->configuration = array(
-    'format' => 'long',
-    'context' => 'argument_entity_id:node_1',
-    'override_title' => 0,
-    'override_title_text' => '',
+      'format' => 'long',
+      'context' => 'argument_entity_id:node_1',
+      'override_title' => 0,
+      'override_title_text' => '',
   );
   $pane->cache = array();
   $pane->style = array(
-    'settings' => NULL,
+      'settings' => NULL,
   );
   $pane->css = array();
   $pane->extras = array();
@@ -265,21 +291,21 @@ $display->panels = array();
   $pane->shown = TRUE;
   $pane->access = array();
   $pane->configuration = array(
-    'label' => 'title',
-    'formatter' => 'entityreference_label',
-    'delta_limit' => '0',
-    'delta_offset' => '0',
-    'delta_reversed' => 0,
-    'formatter_settings' => array(
-      'link' => 1,
-    ),
-    'context' => 'argument_entity_id:node_1',
-    'override_title' => 0,
-    'override_title_text' => '',
+      'label' => 'title',
+      'formatter' => 'entityreference_label',
+      'delta_limit' => '0',
+      'delta_offset' => '0',
+      'delta_reversed' => 0,
+      'formatter_settings' => array(
+          'link' => 1,
+      ),
+      'context' => 'argument_entity_id:node_1',
+      'override_title' => 0,
+      'override_title_text' => '',
   );
   $pane->cache = array();
   $pane->style = array(
-    'settings' => NULL,
+      'settings' => NULL,
   );
   $pane->css = array();
   $pane->extras = array();
@@ -296,21 +322,21 @@ $display->panels = array();
   $pane->shown = TRUE;
   $pane->access = array();
   $pane->configuration = array(
-    'label' => 'title',
-    'formatter' => 'entityreference_label',
-    'delta_limit' => '0',
-    'delta_offset' => '0',
-    'delta_reversed' => 0,
-    'formatter_settings' => array(
-      'link' => 1,
-    ),
-    'context' => 'argument_entity_id:node_1',
-    'override_title' => 0,
-    'override_title_text' => '',
+      'label' => 'title',
+      'formatter' => 'entityreference_label',
+      'delta_limit' => '0',
+      'delta_offset' => '0',
+      'delta_reversed' => 0,
+      'formatter_settings' => array(
+          'link' => 1,
+      ),
+      'context' => 'argument_entity_id:node_1',
+      'override_title' => 0,
+      'override_title_text' => '',
   );
   $pane->cache = array();
   $pane->style = array(
-    'settings' => NULL,
+      'settings' => NULL,
   );
   $pane->css = array();
   $pane->extras = array();
@@ -327,19 +353,19 @@ $display->panels = array();
   $pane->shown = FALSE;
   $pane->access = array();
   $pane->configuration = array(
-    'label' => 'title',
-    'formatter' => 'taxonomy_term_reference_link',
-    'delta_limit' => '0',
-    'delta_offset' => '0',
-    'delta_reversed' => 0,
-    'formatter_settings' => array(),
-    'context' => 'argument_entity_id:node_1',
-    'override_title' => 0,
-    'override_title_text' => '',
+      'label' => 'title',
+      'formatter' => 'taxonomy_term_reference_link',
+      'delta_limit' => '0',
+      'delta_offset' => '0',
+      'delta_reversed' => 0,
+      'formatter_settings' => array(),
+      'context' => 'argument_entity_id:node_1',
+      'override_title' => 0,
+      'override_title_text' => '',
   );
   $pane->cache = array();
   $pane->style = array(
-    'settings' => NULL,
+      'settings' => NULL,
   );
   $pane->css = array();
   $pane->extras = array();
@@ -356,19 +382,19 @@ $display->panels = array();
   $pane->shown = TRUE;
   $pane->access = array();
   $pane->configuration = array(
-    'label' => 'title',
-    'formatter' => 'taxonomy_term_reference_link',
-    'delta_limit' => '0',
-    'delta_offset' => '0',
-    'delta_reversed' => 0,
-    'formatter_settings' => array(),
-    'context' => 'argument_entity_id:node_1',
-    'override_title' => 0,
-    'override_title_text' => '',
+      'label' => 'title',
+      'formatter' => 'taxonomy_term_reference_link',
+      'delta_limit' => '0',
+      'delta_offset' => '0',
+      'delta_reversed' => 0,
+      'formatter_settings' => array(),
+      'context' => 'argument_entity_id:node_1',
+      'override_title' => 0,
+      'override_title_text' => '',
   );
   $pane->cache = array();
   $pane->style = array(
-    'settings' => NULL,
+      'settings' => NULL,
   );
   $pane->css = array();
   $pane->extras = array();
@@ -382,15 +408,17 @@ $display->panels = array();
   $pane->panel = 'top';
   $pane->type = 'node_group_breadcrumbs';
   $pane->subtype = 'node_group_breadcrumbs';
-  $pane->shown = TRUE;
+  $pane->shown = FALSE;
   $pane->access = array();
   $pane->configuration = array(
-    'context' => 'argument_entity_id:node_1',
-    'override_title' => 1,
-    'override_title_text' => '',
+      'context' => 'argument_entity_id:node_1',
+      'override_title' => 1,
+      'override_title_text' => '',
   );
   $pane->cache = array();
-  $pane->style = array();
+  $pane->style = array(
+      'settings' => NULL,
+  );
   $pane->css = array();
   $pane->extras = array();
   $pane->position = 0;
@@ -398,9 +426,10 @@ $display->panels = array();
   $pane->uuid = 'e3a26f23-5b4b-40e2-ba1e-d17c96f7b04f';
   $display->content['new-e3a26f23-5b4b-40e2-ba1e-d17c96f7b04f'] = $pane;
   $display->panels['top'][0] = 'new-e3a26f23-5b4b-40e2-ba1e-d17c96f7b04f';
-$display->hide_title = PANELS_TITLE_FIXED;
-$display->title_pane = 'new-b84ea454-33c8-4f5f-9d03-96199e41cf0f';
-$handler->conf['display'] = $display;
+  $display->hide_title = PANELS_TITLE_FIXED;
+  $display->title_pane = 'new-b84ea454-33c8-4f5f-9d03-96199e41cf0f';
+  $handler->conf['display'] = $display;
+
 
 
   return $handler;
