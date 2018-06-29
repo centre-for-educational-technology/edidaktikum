@@ -2947,7 +2947,7 @@ function _ed_cluster_node_group_breadcrumb(&$node, &$group) {
   }
   $breadcrumb[] = $node->title;
 
-  return theme_breadcrumb(array('breadcrumb' => $breadcrumb));
+  return edidaktikum_theme_bs3_breadcrumb(array('breadcrumb' => $breadcrumb));
 }
 
 /**
@@ -2980,6 +2980,7 @@ function _ed_cluster_node_group_greadcrumbs(&$node) {
 
   return $output;
 }
+
 
 /**
  * Implements hook_node_presave().

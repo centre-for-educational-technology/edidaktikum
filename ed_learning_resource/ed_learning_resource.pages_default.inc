@@ -559,7 +559,7 @@
     $pane->panel = 'top';
     $pane->type = 'node_group_breadcrumbs';
     $pane->subtype = 'node_group_breadcrumbs';
-    $pane->shown = TRUE;
+    $pane->shown = FALSE;
     $pane->access = array();
     $pane->configuration = array(
         'context' => 'argument_node_edit_1',
@@ -580,6 +580,7 @@
     $display->hide_title = PANELS_TITLE_FIXED;
     $display->title_pane = '0';
     $handler->conf['display'] = $display;
+
 
 
 
