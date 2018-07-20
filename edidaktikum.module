@@ -409,6 +409,40 @@ function _ed_get_sorting_options($form_state){
 }
 
 
+function _ed_get_sorting_by_group($form, &$form_state){
+  $form = array();
+  $form['select'] = array(
+      '#type' => 'select',
+      '#options' => isset($form_state['build_info']['args'][0])? $form_state['build_info']['args'][0] : array(),
+  );
+  $form['submit'] = array(
+      '#type' => 'submit',
+      '#value' => t('Filter'),
+  );
+  return $form;
+}
+
+function _ed_get_sorting_by_group_submit($form, &$form_state) {
+
+  error_log($form_state['values']);
+
+  $sortorder = $form_state['values']['select'];
+
+  drupal_goto(current_path(),array('query' => array('group' => $sortorder)));
+}
+
+function ed_get_group_sorting_type(&$content){
+  $group = 0;
+  $content['sorting']['select']['#value'] = '- '.t('All').' -';
+  if(isset($_GET['group'])){
+    $group = $_GET['group'];
+    $content['sorting']['select']['#value'] = _ed_get_group_name_from_id($group);
+
+  }
+  return $group;
+}
+
+
 function _ed_get_sorting_options_submit($form, &$form_state) {
 
   $sortorder = $form_state['values']['select'];

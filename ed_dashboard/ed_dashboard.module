@@ -681,6 +681,7 @@ function ed_dashboard_drafts_page() {
   $account = $GLOBALS['user'];
   $content = array();
 
+
   // Get all user drafts
   $query = db_select('node', 'n')
     ->extend('PagerDefault')
@@ -692,8 +693,33 @@ function ed_dashboard_drafts_page() {
 
   $nids = $query->execute()->fetchCol();
 
+  $groups = array();
+
+  $groups[0] = '- '.t('All').' -';
+
   if (!empty($nids)) {
     $nodes = node_load_multiple($nids);
+
+
+
+    foreach ($nodes as $node){
+      foreach ($node->og_group_ref[LANGUAGE_NONE] as $item){
+        if(!in_array($item['target_id'], $groups)){
+          $nid = $item['target_id'];
+          $groups[$nid] = _ed_get_group_name_from_id($item['target_id']);
+        }
+
+      }
+
+    }
+
+
+    //kpr($groups);
+
+    $content['sorting'] = drupal_get_form('_ed_get_sorting_by_group', $groups);
+    $sql_order = ed_get_sorting_type($content);
+
+
     $build = node_view_multiple($nodes);
     $build['pager'] = array(
       '#theme' => 'pager',
