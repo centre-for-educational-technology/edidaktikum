@@ -78,8 +78,67 @@ function ed_blog_listing_page() {
 
   $table_type = 'pager_table';
 
-  $nids = _ed_get_user_blogs($GLOBALS['user']->uid);
-  $nodes = node_load_multiple($nids);
+
+  // Get all user posts
+  $query = db_select('node', 'n')
+      ->addTag('node_access')
+      ->fields('n', array('nid'));
+
+  $query->condition('type', array('ed_blog', 'ed_answer'), 'IN')
+      ->condition('n.uid', $GLOBALS['user']->uid);
+
+  $nids = $query->execute()->fetchCol();
+
+  $groups = array();
+  $groups[0] = '- '.t('All').' -';
+
+
+  //Get unique groups
+  foreach ($nids as $nid){
+
+    $wrapper = entity_metadata_wrapper('node', $nid);
+    $group_refs = $wrapper->og_group_ref->raw();
+
+    foreach ($group_refs as $group_ref){
+
+      if(!in_array($group_ref, $groups)){
+        $groups[$group_ref] = _ed_get_group_name_from_id($group_ref);
+      }
+    }
+
+  }
+
+
+  $content['sorting'] = drupal_get_form('_ed_get_sorting_by_group', $groups);
+
+  $group_sorting = ed_get_group_sorting_type($content);
+
+
+  //Unset nodes that do not belong to selected group
+  if($group_sorting != 0){
+
+    //Select items with certain group ref
+    $query = new EntityFieldQuery();
+    $result = $query->entityCondition('entity_type', 'node')
+        ->entityCondition('bundle',  array('ed_blog', 'ed_answer'), 'IN')
+        ->propertyCondition('uid',  $GLOBALS['user']->uid)
+        ->fieldCondition('og_group_ref', 'target_id', $group_sorting)
+        ->propertyOrderBy('created', 'DESC')
+        ->pager(ed_get_paging_nr())
+        ->execute();
+  }else{
+    $query = new EntityFieldQuery();
+    $result = $query->entityCondition('entity_type', 'node')
+        ->entityCondition('bundle',  array('ed_blog', 'ed_answer'), 'IN')
+        ->propertyCondition('uid',  $GLOBALS['user']->uid)
+        ->propertyOrderBy('created', 'DESC')
+        ->pager(ed_get_paging_nr())
+        ->execute();
+  }
+
+
+  $nodes = node_load_multiple(array_keys($result['node']));
+
   $rows = array();
   foreach($nodes as $node) {
     if($node->type == 'ed_blog') {
