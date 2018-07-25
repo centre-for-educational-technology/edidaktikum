@@ -424,19 +424,23 @@ function _ed_get_sorting_by_group($form, &$form_state){
 
 function _ed_get_sorting_by_group_submit($form, &$form_state) {
 
-  error_log($form_state['values']);
-
   $sortorder = $form_state['values']['select'];
 
-  drupal_goto(current_path(),array('query' => array('group' => $sortorder)));
+  if($sortorder != 0){
+    drupal_goto(current_path(),array('query' => array('group' => $sortorder)));
+  }else{
+    drupal_goto(current_path());
+  }
+
 }
 
 function ed_get_group_sorting_type(&$content){
   $group = 0;
-  $content['sorting']['select']['#value'] = '- '.t('All').' -';
+
+  $content['sorting']['select']['#value'] = 0;
   if(isset($_GET['group'])){
     $group = $_GET['group'];
-    $content['sorting']['select']['#value'] = _ed_get_group_name_from_id($group);
+    $content['sorting']['select']['#value'] = $group;
 
   }
   return $group;
