@@ -122,55 +122,6 @@ function _ed_forum_view_page_handler() {
   $display->content = array();
   $display->panels = array();
   $pane = new stdClass();
-  $pane->pid = 'new-aa11cd1e-39bc-4884-a7f8-84bcc072cae0';
-  $pane->panel = 'bottom';
-  $pane->type = 'node_comments';
-  $pane->subtype = 'node_comments';
-  $pane->shown = TRUE;
-  $pane->access = array();
-  $pane->configuration = array(
-      'mode' => '1',
-      'comments_per_page' => '50',
-      'context' => 'argument_entity_id:node_1',
-      'override_title' => 0,
-      'override_title_text' => '',
-  );
-  $pane->cache = array();
-  $pane->style = array(
-      'settings' => NULL,
-  );
-  $pane->css = array();
-  $pane->extras = array();
-  $pane->position = 0;
-  $pane->locks = array();
-  $pane->uuid = 'aa11cd1e-39bc-4884-a7f8-84bcc072cae0';
-  $display->content['new-aa11cd1e-39bc-4884-a7f8-84bcc072cae0'] = $pane;
-  $display->panels['bottom'][0] = 'new-aa11cd1e-39bc-4884-a7f8-84bcc072cae0';
-  $pane = new stdClass();
-  $pane->pid = 'new-17273904-ae82-49dc-88fc-0a8d3ae56602';
-  $pane->panel = 'bottom';
-  $pane->type = 'node_comment_form';
-  $pane->subtype = 'node_comment_form';
-  $pane->shown = TRUE;
-  $pane->access = array();
-  $pane->configuration = array(
-      'anon_links' => 0,
-      'context' => 'argument_entity_id:node_1',
-      'override_title' => 0,
-      'override_title_text' => '',
-  );
-  $pane->cache = array();
-  $pane->style = array(
-      'settings' => NULL,
-  );
-  $pane->css = array();
-  $pane->extras = array();
-  $pane->position = 1;
-  $pane->locks = array();
-  $pane->uuid = '17273904-ae82-49dc-88fc-0a8d3ae56602';
-  $display->content['new-17273904-ae82-49dc-88fc-0a8d3ae56602'] = $pane;
-  $display->panels['bottom'][1] = 'new-17273904-ae82-49dc-88fc-0a8d3ae56602';
-  $pane = new stdClass();
   $pane->pid = 'new-9df63b12-41ab-412f-a6c5-c5b990a93c6b';
   $pane->panel = 'left';
   $pane->type = 'entity_field';
@@ -199,6 +150,55 @@ function _ed_forum_view_page_handler() {
   $pane->uuid = '9df63b12-41ab-412f-a6c5-c5b990a93c6b';
   $display->content['new-9df63b12-41ab-412f-a6c5-c5b990a93c6b'] = $pane;
   $display->panels['left'][0] = 'new-9df63b12-41ab-412f-a6c5-c5b990a93c6b';
+  $pane = new stdClass();
+  $pane->pid = 'new-aa11cd1e-39bc-4884-a7f8-84bcc072cae0';
+  $pane->panel = 'left';
+  $pane->type = 'node_comments';
+  $pane->subtype = 'node_comments';
+  $pane->shown = TRUE;
+  $pane->access = array();
+  $pane->configuration = array(
+      'mode' => '1',
+      'comments_per_page' => '50',
+      'context' => 'argument_entity_id:node_1',
+      'override_title' => 0,
+      'override_title_text' => '',
+  );
+  $pane->cache = array();
+  $pane->style = array(
+      'settings' => NULL,
+  );
+  $pane->css = array();
+  $pane->extras = array();
+  $pane->position = 1;
+  $pane->locks = array();
+  $pane->uuid = 'aa11cd1e-39bc-4884-a7f8-84bcc072cae0';
+  $display->content['new-aa11cd1e-39bc-4884-a7f8-84bcc072cae0'] = $pane;
+  $display->panels['left'][1] = 'new-aa11cd1e-39bc-4884-a7f8-84bcc072cae0';
+  $pane = new stdClass();
+  $pane->pid = 'new-17273904-ae82-49dc-88fc-0a8d3ae56602';
+  $pane->panel = 'left';
+  $pane->type = 'node_comment_form';
+  $pane->subtype = 'node_comment_form';
+  $pane->shown = TRUE;
+  $pane->access = array();
+  $pane->configuration = array(
+      'anon_links' => 0,
+      'context' => 'argument_entity_id:node_1',
+      'override_title' => 0,
+      'override_title_text' => '',
+  );
+  $pane->cache = array();
+  $pane->style = array(
+      'settings' => NULL,
+  );
+  $pane->css = array();
+  $pane->extras = array();
+  $pane->position = 2;
+  $pane->locks = array();
+  $pane->uuid = '17273904-ae82-49dc-88fc-0a8d3ae56602';
+  $display->content['new-17273904-ae82-49dc-88fc-0a8d3ae56602'] = $pane;
+  $display->panels['left'][2] = 'new-17273904-ae82-49dc-88fc-0a8d3ae56602';
   $pane = new stdClass();
   $pane->pid = 'new-73aa1a16-95de-4e8c-b1ce-7fb784b412df';
   $pane->panel = 'right';
@@ -358,6 +358,7 @@ function _ed_forum_view_page_handler() {
   $display->hide_title = PANELS_TITLE_FIXED;
   $display->title_pane = 'new-9df63b12-41ab-412f-a6c5-c5b990a93c6b';
   $handler->conf['display'] = $display;
+
 
 
 
