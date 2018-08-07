@@ -43,7 +43,6 @@ function ed_task_menu(){
     'title callback' => '_ed_task_menu_title',
     'page callback' => 'ed_task_listing_page',
     'access callback' => 'user_is_logged_in',
-    //'access callback' => TRUE,
     'weight' => 15,
     'menu_name' => 'ed-dashboard-menu',
     'type' => MENU_NORMAL_ITEM,

@@ -124,8 +124,8 @@ function edidaktikum_menu() {
     'weight' => 6,
   );
   $items['admin/config/edidaktikum/configuration'] = array(
-    'title' => t('eDidaktikum Configuration'),
-    'description' => t('Configuration settings for eDidatkikum'),
+    'title' => 'eDidaktikum Configuration',
+    'description' => 'Configuration settings for eDidatkikum',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('edidaktikum_configuration_page_admin_form'),
     'access arguments' => array('access administration pages'),
