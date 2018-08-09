@@ -253,7 +253,7 @@ function ed_dashboard_page() {
 
 			$content['student_dashboard']['charts']['done'] = array(
 					'#type' => 'markup',
-					'#markup' => '<div class="col-md-4"><h4 class="text-center">'.t("Esitatud ülesanded").'</h4><svg id="animated-chart-done" class="animated-chart" viewbox="0 0 100 100">
+					'#markup' => '<div class="col-md-4"><h4 class="text-center">'.t("Submitted tasks").'</h4><svg id="animated-chart-done" class="animated-chart" viewbox="0 0 100 100">
 			  <circle cx="50" cy="50" r="45"/>
 			  <path id="progress-done" stroke-linecap="round" stroke-width="5" stroke="#fff" fill="none"
 			        d="M50 10
@@ -266,7 +266,7 @@ function ed_dashboard_page() {
 
 			$content['student_dashboard']['charts']['success'] = array(
 					'#type' => 'markup',
-					'#markup' => '<div class="col-md-4"><h4 class="text-center">'.t("Kinnitatud ülesanded").'</h4><svg id="animated-chart-success" class="animated-chart" viewbox="0 0 100 100">
+					'#markup' => '<div class="col-md-4"><h4 class="text-center">'.t("Accepted tasks").'</h4><svg id="animated-chart-success" class="animated-chart" viewbox="0 0 100 100">
 			  <circle cx="50" cy="50" r="45"/>
 			  <path id="progress-success" stroke-linecap="round" stroke-width="5" stroke="#fff" fill="none"
 			        d="M50 10
@@ -281,7 +281,7 @@ function ed_dashboard_page() {
 
 			$content['student_dashboard']['charts']['satisfaction'] = array(
 					'#type' => 'markup',
-					'#markup' => '<div class="col-md-4"><h4 class="text-center">'.t("Rahulolu ülesannetega").'</h4><svg id="animated-chart-satisfaction" class="animated-chart" viewbox="0 0 100 100">
+					'#markup' => '<div class="col-md-4"><h4 class="text-center">'.t("Task satisfaction").'</h4><svg id="animated-chart-satisfaction" class="animated-chart" viewbox="0 0 100 100">
 			  <circle cx="50" cy="50" r="45"/>
 			  <path id="progress-satisfaction" stroke-linecap="round" stroke-width="5" stroke="#fff" fill="none"
 			        d="M50 10
@@ -394,18 +394,18 @@ function ed_dashboard_get_student_dashboard(){
 					switch($answer['status']) {
 						case 'unanswered':
 
-							$group_tasks_markup .= "<a href='".url('node/'.$group_task)."' data-toggle='popover' data-title='".t('Tudengite hinnang')."' task=".$group_task." data-trigger='hover' data-poload='".url("/dashboard/student/rating")."'><button type='button' class='btn btn-default btn-circle'></button></a>";
+							$group_tasks_markup .= "<a href='".url('node/'.$group_task)."' data-toggle='popover' data-title='".t('Student rating')."' task=".$group_task." data-trigger='hover' data-poload='".url("/dashboard/student/rating")."'><button type='button' class='btn btn-default btn-circle'></button></a>";
 							break;
 
 						case 'unchecked':
-							$group_tasks_markup .= "<a href='".url('node/'.$answer['nid'])."' data-toggle='popover' data-title='".t('Tudengite hinnang')."' task=".$group_task." data-trigger='hover' data-poload='".url("/dashboard/student/rating")."'><button type='button' class='btn btn-warning unchecked btn-circle'></button>";
+							$group_tasks_markup .= "<a href='".url('node/'.$answer['nid'])."' data-toggle='popover' data-title='".t('Student rating')."' task=".$group_task." data-trigger='hover' data-poload='".url("/dashboard/student/rating")."'><button type='button' class='btn btn-warning unchecked btn-circle'></button>";
 							$satisfaction_rate+=_ed_get_average_satisfaction_for_task($answer['nid']);
 							$tasks_answered++;
 							$tasks_submitted++;
 							break;
 
 						case 'accepted':
-							$group_tasks_markup .= "<a href='".url('node/'.$answer['nid'])."' data-toggle='popover' data-title='".t('Tudengite hinnang')."' task=".$group_task." data-trigger='hover' data-poload='".url("/dashboard/student/rating")."'><button type='button' class='btn btn-success btn-circle'></button>";
+							$group_tasks_markup .= "<a href='".url('node/'.$answer['nid'])."' data-toggle='popover' data-title='".t('Student rating')."' task=".$group_task." data-trigger='hover' data-poload='".url("/dashboard/student/rating")."'><button type='button' class='btn btn-success btn-circle'></button>";
 							$group_tasks[$key] = array('status' => 'accepted');
 							$satisfaction_rate+=_ed_get_average_satisfaction_for_task($answer['nid']);
 							$tasks_accepted++;
@@ -413,14 +413,14 @@ function ed_dashboard_get_student_dashboard(){
 							break;
 
 						case 'checked':
-							$group_tasks_markup .= "<a href='".url('node/'.$answer['nid'])."' data-toggle='popover' data-title='".t('Tudengite hinnang')."' task=".$group_task." data-trigger='hover' data-poload='".url("/dashboard/student/rating")."'><button type='button' class='btn btn-primary btn-circle'></button>";
+							$group_tasks_markup .= "<a href='".url('node/'.$answer['nid'])."' data-toggle='popover' data-title='".t('Student rating')."' task=".$group_task." data-trigger='hover' data-poload='".url("/dashboard/student/rating")."'><button type='button' class='btn btn-primary btn-circle'></button>";
 							$satisfaction_rate+=_ed_get_average_satisfaction_for_task($answer['nid']);
 							$tasks_submitted++;
 							break;
 
 						case 'rejected':
 
-							$group_tasks_markup .= "<a href='".url('node/'.$answer['nid'])."' data-toggle='popover' data-title='".t('Tudengite hinnang')."' task=".$group_task." data-trigger='hover' data-poload='".url("/dashboard/student/rating")."'><button type='button' class='btn btn-danger btn-circle'></button>";
+							$group_tasks_markup .= "<a href='".url('node/'.$answer['nid'])."' data-toggle='popover' data-title='".t('Student rating')."' task=".$group_task." data-trigger='hover' data-poload='".url("/dashboard/student/rating")."'><button type='button' class='btn btn-danger btn-circle'></button>";
 
 							$group_tasks[$key] = array('status' => 'rejected');
 							$satisfaction_rate+=_ed_get_average_satisfaction_for_task($answer['nid']);
