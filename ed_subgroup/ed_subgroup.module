@@ -37,7 +37,7 @@ function ed_subgroup_ctools_plugin_api() {
 //XXX This overrides ed_cluster_menu
 //function ed_subgroup_menu(){
 //  $items['node/%node/news'] = array(
-//    'title' => t('News'),
+//    'title' => 'News',
 //    'page callback' => 'ed_listing_from_group',
 //    'access callback' => 'ed_subgroup_content_listing_access',
 //    'page arguments' => array('node', 1, 'ed_news'),
@@ -46,7 +46,7 @@ function ed_subgroup_ctools_plugin_api() {
 //    'weight' => 50,
 //  );
 //  $items['node/%node/task-manager'] = array(
-//    'title' => t('Task Manager'),
+//    'title' => 'Task Manager',
 //    'page callback' => 'ed_task_manager',
 //    'access callback' => 'ed_task_manager_access',
 //    'page arguments' => array('node', 1),
@@ -55,7 +55,7 @@ function ed_subgroup_ctools_plugin_api() {
 //    'weight' => 50,
 //  );
 //  $items['node/%node/event'] = array(
-//    'title' => t('Events'),
+//    'title' => 'Events',
 //    'page callback' => 'ed_listing_from_group',
 //    'access callback' => 'ed_subgroup_content_listing_access',
 //    'page arguments' => array('node', 1, 'ed_event'),
@@ -64,7 +64,7 @@ function ed_subgroup_ctools_plugin_api() {
 //    'weight' => 50,
 //  );
 //  $items['node/%node/blog'] = array(
-//    'title' => t('Posts'),
+//    'title' => 'Posts',
 //    'page callback' => 'ed_listing_from_group',
 //    'access callback' => 'ed_subgroup_content_listing_access',
 //    'page arguments' => array('node', 1, 'ed_blog'),
@@ -73,7 +73,7 @@ function ed_subgroup_ctools_plugin_api() {
 //    'weight' => 50,
 //  );
 //  $items['node/%node/learning-resource'] = array(
-//    'title' => t('Learning Resources'),
+//    'title' => 'Learning Resources',
 //    'page callback' => 'ed_listing_from_group',
 //    'access callback' => 'ed_subgroup_content_listing_access',
 //    'page arguments' => array('node', 1, 'ed_learning_resource'),
@@ -82,7 +82,7 @@ function ed_subgroup_ctools_plugin_api() {
 //    'weight' => 50,
 //  );
 //  $items['node/%node/forum'] = array(
-//    'title' => t('Discussion Board'),
+//    'title' => 'Discussion Board',
 //    'page callback' => 'ed_listing_from_group',
 //    'access callback' => 'ed_subgroup_content_listing_access',
 //    'page arguments' => array('node', 1, 'ed_forum'),
@@ -92,7 +92,7 @@ function ed_subgroup_ctools_plugin_api() {
 //  );
 //
 //  $items['node/%node/bookmark'] = array(
-//    'title' => t('Bookmarks'),
+//    'title' => 'Bookmarks',
 //    'page callback' => 'ed_listing_from_group',
 //    'access callback' => 'ed_subgroup_content_listing_access',
 //    'page arguments' => array('node', 1, 'ed_bookmark'),
@@ -101,7 +101,7 @@ function ed_subgroup_ctools_plugin_api() {
 //    'weight' => 50,
 //  );
 //  $items['node/%node/file'] = array(
-//    'title' => t('Files'),
+//    'title' => 'Files',
 //    'page callback' => 'ed_listing_from_group',
 //    'access callback' => 'ed_subgroup_content_listing_access',
 //    'page arguments' => array('node', 1, 'ed_file'),

@@ -35,7 +35,7 @@ function ed_user_extra_menu() {
 
 
   $items['user/%user/study_groups'] = array(
-      'title' => t('Study Groups'),
+      'title' => 'Study Groups',
       'page callback' => 'drupal_get_form',
       'page arguments' => array('ed_user_study_groups_page', 1),
       'access callback' => 'user_edit_access',
@@ -417,11 +417,9 @@ function _ed_user_extra_study_groups_options_list(){
       'kutom' => t('KUTOM - töö- ja tehnoloogiaõpetuse õpetaja'),
       'ekeom_tk' => t('EKEOM - TK - Eesti keele kui teise keele ja eesti kultuuri õpetaja'),
       'grvom_f' => t('GRVOM - F - Soome ja teise keele õpetaja'),
-  
-  
+
+
   );
 
   return $options;
 }
-
-

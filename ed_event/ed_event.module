@@ -30,7 +30,7 @@ function ed_event_node_info() {
 function ed_event_menu() {
   /*
   $items['events'] = array(
-    'title' => t('Events'),
+    'title' => 'Events',
     'page callback' => 'ed_event_listing_page',
     'access callback' => TRUE,
     'weight' => 10,

@@ -29,16 +29,16 @@ function ed_learning_resource_node_view($node, $view_mode, $langcode){
   if($view_mode == 'front'){
     $node->picture = 0;
     $node->content['links']['comment'] = 0;
-    
+
   }
   if($view_mode == 'teaser'){
     $node->picture = 0;
     drupal_add_css('ul.links.inline {display: none;}', array('group' => CSS_THEME, 'type' => 'inline'));
   }
   if($view_mode == 'teaser' && $node->type == 'ed_learning_resource'){
-    
-    
-    
+
+
+
     $viewscount = ed_get_views($node->nid);
     $likescount = ed_get_likes($node->nid);
     $termtype = taxonomy_term_load($node->ed_learning_resource_type[LANGUAGE_NONE][0]['value']);
@@ -48,7 +48,7 @@ function ed_learning_resource_node_view($node, $view_mode, $langcode){
       foreach($node->ed_learning_resource_authors[LANGUAGE_NONE] as $term){
         array_push($authtids, $term['tid']);
       }
-      
+
       $termauthors = taxonomy_term_load_multiple($authtids);
       foreach($termauthors as $author){
         array_push($authorsforparts, l($author->name, 'taxonomy/term/'.$author->tid));
@@ -60,7 +60,7 @@ function ed_learning_resource_node_view($node, $view_mode, $langcode){
         t('Views: ').$viewscount,
         t('Likes: ').$likescount,
       );
-      
+
     }else{
       $author = user_load($node->uid);
       $username = edidaktikum_get_full_name_for_user_account($author);
@@ -72,9 +72,9 @@ function ed_learning_resource_node_view($node, $view_mode, $langcode){
         t('Likes: ').$likescount,
       );
     }
-    
-    
- 
+
+
+
     $node->content['metadata'] = array(
       '#type' => 'markup',
       '#weight' => 50,
@@ -87,7 +87,7 @@ function ed_learning_resource_node_view($node, $view_mode, $langcode){
 	if (isset($node->content['links']['comment'])) {
 	  $node->content['links']['comment']['#access'] = FALSE;
 	}
-	
+
     // TODO Use some default image if not provided
     if(!empty($node->ed_field_featured_image)){
       $imgpath = image_style_url('thumbnail', $node->ed_field_featured_image[LANGUAGE_NONE][0]['uri']);
@@ -126,7 +126,7 @@ function ed_learning_resource_node_view($node, $view_mode, $langcode){
  */
 function ed_learning_resource_menu() {
 //  $items['resources'] = array(
-//    'title' => t('Resources'),
+//    'title' => 'Resources',
 //    'page callback' => 'drupal_get_form',
 //    'page arguments' => array('ed_learning_resource_listing'),
 //    'access callback' => TRUE,
@@ -135,7 +135,7 @@ function ed_learning_resource_menu() {
 //    'type' => MENU_NORMAL_ITEM,
 //  );
   $items['video-bricks'] = array(
-      'title' => t('Video Bricks'),
+      'title' => 'Video Bricks',
       'page callback' => 'ed_learning_resource_video_bricks_listing_page',
       'access callback' => TRUE,
       'weight' => 10,
@@ -143,7 +143,7 @@ function ed_learning_resource_menu() {
 //      'type' => MENU_NORMAL_ITEM,
   );
   $items['resources'] = array(
-    'title' => t('Learning Resources'),
+    'title' => 'Learning Resources',
     'page callback' => 'ed_learning_resource_listing',
     'access callback' => TRUE,
     'weight' => 15,
@@ -151,7 +151,7 @@ function ed_learning_resource_menu() {
     'type' => MENU_NORMAL_ITEM,
   );
   $items['resources/type/%'] = array(
-    'title' => t('Resources'),
+    'title' => 'Resources',
     'page callback' => 'ed_learning_resource_type_listing',
     'page arguments' => array(2),
     'access callback' => TRUE,
@@ -159,7 +159,7 @@ function ed_learning_resource_menu() {
     'type' => MENU_CALLBACK,
   );
   $items['resources/language/%'] = array(
-    'title' => t('Resources'),
+    'title' => 'Resources',
     'page callback' => 'ed_learning_resource_language_listing',
     'page arguments' => array(2),
     'access callback' => TRUE,
@@ -275,7 +275,7 @@ function ed_learning_resource_get_video_bricks() {
 
 
 
-function _ed_get_learning_resources($order){  
+function _ed_get_learning_resources($order){
   $query = db_select('node', 'n')
     ->extend('PagerDefault')
     ->fields('n', array('nid'))
@@ -287,13 +287,13 @@ function _ed_get_learning_resources($order){
   }else{
     $query->orderBy('created', $order);
   }
-  
+
   $query->limit(ed_get_paging_nr());
   $result = $query->execute()->fetchCol();
-  
+
   return $result;
-  
-  
+
+
 }
 
 
@@ -304,11 +304,11 @@ function ed_learning_resource_preprocess_node(&$vars){
       $created = $vars['node']->created;
       $vars['submitted'] = format_date($created, 'short').", ".$vars['node']->name;
     }
-	
-	
+
+
 	  drupal_add_js(drupal_get_path('module', 'edidaktikum') . '/js/ed_likes.js', 'file');
 	  drupal_add_js(drupal_get_path('module', 'edidaktikum') . '/js/ed_share.js', 'file');
-	
+
 	  if($vars['view_mode'] == 'full'){
 	    if($vars['node']->ed_field_resource_type[LANGUAGE_NONE][0]['value'] == 2){
         $vars['theme_hook_suggestions'][] = 'node__ed_learning_resource_full_video';

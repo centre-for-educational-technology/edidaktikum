@@ -117,7 +117,7 @@ function ed_collection_preprocess_node(&$variables) {
  */
 function ed_collection_menu() {
   $items['collections'] = array(
-    'title' => t('Collections'),
+    'title' => 'Collections',
     'page callback' => 'ed_collection_listing_page',
     'access callback' => TRUE,
     'weight' => 10,
@@ -125,7 +125,7 @@ function ed_collection_menu() {
     'type' => MENU_NORMAL_ITEM,
   );
   $items['dashboard/collection'] = array(
-    'title' => t('Collection'),
+    'title' => 'Collection',
     'page callback' => 'ed_collection_dashboard_listing_page',
     'access callback' => 'ed_collection_teacher_or_admin_is_logged_in',
     'weight' => 35,

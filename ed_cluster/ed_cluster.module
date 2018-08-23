@@ -16,7 +16,7 @@ define('ED_ACCESS_REALM', 'ed_access');
  */
 function ed_cluster_menu() {
   $items['node/%node/tasks'] = array(
-    'title' => t('Tasks'),
+    'title' => 'Tasks',
     'type' => MENU_LOCAL_TASK,
     'page callback' => 'ed_task_listing_for_students',
     'access callback' => 'ed_task_listing_for_students_access',
@@ -25,7 +25,7 @@ function ed_cluster_menu() {
     'weight' => 55,
   );
   $items['clusters'] = array(
-    'title' => t('Groups'),
+    'title' => 'Groups',
     'type' => MENU_NORMAL_ITEM,
     'page callback' => 'ed_all_groups_listing', //ed_all_groups_listing
     'access callback' => TRUE,
@@ -33,28 +33,28 @@ function ed_cluster_menu() {
     'menu_name' => 'main-menu',
   );
   $items['clusters/groups'] = array(
-    'title' => t('All Groups'),
+    'title' => 'All Groups',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     //'page callback' => 'ed_all_groups_listing',
     'access callback' => TRUE,
     'weight' => 0,
   );
   $items['clusters/mygroups'] = array(
-    'title' => t('My Groups'),
+    'title' => 'My Groups',
     'type' => MENU_LOCAL_TASK,
     'access callback' => 'user_is_logged_in',
     'page callback' => 'ed_cluster_my_listing_page',
     'weight' => 5,
   );
   $items['clusters/inactivegroups'] = array(
-      'title' => t('Inactive Groups'),
+      'title' => 'Inactive Groups',
       'type' => MENU_LOCAL_TASK,
       'access callback' => 'user_is_logged_in',
       'page callback' => 'ed_cluster_my_inactive_listing_page',
       'weight' => 9,
   );
   $items['clusters/searchgroup'] = array(
-    'title' => t('Search for a group'),
+    'title' => 'Search for a group',
     'type' => MENU_LOCAL_TASK,
     'access callback' => TRUE,
     'page callback' => 'drupal_get_form',
@@ -62,7 +62,7 @@ function ed_cluster_menu() {
     'weight' => 10,
   );
   $items['node/%node/task-manager'] = array(
-    'title' => t('Task Manager'),
+    'title' => 'Task Manager',
     'page callback' => 'ed_task_manager',
     'access callback' => 'ed_task_manager_access',
     'page arguments' => array('node', 1),
@@ -71,7 +71,7 @@ function ed_cluster_menu() {
     'weight' => 50,
   );
   $items['node/%node/q_portfolio'] = array(
-      'title' => t('Qualification Portfolio'),
+      'title' => 'Qualification Portfolio',
       'page callback' => 'ed_listing_from_group',
       'access callback' => 'ed_group_assessors_ed_q_portfolio_listing_access',
       'page arguments' => array('node', 1, 'ed_q_portfolio'),
@@ -80,7 +80,7 @@ function ed_cluster_menu() {
       'weight' => 3,
   );
   $items['node/%node/news'] = array(
-    'title' => t('News'),
+    'title' => 'News',
     'page callback' => 'ed_listing_from_group',
     'access callback' => 'ed_group_content_listing_access',
     'page arguments' => array('node', 1, 'ed_news'),
@@ -89,7 +89,7 @@ function ed_cluster_menu() {
     'weight' => 50,
   );
   $items['node/%node/event'] = array(
-    'title' => t('Events'),
+    'title' => 'Events',
     'page callback' => 'ed_listing_from_group',
     'access callback' => 'ed_group_content_listing_access',
     'page arguments' => array('node', 1, 'ed_event'),
@@ -98,7 +98,7 @@ function ed_cluster_menu() {
     'weight' => 50,
   );
   $items['node/%node/subgroups'] = array(
-    'title' => t('Subgroups'),
+    'title' => 'Subgroups',
     'page callback' => 'ed_subgroup_listing_from_group',
     'access callback' => 'ed_group_content_listing_access',
     'page arguments' => array('node', 1, 'ed_subgroup'),
@@ -115,7 +115,7 @@ function ed_cluster_menu() {
     'file' => 'ed_cluster.pages.inc',
   );
   $items['node/%node/blog'] = array(
-    'title' => t('Posts'),
+    'title' => 'Posts',
     'page callback' => 'ed_listing_from_group',
     'access callback' => 'ed_group_content_listing_access',
     'page arguments' => array('node', 1, 'ed_blog'),
@@ -124,7 +124,7 @@ function ed_cluster_menu() {
     'weight' => 50,
   );
   $items['node/%node/learning-resource'] = array(
-    'title' => t('Learning Resources'),
+    'title' => 'Learning Resources',
     'page callback' => 'ed_learning_resource_listing_from_group',
     'access callback' => 'ed_group_content_listing_access',
     'page arguments' => array(1),
@@ -133,7 +133,7 @@ function ed_cluster_menu() {
     'weight' => 50,
   );
   $items['node/%node/forum'] = array(
-    'title' => t('Discussion Board'),
+    'title' => 'Discussion Board',
     'page callback' => 'ed_listing_from_group',
     'access callback' => 'ed_group_content_listing_access',
     'page arguments' => array('node', 1, 'ed_forum'),
@@ -143,7 +143,7 @@ function ed_cluster_menu() {
   );
 
   $items['node/%node/bookmark'] = array(
-    'title' => t('Bookmarks'),
+    'title' => 'Bookmarks',
     'page callback' => 'ed_listing_from_group',
     'access callback' => 'ed_group_content_listing_access',
     'page arguments' => array('node', 1, 'ed_bookmark'),
@@ -152,7 +152,7 @@ function ed_cluster_menu() {
     'weight' => 50,
   );
   $items['node/%node/file'] = array(
-    'title' => t('Files'),
+    'title' => 'Files',
     'page callback' => 'ed_cluster_file_listing_from_group',
     'access callback' => 'ed_group_content_listing_access',
     'page arguments' => [1,],
@@ -172,7 +172,7 @@ function ed_cluster_menu() {
     'type' => MENU_CALLBACK,
   );
   $items['dashboard/shared'] = array(
-    'title' => t('Shared with me'),
+    'title' => 'Shared with me',
     'page callback' => 'ed_cluster_to_group_member_page',
     'access callback' => 'user_is_logged_in',
     'file' => 'ed_cluster.pages.inc',
@@ -189,7 +189,7 @@ function ed_cluster_menu() {
     'file' => 'ed_cluster.pages.inc',
   );
   $items['node/%node/pages'] = array(
-    'title' => t('Pages'),
+    'title' => 'Pages',
     'page callback' => 'ed_listing_from_group',
     'access callback' => 'ed_group_content_listing_access',
     'page arguments' => array('node', 1, 'ed_page'),
@@ -199,7 +199,7 @@ function ed_cluster_menu() {
   );
 
   //$items['node/%node/task-manager-experimental'] = [
-  //  'title' => t('Task Manager (experimental)'),
+  //  'title' => 'Task Manager (experimental)',
   //  'access callback' => 'ed_current_user_is_administrator_or_supervisor',
   //  'page callback' => 'ed_task_manager_experimental',
   //  'page arguments' => array('node', 1),
