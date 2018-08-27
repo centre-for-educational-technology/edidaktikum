@@ -479,8 +479,14 @@ function _get_all_answers_to_task($task){
 }
 
 
-
-
+/**
+ * Initially this function returned tasks created in certain month
+ * Later it was modified to return tasks with deadline in certain month
+ * @param $gid
+ * @param $month
+ * @param $year
+ * @return mixed
+ */
 function _ed_get_group_tasks_for_month_year($gid, $month, $year){
 
   //January case - should be next year
@@ -502,7 +508,8 @@ function _ed_get_group_tasks_for_month_year($gid, $month, $year){
 			->condition('ogm.gid', $gid)
 			->condition('n.nid', $gid, '!=')
 			->condition('n.type', 'ed_task')
-			->condition('n.created', array($first_minute, $last_minute), 'BETWEEN')
+//			->condition('n.created', array($first_minute, $last_minute), 'BETWEEN')
+      ->condition('dd.ed_task_due_date_value', array($first_minute, $last_minute), 'BETWEEN')
 			->addTag('node_access')
       ->orderBy('dd.ed_task_due_date_value', 'ASC');
 	$query->distinct();
