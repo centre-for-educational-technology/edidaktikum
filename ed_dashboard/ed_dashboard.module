@@ -59,137 +59,8 @@ function ed_dashboard_menu() {
 			'type' => MENU_CALLBACK,
 			'access callback' => 'user_is_logged_in',
 	);
-  $items['dashboard/student_activity'] = [
-    'title' => 'Student activity',
-    'access callback' => 'ed_current_user_is_administrator_or_supervisor',
-    'page callback' => 'ed_student_activity_page',
-    'weight' => 50,
-    'menu_name' => 'ed-dashboard-menu',
-    'type' => MENU_NORMAL_ITEM
-  ];
-
-
 
   return $items;
-}
-
-function ed_current_user_is_administrator() {
-  return in_array('administrator', $GLOBALS['user']->roles);
-}
-
-function ed_current_user_is_supervisor() {
-  return in_array('supervisor', $GLOBALS['user']->roles);
-}
-
-function ed_current_user_is_administrator_or_supervisor() {
-  return ed_current_user_is_administrator() || ed_current_user_is_supervisor();
-}
-
-
-
-function ed_student_activity_page() {
-  menu_tree_set_path('main-menu', 'dashboard');
-
-  $users = edf_get_users(['groups', 'full_name', 'study_groups', 'roles'], ['max_offline_time' => 2 * 365 * 24 * 60 * 60]);
-  $tasks = edf_get_tasks(['due_date', 'study_groups', 'targeted_users', 'answers_by_uid'], ['max_time_ago_changed' => 2 * 365 * 24 * 60 * 60]);
-  edf_fill_user_tasks($users, $tasks);
-
-  //  analyze
-
-  foreach($users as &$user) {
-    $all_tasks = [];
-
-    foreach ($user['groups'] as $group) {
-      if (!isset($group['tasks'])) continue;
-      $all_tasks = array_merge($all_tasks, $group['tasks']);
-    }
-
-    if (count($all_tasks) > 0) {
-
-      $total_accepted = 0;
-      $total_checked = 0;
-      $total_answered = 0;
-      $total_on_time = 0;
-      $total = count($all_tasks);
-
-      $total_gradeable = 0;
-      $total_grade = 0;
-
-      foreach ($all_tasks as $task) {
-        if (isset($task['answer'])) {
-          $total_answered++;
-
-          if ($task['answer']['created'] <= $task['due_date']) {
-            $total_on_time++;
-          }
-
-          if ($task['grade']['status'] != 'unchecked') {
-            $total_checked++;
-
-            if (!is_null($task['grade']['grade'])) {
-              $total_gradeable++;
-              $total_grade += $task['grade']['grade'] / 100;
-            }
-
-            if ($task['grade']['status'] == 'accepted') {
-              $total_accepted++;
-            }
-          }
-        }
-      }
-
-      $score = [
-        'answered' => round($total_answered / $total * 100),
-        'on_time' => round($total_on_time / $total * 100),
-      ];
-      $score_total = $score['answered'] + $score['on_time'];
-      $score_comp = 2;
-
-      if ($total_checked == 0) {
-        $score['accepted'] = '-';
-      } else {
-        $score['accepted'] = round($total_accepted / $total_checked * 100);
-        $score_total += $score['accepted'];
-        $score_comp++;
-      }
-
-      if ($total_gradeable == 0) {
-        $score['grades'] = '-';
-      } else {
-        $score['grades'] = round($total_grade / $total_gradeable * 100);
-        $score_total += $score['grades'];
-        $score_comp++;
-      }
-
-      $score['average'] = round($score_total / $score_comp);
-      $user['score'] = $score;
-    } else {
-      unset($users[$user['uid']]);
-    }
-
-    unset($user);
-  }
-
-  uasort($users, function($a, $b) {
-    return ($b['score']['average'] - $a['score']['average']);
-  });
-
-  //  parse
-
-  $table = "<table><tr><th>" . t('Name') . "</th><th>" . t('Participation') . "</th><th>" . t('Punctuality') . "</th><th>";
-  $table .= t('Success') . "</th><th>" . t('Grades') . "</th><th>" . t('Average') . "</th></tr>";
-
-  foreach($users as &$user) {
-    if (!isset($user['score'])) continue;
-    $table .= "<tr><td><a href=../user/" . $user['uid'] . ">" . $user['full_name'] . "</a></td><td>" . $user['score']['answered'] . "</td><td>" . $user['score']['on_time'] . "</td><td>";
-    $table .= $user['score']['accepted'] . "</td><td>" . $user['score']['grades'] . "</td><td>" . $user['score']['average'] . "</td></tr>";
-    unset($user);
-  }
-
-
-  $table .= "</table>";
-
-  return $table;
 }
 
 /**
@@ -236,21 +107,21 @@ function ed_dashboard_page() {
 //    );
 //  }
 
-	
-	
+
+
 	$group_nids = _ed_dashboard_get_current_user_groups();
 	if (!empty($group_nids)) {
-		
+
 		$check_groups = ed_get_groups_by_user_no_subgroups();
-		
+
 		if(!empty($check_groups)){
-			
+
 			$this_semester_months = _ed_get_months_of_current_semester();
 			$this_semester_months_markup = '';
 			foreach ($this_semester_months as $key=>$value){
 				$this_semester_months_markup.='<th data-field="'.$key.'">'.$value.'</th>';
 			}
-			
+
 			$content['student_dashboard']['charts']['done'] = array(
 					'#type' => 'markup',
 					'#markup' => '<div class="col-md-4"><h4 class="text-center">'.t("Submitted tasks").'</h4><svg id="animated-chart-done" class="animated-chart" viewbox="0 0 100 100">
@@ -263,7 +134,7 @@ function ed_dashboard_page() {
 			  <text id="count-done" x="50" y="50" text-anchor="middle" dy="7" font-size="20">0%</text>
 			</svg></div>',
 			);
-			
+
 			$content['student_dashboard']['charts']['success'] = array(
 					'#type' => 'markup',
 					'#markup' => '<div class="col-md-4"><h4 class="text-center">'.t("Accepted tasks").'</h4><svg id="animated-chart-success" class="animated-chart" viewbox="0 0 100 100">
@@ -275,10 +146,10 @@ function ed_dashboard_page() {
 			  </path>
 			  <text id="count-success" x="50" y="50" text-anchor="middle" dy="7" font-size="20">0%</text>
 			</svg></div>',
-			
+
 			);
-			
-			
+
+
 			$content['student_dashboard']['charts']['satisfaction'] = array(
 					'#type' => 'markup',
 					'#markup' => '<div class="col-md-4"><h4 class="text-center">'.t("Task satisfaction").'</h4><svg id="animated-chart-satisfaction" class="animated-chart" viewbox="0 0 100 100">
@@ -290,9 +161,9 @@ function ed_dashboard_page() {
 			  </path>
 			  <text id="count-satisfaction" x="50" y="50" text-anchor="middle" dy="7" font-size="20">0%</text>
 			</svg></div>',
-			
+
 			);
-			
+
 			$content['student_dashboard']['table'] = array(
 					'#type' => 'markup',
 					'#prefix' => '<table id="student-dash-table" data-toggle="table" data-url="'.url("/dashboard/student/").'">',
@@ -303,15 +174,15 @@ function ed_dashboard_page() {
 	    </thead>',
 					'#suffix' => '</table>',
 			);
-			
-			
+
+
 		}else{
 			$groups = node_load_multiple($group_nids);
-			
+
 			if (!empty($groups)) {
 				$content['groups-listing'] = node_view_multiple($groups, 'dashboard');
-				
-				
+
+
 				foreach ($content['groups-listing']['nodes'] as $node){
 					if (isset($node['#node']->picture)) {
 						//Hide user picture
@@ -322,12 +193,12 @@ function ed_dashboard_page() {
 						'#theme' => 'pager',
 						'#weight' => 5,
 				);
-				
+
 			}
 		}
-		
-		
-		
+
+
+
 	}else {
 		$content['groups-not-found'] = array(
 				'#type' => 'markup',
@@ -336,7 +207,7 @@ function ed_dashboard_page() {
 				'#suffix' => '</div>',
 		);
 	}
-	
+
 
   return $content;
 }
@@ -346,64 +217,64 @@ function ed_dashboard_page() {
  * Student dashboard api
  */
 function ed_dashboard_get_student_dashboard(){
-	
+
 	$response = array(
 			'success' => false,
 	);
-	
-	
+
+
 	$my_groups = array_values(ed_get_groups_by_user_no_subgroups());
-	
-	
-	
-	
+
+
+
+
 	$months_in_this_semester = array_keys(_ed_get_months_of_current_semester());
-	
+
 	$total_tasks = 0;
 	$tasks_accepted = 0;
 	$tasks_answered = 0;
 	$satisfaction_rate = 0;
 	$tasks_submitted = 0;
-	
+
 	$my_groups_names_tasks = array();
-	
+
 	if(!empty($my_groups)){
 		foreach ($my_groups as $my_group){
 
-			
+
 			$months_tasks = array();
-			
+
 			//  get members and separate out admins
 			$members = ed_get_group_members($my_group, true, true, true);
 			$admins = ed_filter_admins($members);
-			
-			
+
+
 			foreach ($months_in_this_semester as $month){
 				$group_tasks = _ed_get_group_tasks_for_month_year($my_group, $month, date('Y'));
-		
+
 				$group_tasks_markup = '';
-				
+
 				foreach ($group_tasks as $key=>$group_task){
 					$total_tasks++;
-					
-				
+
+
 					$answer = ed_get_answer($group_task, $GLOBALS['user']->uid, false, $admins);
-					
-					
-					
+
+
+
 					switch($answer['status']) {
 						case 'unanswered':
-							
+
 							$group_tasks_markup .= "<a href='".url('node/'.$group_task)."' data-toggle='popover' data-title='".t('Student rating')."' task=".$group_task." data-trigger='hover' data-poload='".url("/dashboard/student/rating")."'><button type='button' class='btn btn-default btn-circle'></button></a>";
 							break;
-						
+
 						case 'unchecked':
 							$group_tasks_markup .= "<a href='".url('node/'.$answer['nid'])."' data-toggle='popover' data-title='".t('Student rating')."' task=".$group_task." data-trigger='hover' data-poload='".url("/dashboard/student/rating")."'><button type='button' class='btn btn-warning unchecked btn-circle'></button>";
 							$satisfaction_rate+=_ed_get_average_satisfaction_for_task($answer['nid']);
 							$tasks_answered++;
 							$tasks_submitted++;
 							break;
-						
+
 						case 'accepted':
 							$group_tasks_markup .= "<a href='".url('node/'.$answer['nid'])."' data-toggle='popover' data-title='".t('Student rating')."' task=".$group_task." data-trigger='hover' data-poload='".url("/dashboard/student/rating")."'><button type='button' class='btn btn-success btn-circle'></button>";
 							$group_tasks[$key] = array('status' => 'accepted');
@@ -411,97 +282,97 @@ function ed_dashboard_get_student_dashboard(){
 							$tasks_accepted++;
 							$tasks_submitted++;
 							break;
-						
+
 						case 'checked':
 							$group_tasks_markup .= "<a href='".url('node/'.$answer['nid'])."' data-toggle='popover' data-title='".t('Student rating')."' task=".$group_task." data-trigger='hover' data-poload='".url("/dashboard/student/rating")."'><button type='button' class='btn btn-primary btn-circle'></button>";
 							$satisfaction_rate+=_ed_get_average_satisfaction_for_task($answer['nid']);
 							$tasks_submitted++;
 							break;
-						
+
 						case 'rejected':
-							
+
 							$group_tasks_markup .= "<a href='".url('node/'.$answer['nid'])."' data-toggle='popover' data-title='".t('Student rating')."' task=".$group_task." data-trigger='hover' data-poload='".url("/dashboard/student/rating")."'><button type='button' class='btn btn-danger btn-circle'></button>";
-							
+
 							$group_tasks[$key] = array('status' => 'rejected');
 							$satisfaction_rate+=_ed_get_average_satisfaction_for_task($answer['nid']);
 							$tasks_submitted++;
 							break;
-						
+
 					}
-					
+
 				}
-				
-				
-				
+
+
+
 				$months_tasks[$month] = $group_tasks_markup;
-			
+
 			}
-			
+
 			//Add group title
 			$wrapper = entity_metadata_wrapper('node', $my_group);
 			$group_name = $wrapper->title->value();
 			$months_tasks['group'] = [$group_name, $my_group];
-		
-			
-			
+
+
+
 			array_push($my_groups_names_tasks, $months_tasks);
-			
+
 		}
-		
+
 	}
-	
-	
+
+
 	$response['success'] = true;
 	$response['data'] = $my_groups_names_tasks;
-	
+
 	if($tasks_submitted>0){
 		$satisfaction_rate = $satisfaction_rate/$tasks_submitted;
 	}else{
 		$satisfaction_rate = 0;
 	}
-	
-	
+
+
 	if($total_tasks>0){
 		$response['stats'] = array('tasks_accepted' => $tasks_accepted*100/$total_tasks, 'tasks_answered' => $tasks_answered*100/$total_tasks, 'satisfaction_rate' => $satisfaction_rate);
 	}else{
 		$response['stats'] = array('tasks_accepted' => 0, 'tasks_answered' => 0, 'satisfaction_rate' => 0);
 	}
-	
-	
-	
+
+
+
 	return drupal_json_output($response);
-	
+
 }
 
 
 
 function _ed_get_average_satisfaction_for_task($answer_id){
-	
+
 	$difficulty = 0;
 	$time_eff = 0;
 	$satisfaction = 0;
-	
+
 	$wrapper = entity_metadata_wrapper('node', $answer_id);
-	
+
 
 	if($wrapper->__isset('ed_field_difficulty_feedb')){
 		//100 - very difficult - lower rating
 		$difficulty = 100 - $wrapper->ed_field_difficulty_feedb->value()*100/4;
 	}
-	
+
 	if($wrapper->__isset('ed_field_time_eff_feedb')){
 		//100 - very time consuming - lower rating
 		$time_eff = 100 - $wrapper->ed_field_time_eff_feedb->value()*100/4;
 	}
-	
+
 	if($wrapper->__isset('ed_field_satisf_feedb')){
 		$satisfaction = $wrapper->ed_field_satisf_feedb->value()*100/4;
 	}
-	
-	
-	
+
+
+
 	$rating = ($difficulty+$time_eff+$satisfaction)/3;
-	
+
 	return $rating;
 }
 
@@ -515,7 +386,7 @@ function ed_get_groups_by_user_no_subgroups() {
 	$usergroups = og_get_groups_by_user();
 
   if($usergroups){
-	
+
     $query = db_select('node', 'n')
         ->fields('n', array('nid'))
         ->condition('n.status', 1);
@@ -566,46 +437,46 @@ function ed_get_groups_by_user_no_subgroups() {
  * Get task rating used in student dashboard
  */
 function ed_dashboard_get_task_rating(){
-	
+
 	$response = array(
 			'success' => false,
 	);
-	
+
 	$rating = 0;
-	
+
 	$answers_count = 0;
-	
-	
+
+
 	if(isset($_POST['task_id'])){
 		$answers = _get_all_answers_to_task($_POST['task_id']);
-		
-		
-		
+
+
+
 		if(!empty($answers)){
-			
+
 			foreach ($answers as $answer){
-				
+
 				$answers_count++;
-				
+
 				$rating += _ed_get_average_satisfaction_for_task( $answer->nid);
-	
+
 			}
-			
+
 			$response['rating'] = $rating/$answers_count;
-			
+
 		}else{
 			$response['rating'] = 0;
 		}
 	}else{
 		$response['rating'] = 0;
 	}
-	
 
-	
-	
-	
+
+
+
+
 	$response['success'] = true;
-	
+
 	return drupal_json_output($response);
 }
 
@@ -617,7 +488,7 @@ function _get_all_answers_to_task($task){
 	$query->fields('n', array('nid'))
 			->condition('n.type', 'ed_answer');
 	$query->condition('b.field_ref_to_task_target_id', $task);
-	
+
 	$result = $query->execute()->fetchAll();
 	return $result;
 }
@@ -632,13 +503,13 @@ function _ed_get_group_tasks_for_month_year($gid, $month, $year){
     $year = $year + 1;
   }
 	$year_month = $year.'-'.$month;
-	
+
 	$date = date_parse_from_format ("Y-m" ,  $year_month);
 	$num = cal_days_in_month(CAL_GREGORIAN, $date['month'], $date['year']);
 	$first_minute = mktime(0, 0, 0, $date['month'], 1, $date['year']);
 	$last_minute = mktime(23, 59, 59, $date['month'], $num, $date['year']);
-	
-	
+
+
 	$query = db_select('node', 'n');
 	$query->join('og_membership', 'ogm', "n.nid = ogm.etid AND ogm.entity_type = 'node'");
   $query->join('field_data_ed_task_due_date', 'dd', 'dd.entity_id = ogm.etid');
@@ -659,15 +530,15 @@ function _ed_get_group_tasks_for_month_year($gid, $month, $year){
  * Return a list of the months in this semester
  */
 function _ed_get_months_of_current_semester(){
-	
+
 	$current_month = format_date(time(), 'medium','n');
 
-	
+
 	if($current_month >= 2 && $current_month <= 7){
 		//Second semester, Feb-Jul
 		return array(2 => t('February'), 3 => t('March'), 4 => t('April'), 5 => t('May'), 6 => t('June'), 7 => t('July'));
-		
-	
+
+
 	}else{
 		//First semester, Aug-Jan
 		return array(8 => t('August'), 9 => t('September'), 10 => t('October'), 11 => t('November'), 12 => t('December'), 1 => t('January'));
@@ -996,4 +867,3 @@ function ed_dashboard_user_delete($account) {
     ->condition('uid', $account->uid)
     ->execute();
 }
-
