@@ -264,7 +264,7 @@ function ed_task_listing_page() {
       if($tasknode->ed_status != 'unanswered'){
         $status_last = $tasknode->ed_status;
 
-        switch($status ? $status_last : 'invalid'){
+        switch($status_last ? $status_last : 'invalid'){
           case('accepted'):
             $tmp_data['class'] = 'answered';
             $tmp_data['data'] = t('Answered, Accepted');
