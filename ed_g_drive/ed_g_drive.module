@@ -19,17 +19,17 @@ function ed_g_drive_field_info() {
 
 function ed_g_drive_file_property_info_callback(&$info, $entity_type, $field, $instance, $field_type) {
 	$property = &$info[$entity_type]['bundles'][$instance['bundle']]['properties'][$field['field_name']];
-	
+
 	$property['getter callback'] = 'entity_metadata_field_verbatim_get';
 	$property['setter callback'] = 'entity_metadata_field_verbatim_set';
 	unset($property['query callback']);
-	
+
 	$property['property info']['name'] = array(
 			'type' => 'text',
 			'label' => t('name'),
 			'setter callback' => 'entity_property_verbatim_set',
 	);
-	
+
 	$property['property info']['url'] = array(
 			'type' => 'text',
 			'label' => t('url'),
@@ -60,7 +60,7 @@ function ed_g_drive_field_widget_info() {
  * Implements hook_field_formatter_info().
  */
 function ed_g_drive_field_formatter_info() {
-	
+
 	return array(
 			'ed_g_drive_file_default' => array(
 					'label' => t('Default'),
@@ -73,11 +73,11 @@ function ed_g_drive_field_formatter_info() {
 * Implements hook_field_formatter_view().
  */
 function ed_g_drive_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
-	
+
 	$element = array();
 	switch ($display['type']) {
 		case 'ed_g_drive_file_default' :
-	
+
 			foreach ($items as $delta => $item) {
 				if (isset($item['url'])) {
 					$element[$delta]['#markup'] = " <a href='".$item['url']."'>".$item['name']."</a> <img src='".$item['mime']."'>";;
@@ -113,7 +113,7 @@ function ed_g_drive_field_validate($entity_type, $entity, $field, $instance, $la
 			}
 		}
 	}
-	
+
 }
 
 
@@ -122,21 +122,21 @@ function ed_g_drive_field_validate($entity_type, $entity, $field, $instance, $la
  * Implements hook_field_widget_form().
  */
 function ed_g_drive_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
-	
-	
+
+
 	//drupal_add_js(drupal_get_path('module', 'ed_g_drive') . '/js/ed_g_drive.js', 'file');
-	
-	
+
+
 	//Some data
 	if(!empty($form['#node']->ed_g_drive_file[LANGUAGE_NONE][$element['#delta']]['url'])){
-		
+
 		$name = $form['#node']->ed_g_drive_file[LANGUAGE_NONE][$element['#delta']]['name'];
 		$url = $form['#node']->ed_g_drive_file[LANGUAGE_NONE][$element['#delta']]['url'];
 		$mime = $form['#node']->ed_g_drive_file[LANGUAGE_NONE][$element['#delta']]['mime'];
-		
-		
+
+
 		$suffix = " <a href='".$url."'>".$name."</a> <img src='".$mime."'></div>";
-		
+
 		$element['name'] = array(
 				'#type' => 'hidden',
 				'#title' => t('Name'),
@@ -147,7 +147,7 @@ function ed_g_drive_field_widget_form(&$form, &$form_state, $field, $instance, $
 				'#suffix' => '</div>',
 				'#default_value' => $form['#node']->ed_g_drive_file[LANGUAGE_NONE][$element['#delta']]['name']
 		);
-		
+
 		$element['url'] = array(
 				'#type' => 'hidden',
 				'#title' => t('URL'),
@@ -157,7 +157,7 @@ function ed_g_drive_field_widget_form(&$form, &$form_state, $field, $instance, $
 				'#prefix' => '<div class="ed_g_drive" order='.$element['#delta'].'>',
 				'#suffix' => '</div>',
 				'#default_value' => $form['#node']->ed_g_drive_file[LANGUAGE_NONE][$element['#delta']]['url'],
-		
+
 		);
 		$element['mime'] = array(
 				'#type' => 'hidden',
@@ -169,7 +169,7 @@ function ed_g_drive_field_widget_form(&$form, &$form_state, $field, $instance, $
 				'#suffix' => '</div>',
 				'#default_value' => $form['#node']->ed_g_drive_file[LANGUAGE_NONE][$element['#delta']]['mime'],
 		);
-		
+
 		$element['button'] = array(
 				'#type' => 'button',
 				'#value' => t('Kustuta'),
@@ -180,12 +180,12 @@ function ed_g_drive_field_widget_form(&$form, &$form_state, $field, $instance, $
 				),
 				'#prefix' => '<div class="ed_g_drive_file_btn_wrapper">',
 				'#suffix' => $suffix,
-		
+
 		);
-	
-		
+
+
 	}else{
-		
+
 		$element['name'] = array(
 				'#type' => 'hidden',
 				'#title' => t('Name'),
@@ -195,7 +195,7 @@ function ed_g_drive_field_widget_form(&$form, &$form_state, $field, $instance, $
 				'#prefix' => '<div class="ed_g_drive" order='.$element['#delta'].'>',
 				'#suffix' => '</div>'
 		);
-		
+
 		$element['url'] = array(
 				'#type' => 'hidden',
 				'#title' => t('URL'),
@@ -204,7 +204,7 @@ function ed_g_drive_field_widget_form(&$form, &$form_state, $field, $instance, $
 				'#attributes' => array('maxlength' => 4000),
 				'#prefix' => '<div class="ed_g_drive" order='.$element['#delta'].'>',
 				'#suffix' => '</div>'
-		
+
 		);
 		$element['mime'] = array(
 				'#type' => 'hidden',
@@ -215,10 +215,10 @@ function ed_g_drive_field_widget_form(&$form, &$form_state, $field, $instance, $
 				'#prefix' => '<div class="ed_g_drive" order='.$element['#delta'].'>',
 				'#suffix' => '</div>'
 		);
-		
+
 		$element['button'] = array(
 				'#type' => 'button',
-				'#value' => t('Lisa'),
+				'#value' => t('Add'),
 				'#attributes' => array(
 						'onclick' => "return false",
 						'class' => array('ed_g_drive_file_btn'),
@@ -232,23 +232,23 @@ function ed_g_drive_field_widget_form(&$form, &$form_state, $field, $instance, $
 				),
 
 		);
-		
-		
+
+
 	}
-	
-	
+
+
 	//error_log(print_r($form_state['input']['ed_g_drive_file'][LANGUAGE_NONE][$element['#delta']]['url'], true));
 
 	if(!empty($form_state['input']['ed_g_drive_file'][LANGUAGE_NONE][$element['#delta']]['url'])){
-		
-		
+
+
 		$name = $form_state['input']['ed_g_drive_file'][LANGUAGE_NONE][$element['#delta']]['name'];
 		$url = $form_state['input']['ed_g_drive_file'][LANGUAGE_NONE][$element['#delta']]['url'];
 		$mime = $form_state['input']['ed_g_drive_file'][LANGUAGE_NONE][$element['#delta']]['mime'];
-		
+
 		$suffix = " <a href='".$url."'>".$name."</a> <img src='".$mime."'></div>";
 
-		
+
 		$element['button'] = array(
 				'#type' => 'button',
 				'#value' => t('Kustuta'),
@@ -259,11 +259,11 @@ function ed_g_drive_field_widget_form(&$form, &$form_state, $field, $instance, $
 				),
 				'#prefix' => '<div class="ed_g_drive_file_btn_wrapper">',
 				'#suffix' => $suffix,
-		
+
 		);
-		
+
 	}
-	
+
 
 	return $element;
 }

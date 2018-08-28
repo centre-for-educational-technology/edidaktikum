@@ -204,7 +204,7 @@ function ed_answer_form_alter(&$form, &$form_state, $form_id){
 
 
 
-	  $form['ed_field_difficulty_feedb']['#prefix'] = '<div role="alert" class="alert alert-info feedback-notice"> '.t('Tagasiside ei ole isikustatud').'</div>';
+	  $form['ed_field_difficulty_feedb']['#prefix'] = '<div role="alert" class="alert alert-info feedback-notice"> '.t('Feedback is not personalised').'</div>';
 	  $form['ed_field_difficulty_feedb'][LANGUAGE_NONE]['#default_value'] = 1;
 	  $form['ed_field_time_eff_feedb'][LANGUAGE_NONE]['#default_value'] = 1;
 
