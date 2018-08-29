@@ -1,0 +1,71 @@
+<?php
+
+/**
+ * Inserts a data about user viewing entity into a database (full view).
+ * Has a dumplicate protection that checks that entities of same type with same
+ * identifier would only be addd once, even if the full view is called more than
+ * once.
+ * @param  string $type   Entity type (node and user mostly)
+ * @param  string $bundle Entity bundle type (mostly applicable to nodes)
+ * @param  int    $eid    Entity unique identifier
+ * @param  int    $uid    User identifier (actor)
+ * @return mixed          InsertQuery object or nothing (in case of duplicate protection)
+ */
+function _ed_statistics_store_entity_view($type, $bundle, $eid, $uid) {
+	static $processed;
+
+	if (!isset($processed)) {
+		$processed = [];
+	}
+
+	if (!isset($processed[$type])) {
+		$processed[$type] = [];
+	}
+
+	if (in_array($eid, $processed[$type])) {
+		return;
+	}
+
+	array_push($processed[$type], $eid);
+
+	return db_insert('ed_entity_view')
+		->fields([
+			'entity_type' => $type,
+			'entity_bundle' => $bundle,
+			'eid' => $eid,
+			'uid' => $uid,
+			'timestamp' => REQUEST_TIME,
+		])
+		->execute();
+}
+
+/**
+ * Implements hook_entity_view().
+ */
+function ed_statistics_entity_view($entity, $type, $view_mode, $langcode) {
+	if (user_is_logged_in()) {
+    $account = clone $GLOBALS['user'];
+
+		if ($type === 'node' && $view_mode === 'full') {
+			_ed_statistics_store_entity_view($type, $entity->type, $entity->nid, $account->uid);
+		} else if ($type === 'user' && $view_mode === 'full') {
+			_ed_statistics_store_entity_view($type, '', $entity->uid, $account->uid);
+		}
+	}
+}
+
+/**
+ * Implements ctools_render_alter().
+ */
+function ed_statistics_ctools_render_alter($info, $page, $context) {
+	if(user_is_logged_in()
+	  && isset($context['contexts']['argument_entity_id:node_1'])
+    && isset($context['task'])
+		&& $context['task']['task type'] === 'page'
+    && $context['task']['name'] === 'node_view') {
+    $account = clone $GLOBALS['user'];
+		$node = $context['contexts']['argument_entity_id:node_1']->data;
+
+		_ed_statistics_store_entity_view('node', $node->type, $node->nid, $account->uid);
+	}
+}
