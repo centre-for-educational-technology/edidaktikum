@@ -371,7 +371,8 @@ function ed_cluster_node_add_field_curriculum() {
 				'foreign keys' => array(),
 				'module' => 'list',
 				'settings' => array(
-						'allowed_values' => _ed_cluster_curriculum_options_list(),
+						'allowed_values' => [],
+            'allowed_values_function' => '_ed_cluster_curriculum_options_list',
 				),
 		);
 		field_create_field($field);
@@ -414,7 +415,8 @@ function ed_cluster_node_add_field_university() {
 				'foreign keys' => array(),
 				'module' => 'list',
 				'settings' => array(
-						'allowed_values' => _ed_cluster_universities_options_list(),
+						'allowed_values' => [],
+            'allowed_values_function' => '_ed_cluster_universities_options_list',
 				),
 		);
 		field_create_field($field);
@@ -1081,4 +1083,22 @@ function ed_cluster_update_7110(&$sandbox) {
   $field = field_info_field('ed_field_curriculum');
   $field['cardinality'] = FIELD_CARDINALITY_UNLIMITED;
   field_update_field($field);
+}
+
+/**
+ * Changing ed_field_curriculum and ed_field_university to use callback functions,
+ * it also temporarily removes protection from mdifying allowed_values of fields
+ */
+function ed_cluster_update_7111(&$sandbox) {
+  define('ED_REMOVE_LIST_FIELD_UPDATE_FORBID', true);
+  $curriculum = field_info_field('ed_field_curriculum');
+  $curriculum['settings']['allowed_values_function'] = '_ed_cluster_curriculum_options_list';
+  $curriculum['settings']['allowed_values'] = [];
+  field_update_field($curriculum);
+
+  $university = field_info_field('ed_field_university');
+  $university['settings']['allowed_values_function'] = '_ed_cluster_universities_options_list';
+  $university['settings']['allowed_values'] = [];
+  field_update_field($university);
+  define('ED_REMOVE_LIST_FIELD_UPDATE_FORBID', false);
 }
