@@ -1,0 +1,6 @@
+name = eDidaktikum Statistics
+description = eDidaktikum statistics module.
+package = eDidaktikum
+core = 7.x
+
+dependencies[] = edidaktikum

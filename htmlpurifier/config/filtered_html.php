@@ -52,5 +52,7 @@ function htmlpurifier_config_filtered_html($config) {
 
 
   $config->set('Filter.Custom', array(new HTMLPurifier_Filter_EdIframe()));
+  $def = $config->getHTMLDefinition(true);
+  $def->addAttribute('a', 'target', 'Enum#_blank,_top,_self,_parent');
 
 }

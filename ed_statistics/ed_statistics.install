@@ -1,0 +1,69 @@
+<?php
+
+/**
+ * @file
+ * Install, uninstall, enable and disable functions for eDidaktikum Statistics.
+ */
+
+ /**
+  * Implements hook_schema().
+  */
+ function ed_statistics_schema() {
+   $schema['ed_entity_view'] = [
+     'description' => 'Stores entity page views made by users.',
+     'fields' => [
+       'entity_type' => [
+         'description' => 'The entity type (e.g node).',
+         'type' => 'varchar',
+         'length' => '32',
+         'not null' => TRUE,
+         'default' => '',
+       ],
+       'entity_bundle' => [
+         'description' => 'The entity bundle name (e.g. article).',
+         'type' => 'varchar',
+         'length' => '255',
+         'not null' => TRUE,
+         'default' => '',
+       ],
+       'eid' => [
+         'description' => 'Entity unique identifier.',
+         'type' => 'int',
+         'unsigned' => TRUE,
+         'not null' => TRUE,
+       ],
+       'uid' => [
+         'description' => 'User unique identifier.',
+         'type' => 'int',
+         'unsigned' => TRUE,
+         'not null' => TRUE,
+         'default' => 0,
+       ],
+       'timestamp' => [
+         'type' => 'int',
+         'unsigned' => TRUE,
+         'not null' => TRUE,
+         'default' => 0,
+         'description' => 'Creation timestamp.',
+       ],
+     ],
+     'indexes' => [
+       'entity_type' => ['entity_type',],
+       'entity_bundle' => ['entity_bundle',],
+       'eid' => ['eid',],
+       'uid' => ['uid',],
+       'eid_uid' => ['eid', 'uid',],
+       'timestamp' => ['timestamp',],
+     ],
+     'foreign keys' => [
+       'creator' => [
+         'table' => 'users',
+         'columns' => [
+           'uid' => 'uid',
+         ],
+       ],
+     ],
+   ];
+
+   return $schema;
+ }
