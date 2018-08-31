@@ -8,7 +8,7 @@
           var ckey = $(this).val();
           if (ckey === '_none') return;
 
-          var ukey = Drupal.settings.edidaktikum.universities_with_curriculums[ckey];
+          var ukey = Drupal.settings.edidaktikum.curriculum_university_data[ckey];
           if (ukey !== undefined && $.inArray(ukey.toString(), selected) != -1) {
             $(this).prop('disabled', false).show();
           } else {

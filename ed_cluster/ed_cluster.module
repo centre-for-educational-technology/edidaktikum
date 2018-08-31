@@ -2611,7 +2611,7 @@ function ed_cluster_field_widget_form_alter(&$element, &$form_state, $context) {
   if (!empty($element['#field_name']) && 'ed_field_curriculum' == $element['#field_name']) {
     drupal_add_js(array(
       'edidaktikum' => [
-        'universities_with_curriculums' => _ed_cluster_curriculum_university_data(),
+        'curriculum_university_data' => _ed_cluster_curriculum_university_data(),
       ],
     ), 'setting');
     $element['#attached']['js'][] = drupal_get_path('module', 'ed_cluster') . '/js/ed_field_curriculum.js';
@@ -3251,13 +3251,13 @@ function _ed_cluster_curriculum_university_data() {
   $structure = _ed_cluster_universities_with_curriculums_structure();
   $data = [];
 
-  foreach ($structure as $key => $value) {
-    if (is_array($value['curriculums']) && sizeof($value['curriculums']) > 0) {
-      foreach (array_keys($value['curriculums']) as $curriculum) {
-        $data[$curriculum] = $key;
-      }
+  array_walk($structure, function($item, $key) use (&$data) {
+    if (is_array($item['curriculums']) && sizeof($item['curriculums']) > 0) {
+      $data = array_merge($data, array_map(function() use ($key) {
+        return $key;
+      }, $item['curriculums']));
     }
-  }
+  });
 
   return $data;
 }
