@@ -2,6 +2,7 @@
   Drupal.behaviors.edTaskFieldCompetence = {
     'attach': function(context) {
       var fieldSelector = '#edit-ed-field-competence';
+      var fieldLabelSelector = fieldSelector + ' > .form-item > label';
       var fieldInputSelector = fieldSelector + ' input[type="checkbox"]';
       var fieldTermReferenceTreeLevelSelector = fieldSelector + ' ul.term-reference-tree-level';
       var fieldTermReferenceTreeLevelChildSelector = fieldTermReferenceTreeLevelSelector + ' > li';
@@ -30,6 +31,18 @@
                 $(this).parent('li').addClass('competence-tree-hidden');
               }
             });
+
+            if ( data.competences.length > 0 ) {
+              $(fieldSelector).find('.alert.alert-warning').remove();
+              $(fieldLabelSelector).show();
+            } else {
+              $(fieldLabelSelector).hide();
+              $(fieldSelector).find('.alert.alert-warning').remove();
+              $(fieldSelector).prepend($('<div>', {
+                'class': 'alert alert-warning text-center',
+                'text': Drupal.t('This groups has no competences. Open group edit view to add competences.')
+              }));
+            }
           }
           // Uncheck any competences that are no longer allowed
           _competences.filter(':checked:not(.competence-allowed)').prop('checked', false);

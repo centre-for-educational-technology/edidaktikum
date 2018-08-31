@@ -1614,7 +1614,7 @@ function ed_task_manager($test, $node) {
 
   //  filter thingy
   $task_titles = [t('All tasks')];
-  foreach ($tasks as $task) $task_titles []= $task['title'];
+  foreach ($tasks as $task) $task_titles[$task['nid']] = $task['title'];
 
   $content['task-filter-container'] = [
     '#type' => 'container',
@@ -2607,6 +2607,15 @@ function ed_cluster_field_widget_form_alter(&$element, &$form_state, $context) {
       $element['admin']['#access'] = FALSE;
     }
   }
+
+  if (!empty($element['#field_name']) && 'ed_field_curriculum' == $element['#field_name']) {
+    drupal_add_js(array(
+      'edidaktikum' => [
+        'curriculum_university_data' => _ed_cluster_curriculum_university_data(),
+      ],
+    ), 'setting');
+    $element['#attached']['js'][] = drupal_get_path('module', 'ed_cluster') . '/js/ed_field_curriculum.js';
+  }
 }
 
 /**
@@ -3051,86 +3060,222 @@ function ed_cluster_field_formatter_view($entity_type, $entity, $field, $instanc
   return $element;
 }
 
-function _ed_cluster_universities_options_list(){
-
-	$options = array(
-			t('Eesti Kunstiakadeemia'),
-			t('Eesti Lennuakadeemia'),
-			t('Eesti Maaülikool'),
-			t('Eesti Muusika- ja Teatriakadeemia'),
-			t('Lääne-Viru rakenduskõrgkool'),
-			t('Sisekaitseakadeemia'),
-			t('Tallinna Tehnikakõrgkool'),
-			t('Tallinna Tervishoiu Kõrgkool'),
-			t('Tallinna Tehnikaülikool'),
-			t('Tallinna Tehnikaülikooli Eesti Mereakadeemia'),
-			t('Tallinna Tehnikaülikooli geoloogia instituut'),
-			t('Tallinna Tehnikaülikooli Kuressaare kolledž'),
-			t('Tallinna Tehnikaülikooli küberneetika instituut'),
-			t('Tallinna Tehnikaülikooli meresüsteemide instituut'),
-			t('Tallinna Tehnikaülikooli sertifitseerimisasutus'),
-			t('Tallinna Tehnikaülikooli Tallinna kolledž'),
-			t('Tallinna Tehnikaülikooli Tartu kolledž'),
-			t('Tallinna Tehnikaülikooli tehnomeedikum'),
-			t('Tallinna Tehnikaülikooli Virumaa kolledž'),
-			t('Tallinna Ülikool'),
-			t('Tallinna Ülikooli pedagoogiline seminar'),
-			t('Tartu kõrgem kunstikool'),
-			t('Tartu tervishoiu kõrgkool'),
-			t('Tartu Ülikool'),
-
-	);
-
-	return $options;
+/**
+ * Returns an multidimensional array with data for universities and their
+ * curriculums.
+ * Please note that keys are set explicitly, this is important in case something
+ * is added or removed, they keys should be unique and explicit.
+ * All curriculums would be combined into a single list for the field, meaning
+ * that each one should have a unique key/identifier (not just unique for the
+ * university in question).
+ * @return array Array of universities with title and curriculums
+ */
+function _ed_cluster_universities_with_curriculums_structure() {
+  return [
+    0 => [
+      'title' => t('Eesti Kunstiakadeemia'),
+      'curriculums' => [],
+    ],
+    1 => [
+      'title' => t('Eesti Lennuakadeemia'),
+      'curriculums' => [],
+    ],
+    2 => [
+      'title' => t('Eesti Maaülikool'),
+      'curriculums' => [],
+    ],
+    3 => [
+      'title' => t('Eesti Muusika- ja Teatriakadeemia'),
+      'curriculums' => [],
+    ],
+    4 => [
+      'title' => t('Lääne-Viru rakenduskõrgkool'),
+      'curriculums' => [],
+    ],
+    5 => [
+      'title' => t('Sisekaitseakadeemia'),
+      'curriculums' => [],
+    ],
+    6 => [
+      'title' => t('Tallinna Tehnikakõrgkool'),
+      'curriculums' => [],
+    ],
+    7 => [
+      'title' => t('Tallinna Tervishoiu Kõrgkool'),
+      'curriculums' => [],
+    ],
+    8 => [
+      'title' => t('Tallinna Tehnikaülikool'),
+      'curriculums' => [],
+    ],
+    9 => [
+      'title' => t('Tallinna Tehnikaülikooli Eesti Mereakadeemia'),
+      'curriculums' => [],
+    ],
+    10 => [
+      'title' => t('Tallinna Tehnikaülikooli geoloogia instituut'),
+      'curriculums' => [],
+    ],
+    11 => [
+      'title' => t('Tallinna Tehnikaülikooli Kuressaare kolledž'),
+      'curriculums' => [],
+    ],
+    12 => [
+      'title' => t('Tallinna Tehnikaülikooli küberneetika instituut'),
+      'curriculums' => [],
+    ],
+    13 => [
+      'title' => t('Tallinna Tehnikaülikooli meresüsteemide instituut'),
+      'curriculums' => [],
+    ],
+    14 => [
+      'title' => t('Tallinna Tehnikaülikooli sertifitseerimisasutus'),
+      'curriculums' => [],
+    ],
+    15 => [
+      'title' => t('Tallinna Tehnikaülikooli Tallinna kolledž'),
+      'curriculums' => [],
+    ],
+    16 => [
+      'title' => t('Tallinna Tehnikaülikooli Tartu kolledž'),
+      'curriculums' => [],
+    ],
+    17 => [
+      'title' => t('Tallinna Tehnikaülikooli tehnomeedikum'),
+      'curriculums' => [],
+    ],
+    18 => [
+      'title' => t('Tallinna Tehnikaülikooli Virumaa kolledž'),
+      'curriculums' => [],
+    ],
+    19 => [
+      'title' => t('Tallinna Ülikool'),
+      'curriculums' => [
+        'IFHTM.DT' => t('IFHTM.DT - Haridustehnoloogia'),
+  			'KAKLI.HR' => t('KAKLI.HR - Klassiõpetaja'),
+  			'KAKPB.HR' => t('KAKPB.HR - Kutsepedagoogika'),
+  			'KAALB.HR' => t('KAALB.HR - Alushariduse pedagoog'),
+  			'KAEPB.HR' => t('KAEPB.HR - Eripedagoogika'),
+  			'KAANB.HR' => t('KAANB.HR - Andragoogika'),
+  			'KAPB.HR' => t('KAPB.HR - Pedagoogika'),
+  			'KUTOM.LT' => t('KUTOM.LT - Töö- ja tehnoloogiaõpetuse õpetaja'),
+  			'KUKKM.LT' => t('KUKKM.LT - Käsitöö ja kodunduse õpetaja'),
+  			'MLMOM.DT' => t('MLMOM.DT - Matemaatikaõpetaja'),
+  			'KAMOM.HR' => t('KAMOM.HR - Mitme aine õpetaja'),
+  			'IFIOM.DT' => t('IFIOM.DT - Informaatikaõpetaja, kooli infojuht'),
+  			'GRIOM.HT' => t('GRIOM.HT - Inglise keele õpetaja'),
+  			'KUKUM.FK' => t('KUKUM.FK - Kunstiõpetaja'),
+  			'SKVOM.HT' => t('SKVOM.HT - Vene keele ja kirjanduse õpetaja'),
+  			'KUMOM.FK' => t('KUMOM.FK - Muusikaõpetaja'),
+  			'GRPOM.HT' => t('GRPOM.HT - Prantsuse keele õpetaja'),
+  			'GRSOM.HT' => t('GRSOM.HT - Saksa keele õpetaja'),
+  			'AIAOM.HT' => t('AIAOM.HT - Ajaloo ja ühiskonnaõpetuse õpetaja'),
+  			'MLBOM.LT' => t('MLBOM.LT - Bioloogiaõpetaja'),
+  			'EKEOM.HT' => t('EKEOM.HT - Eesti keele ja kirjanduse õpetaja'),
+  			'EKEVM.HT' => t('EKEVM.HT - Eesti keele kui teise keele õpetaja'),
+  			'MLFOM.LT' => t('MLFOM.LT - Füüsikaõpetaja'),
+  			'KAALM.HR' => t('KAALM.HR - Alushariduse pedagoog'),
+  			'KAANM.HR' => t('KAANM.HR - Andragoogika'),
+  			'KAEPM.HR' => t('KAEPM.HR - Eripedagoog-nõustaja'),
+  			'KAHJM.HR' => t('KAHJM.HR - Hariduse juhtimine'),
+  			'MLGOM.LT' => t('MLGOM.LT - Geograafiaõpetaja'),
+  			'TSKOM.LT' => t('TSKOM.LT - Teacher of Physical Education'),
+  			'KAKTM.HR' => t('KAKTM.HR - Kasvatusteadused'),
+  			'KAKTD.HR' => t('KAKTD.HR - Kasvatusteadused'),
+  			'KAKOM.HR' => t('KAKOM.HR - Kutseõpetaja'),
+  			'TPNR.HR' => t('TPNR.HR - Noorsootöö'),
+  			'TPLR.HR' => t('TPLR.HR - Koolieelse lasteasutuse õpetaja'),
+  			'MLLOM.LT' => t('MLLOM.LT - Põhikooli loodus- ja täppisteaduslike ainete õpetaja'),
+  			'TPNM.HR' => t('TPNM.HR - Noorsootöö korraldus'),
+  			'MLGLM.LT' => t('MLGLM.LT - Gümnaasiumi loodusteaduslike ainete õpetaja'),
+  			'DTLGM.DT' => t('DTLGM.DT - Digitaalsed õpimängud'),
+  			'KAKPM.HR' => t('KAKPM.HR - Kutseõpetaja'),
+  			'KUKAM.FK' => t('KUKAM.FK - Kunstiõpetaja'),
+  			'KUMUM.FK' => t('KUMUM.FK - Muusikaõpetaja'),
+  			'KATHM.HR' => t('KATHM.HR - Täiskasvanuõpe sotsiaalsetes muutustes'),
+  			'GRVOM.HT' => t('GRVOM.HT - Võõrkeeleõpetaja'),
+  			'KUIKM.LT' => t('KUIKM.LT - Tehnoloogiavaldkonna ainete õpetaja'),
+      ],
+    ],
+    20 => [
+      'title' => t('Tallinna Ülikooli pedagoogiline seminar'),
+      'curriculums' => [],
+    ],
+    21 => [
+      'title' => t('Tartu kõrgem kunstikool'),
+      'curriculums' => [],
+    ],
+    22 => [
+      'title' => t('Tartu tervishoiu kõrgkool'),
+      'curriculums' => [],
+    ],
+    23 => [
+      'title' => t('Tartu Ülikool'),
+      'curriculums' => [],
+    ],
+	];
 }
 
-function _ed_cluster_curriculum_options_list(){
-	$options = array(
-			'IFHTM.DT' => t('IFHTM.DT - Haridustehnoloogia'),
-			'KAKLI.HR' => t('KAKLI.HR - Klassiõpetaja'),
-			'KAKPB.HR' => t('KAKPB.HR - Kutsepedagoogika'),
-			'KAALB.HR' => t('KAALB.HR - Alushariduse pedagoog'),
-			'KAEPB.HR' => t('KAEPB.HR - Eripedagoogika'),
-			'KAANB.HR' => t('KAANB.HR - Andragoogika'),
-			'KAPB.HR' => t('KAPB.HR - Pedagoogika'),
-			'KUTOM.LT' => t('KUTOM.LT - Töö- ja tehnoloogiaõpetuse õpetaja'),
-			'KUKKM.LT' => t('KUKKM.LT - Käsitöö ja kodunduse õpetaja'),
-			'MLMOM.DT' => t('MLMOM.DT - Matemaatikaõpetaja'),
-			'KAMOM.HR' => t('KAMOM.HR - Mitme aine õpetaja'),
-			'IFIOM.DT' => t('IFIOM.DT - Informaatikaõpetaja, kooli infojuht'),
-			'GRIOM.HT' => t('GRIOM.HT - Inglise keele õpetaja'),
-			'KUKUM.FK' => t('KUKUM.FK - Kunstiõpetaja'),
-			'SKVOM.HT' => t('SKVOM.HT - Vene keele ja kirjanduse õpetaja'),
-			'KUMOM.FK' => t('KUMOM.FK - Muusikaõpetaja'),
-			'GRPOM.HT' => t('GRPOM.HT - Prantsuse keele õpetaja'),
-			'GRSOM.HT' => t('GRSOM.HT - Saksa keele õpetaja'),
-			'AIAOM.HT' => t('AIAOM.HT - Ajaloo ja ühiskonnaõpetuse õpetaja'),
-			'MLBOM.LT' => t('MLBOM.LT - Bioloogiaõpetaja'),
-			'EKEOM.HT' => t('EKEOM.HT - Eesti keele ja kirjanduse õpetaja'),
-			'EKEVM.HT' => t('EKEVM.HT - Eesti keele kui teise keele õpetaja'),
-			'MLFOM.LT' => t('MLFOM.LT - Füüsikaõpetaja'),
-			'KAALM.HR' => t('KAALM.HR - Alushariduse pedagoog'),
-			'KAANM.HR' => t('KAANM.HR - Andragoogika'),
-			'KAEPM.HR' => t('KAEPM.HR - Eripedagoog-nõustaja'),
-			'KAHJM.HR' => t('KAHJM.HR - Hariduse juhtimine'),
-			'MLGOM.LT' => t('MLGOM.LT - Geograafiaõpetaja'),
-			'TSKOM.LT' => t('TSKOM.LT - Teacher of Physical Education'),
-			'KAKTM.HR' => t('KAKTM.HR - Kasvatusteadused'),
-			'KAKTD.HR' => t('KAKTD.HR - Kasvatusteadused'),
-			'KAKOM.HR' => t('KAKOM.HR - Kutseõpetaja'),
-			'TPNR.HR' => t('TPNR.HR - Noorsootöö'),
-			'TPLR.HR' => t('TPLR.HR - Koolieelse lasteasutuse õpetaja'),
-			'MLLOM.LT' => t('MLLOM.LT - Põhikooli loodus- ja täppisteaduslike ainete õpetaja'),
-			'TPNM.HR' => t('TPNM.HR - Noorsootöö korraldus'),
-			'MLGLM.LT' => t('MLGLM.LT - Gümnaasiumi loodusteaduslike ainete õpetaja'),
-			'DTLGM.DT' => t('DTLGM.DT - Digitaalsed õpimängud'),
-			'KAKPM.HR' => t('KAKPM.HR - Kutseõpetaja'),
-			'KUKAM.FK' => t('KUKAM.FK - Kunstiõpetaja'),
-			'KUMUM.FK' => t('KUMUM.FK - Muusikaõpetaja'),
-			'KATHM.HR' => t('KATHM.HR - Täiskasvanuõpe sotsiaalsetes muutustes'),
-			'GRVOM.HT' => t('GRVOM.HT - Võõrkeeleõpetaja'),
-			'KUIKM.LT' => t('KUIKM.LT - Tehnoloogiavaldkonna ainete õpetaja'),
-	);
+/**
+ * Returns the values used for options list of ed_field_university
+ * @return array Array of key => title values
+ */
+function _ed_cluster_universities_options_list() {
+  return array_map(function($single) {
+    return $single['title'];
+  }, _ed_cluster_universities_with_curriculums_structure());
+}
 
-	return $options;
+/**
+ * Returns the values used for options list of ed_field_curriculum
+ * @return array Array of key => title
+ */
+function _ed_cluster_curriculum_options_list() {
+  $curriculums = [];
+  $structure = _ed_cluster_universities_with_curriculums_structure();
+
+  array_walk($structure, function($single) use (&$curriculums) {
+    if (is_array($single['curriculums']) && sizeof($single['curriculums']) > 0) {
+      $curriculums = array_merge($curriculums, $single['curriculums']);
+    }
+  });
+
+  return $curriculums;
+}
+
+/**
+ * Returns curriculum keys with corresponding university identifiers
+ * @return array Array of curriculum key => university key
+ */
+function _ed_cluster_curriculum_university_data() {
+  $structure = _ed_cluster_universities_with_curriculums_structure();
+  $data = [];
+
+  array_walk($structure, function($item, $key) use (&$data) {
+    if (is_array($item['curriculums']) && sizeof($item['curriculums']) > 0) {
+      $data = array_merge($data, array_map(function() use ($key) {
+        return $key;
+      }, $item['curriculums']));
+    }
+  });
+
+  return $data;
+}
+
+/**
+ * Implements hook_module_implements_alter()
+ */
+function ed_cluster_module_implements_alter(&$implementations, $hook) {
+  // This one could have serious implications and would only remove the hook if
+  // and only if the constant is set and the value equals true.
+  // This hack is required to prevnt field update protection in case change to
+  // allowed_values removes one that have already been used within the field.
+  // One should know what is being done while running it.
+  if ($hook === 'field_update_forbid') {
+    if (defined('ED_REMOVE_LIST_FIELD_UPDATE_FORBID') && ED_REMOVE_LIST_FIELD_UPDATE_FORBID === true) {
+      if (array_key_exists('list', $implementations)) {
+        unset($implementations['list']);
+      }
+    }
+  }
 }
