@@ -1614,7 +1614,7 @@ function ed_task_manager($test, $node) {
 
   //  filter thingy
   $task_titles = [t('All tasks')];
-  foreach ($tasks as $task) $task_titles []= $task['title'];
+  foreach ($tasks as $task) $task_titles[$task['nid']] = $task['title'];
 
   $content['task-filter-container'] = [
     '#type' => 'container',
