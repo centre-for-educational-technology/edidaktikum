@@ -17,6 +17,8 @@ define('ED_ACCESS_REALM', 'ed_access');
 function ed_cluster_menu() {
   $items['node/%node/tasks'] = array(
     'title' => 'Tasks',
+    'title callback' => 'ed_cluster_title_with_unseen_count',
+    'title arguments' => ['Tasks', 1, 'ed_task'],
     'type' => MENU_LOCAL_TASK,
     'page callback' => 'ed_task_listing_for_students',
     'access callback' => 'ed_task_listing_for_students_access',
@@ -63,6 +65,8 @@ function ed_cluster_menu() {
   );
   $items['node/%node/task-manager'] = array(
     'title' => 'Task Manager',
+    'title callback' => 'ed_cluster_title_with_unseen_count',
+    'title arguments' => ['Task Manager', 1, 'ed_task'],
     'page callback' => 'ed_task_manager',
     'access callback' => 'ed_task_manager_access',
     'page arguments' => array('node', 1),
@@ -72,6 +76,8 @@ function ed_cluster_menu() {
   );
   $items['node/%node/q_portfolio'] = array(
       'title' => 'Qualification Portfolio',
+      'title callback' => 'ed_cluster_title_with_unseen_count',
+      'title arguments' => ['Qualification Portfolio', 1, 'ed_q_portfolio'],
       'page callback' => 'ed_listing_from_group',
       'access callback' => 'ed_group_assessors_ed_q_portfolio_listing_access',
       'page arguments' => array('node', 1, 'ed_q_portfolio'),
@@ -81,6 +87,8 @@ function ed_cluster_menu() {
   );
   $items['node/%node/news'] = array(
     'title' => 'News',
+    'title callback' => 'ed_cluster_title_with_unseen_count',
+    'title arguments' => ['News', 1, 'ed_news'],
     'page callback' => 'ed_listing_from_group',
     'access callback' => 'ed_group_content_listing_access',
     'page arguments' => array('node', 1, 'ed_news'),
@@ -90,6 +98,8 @@ function ed_cluster_menu() {
   );
   $items['node/%node/event'] = array(
     'title' => 'Events',
+    'title callback' => 'ed_cluster_title_with_unseen_count',
+    'title arguments' => ['Events', 1, 'ed_event'],
     'page callback' => 'ed_listing_from_group',
     'access callback' => 'ed_group_content_listing_access',
     'page arguments' => array('node', 1, 'ed_event'),
@@ -99,6 +109,8 @@ function ed_cluster_menu() {
   );
   $items['node/%node/subgroups'] = array(
     'title' => 'Subgroups',
+    'title callback' => 'ed_cluster_title_with_unseen_count',
+    'title arguments' => ['Subgroups', 1, 'ed_subgroup'],
     'page callback' => 'ed_subgroup_listing_from_group',
     'access callback' => 'ed_group_content_listing_access',
     'page arguments' => array('node', 1, 'ed_subgroup'),
@@ -116,6 +128,8 @@ function ed_cluster_menu() {
   );
   $items['node/%node/blog'] = array(
     'title' => 'Posts',
+    'title callback' => 'ed_cluster_title_with_unseen_count',
+    'title arguments' => ['Posts', 1, 'ed_blog'],
     'page callback' => 'ed_listing_from_group',
     'access callback' => 'ed_group_content_listing_access',
     'page arguments' => array('node', 1, 'ed_blog'),
@@ -125,6 +139,8 @@ function ed_cluster_menu() {
   );
   $items['node/%node/learning-resource'] = array(
     'title' => 'Learning Resources',
+    'title callback' => 'ed_cluster_title_with_unseen_count',
+    'title arguments' => ['Learning Resources', 1, 'ed_learning_resource'],
     'page callback' => 'ed_learning_resource_listing_from_group',
     'access callback' => 'ed_group_content_listing_access',
     'page arguments' => array(1),
@@ -134,6 +150,8 @@ function ed_cluster_menu() {
   );
   $items['node/%node/forum'] = array(
     'title' => 'Discussion Board',
+    'title callback' => 'ed_cluster_title_with_unseen_count',
+    'title arguments' => ['Discussion Board', 1, 'ed_forum'],
     'page callback' => 'ed_listing_from_group',
     'access callback' => 'ed_group_content_listing_access',
     'page arguments' => array('node', 1, 'ed_forum'),
@@ -144,6 +162,8 @@ function ed_cluster_menu() {
 
   $items['node/%node/bookmark'] = array(
     'title' => 'Bookmarks',
+    'title callback' => 'ed_cluster_title_with_unseen_count',
+    'title arguments' => ['Bookmarks', 1, 'ed_bookmark'],
     'page callback' => 'ed_listing_from_group',
     'access callback' => 'ed_group_content_listing_access',
     'page arguments' => array('node', 1, 'ed_bookmark'),
@@ -153,6 +173,8 @@ function ed_cluster_menu() {
   );
   $items['node/%node/file'] = array(
     'title' => 'Files',
+    'title callback' => 'ed_cluster_title_with_unseen_count',
+    'title arguments' => ['Files', 1, 'ed_file'],
     'page callback' => 'ed_cluster_file_listing_from_group',
     'access callback' => 'ed_group_content_listing_access',
     'page arguments' => [1,],
@@ -190,6 +212,8 @@ function ed_cluster_menu() {
   );
   $items['node/%node/pages'] = array(
     'title' => 'Pages',
+    'title callback' => 'ed_cluster_title_with_unseen_count',
+    'title arguments' => ['Pages', 1, 'ed_page'],
     'page callback' => 'ed_listing_from_group',
     'access callback' => 'ed_group_content_listing_access',
     'page arguments' => array('node', 1, 'ed_page'),
@@ -3278,4 +3302,69 @@ function ed_cluster_module_implements_alter(&$implementations, $hook) {
       }
     }
   }
+}
+
+/**
+ * Returns data with counts of unseen resources by type.
+ * @param  int $gid Group identifier
+ * @param  int $uid User identifier
+ * @return array         An array of type => count
+ */
+function ed_cluster_unseen_counts_by_type($gid, $uid) {
+  static $data;
+  $data_key = $gid . ':' . $uid;
+
+  if (!isset($data)) {
+    $data = [];
+  }
+
+  if (!module_exists('ed_statistics')) {
+    return [];
+  }
+
+  if (array_key_exists($data_key, $data)) {
+    return $data[$data_key];
+  }
+
+	$q = db_select('og_membership', 'ogm');
+	$q->condition('ogm.gid', $gid);
+	$q->condition('ogm.entity_type', 'node');
+	$q->join('node', 'n', 'n.nid = ogm.etid AND n.status = 1');
+  $q->leftJoin('ed_entity_view', 'ev', 'ev.entity_type = \'node\' AND ev.eid = ogm.etid AND ev.uid = ' . $uid);
+	$q->fields('n', ['type',]);
+  $q->isNull('ev.eid');
+  $q->groupBy('n.type');
+  $q->addExpression('COUNT(DISTINCT(n.nid))', 'count');
+
+	$response = $q->execute()->fetchAll(PDO::FETCH_ASSOC);
+
+  $tmp_data = [];
+  if ($response && is_array($response) && count($response) > 0) {
+    array_walk($response, function($value) use (&$tmp_data) {
+      $tmp_data[$value['type']] = $value['count'];
+    });
+  }
+  $data[$data_key] = $tmp_data;
+
+	return $data[$data_key];
+}
+
+/**
+ * Returns title of a menu, with an optional addition of resources unseen by current user.
+ * @param  string $title Initial title that would be translated
+ * @param  object $node  Group node object
+ * @param  string $type  Node type
+ * @return string        Translated title with an option addition of unseen resources
+ */
+function ed_cluster_title_with_unseen_count($title, $node, $type) {
+  if (user_is_logged_in()) {
+    $data = ed_cluster_unseen_counts_by_type($node->nid, $GLOBALS['user']->uid);
+    if (array_key_exists($type, $data)) {
+      return t('@title (@count)', [
+        '@title' => t($title),
+        '@count' => $data[$type],
+      ]);
+    }
+  }
+  return t($title);
 }
