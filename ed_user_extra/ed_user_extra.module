@@ -24,24 +24,24 @@ function ed_user_extra_ctools_plugin_directory($module, $plugin) {
 
 function ed_user_extra_menu() {
 
-  $items['user/%user/notifications'] = array(
-    'title' => 'Notifications',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('ed_user_notifications_page', 1),
-    'access callback' => 'user_edit_access',
-    'access arguments' => array(1),
-    'type' => MENU_LOCAL_TASK,
-  );
-
-
-  $items['user/%user/study_groups'] = array(
-      'title' => 'Study Groups',
-      'page callback' => 'drupal_get_form',
-      'page arguments' => array('ed_user_study_groups_page', 1),
-      'access callback' => 'user_edit_access',
-      'access arguments' => array(1),
-      'type' => MENU_LOCAL_TASK,
-  );
+//  $items['user/%user/notifications'] = array(
+//    'title' => 'Notifications',
+//    'page callback' => 'drupal_get_form',
+//    'page arguments' => array('ed_user_notifications_page', 1),
+//    'access callback' => 'user_edit_access',
+//    'access arguments' => array(1),
+//    'type' => MENU_LOCAL_TASK,
+//  );
+//
+//
+//  $items['user/%user/study_groups'] = array(
+//      'title' => 'Study Groups',
+//      'page callback' => 'drupal_get_form',
+//      'page arguments' => array('ed_user_study_groups_page', 1),
+//      'access callback' => 'user_edit_access',
+//      'access arguments' => array(1),
+//      'type' => MENU_LOCAL_TASK,
+//  );
 
   return $items;
 
@@ -160,10 +160,10 @@ function ed_user_extra_form_alter(&$form, &$form_state, $form_id){
 
   if($form_id=='user_profile_form'){
 
-    $form['field_pref_lang']['#access'] = FALSE;
+    //$form['field_pref_lang']['#access'] = FALSE;
 
-    $form['ed_notification_content_types']['#access'] = FALSE;
-    $form['ed_field_study_group']['#access'] = FALSE;
+    //$form['ed_notification_content_types']['#access'] = FALSE;
+    //$form['ed_field_study_group']['#access'] = FALSE;
 
     $form['ed_field_full_name']['#weight'] = -12;
     $form['field_institution']['#weight'] = -11;

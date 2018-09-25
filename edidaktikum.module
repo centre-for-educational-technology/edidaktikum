@@ -206,6 +206,13 @@ function edidaktikum_menu() {
     'page arguments' => array(1, 2),
   );
 
+  $items['user/%user/groups'] = array(
+      'title' => 'My Groups',
+      'type' => MENU_LOCAL_TASK,
+      'access callback' => 'user_is_logged_in',
+      'page callback' => 'ed_cluster_my_listing_page',
+      'weight' => 5,
+  );
 
 
   return $items;
@@ -630,6 +637,7 @@ function edidaktikum_user_view_alter(&$build) {
 
     }
     if (isset($build['og_user_node']) && is_array($build['og_user_node']) && !empty($build['og_user_node']) && !empty($build['og_user_node']['#items'])) {
+      $build['og_user_node']['#label_display'] = 'hidden';
       $items_nodes = node_load_multiple(array_map(function ($item) {
         return $item['target_id'];
       }, $build['og_user_node']['#items']));
@@ -993,7 +1001,27 @@ function edidaktikum_menu_alter(&$items) {
     $items['comment/%/delete']['access callback'] = 'edidaktikum_comment_delete_access';
     $items['comment/%/delete']['access arguments'] = array(1);
   }
+  //$items['user/%user/hybridauth']['access callback'] = false;
 }
+
+
+//function edidaktikum_menu_local_tasks_alter(&$data, $router_item, $root_path) {
+//  foreach ($data['tabs'] as $key1 => $tabs) {
+//    foreach ($tabs['output'] as $key2 => $item) {
+//
+//      // Conditionally change link title
+//      if (drupal_match_path($item['#link']['path'], 'user/*')) {
+//
+//        $item['#prefix'] = '<div class="tabbable tabs-left"><ul class="nav nav-tabs">';
+//        $item['#suffix'] = '</ul></div>';
+//        drupal_render($item);
+//        //kpr($item);
+//      }
+//    }
+//  }
+//  kpr($item);
+//}
+
 
 /**
 Implements hook_pathauto_alias_alter.
@@ -1590,7 +1618,6 @@ function edidaktikum_get_short_content_or_excerpt($node){
   }
 }
 
-
 /**
  * Implements hook_theme()
  * Used by by module templates
@@ -1598,6 +1625,7 @@ function edidaktikum_get_short_content_or_excerpt($node){
 function edidaktikum_theme_bs3_theme()
 {
 
+  global $user;
   return array(
       'ed_collection' => array(
           'template' => 'templates/ed_collection',
@@ -1606,6 +1634,13 @@ function edidaktikum_theme_bs3_theme()
       'video-bricks' => array(
           'template' => 'templates/video-bricks',
           'variables' => array('nodes' => null),
+      ),
+
+      'user_profile_form' => array(
+        // Forms always take the form argument.
+          'arguments' => array('form' => NULL),
+          'render element' => 'form',
+          'template' => 'templates/user-profile-edit',
       ),
   );
 }

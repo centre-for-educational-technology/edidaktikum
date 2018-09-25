@@ -47,14 +47,14 @@ function ed_blog_menu() {
     'menu_name' => 'ed-dashboard-menu',
     'type' => MENU_NORMAL_ITEM,
   );
-  $items['user/%user/blog'] = array(
-    'title' => 'Blog',
-    'page callback' => 'ed_blog_user_profile_blog_listing_page',
-    'page arguments' => array(1),
-    'access callback' => 'user_is_logged_in',
-    'weight' => 10,
-    'type' => MENU_LOCAL_TASK,
-  );
+//  $items['user/%user/blog'] = array(
+//    'title' => 'Blog',
+//    'page callback' => 'ed_blog_user_profile_blog_listing_page',
+//    'page arguments' => array(1),
+//    'access callback' => 'user_is_logged_in',
+//    'weight' => 10,
+//    'type' => MENU_LOCAL_TASK,
+//  );
   return $items;
 }
 
