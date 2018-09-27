@@ -532,7 +532,7 @@ function ed_generate_resource_create_buttons(&$content, $gnode, $destination){
   $content['new-resource-buttons']['add-new-type-1'] = array(
       '#type' => 'item',
       '#title' => t(''),
-      '#markup' => l(t('New Learnng resource'), 'node/add/ed-learning-resource', $options_type1),
+      '#markup' => l(t('New Learning resource'), 'node/add/ed-learning-resource', $options_type1),
 
   );
   $content['new-resource-buttons']['add-new-type-2'] = array(
