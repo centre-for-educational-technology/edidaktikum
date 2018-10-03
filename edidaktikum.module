@@ -672,6 +672,11 @@ function edidaktikum_user_view_alter(&$build) {
       unset($build['hybridauth_identities']);
     }
 
+    if(isset($build['ed_field_study_group'])){
+      $build['ed_field_study_group']['#label_display'] = 'hidden';
+    }
+
+
   }
 }
 

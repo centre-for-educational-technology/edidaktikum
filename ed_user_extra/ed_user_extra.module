@@ -22,8 +22,8 @@ function ed_user_extra_ctools_plugin_directory($module, $plugin) {
  * Implements hook_menu().
  */
 
-function ed_user_extra_menu() {
-
+//function ed_user_extra_menu() {
+//
 //  $items['user/%user/notifications'] = array(
 //    'title' => 'Notifications',
 //    'page callback' => 'drupal_get_form',
@@ -42,10 +42,10 @@ function ed_user_extra_menu() {
 //      'access arguments' => array(1),
 //      'type' => MENU_LOCAL_TASK,
 //  );
-
-  return $items;
-
-}
+//
+//  return $items;
+//
+//}
 
 
 /*
