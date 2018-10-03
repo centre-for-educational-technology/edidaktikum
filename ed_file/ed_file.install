@@ -84,12 +84,12 @@ function ed_file_create_ed_file_folder_node_type() {
  */
 function ed_file_set_permissions() {
   $permissions = array(
-    'create ed_file content' => TRUE,  
-    'edit own ed_file content' => TRUE,  
-    'delete own ed_file content' => TRUE,  
-    'create ed_file_folder content' => TRUE,  
-    'edit own ed_file_folder content' => TRUE,  
-    'delete own ed_file_folder content' => TRUE,  
+    'create ed_file content' => TRUE,
+    'edit own ed_file content' => TRUE,
+    'delete own ed_file content' => TRUE,
+    'create ed_file_folder content' => TRUE,
+    'edit own ed_file_folder content' => TRUE,
+    'delete own ed_file_folder content' => TRUE,
   );
   user_role_change_permissions(DRUPAL_AUTHENTICATED_RID, $permissions);
 }
@@ -144,11 +144,11 @@ function ed_file_create_field_ed_file_folder_ref() {
         'handler' => 'views',
         'handler_settings' => array(
           'view' => array(
-            'view_name' => 'user_ed_file_folders',  
+            'view_name' => 'user_ed_file_folders',
             'display_name' => 'entityreference',
-            'args' => '', 
-          ),  
-        ), 
+            'args' => '',
+          ),
+        ),
       ),
     );
     $field = field_create_field($field);
@@ -157,7 +157,7 @@ function ed_file_create_field_ed_file_folder_ref() {
 
 /**
  * Adds ed_file_folder_ref field to given node type.
- * 
+ *
  * @param string $node_type
  *   Node type
  */
@@ -207,7 +207,7 @@ function ed_file_node_add_field_file_upload() {
       'label' => t('Upload file'),
       'description' => '',
       'settings' => array(
-        'file_extensions' => 'txt doc docx xls xlsx ppt pptx pdf png jpg rar zip',
+        'file_extensions' => 'txt doc docx xls xlsx ppt pptx pdf png jpg rar zip bdoc ddoc cdoc csv',
         'file_directory' => 'ed_file_uploads',
       ),
       'required' => TRUE,
@@ -278,7 +278,7 @@ function ed_file_node_add_field_competence() {
     field_create_instance($instance);
   }
 }
-  
+
 /**
  * Deletes all ed_file and ed_file_folder nodes.
  */
@@ -299,9 +299,9 @@ function ed_file_delete_ed_files_and_folders() {
 function ed_file_delete_ed_file_node_type() {
   if (in_array('ed_file', node_type_get_names())) {
     node_type_delete('ed_file');
-    node_types_rebuild();  
+    node_types_rebuild();
     variable_del('comment_ed_file');
-  }  
+  }
 }
 
 /**
@@ -310,9 +310,9 @@ function ed_file_delete_ed_file_node_type() {
 function ed_file_delete_ed_file_folder_node_type() {
   if (in_array('ed_file_folder', node_type_get_names())) {
     node_type_delete('ed_file_folder');
-    node_types_rebuild();  
+    node_types_rebuild();
     variable_del('comment_ed_file_folder');
-  }  
+  }
 }
 
 /**
