@@ -215,6 +215,17 @@ function edidaktikum_menu() {
       'weight' => 5,
   );
 
+  //Hide Track page visits
+  $items['user/%user/track/navigation'] = array(
+      'title' => 'Track page visits',
+      'page callback' => 'statistics_user_tracker',
+      'access callback' => 'false',
+      'access arguments' => array('access statistics'),
+      'type' => MENU_LOCAL_TASK,
+      'weight' => 2,
+      'file' => 'statistics.pages.inc',
+  );
+
 
   return $items;
 }
