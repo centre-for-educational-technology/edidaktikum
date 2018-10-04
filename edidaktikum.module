@@ -209,9 +209,21 @@ function edidaktikum_menu() {
   $items['user/%user/groups'] = array(
       'title' => 'My Groups',
       'type' => MENU_LOCAL_TASK,
-      'access callback' => 'user_is_logged_in',
+      'access callback' => 'profile_groups_access',
+      'access arguments' => array(1),
       'page callback' => 'ed_cluster_my_listing_page',
       'weight' => 5,
+  );
+
+  //Hide Track page visits
+  $items['user/%user/track/navigation'] = array(
+      'title' => 'Track page visits',
+      'page callback' => 'statistics_user_tracker',
+      'access callback' => 'false',
+      'access arguments' => array('access statistics'),
+      'type' => MENU_LOCAL_TASK,
+      'weight' => 2,
+      'file' => 'statistics.pages.inc',
   );
 
 
@@ -247,6 +259,12 @@ function edidaktikum_node_delete_page($groups, $deletedtitle){
   }
 
   return $content;
+}
+
+
+//Based on user_edit_access
+function profile_groups_access($account) {
+  return (($GLOBALS['user']->uid == $account->uid)) && $account->uid > 0;
 }
 
 
@@ -630,11 +648,7 @@ function edidaktikum_user_view_alter(&$build) {
 
   if ('full' == $build['#view_mode']) {
     if(isset($build['ed_field_full_name'])){
-      $build['ed_field_full_name']['#title'] = t('E-mail');
-      $build['ed_field_full_name'][0]['#markup'] = '<a href="mailto:'.$build['#account']->mail.'?subject=eDidaktikum e-mail">'.$build['#account']->mail.'</a>';
-    }
-    if(!isset($build['ed_user_view_email'])){
-
+      $build['email'][0]['#markup'] = '<a href="mailto:'.$build['#account']->mail.'?subject=eDidaktikum e-mail">'.$build['#account']->mail.'</a>';
     }
     if (isset($build['og_user_node']) && is_array($build['og_user_node']) && !empty($build['og_user_node']) && !empty($build['og_user_node']['#items'])) {
       $build['og_user_node']['#label_display'] = 'hidden';
@@ -667,6 +681,13 @@ function edidaktikum_user_view_alter(&$build) {
     }
     if (isset($build['summary'])) {
       $build['summary']['#title'] = '';
+      $build['summary']['member_for']['#title'] = '';
+      $build['summary']['member_for']['#markup'] = '<p>'.$build['summary']['member_for']['#markup'].'</p>';
+    }
+    if (isset($build['field_institution'])) {
+      $build['field_institution']['#label_display'] = 'hidden';
+      $build['field_institution'][0]['#markup'] = '<p>'.$build['#account']->field_institution[LANGUAGE_NONE][0]['safe_value'].'</p>';
+
     }
     if (isset($build['hybridauth_identities'])) {
       unset($build['hybridauth_identities']);
