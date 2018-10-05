@@ -334,7 +334,7 @@ function ed_task_update_7110(&$sandbox) {
 /**
  * Delete ed_field_category instance
  */
-function ed_task_update_7114(&$sandbox) {
+function ed_task_update_7111(&$sandbox) {
 
   $instance = field_info_instance('node', 'ed_field_category', 'ed_task');
   field_delete_instance($instance);
