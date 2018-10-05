@@ -40,7 +40,7 @@
               $(fieldSelector).find('.alert.alert-warning').remove();
               $(fieldSelector).prepend($('<div>', {
                 'class': 'alert alert-warning text-center',
-                'text': Drupal.t('This groups has no competences. Open group edit view to add competences.')
+                'text': Drupal.t('This group has no competences. Open group edit view to add competences.')
               }));
             }
           }

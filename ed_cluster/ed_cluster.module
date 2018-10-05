@@ -874,6 +874,10 @@ function ed_cluster_my_inactive_listing_page(){
   if (!empty($og_groups)) {
     $nodes = node_load_multiple($og_groups);
 
+    foreach ($nodes as $node){
+      error_log($node->nid.' '.$node->ed_field_group_state[LANGUAGE_NONE][0]['value']);
+    }
+
 	  $content['clusters'] = ed_generate_grid_of_groups($nodes);
     $content['pager'] = array(
         '#theme' => 'pager',
@@ -2260,6 +2264,7 @@ function ed_cluster_get_clusters($order, $remove_user_groups = FALSE, $inactive)
       $exclude_query = new EntityFieldQuery();
       $exclude_query->entityCondition('entity_type', 'node')
           ->entityCondition('bundle', 'ed_cluster')
+          ->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT')
           ->fieldCondition('ed_field_group_state', 'value', 1);
       $exclude_result = $exclude_query->execute();
       $excluded = array_keys($exclude_result['node']);

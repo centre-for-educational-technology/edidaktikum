@@ -329,3 +329,15 @@ function ed_task_update_7110(&$sandbox) {
 	ed_task_node_add_field_g_drive_file();
 	
 }
+
+
+/**
+ * Delete ed_field_category instance
+ */
+function ed_task_update_7114(&$sandbox) {
+
+  $instance = field_info_instance('node', 'ed_field_category', 'ed_task');
+  field_delete_instance($instance);
+
+
+}
