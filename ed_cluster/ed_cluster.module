@@ -706,9 +706,9 @@ function ed_generate_grid_of_groups($nodes){
 	$counter = 1;
 	$row = 1;
 
-	drupal_add_js('jQuery(document).ready(function(){
-        jQuery(".group").matchHeight();
-        });','inline');
+  drupal_add_js('https://cdn.jsdelivr.net/npm/sweetalert2@7.28.4/dist/sweetalert2.all.min.js', 'external');
+  drupal_add_js(drupal_get_path('module', 'ed_cluster') . '/js/grid_of_groups.js');
+
 
 	$build['row-'.$row] = array(
 			'#type' => 'markup',
@@ -771,14 +771,11 @@ function ed_generate_grid_of_groups($nodes){
 						'#markup' => '<a href="'.url('group/node/' . $node->nid . '/subscribe/og_user_node').'"><button class="price-btn" type="button">'.t('Join').'</button></a>'
 				);
 
+				//Add access denied alerts if this is private group
         if($node->group_access[LANGUAGE_NONE][0]['value'] && !user_access('administer nodes')){
 
-          $build['row-'.$row]['node-'.$node->nid]['list-item']['list-img'] = array(
-              '#type' => 'markup',
-              '#prefix' => '<figure class="product-list__img">',
-              '#markup' => !empty($node->ed_field_featured_image) ? l('<img src="'.image_style_url('medium', $node->ed_field_featured_image[LANGUAGE_NONE][0]['uri']).'">', 'group/node/' . $node->nid . '/subscribe/og_user_node', array('html' => TRUE)):l('<img src="'.$GLOBALS['base_url'].'/'.path_to_theme().'/images/icons/ed_group_icon_default.png">', 'group/node/' . $node->nid . '/subscribe/og_user_node', array('html' => true)),
-              '#suffix' => '</figure>',
-          );
+          $build['row-'.$row]['node-'.$node->nid]['title']['#prefix'] = '<h3 class="product-list__title no-access">';
+          $build['row-'.$row]['node-'.$node->nid]['list-item']['list-img']['#prefix'] = '<figure class="product-list__img no-access">';
 
         }
 
