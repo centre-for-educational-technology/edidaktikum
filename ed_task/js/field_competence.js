@@ -19,7 +19,8 @@
 
           if ( data && data.competences ) {
             $.each(data.competences, function(key, single) {
-              var competence = _competences.filter('[value="' + single + '"]');
+              var competence = _competences.filter('[name*="[' + single + ']"]');
+              console.log(single);
               if ( competence ) {
                 competence.closest('li').removeClass('competence-hidden');
                 competence.addClass('competence-allowed');
