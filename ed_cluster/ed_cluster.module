@@ -2500,6 +2500,9 @@ function ed_cluster_form_submit_learning_outcomes($form, &$form_state) {
   }
 
   //  add new
+  if(!isset($form_state["values"]["ed_field_learning_outcome_ref"]) || !is_array($form_state["values"]["ed_field_learning_outcome_ref"])){
+    $form_state["values"]["ed_field_learning_outcome_ref"] = [];
+  }
   $form_state["values"]["ed_field_learning_outcome_ref"]["und"] = [];
   foreach ($learning_outcomes as &$outcome) {
     $node = new stdClass();
@@ -2518,7 +2521,7 @@ function ed_cluster_form_submit_learning_outcomes($form, &$form_state) {
     $node->promote = 0;
     $node = node_submit($node);
     node_save($node);
-    $form_state["values"]["ed_field_learning_outcome_ref"]["und"] []= ["target_id" => $node->nid];
+    $form_state["values"]["ed_field_learning_outcome_ref"][LANGUAGE_NONE][] = array("target_id" => $node->nid);
 
     unset($outcome);
   }

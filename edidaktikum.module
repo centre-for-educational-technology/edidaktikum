@@ -1508,7 +1508,7 @@ function ed_get_taxonomy_tree($vid) {
     $map = ["0" =>& $root];
 
     foreach ($nodes as &$node) {
-      $n = ["tid" => $node["tid"], "name" => $node["name"], "children" => []];
+      $n = ["tid" => $node["tid"], "name" => $node["name"], "children" => isset($map[$node["tid"]]) ? $map[$node["tid"]]["children"] : []];
       $map[$node["parent"]]["children"] []=& $n;
       $map[$node["tid"]] =& $n;
       unset($n);
