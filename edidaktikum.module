@@ -1637,10 +1637,16 @@ function edidaktikum_get_short_content_or_excerpt($node){
   if(!empty($node->ed_field_excerpt)){
     return strlen( $node->ed_field_excerpt['und'][0]['safe_value']) > 150 ? substr( $node->ed_field_excerpt['und'][0]['safe_value'],0,150)."..." :  $node->ed_field_excerpt['und'][0]['safe_value'];
   }else{
-    if (strpos($node->ed_field_content['und'][0]['safe_value'], 'iframe') !== false) {
+    if(!empty($node->ed_field_content)){
+      if (strpos($node->ed_field_content['und'][0]['safe_value'], 'iframe') !== false) {
+        return '';
+      }
+      return strlen( $node->ed_field_content['und'][0]['safe_value']) > 250 ? strip_tags(substr( $node->ed_field_content['und'][0]['safe_value'],0,250)."...") :  strip_tags($node->ed_field_content['und'][0]['safe_value']);
+    }
+    else{
       return '';
     }
-    return strlen( $node->ed_field_content['und'][0]['safe_value']) > 250 ? strip_tags(substr( $node->ed_field_content['und'][0]['safe_value'],0,250)."...") :  strip_tags($node->ed_field_content['und'][0]['safe_value']);
+
   }
 }
 

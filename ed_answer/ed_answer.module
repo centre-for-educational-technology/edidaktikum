@@ -517,15 +517,21 @@ function ed_answer_form_comment_form_alter(&$form, &$form_state) {
 
 
   //XXX Could make use of status stored directly in answer
-  $members = ed_get_group_members($form_state['node']->og_group_ref[LANGUAGE_NONE][0]['target_id'], true, true, true);
-  $admins = ed_filter_admins($members);
-  $answer = ed_get_answer($form_state['node']->field_ref_to_task[LANGUAGE_NONE][0]['target_id'], $form_state['node']->uid, false, $admins);
-  $status = $answer['status'];
-  $grade = $answer['grade'];
+  if(!empty($form_state['node'])){
+    $members = ed_get_group_members($form_state['node']->og_group_ref[LANGUAGE_NONE][0]['target_id'], true, true, true);
+    $admins = ed_filter_admins($members);
+    $answer = ed_get_answer($form_state['node']->field_ref_to_task[LANGUAGE_NONE][0]['target_id'], $form_state['node']->uid, false, $admins);
 
-  $form['ed_answer_status'][LANGUAGE_NONE]['#default_value'] = $status;
-  $form['ed_answer_grade'][LANGUAGE_NONE][0]['value']['#default_value'] = $grade;
+    if(!empty($answer['status'])){
+      $status = $answer['status'];
+      $form['ed_answer_status'][LANGUAGE_NONE]['#default_value'] = $status;
+    }
 
+    if(!empty($answer['grade'])){
+      $grade = $answer['grade'];
+      $form['ed_answer_grade'][LANGUAGE_NONE][0]['value']['#default_value'] = $grade;
+    }
+  }
 
   //disable wysiwyg
 	$form['comment_body']['und'][0]['#wysiwyg'] = FALSE;
@@ -538,6 +544,7 @@ function ed_answer_comment_view_alter(&$build){
   if(!empty($build['comment_body'])){
     if(!in_array($build['comment_body']['#object']->uid, $admins)){
       $build['ed_answer_status']['#access'] = FALSE;
+      $build['ed_answer_grade']['#access'] = FALSE;
 
     }
   }
