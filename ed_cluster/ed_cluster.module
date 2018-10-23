@@ -2465,10 +2465,10 @@ function ed_cluster_form_alter(&$form, &$form_state, $form_id) {
     // Code assumes that corresponding taxonomy vocabulary does exist
     $competenceVocabulary = taxonomy_vocabulary_machine_name_load('ed_competence_voc');
     $nle_data = [
-      ["title" => "", "description" => "Name", "type" => "name", "name" => "name", "default" => "Õpiväljund"],
-      ["title" => "", "description" => "Description", "type" => "text_area", "name" => "description"],
-      ["title" => "Competence", "description" => "", "type" => "taxonomy_list", "taxonomy_tree" => ed_get_taxonomy_tree($competenceVocabulary->vid), "name" => "competences"],
-      ["title" => "", "description" => "Assessment method", "type" => "text_area", "name" => "assessment_method"]
+      ["title" => "", "description" => t("Name"), "type" => "name", "name" => "name", "default" => t("Learning Outcome")],
+      ["title" => "", "description" => t("Description"), "type" => "text_area", "name" => "description"],
+      ["title" => t("Competence"), "description" => "", "type" => "taxonomy_list", "taxonomy_tree" => ed_get_taxonomy_tree($competenceVocabulary->vid), "name" => "competences"],
+      ["title" => "", "description" => t("Assessment method"), "type" => "text_area", "name" => "assessment_method"]
     ];
 
     $form["ed_field_learning_outcome_ref"] = [

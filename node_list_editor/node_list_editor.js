@@ -16,7 +16,7 @@
 			this.paths[node.tid] = path.slice();
 			this.paths[node.tid].push(node.tid);
 			path.push(node.tid);
-			
+
 			for (var i = 0; i < node.children.length; i++) {
 				this.map_node_path(node.children[i], path.slice());
 			}
@@ -41,7 +41,7 @@
 
 			this.remove_current_child();
 			if (node === undefined) {
-				var old_value = this.value;					
+				var old_value = this.value;
 				if (sel_node === undefined) {
 					if (this.root !== this) {
 						this.root._value = this.node.tid;
@@ -54,8 +54,8 @@
 				this.callback_changed(this.value, old_value);
 			}
 
-			if (sel_node === undefined || sel_node.children.length == 0) return;	
-			this.child = new taxonomy_item(sel_node, this, this.callback_changed);		
+			if (sel_node === undefined || sel_node.children.length == 0) return;
+			this.child = new taxonomy_item(sel_node, this, this.callback_changed);
 		}.bind(this);
 
 
@@ -89,7 +89,7 @@
 		});
 
 		if (parent === undefined) {
-			this.el_del = build("div", "edf_mini_button", this.el, "❌");
+			this.el_del = build("div", "edf_mini_button", this.el, '<i class="fa fa-times-circle fa-2x" aria-hidden="true"></i>');
 			this.el_del.addEventListener("click", function() {
 				this.callback_changed(undefined, this.value);
 				this.el.parentElement.removeChild(this.el);
@@ -183,7 +183,7 @@
 					} catch(ex){}
 				}
 			}
-			
+
 			return name + " " + (biggest + 1);
 		}.bind(this);
 
@@ -209,7 +209,7 @@
 						if (data !== undefined) item[field.name] = data[field.name];
 						else item[field.name] = [];
 						break;
-				}		
+				}
 			}
 			this.items.push(item);
 
@@ -261,7 +261,7 @@
 			var el = build("div", "taxonomy_list", this.el_form);
 			var el_title = build("div", "title", el, field.title);
 			var el_taxonomies = build("div", "taxonomies", el);
-			var el_add_button = build("div", "edf_mini_button", el, "➕");
+			var el_add_button = build("div", "edf_mini_button", el, '<i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i>');
 			field.el = el_taxonomies;
 
 			el_add_button.addEventListener("click", function() { this.add_taxonomy_item(field); }.bind(this) );
@@ -319,12 +319,12 @@
 			}
 		}
 
-		this.el_add_tab = build("div", "add tab", this.el_tabber, "Add");
-		this.el_add_tab.addEventListener("click", function() {	
+		this.el_add_tab = build("div", "add tab", this.el_tabber, Drupal.t("Add"));
+		this.el_add_tab.addEventListener("click", function() {
 			this.current_item = this.add_item();
 		}.bind(this));
 
-		this.el_del = build("div", "button delete", this.el_form, "Delete");
+		this.el_del = build("div", "button delete", this.el_form, Drupal.t("Delete"));
 		this.el_del.addEventListener("click", function() {
 			this.rem_item(this.current_item);
 			if (this.items.length > 0) this.current_item = this.items[0];
@@ -351,9 +351,9 @@
 				var attr_name = attributes_in_b64[j];
 				if (el.hasAttribute(attr_name)) el.setAttribute(attr_name, atob(el.getAttribute(attr_name)));
 			}
-			
 
-			//	create		
+
+			//	create
 			new node_list_editor(el);
 		}
 
