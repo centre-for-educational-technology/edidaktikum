@@ -12,23 +12,28 @@
 
 .edf_mini_button {
 	display:inline-block;
-	background-color:rgb(190,190,190);
 	border-radius:100px;
-	width:21px;
-	height:21px;
-	vertical-align:center;
-	padding-left:3px;
-	padding-top:1px;
+	width:22px;
+	height:22px;
+	vertical-align: middle;
+	text-align: center;
 	margin:5px;
 	box-sizing:border-box;
 	cursor:pointer;
 	color:white;
 }
 
-.edf_mini_button:hover {
-	background-color:rgb(220,220,220);
+.edf_mini_button .fa {
+	color: #1abc9c;
 }
 
+.edf_mini_button .fa.fa-times-circle {
+	color: red;
+}
+
+.edf_mini_button .fa:hover {
+	opacity: 0.75;
+}
 
 .node_list_editor .taxonomy_list {
 	box-sizing:border-box;

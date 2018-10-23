@@ -2465,10 +2465,10 @@ function ed_cluster_form_alter(&$form, &$form_state, $form_id) {
     // Code assumes that corresponding taxonomy vocabulary does exist
     $competenceVocabulary = taxonomy_vocabulary_machine_name_load('ed_competence_voc');
     $nle_data = [
-      ["title" => "", "description" => "Name", "type" => "name", "name" => "name", "default" => "Õpiväljund"],
-      ["title" => "", "description" => "Description", "type" => "text_area", "name" => "description"],
-      ["title" => "Competence", "description" => "", "type" => "taxonomy_list", "taxonomy_tree" => ed_get_taxonomy_tree($competenceVocabulary->vid), "name" => "competences"],
-      ["title" => "", "description" => "Assessment method", "type" => "text_area", "name" => "assessment_method"]
+      ["title" => "", "description" => t("Name"), "type" => "name", "name" => "name", "default" => t("Learning Outcome")],
+      ["title" => "", "description" => t("Description"), "type" => "text_area", "name" => "description"],
+      ["title" => t("Competence"), "description" => "", "type" => "taxonomy_list", "taxonomy_tree" => ed_get_taxonomy_tree($competenceVocabulary->vid), "name" => "competences"],
+      ["title" => "", "description" => t("Assessment method"), "type" => "text_area", "name" => "assessment_method"]
     ];
 
     $form["ed_field_learning_outcome_ref"] = [
@@ -3144,6 +3144,7 @@ function _ed_cluster_universities_with_curriculums_structure() {
     ],
     19 => [
       'title' => t('Tallinna Ülikool'),
+      'weight' => 1,
       'curriculums' => [
         'IFHTM.DT' => t('IFHTM.DT - Haridustehnoloogia'),
   			'KAKLI.HR' => t('KAKLI.HR - Klassiõpetaja'),
@@ -3205,6 +3206,7 @@ function _ed_cluster_universities_with_curriculums_structure() {
     ],
     23 => [
       'title' => t('Tartu Ülikool'),
+      'weight' => 2,
       'curriculums' => [],
     ],
 	];
@@ -3215,9 +3217,35 @@ function _ed_cluster_universities_with_curriculums_structure() {
  * @return array Array of key => title values
  */
 function _ed_cluster_universities_options_list() {
+  $structure = _ed_cluster_universities_with_curriculums_structure();
+
+  // Weight is most important for sorting (is a special case)
+  // If weight is missing, then title comes into play (default)
+  uasort($structure, function($a, $b) {
+    if (isset($a['weight']) && isset($b['weight'])) {
+      if ($a['weight'] === $b['weight']) {
+        // This can not happen as weights should never be the same
+        // If that is true, then comparison by title is needed
+        return 0;
+      }
+
+      return ($a['weight'] < $b['weight']) ? -1 : 1;
+    } else if (isset($a['weight'])) {
+      return -1;
+    } else if (isset($b['weight'])) {
+      return 1;
+    }
+
+    if ($a['title'] === $b['title']) {
+      return 0;
+    }
+
+    return ($a['title'] < $b['title']) ? -1 : 1;
+  });
+
   return array_map(function($single) {
     return $single['title'];
-  }, _ed_cluster_universities_with_curriculums_structure());
+  }, $structure);
 }
 
 /**
