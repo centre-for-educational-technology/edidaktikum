@@ -222,35 +222,38 @@ function ed_answer_form_alter(&$form, &$form_state, $form_id){
       '#suffix' => '</ul>',
     );
     $help = 0;
-    foreach($cat_terms as $tid){
-      $form['ed_answer_task_cat']['category'][$help] = array(
-        '#type' => 'markup',
-        '#markup' => t(l(t($tid['#options']['entity']->name), $tid['#href']).'<br />'),
-      );
-      if(ed_answer_check_tid_parents($tid['#options']['entity']->tid)==0){
-      /*$form['test']['test2'][$help]['#prefix'] = '<li>';
-        $form['test']['test2'][$help]['#suffix'] = '</li>';*/
-      }else{
-        $depth = 0;
-        $flag = true;
-        $parent = ed_answer_check_tid_parents($tid['#options']['entity']->tid);
-        $form['ed_answer_task_cat']['category'][$help]['#prefix']='';
-        $form['ed_answer_task_cat']['category'][$help]['#suffix']='';
-        while($flag){
-          if($parent==0){
-            for($i = 0;$i<$depth;$i++){
-              $form['ed_answer_task_cat']['category'][$help]['#prefix'].='<ul>';
+    if(!empty($cat_terms) && is_array($cat_terms)){
+      foreach($cat_terms as $tid){
+        $form['ed_answer_task_cat']['category'][$help] = array(
+            '#type' => 'markup',
+            '#markup' => t(l(t($tid['#options']['entity']->name), $tid['#href']).'<br />'),
+        );
+        if(ed_answer_check_tid_parents($tid['#options']['entity']->tid)==0){
+          /*$form['test']['test2'][$help]['#prefix'] = '<li>';
+            $form['test']['test2'][$help]['#suffix'] = '</li>';*/
+        }else{
+          $depth = 0;
+          $flag = true;
+          $parent = ed_answer_check_tid_parents($tid['#options']['entity']->tid);
+          $form['ed_answer_task_cat']['category'][$help]['#prefix']='';
+          $form['ed_answer_task_cat']['category'][$help]['#suffix']='';
+          while($flag){
+            if($parent==0){
+              for($i = 0;$i<$depth;$i++){
+                $form['ed_answer_task_cat']['category'][$help]['#prefix'].='<ul>';
+              }
+              $form['ed_answer_task_cat']['category'][$help]['#suffix'].='</ul>';
+              $flag = false;
+            }else{
+              $depth++;
+              $parent = ed_answer_check_tid_parents($parent);
             }
-            $form['ed_answer_task_cat']['category'][$help]['#suffix'].='</ul>';
-            $flag = false;
-          }else{
-            $depth++;
-            $parent = ed_answer_check_tid_parents($parent);
           }
         }
+        $help++;
       }
-      $help++;
     }
+
     $form['ed_answer_task_comp'] = array(
       '#tree' => TRUE,
       '#type' => 'fieldset',
@@ -517,7 +520,7 @@ function ed_answer_form_comment_form_alter(&$form, &$form_state) {
 
 
   //XXX Could make use of status stored directly in answer
-  if(!empty($form_state['node'])){
+  if(!empty($form_state['node']->field_ref_to_task)){
     $members = ed_get_group_members($form_state['node']->og_group_ref[LANGUAGE_NONE][0]['target_id'], true, true, true);
     $admins = ed_filter_admins($members);
     $answer = ed_get_answer($form_state['node']->field_ref_to_task[LANGUAGE_NONE][0]['target_id'], $form_state['node']->uid, false, $admins);
