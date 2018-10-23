@@ -417,8 +417,8 @@ function _ed_learning_resource_installed_instances() {
       ),
     ),
   );
- 
-  // To group member field instance 
+
+  // To group member field instance
   $instances[ED_FIELD_TO_GROUP_MEMBER] = array(
     'field_name' => ED_FIELD_TO_GROUP_MEMBER,
     'label' => 'Specify user',
@@ -474,7 +474,7 @@ function _ed_learning_resource_type_list() {
 	  ->execute();
   $options = array();
   foreach($results as $term) {
-	  $options[$term->tid] = t($term->name); 
+	  $options[$term->tid] = t($term->name);
   }
   return $options;
 }
@@ -511,19 +511,19 @@ function _ed_learning_resource_study_areas_options_list(){
 			t('Hariduse juhtimine'),
 			t('Kasvatusteadused'),
 			t('Psühholoogia')
-	
+
 	);
-	
+
 	return $options;
 }
 
 function _ed_learning_resource_assets_distribution_options_list(){
-	
+
 	$options = array(
 			t('Kursuse õppematerjal'),
-			t('Üldharidus'),
+			t('Üldinfo'),
 	);
-	
+
 	return $options;
-	
+
 }
