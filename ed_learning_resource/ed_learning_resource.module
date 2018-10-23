@@ -512,7 +512,7 @@ function ed_generate_resource_create_buttons(&$content, $gnode, $destination){
           'destination' => $destination
       ),
   );
-  $options_type2 = array(
+  /*$options_type2 = array(
       'attributes' => array(
           'class' => 'btn btn-success new-group price-btn',
           'role' => 'button'
@@ -522,7 +522,7 @@ function ed_generate_resource_create_buttons(&$content, $gnode, $destination){
           'og_group_ref' => $gnode->nid,
           'destination' => $destination
       ),
-  );
+  );*/
 
   $content['new-resource-buttons'] = array(
       '#type' => 'markup',
@@ -535,11 +535,11 @@ function ed_generate_resource_create_buttons(&$content, $gnode, $destination){
       '#markup' => l(t('New Learning resource'), 'node/add/ed-learning-resource', $options_type1),
 
   );
-  $content['new-resource-buttons']['add-new-type-2'] = array(
+  /*$content['new-resource-buttons']['add-new-type-2'] = array(
       '#type' => 'item',
       '#title' => t(''),
       '#markup' => l(t('New Video brick type resource'), 'node/add/ed-learning-resource', $options_type2),
-  );
+  );*/
 
 
   return $content;
