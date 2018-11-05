@@ -36,11 +36,6 @@ function ed_event_menu() {
     'type' => MENU_NORMAL_ITEM,
   );
    */
-  $items['events/get/events'] = array(
-    'page callback' => 'ed_event_get_events_ajax',
-    'type' => MENU_CALLBACK,
-    'access callback' => TRUE,
-  );
   $items['events/rss'] = array(
     'title' => 'Events',
     'page callback' => 'ed_event_latest_feed',
@@ -111,26 +106,6 @@ function ed_event_listing_page() {
   }
 
   return $content;
-}
-
-function ed_event_get_events_ajax() {
-  $events = ed_event_get_all_events();
-  $results = array();
-  foreach ($events as $event_nid) {
-    $event = node_load($event_nid);
-    $excerpt_field = field_get_items('node', $event, 'ed_field_excerpt');
-    $start_field = field_get_items('node', $event, 'ed_event_field_start');
-    $end_field = field_get_items('node', $event, 'ed_event_field_end');
-    $results[] = array(
-      "date" => $start_field[0]['value'] . "000",
-      "enddate" => $end_field[0]['value'] . "000",
-      "type" => $event->type,
-      "title" => $event->title,
-      "description" => $excerpt_field[0]['safe_value'],
-      "url" => 'node/'.$event->nid,
-    );
-  }
-  drupal_json_output($results);
 }
 
 /**
