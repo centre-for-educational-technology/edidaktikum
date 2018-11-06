@@ -651,33 +651,39 @@ function edidaktikum_user_view_alter(&$build) {
       $build['email'][0]['#markup'] = '<a href="mailto:'.$build['#account']->mail.'?subject=eDidaktikum e-mail">'.$build['#account']->mail.'</a>';
     }
     if (isset($build['og_user_node']) && is_array($build['og_user_node']) && !empty($build['og_user_node']) && !empty($build['og_user_node']['#items'])) {
-      $build['og_user_node']['#label_display'] = 'hidden';
+			$build['og_user_node']['#label_display'] = 'hidden';
+
+			// Create two "virtual" elements that would clone the logic of groups field and copy data for active and inactive groups
+			$build['og_user_node_active'] = [
+				'#title' => '',
+				'#items' => [],
+			];
+			$build['og_user_node_inactive'] = [
+				'#title' => '',
+				'#items' => [],
+			];
+
+			foreach(array_keys($build['og_user_node']) as $key) {
+				if (in_array($key, ['#theme', '#weight', '#access', '#label_display', '#view_mode', '#language', '#field_name', '#field_type', '#field_translatable', '#entity_type', '#bundle', '#object', '#formatter',])) {
+					$build['og_user_node_active'][$key] = $build['og_user_node'][$key];
+					$build['og_user_node_inactive'][$key] = $build['og_user_node'][$key];
+				}
+			}
+
       $items_nodes = node_load_multiple(array_map(function ($item) {
         return $item['target_id'];
       }, $build['og_user_node']['#items']));
 
-      //Sort inactive groups
       foreach(array_values($items_nodes) as $index => $item_node) {
-        if (isset($item_node->ed_field_group_state) && $item_node->ed_field_group_state[LANGUAGE_NONE][0]['value'] == 0) {
-          $build['og_user_node'][$index]['#attributes'] = array('class' => 'ed_group_inactive');
-          $build['og_user_node']['#items'][$index]['weight'] = 10;
+				if (isset($item_node->ed_field_group_state) && $item_node->ed_field_group_state[LANGUAGE_NONE][0]['value'] == 1) {
+					$build['og_user_node_active']['#items'][] = $build['og_user_node']['#items'][$index];
+					$build['og_user_node_active'][sizeof($build['og_user_node_active']['#items'])-1] = $build['og_user_node'][$index];
         }
-        //Not belonging to ed_cluster, subgroup
-        else if(!isset($item_node->ed_field_group_state)){
-          unset($build['og_user_node'][$index]);
-        }
+				else if (isset($item_node->ed_field_group_state) && $item_node->ed_field_group_state[LANGUAGE_NONE][0]['value'] == 0) {
+					$build['og_user_node_inactive']['#items'][] = $build['og_user_node']['#items'][$index];
+					$build['og_user_node_inactive'][sizeof($build['og_user_node_inactive']['#items'])-1] = $build['og_user_node'][$index];
+				}
       }
-      uasort($build['og_user_node']['#items'], 'drupal_sort_weight');
-
-      // Checks if last element of the array is just a #markup
-      // and removes if that is true
-      $last = end($build['og_user_node']);
-      reset($build['og_user_node']);
-      if (isset($last['#markup'])) {
-        array_pop($build['og_user_node']);
-      }
-      unset($last);
-
     }
     if (isset($build['summary'])) {
       $build['summary']['#title'] = '';
