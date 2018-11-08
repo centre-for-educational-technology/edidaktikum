@@ -25,40 +25,40 @@ function _ed_task_edit_page_handler(){
   $handler->handler = 'panel_context';
   $handler->weight = 0;
   $handler->conf = array(
-      'title' => 'Task add/edit',
-      'no_blocks' => 0,
-      'pipeline' => 'standard',
-      'css_id' => '',
-      'css' => '',
-      'contexts' => array(),
-      'relationships' => array(),
-      'access' => array(
-          'plugins' => array(
-              0 => array(
-                  'name' => 'node_type',
-                  'settings' => array(
-                      'type' => array(
-                          'ed_task' => 'ed_task',
-                      ),
-                  ),
-                  'context' => 'argument_node_edit_1',
-                  'not' => FALSE,
-              ),
+    'title' => 'Task add/edit',
+    'no_blocks' => 0,
+    'pipeline' => 'standard',
+    'css_id' => '',
+    'css' => '',
+    'contexts' => array(),
+    'relationships' => array(),
+    'access' => array(
+      'plugins' => array(
+        0 => array(
+          'name' => 'node_type',
+          'settings' => array(
+            'type' => array(
+              'ed_task' => 'ed_task',
+            ),
           ),
-          'logic' => 'and',
+          'context' => 'argument_node_edit_1',
+          'not' => FALSE,
+        ),
       ),
+      'logic' => 'and',
+    ),
   );
   $display = new panels_display();
   $display->layout = 'twocol_stacked';
   $display->layout_settings = array();
   $display->panel_settings = array(
-      'style_settings' => array(
-          'default' => NULL,
-          'top' => NULL,
-          'left' => NULL,
-          'right' => NULL,
-          'bottom' => NULL,
-      ),
+    'style_settings' => array(
+      'default' => NULL,
+      'top' => NULL,
+      'left' => NULL,
+      'right' => NULL,
+      'bottom' => NULL,
+    ),
   );
   $display->cache = array();
   $display->title = '';
@@ -75,13 +75,13 @@ function _ed_task_edit_page_handler(){
   $pane->shown = TRUE;
   $pane->access = array();
   $pane->configuration = array(
-      'context' => 'argument_node_edit_1',
-      'override_title' => 0,
-      'override_title_text' => '',
+    'context' => 'argument_node_edit_1',
+    'override_title' => 0,
+    'override_title_text' => '',
   );
   $pane->cache = array();
   $pane->style = array(
-      'settings' => NULL,
+    'settings' => NULL,
   );
   $pane->css = array();
   $pane->extras = array();
@@ -98,13 +98,13 @@ function _ed_task_edit_page_handler(){
   $pane->shown = TRUE;
   $pane->access = array();
   $pane->configuration = array(
-      'context' => 'argument_node_edit_1',
-      'override_title' => 0,
-      'override_title_text' => '',
+    'context' => 'argument_node_edit_1',
+    'override_title' => 0,
+    'override_title_text' => '',
   );
   $pane->cache = array();
   $pane->style = array(
-      'settings' => NULL,
+    'settings' => NULL,
   );
   $pane->css = array();
   $pane->extras = array();
@@ -121,15 +121,15 @@ function _ed_task_edit_page_handler(){
   $pane->shown = TRUE;
   $pane->access = array();
   $pane->configuration = array(
-      'label' => '',
-      'formatter' => '',
-      'context' => 'argument_node_edit_1',
-      'override_title' => 0,
-      'override_title_text' => '',
+    'label' => '',
+    'formatter' => '',
+    'context' => 'argument_node_edit_1',
+    'override_title' => 0,
+    'override_title_text' => '',
   );
   $pane->cache = array();
   $pane->style = array(
-      'settings' => NULL,
+    'settings' => NULL,
   );
   $pane->css = array();
   $pane->extras = array();
@@ -146,18 +146,18 @@ function _ed_task_edit_page_handler(){
   $pane->shown = TRUE;
   $pane->access = array();
   $pane->configuration = array(
-      'formatter' => '',
-      'context' => 'argument_node_edit_1',
-      'override_title' => 0,
-      'override_title_text' => '',
+    'formatter' => '',
+    'context' => 'argument_node_edit_1',
+    'override_title' => 0,
+    'override_title_text' => '',
   );
   $pane->cache = array();
   $pane->style = array(
-      'settings' => NULL,
+    'settings' => NULL,
   );
   $pane->css = array(
-      'css_id' => 'category',
-      'css_class' => '',
+    'css_id' => 'category',
+    'css_class' => '',
   );
   $pane->extras = array();
   $pane->position = 2;
@@ -173,19 +173,19 @@ function _ed_task_edit_page_handler(){
   $pane->shown = TRUE;
   $pane->access = array();
   $pane->configuration = array(
-      'label' => '',
-      'formatter' => '',
-      'context' => 'argument_node_edit_1',
-      'override_title' => 0,
-      'override_title_text' => '',
+    'label' => '',
+    'formatter' => '',
+    'context' => 'argument_node_edit_1',
+    'override_title' => 0,
+    'override_title_text' => '',
   );
   $pane->cache = array();
   $pane->style = array(
-      'settings' => NULL,
+    'settings' => NULL,
   );
   $pane->css = array(
-      'css_id' => 'competence',
-      'css_class' => '',
+    'css_id' => 'competence',
+    'css_class' => '',
   );
   $pane->extras = array();
   $pane->position = 3;
@@ -201,15 +201,15 @@ function _ed_task_edit_page_handler(){
   $pane->shown = TRUE;
   $pane->access = array();
   $pane->configuration = array(
-      'label' => '',
-      'formatter' => '',
-      'context' => 'argument_node_edit_1',
-      'override_title' => 0,
-      'override_title_text' => '',
+    'label' => '',
+    'formatter' => '',
+    'context' => 'argument_node_edit_1',
+    'override_title' => 0,
+    'override_title_text' => '',
   );
   $pane->cache = array();
   $pane->style = array(
-      'settings' => NULL,
+    'settings' => NULL,
   );
   $pane->css = array();
   $pane->extras = array();
@@ -226,13 +226,13 @@ function _ed_task_edit_page_handler(){
   $pane->shown = TRUE;
   $pane->access = array();
   $pane->configuration = array(
-      'context' => 'argument_node_edit_1',
-      'override_title' => 1,
-      'override_title_text' => '',
+    'context' => 'argument_node_edit_1',
+    'override_title' => 1,
+    'override_title_text' => '',
   );
   $pane->cache = array();
   $pane->style = array(
-      'settings' => NULL,
+    'settings' => NULL,
   );
   $pane->css = array();
   $pane->extras = array();
@@ -249,13 +249,13 @@ function _ed_task_edit_page_handler(){
   $pane->shown = TRUE;
   $pane->access = array();
   $pane->configuration = array(
-      'context' => 'argument_node_edit_1',
-      'override_title' => 0,
-      'override_title_text' => '',
+    'context' => 'argument_node_edit_1',
+    'override_title' => 0,
+    'override_title_text' => '',
   );
   $pane->cache = array();
   $pane->style = array(
-      'settings' => NULL,
+    'settings' => NULL,
   );
   $pane->css = array();
   $pane->extras = array();
@@ -272,15 +272,15 @@ function _ed_task_edit_page_handler(){
   $pane->shown = TRUE;
   $pane->access = array();
   $pane->configuration = array(
-      'label' => '',
-      'formatter' => '',
-      'context' => 'argument_node_edit_1',
-      'override_title' => 0,
-      'override_title_text' => '',
+    'label' => '',
+    'formatter' => '',
+    'context' => 'argument_node_edit_1',
+    'override_title' => 0,
+    'override_title_text' => '',
   );
   $pane->cache = array();
   $pane->style = array(
-      'settings' => NULL,
+    'settings' => NULL,
   );
   $pane->css = array();
   $pane->extras = array();
@@ -297,14 +297,14 @@ function _ed_task_edit_page_handler(){
   $pane->shown = TRUE;
   $pane->access = array();
   $pane->configuration = array(
-      'formatter' => '',
-      'context' => 'argument_node_edit_1',
-      'override_title' => 0,
-      'override_title_text' => '',
+    'formatter' => '',
+    'context' => 'argument_node_edit_1',
+    'override_title' => 0,
+    'override_title_text' => '',
   );
   $pane->cache = array();
   $pane->style = array(
-      'settings' => NULL,
+    'settings' => NULL,
   );
   $pane->css = array();
   $pane->extras = array();
@@ -314,6 +314,32 @@ function _ed_task_edit_page_handler(){
   $display->content['new-3da6e304-e42f-4f10-afdf-2353f735b874'] = $pane;
   $display->panels['right'][0] = 'new-3da6e304-e42f-4f10-afdf-2353f735b874';
   $pane = new stdClass();
+  $pane->pid = 'new-3f3bd51f-cdd3-4776-8959-771de98adc3d';
+  $pane->panel = 'right';
+  $pane->type = 'entity_form_field';
+  $pane->subtype = 'node:ed_task_maximum_points';
+  $pane->shown = TRUE;
+  $pane->access = array();
+  $pane->configuration = array(
+    'label' => '',
+    'formatter' => '',
+    'context' => 'argument_node_edit_1',
+    'override_title' => 0,
+    'override_title_text' => '',
+    'override_title_heading' => 'h2',
+  );
+  $pane->cache = array();
+  $pane->style = array(
+    'settings' => NULL,
+  );
+  $pane->css = array();
+  $pane->extras = array();
+  $pane->position = 1;
+  $pane->locks = array();
+  $pane->uuid = '3f3bd51f-cdd3-4776-8959-771de98adc3d';
+  $display->content['new-3f3bd51f-cdd3-4776-8959-771de98adc3d'] = $pane;
+  $display->panels['right'][1] = 'new-3f3bd51f-cdd3-4776-8959-771de98adc3d';
+  $pane = new stdClass();
   $pane->pid = 'new-30666dae-916d-4428-a22d-3316e72be85a';
   $pane->panel = 'right';
   $pane->type = 'entity_form_field';
@@ -321,22 +347,22 @@ function _ed_task_edit_page_handler(){
   $pane->shown = TRUE;
   $pane->access = array();
   $pane->configuration = array(
-      'formatter' => '',
-      'context' => 'argument_node_edit_1',
-      'override_title' => 0,
-      'override_title_text' => '',
+    'formatter' => '',
+    'context' => 'argument_node_edit_1',
+    'override_title' => 0,
+    'override_title_text' => '',
   );
   $pane->cache = array();
   $pane->style = array(
-      'settings' => NULL,
+    'settings' => NULL,
   );
   $pane->css = array();
   $pane->extras = array();
-  $pane->position = 1;
+  $pane->position = 2;
   $pane->locks = '';
   $pane->uuid = '30666dae-916d-4428-a22d-3316e72be85a';
   $display->content['new-30666dae-916d-4428-a22d-3316e72be85a'] = $pane;
-  $display->panels['right'][1] = 'new-30666dae-916d-4428-a22d-3316e72be85a';
+  $display->panels['right'][2] = 'new-30666dae-916d-4428-a22d-3316e72be85a';
   $pane = new stdClass();
   $pane->pid = 'new-9d0c4772-6f2d-4fee-857f-595978e53100';
   $pane->panel = 'right';
@@ -345,23 +371,23 @@ function _ed_task_edit_page_handler(){
   $pane->shown = TRUE;
   $pane->access = array();
   $pane->configuration = array(
-      'label' => '',
-      'formatter' => '',
-      'context' => 'argument_node_edit_1',
-      'override_title' => 0,
-      'override_title_text' => '',
+    'label' => '',
+    'formatter' => '',
+    'context' => 'argument_node_edit_1',
+    'override_title' => 0,
+    'override_title_text' => '',
   );
   $pane->cache = array();
   $pane->style = array(
-      'settings' => NULL,
+    'settings' => NULL,
   );
   $pane->css = array();
   $pane->extras = array();
-  $pane->position = 2;
+  $pane->position = 3;
   $pane->locks = array();
   $pane->uuid = '9d0c4772-6f2d-4fee-857f-595978e53100';
   $display->content['new-9d0c4772-6f2d-4fee-857f-595978e53100'] = $pane;
-  $display->panels['right'][2] = 'new-9d0c4772-6f2d-4fee-857f-595978e53100';
+  $display->panels['right'][3] = 'new-9d0c4772-6f2d-4fee-857f-595978e53100';
   $pane = new stdClass();
   $pane->pid = 'new-47602f6b-3af9-4366-9673-3967f361961f';
   $pane->panel = 'right';
@@ -370,23 +396,23 @@ function _ed_task_edit_page_handler(){
   $pane->shown = TRUE;
   $pane->access = array();
   $pane->configuration = array(
-      'label' => '',
-      'formatter' => '',
-      'context' => 'argument_node_edit_1',
-      'override_title' => 0,
-      'override_title_text' => '',
+    'label' => '',
+    'formatter' => '',
+    'context' => 'argument_node_edit_1',
+    'override_title' => 0,
+    'override_title_text' => '',
   );
   $pane->cache = array();
   $pane->style = array(
-      'settings' => NULL,
+    'settings' => NULL,
   );
   $pane->css = array();
   $pane->extras = array();
-  $pane->position = 3;
+  $pane->position = 4;
   $pane->locks = array();
   $pane->uuid = '47602f6b-3af9-4366-9673-3967f361961f';
   $display->content['new-47602f6b-3af9-4366-9673-3967f361961f'] = $pane;
-  $display->panels['right'][3] = 'new-47602f6b-3af9-4366-9673-3967f361961f';
+  $display->panels['right'][4] = 'new-47602f6b-3af9-4366-9673-3967f361961f';
   $pane = new stdClass();
   $pane->pid = 'new-1d408b21-7027-4c38-b99f-f159789e08ec';
   $pane->panel = 'top';
@@ -395,13 +421,13 @@ function _ed_task_edit_page_handler(){
   $pane->shown = FALSE;
   $pane->access = array();
   $pane->configuration = array(
-      'context' => 'argument_node_edit_1',
-      'override_title' => 1,
-      'override_title_text' => '',
+    'context' => 'argument_node_edit_1',
+    'override_title' => 1,
+    'override_title_text' => '',
   );
   $pane->cache = array();
   $pane->style = array(
-      'settings' => NULL,
+    'settings' => NULL,
   );
   $pane->css = array();
   $pane->extras = array();
@@ -413,8 +439,6 @@ function _ed_task_edit_page_handler(){
   $display->hide_title = PANELS_TITLE_FIXED;
   $display->title_pane = '0';
   $handler->conf['display'] = $display;
-
-
 
   return $handler;
 }
