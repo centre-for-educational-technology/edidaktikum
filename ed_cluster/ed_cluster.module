@@ -1577,6 +1577,7 @@ function ed_task_manager($test, $node) {
   menu_tree_set_path('main-menu', 'clusters');
   drupal_add_css(drupal_get_path('module', 'ed_cluster').'/task_manager.css');
   drupal_add_js(drupal_get_path('module', 'ed_cluster').'/js/ed_task_manager_task_filter.js');
+  drupal_add_js(drupal_get_path('module', 'ed_cluster').'/js/table-scroll.js');
 
 
   //  more stuff
@@ -1727,7 +1728,8 @@ function ed_task_manager($test, $node) {
     '#theme' => 'table',
     '#rows' => $rows,
     '#header' => $headers,
-    '#attributes' => array('data-averaging_table' => t("Average"), 'data-sticky_headers' => '', 'class' => array('table-bordered'))
+    '#sticky' => false,
+    '#attributes' => array('data-averaging_table' => t("Average"), 'data-sticky_headers' => '', 'class' => array('table table-bordered scroll'))
   );
 
   return $content;
