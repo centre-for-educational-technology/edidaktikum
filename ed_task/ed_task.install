@@ -29,7 +29,7 @@ function ed_task_install() {
 
   //Disable comments
   variable_set('comment_ed_task', COMMENT_NODE_CLOSED);
-	
+
 	ed_task_node_add_field_g_drive_file();
 }
 
@@ -325,9 +325,9 @@ function ed_task_update_7109(&$sandbox) {
  * Adds ed_g_drive_file field instance to ed_task
  */
 function ed_task_update_7110(&$sandbox) {
-	
+
 	ed_task_node_add_field_g_drive_file();
-	
+
 }
 
 
@@ -340,4 +340,29 @@ function ed_task_update_7111(&$sandbox) {
   field_delete_instance($instance);
 
 
+}
+
+/**
+ * Create field and instance for ed_task_maximum_points if do not yet exist
+ */
+function ed_task_update_7112() {
+  $field_name = 'ed_task_maximum_points';
+  $fields = _ed_task_installed_fields();
+
+  if (isset($fields[$field_name]) && !field_info_field($field_name)) {
+    field_create_field($fields[$field_name]);
+  }
+
+  $instances = _ed_task_installed_instances();
+
+  if (isset($instances[$field_name])) {
+    $field = field_info_field($field_name);
+
+    if (!empty($field) && !field_info_instance('node', $field_name, 'ed_task')) {
+      $instance = $instances[$field_name];
+      $instance['entity_type'] = 'node';
+      $instance['bundle'] = 'ed_task';
+      field_create_instance($instance);
+    }
+  }
 }

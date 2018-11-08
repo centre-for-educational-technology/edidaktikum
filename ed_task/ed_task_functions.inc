@@ -24,6 +24,12 @@ function _ed_task_installed_fields() {
       ),
     ),
   );
+  $fields['ed_task_maximum_points'] = [
+    'field_name' => 'ed_task_maximum_points',
+    'type' => 'number_integer',
+    'entity_types' => ['node',],
+    'cardinality' => 1,
+  ];
 
   return $fields;
 }
@@ -151,6 +157,18 @@ function _ed_task_installed_instances() {
     'required' => 0,
     'default_value' => NULL,
   );
+
+  $instances['ed_task_maximum_points'] = [
+    'field_name' => 'ed_task_maximum_points',
+    'required' => FALSE,
+    'label' => 'Maximum Score',
+    'description' => 'Maximum score to be awarded for completing the task. Please provide a value from 1 to 100.',
+    'settings' => [
+      'min' => 1,
+      'max' => 100,
+    ],
+    'default_value' => NULL,
+  ];
 
   return $instances;
 }
