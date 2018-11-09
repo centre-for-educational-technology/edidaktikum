@@ -6,6 +6,27 @@
  */
 
 /**
+ * Implements hook_node_info().
+ */
+function ed_file_node_info() {
+  $items['ed_file'] = [
+    'name' => t('File'),
+    'base' => 'node_content',
+    'description' => '',
+    'has_title' => TRUE,
+    'title_label' => t('Title'),
+  ];
+  $items['ed_file_folder'] = [
+    'name' => t('File folder'),
+    'base' => 'node_content',
+    'description' => '',
+    'has_title' => TRUE,
+    'title_label' => t('Title'),
+  ];
+  return $items;
+}
+
+/**
  * Implements hook_menu().
  */
 function ed_file_menu() {
