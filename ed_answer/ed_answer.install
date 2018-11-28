@@ -486,6 +486,84 @@ function _ed_answer_create_status_field_instance(){
 }
 
 
+
+function ed_answer_create_field_last_status(){
+  $field_name = 'ed_answer_last_status';
+  if(!field_info_field($field_name)) {
+    $field = array(
+        'field_name' => $field_name,
+        'type' => 'ed_answer_last_status',
+        'cardinality' => 1,
+    );
+    field_create_field($field);
+  }
+}
+
+function ed_answer_node_add_field_last_status() {
+  $field_name = 'ed_answer_last_status';
+  $field = field_info_field($field_name);
+  if (!empty($field) && !field_info_instance('node', $field_name, 'ed_answer')) {
+    $instance = array(
+        'field_name' => $field_name,
+        'entity_type' => 'node',
+        'bundle' => 'ed_answer',
+        'label' => t('Last status'),
+        'description' => '',
+        'widget' => array(
+            'settings' => array(
+                'rows' => 1,
+            ),
+        ),
+        'required' => FALSE,
+        'display' => array(
+            'default' => array(
+                'label' => 'hidden',
+            ),
+            'featured' => array(
+                'label' => 'hidden',
+            ),
+        )
+    );
+    field_create_instance($instance);
+  }
+}
+
+
+
+
+/**
+ * Implements hook_field_schema().
+ * Used by ed_answer_last_status field
+ */
+function ed_answer_field_schema($field) {
+
+  switch ($field['type']) {
+    case 'ed_answer_last_status':
+      $schema = array(
+          'columns' => array(
+              'cid' => array(
+                  'type' => 'int',
+                  'unsigned' => TRUE,
+                  'length' => 10,
+                  'not null' => false,
+              ),
+              'status' => array(
+                  'type' => 'varchar',
+                  'length' => 255,
+                  'not null' => false,
+              ),
+          ),
+
+      );
+      break;
+  }
+
+  return $schema;
+
+}
+
+
+
 /**
  * Update ed_status comment field instance to translatable.
  */
@@ -613,3 +691,15 @@ function ed_answer_update_7116(&$sandbox) {
 	
 }
 
+
+function ed_answer_update_7119(&$sandbox) {
+
+  field_delete_field('ed_answer_last_status');
+  field_delete_instance('ed_answer_last_status');
+
+
+  ed_answer_create_field_last_status();
+
+  ed_answer_node_add_field_last_status();
+
+}

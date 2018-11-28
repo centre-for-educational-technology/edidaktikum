@@ -554,13 +554,181 @@ function ed_answer_comment_view_alter(&$build){
 }
 
 function ed_answer_node_update($node){
+
   if($node->type == 'ed_answer'){
+
+//    $flag = false;
+
+
     $comments = comment_load_multiple(comment_get_thread($node, COMMENT_MODE_FLAT, 100));
     foreach($comments as $comment){
-      if($comment->ed_answer_status[LANGUAGE_NONE][0]['value'] == 'rejected'){
+      error_log(print_r($comment, true));
+      if($comment->ed_answer_status[LANGUAGE_NONE][0]['value'] == 'rejected' || $comment->ed_answer_status[LANGUAGE_NONE][0]['value'] == 'accepted'){
         $comment->ed_answer_status[LANGUAGE_NONE][0]['value'] = 'unchecked';
+        $comment->ed_answer_grade = array();
         comment_save($comment);
+//        $flag = true;
+      }
+    }
+
+//    if($flag){
+//      global $user;
+//      $account = clone $user;
+//
+//      $comment = new stdClass();
+//
+//      $comment->nid = $node->nid;
+//      $comment->cid = 0;
+//      $comment->pid = 0;
+//      $comment->uid = $account->uid;
+//      $comment->mail = $account->mail;
+//      $comment->is_anonymous = 0;
+//      $comment->status = COMMENT_PUBLISHED;
+//      $comment->language = LANGUAGE_NONE;
+//      $comment->subject = t('Automated comment');
+//      $comment->comment_body[$comment->language][0]['value'] = t('This comment has been added, because the student modified the answer after it was reviewed by teacher'); // Everything here is pretty much like with a node
+//      $comment->comment_body[$comment->language][0]['format'] = 'filtered_html';
+////      $comment->ed_answer_status[LANGUAGE_NONE][0]['value'] = 'unchecked';
+////      $comment->ed_answer_grade = array();
+//      comment_submit($comment); // saving a comment
+//      comment_save($comment);
+//
+//    }
+  }
+}
+
+
+/*
+ * Implements hook_field_info
+ */
+function ed_answer_field_info() {
+  return array (
+      'ed_answer_last_status' => array (
+          'label' => t('Answer status'),
+          'description' => t('This field stores status of an answer'),
+          'default_widget' => 'ed_answer_last_status_widget',
+          'default_formatter' => 'ed_answer_last_status_default',
+          'property_type' => 'ed_answer_last_status', // we add the propert type here
+          'property_callbacks' => array('ed_answer_last_status_property_info_callback'), // we add the callback
+      ),
+  );
+}
+
+
+function ed_answer_last_status_property_info_callback(&$info, $entity_type, $field, $instance, $field_type) {
+  $property = &$info[$entity_type]['bundles'][$instance['bundle']]['properties'][$field['field_name']];
+
+  $property['getter callback'] = 'entity_metadata_field_verbatim_get';
+  $property['setter callback'] = 'entity_metadata_field_verbatim_set';
+  unset($property['query callback']);
+
+  $property['property info']['cid'] = array(
+      'type' => 'integer',
+      'label' => t('cid'),
+      'setter callback' => 'entity_property_verbatim_set',
+  );
+
+  $property['property info']['status'] = array(
+      'type' => 'text',
+      'label' => t('status'),
+      'setter callback' => 'entity_property_verbatim_set',
+  );
+
+}
+
+/**
+ * Implements hook_field_widget_info().
+ */
+function ed_answer_field_widget_info() {
+
+  return array(
+      'ed_answer_last_status_widget' => array(
+          'label' => t('Default'),
+          'field types' => array('ed_answer_last_status'),
+      ),
+  );
+}
+
+
+/**
+ * Implements hook_field_formatter_info().
+ */
+function ed_answer_field_formatter_info() {
+
+  return array(
+      'ed_answer_last_status_default' => array(
+          'label' => t('Default'),
+          'field types' => array('ed_answer_last_status'),
+      ),
+  );
+}
+
+/**
+ * Implements hook_field_formatter_view().
+ */
+function ed_answer_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+
+  $element = array();
+  switch ($display['type']) {
+    case 'ed_answer_last_status_default' :
+
+      foreach ($items as $delta => $item) {
+        if (isset($item['cid'])) {
+          $element[$delta]['#markup'] = $item['cid'] . ' ' . $item['status'];
+        }
+      }
+      break;
+  }
+  return $element;
+}
+
+/*
+ * Implements hook_field_is_empty().
+ */
+function ed_answer_field_is_empty($item, $field) {
+  $temp = array_keys($field['columns']);
+  $key = array_shift($temp);
+  return empty($item[$key]);
+}
+
+
+/**
+ * Implements hook_field_validate().
+ */
+function ed_answer_field_validate($entity_type, $entity, $field, $instance, $langcode, $items, &$errors) {
+  // Loop through field items in the case of multiple values.
+  foreach ($items as $delta => $item) {
+    if (isset($item['cid']) && $item['cid'] != '') {
+      if (strlen($item['url']) > 4000) {
+        $errors[$field['field_name']][$langcode][$delta][] = array(
+            'error' => 'ed_answer_invalid_status',
+            'message' => t('%title: Comment id cannot be empty', array('%title' => $instance['label'])),
+        );
       }
     }
   }
+
+}
+
+/**
+ * Implements hook_field_widget_form().
+ */
+function ed_answer_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
+
+  $element['cid'] = array(
+      '#type' => 'hidden',
+      '#title' => t('Comment id'),
+      '#required' => $element['#required'],
+      '#size' => 1,
+      '#attributes' => array('maxlength' => 10),
+  );
+  $element['status'] = array(
+      '#type' => 'hidden',
+      '#title' => t('Status'),
+      '#required' => $element['#required'],
+      '#size' => 10,
+      '#attributes' => array('maxlength' => 10),
+  );
+
+  return $element;
 }
