@@ -543,13 +543,17 @@ function ed_answer_field_schema($field) {
           'columns' => array(
               'cid' => array(
                   'type' => 'int',
-                  'unsigned' => TRUE,
                   'length' => 10,
                   'not null' => false,
               ),
               'status' => array(
                   'type' => 'varchar',
                   'length' => 255,
+                  'not null' => false,
+              ),
+              'grade' => array(
+                  'type' => 'int',
+                  'length' => 10,
                   'not null' => false,
               ),
           ),
@@ -692,7 +696,7 @@ function ed_answer_update_7116(&$sandbox) {
 }
 
 
-function ed_answer_update_7119(&$sandbox) {
+function ed_answer_update_7121(&$sandbox) {
 
   field_delete_field('ed_answer_last_status');
   field_delete_instance('ed_answer_last_status');
