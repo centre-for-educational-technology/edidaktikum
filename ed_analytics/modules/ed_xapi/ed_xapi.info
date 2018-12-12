@@ -1,0 +1,8 @@
+name = eDidaktikum Analytics xAPI
+description = eDidaktikum analytics module integration with Learning Record Store.
+package = eDidaktikum
+core = 7.x
+configure = admin/config/edidaktikum/analytics
+
+dependencies[] = edidaktikum
+dependencies[] = ed_analytics

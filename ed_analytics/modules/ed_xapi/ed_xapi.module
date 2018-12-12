@@ -1,0 +1,225 @@
+<?php
+
+/**
+* @file
+* Drupal eDidaktikum Analytics xAPI module.
+*/
+
+define('ED_XAPI_BATCH_SIZE', 100);
+define('ED_XAPI_TIMEOUT', 45.0);
+define('ED_XAPI_STATEMENTS_QUEUE', 'ed_xapi_statements');
+define('ED_XAPI_BATCHES_QUEUE', 'ed_xapi_batches');
+define('ED_XAPI_WATCHDOG_TYPE', 'ed_xapi');
+
+/**
+ * Special Exception class use to signal LRS connection configuration missing
+ */
+class EdXapiConnectionConfigurationException extends Exception {}
+
+/**
+* Sends statement to the LRS endpoint.
+* @param  string $action Gets added to the base endpoint URL (example: statements)
+* @param  array  $data   Statement data
+* @return mixed          Either response object of drupal_http_request() or NULL (in case configuration is not provided)
+*/
+function ed_xapi_send_to_lrs($action, $data) {
+  $endpoint = variable_get('ed_analytics_ll_endpoint');
+  $authUser = variable_get('ed_analytics_ll_username');
+  $authPassword = variable_get('ed_analytics_ll_password');
+
+  if ( !( $endpoint && $authUser && $authPassword ) ) {
+    throw new EdXapiConnectionConfigurationException('LRS connection data not present.');
+  }
+
+  $url = $endpoint . '/' . $action;
+  $basicAuth = base64_encode("$authUser:$authPassword");
+  $jsonData = json_encode($data);
+  $options = [
+    'method' => 'POST',
+    'data' => $jsonData,
+    'headers' => [
+      'Content-Type' => 'application/json',
+      'X-Experience-API-Version' => '1.0.3',
+      'Authorization' => "Basic $basicAuth",
+      'Content-Length' => strlen($jsonData),
+    ],
+    'timeout' => ED_XAPI_TIMEOUT,
+  ];
+
+  $response = drupal_http_request($url, $options);
+
+  if ( isset($response->error) ) {
+    $debug = [
+      'request' => [
+        'url' => $url,
+        'count' => is_array($data) ? sizeof($data) : 1,
+      ],
+      'response' => [
+        'code' => $response->code,
+        'status' => isset($response->status_message) ? $response->status_message : '',
+        'error' => $response->error,
+      ]
+    ];
+
+    watchdog(ED_XAPI_WATCHDOG_TYPE, json_encode($debug), [], WATCHDOG_ERROR);
+    db_insert('ed_xapi_statements')
+    ->fields([
+      'code' => $response->code,
+      'status_message' => isset($response->status_message) ? $response->status_message : '',
+      'error' => $response->error,
+      'count' => is_array($data) ? sizeof($data) : 1,
+      'data' => $jsonData,
+      'created' => REQUEST_TIME,
+      ])->execute();
+    }
+
+    return $response;
+  }
+
+  /**
+  * Processes statements queue and creates batches to be sent to LRS.
+  * Batches are added into another queue.
+  * @return void
+  */
+  function _ed_xapi_process_statements_cron() {
+    $statementsQueue = DrupalQueue::get(ED_XAPI_STATEMENTS_QUEUE);
+    $statementsQueue->createQueue();
+
+    if ($statementsQueue->numberOfItems() > 0) {
+      $batchesQueue = DrupalQueue::get(ED_XAPI_BATCHES_QUEUE);
+      $batchesQueue->createQueue();
+
+      $totalBatches = ceil($statementsQueue->numberOfItems() / ED_XAPI_BATCH_SIZE);
+
+      foreach (range(1, $totalBatches) as $batch) {
+        $statements = [];
+        while((sizeof($statements) < ED_XAPI_BATCH_SIZE) && ($item = $statementsQueue->claimItem())) {
+          $statements[] = $item->data;
+          $statementsQueue->deleteItem($item);
+        }
+        $batchesQueue->createItem($statements);
+      }
+    }
+  }
+
+  /**
+  * Implements hook_cron().
+  */
+  function ed_xapi_cron() {
+    _ed_xapi_process_statements_cron();
+  }
+
+  /**
+  * Batch queue worker callback.
+  * @param  array $data Statements data
+  * @return void
+  */
+  function _ed_xapi_process_batch($data) {
+    try {
+      $response = ed_xapi_send_to_lrs('statements', $data);
+      // TODO Need to release the batch if the error does not hint to an issue with the payload
+      /*if ( isset($response->error) || is_null($response) ) {
+      throw new Exception('xAPI call failed!');
+      }*/
+    } catch(EdXapiConnectionConfigurationException $e) {
+      watchdog(ED_XAPI_WATCHDOG_TYPE, $e->getMessage(), [], WATCHDOG_WARNING);
+    } catch(Exception $e) {
+      watchdog(ED_XAPI_WATCHDOG_TYPE, $e->getMessage(), [], WATCHDOG_ERROR);
+    }
+}
+
+/**
+* Implements hook_cron_queue_info()
+* @return array Defined cron queue workers
+*/
+function ed_xapi_cron_queue_info() {
+  $queues = [];
+  $queues[ED_XAPI_BATCHES_QUEUE] = [
+    'worker callback' => '_ed_xapi_process_batch',
+    'time' => 20 * 60, // Maximum amount of time allowed for the process to handle the queue
+  ];
+
+  return $queues;
+}
+
+/**
+ * Builds an Actor part from the account object provided.
+ * @param  object $account System Account object
+ * @return array           An array with acor data
+ */
+function _ed_xapi_build_actor($account) {
+  return [
+    'objectType' => 'Agent',
+    'name' => edidaktikum_get_full_name_for_user_account($account),
+    'mbox_sha1sum' => sha1('mailto:' . $account->mail),
+  ];
+}
+
+/**
+ * Adds some common data to the statement that is specific to the system
+ * @param array $statement Pointer to an array holding statement structure
+ */
+function _ed_xapi_add_statement_presets(&$statement) {
+  global $language;
+  if (!isset($statement['timestamp'])) {
+    $statement['timestamp'] = date(DATE_RFC3339);
+  }
+
+  $statement['context']['platform'] = 'eDidaktikum';
+  $statement['context']['extensions']['http://id.tincanapi.com/extension/ip-address'] = ip_address();
+  $statement['context']['language'] = $language->language;
+}
+
+/**
+ * Adds stataement to the queue.
+ * @param  array $statement Statement data
+ * @return boolean
+ */
+function _ed_xapi_enqueue_statement($statement) {
+  _ed_xapi_add_statement_presets($statement);
+  try {
+    $queue = DrupalQueue::get(ED_XAPI_STATEMENTS_QUEUE);
+    $queue->createQueue();
+    $queue->createItem($statement);
+
+    return true;
+  } catch (Exception $e) {
+    watchdog(ED_XAPI_WATCHDOG_TYPE, $e->getTraceAsString(), [], WATCHDOG_ERROR);
+  }
+
+  return false;
+}
+
+/**
+ * Implements hook_user_login()
+ */
+function ed_xapi_user_login(&$edit, $account) {
+  $statement = [
+    'actor' => _ed_xapi_build_actor($account),
+    'verb' => [
+      'id' => 'https://w3id.org/xapi/adl/verbs/logged-in',
+      'display' => [
+        'en' => 'logged-in',
+      ],
+    ],
+    'object' => [
+      'objectType' => 'Activity',
+      'id' => url('/', [
+        'absolute' => TRUE,
+        'language' => (object)[
+          'language' => FALSE,
+        ]
+      ]),
+      'definition' => [
+        'type' => 'http://activitystrea.ms/schema/1.0/application',
+        'name' => [
+          'en' => 'eDidaktikum',
+        ],
+        'extensions' => [
+          'http://xapi.jisc.ac.uk/subType' => 'http://id.tincanapi.com/activitytype/lms', // TODO Need a better extension ID source
+        ],
+      ],
+    ],
+  ];
+  _ed_xapi_enqueue_statement($statement);
+}

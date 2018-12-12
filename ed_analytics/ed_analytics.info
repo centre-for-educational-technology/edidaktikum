@@ -2,7 +2,6 @@ name = eDidaktikum Analytics
 description = eDidaktikum analytics module. Integration with Learning Locker.
 package = eDidaktikum
 core = 7.x
+configure = admin/config/edidaktikum/analytics
 
 dependencies[] = edidaktikum
-
-
