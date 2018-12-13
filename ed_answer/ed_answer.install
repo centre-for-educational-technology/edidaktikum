@@ -696,14 +696,132 @@ function ed_answer_update_7116(&$sandbox) {
 }
 
 
-function ed_answer_update_7121(&$sandbox) {
+/**
+ * Create and add ed_answer_last_status field
+ * @param $sandbox
+ */
+function ed_answer_update_7117(&$sandbox) {
 
   field_delete_field('ed_answer_last_status');
   field_delete_instance('ed_answer_last_status');
 
-
   ed_answer_create_field_last_status();
 
   ed_answer_node_add_field_last_status();
+
+}
+
+
+/**
+ * Migration to populate answer statuses from comments
+ * @param $sandbox
+ */
+function ed_answer_update_7118(&$sandbox)
+{
+  // Initialize batch
+  if (!isset($sandbox['max'])) {
+
+    $sandbox['max'] = db_query("SELECT COUNT(n.nid)
+         FROM {node} n
+           JOIN {field_data_field_ref_to_task} rt ON rt.entity_id = n.nid
+         WHERE n.status = 1")->fetchField();
+
+    $sandbox['progress'] = 0;
+    $sandbox['updated'] = 0;
+    $sandbox['current_node'] = -1;
+
+    if (empty($sandbox['max'])) {
+      $sandbox['#finished'] = 1;
+      return t('Nothing updated');
+    }
+  }
+
+
+  $q = db_select('field_data_field_ref_to_task', 'rt');
+  $q->join('node', 'n', 'n.nid = rt.entity_id AND n.status = 1');
+  $q->fields('n', ['nid', 'created', 'changed']);
+  $q->orderBy('n.nid', 'ASC')
+      ->where('n.nid > :nid', array(
+      ':nid' => $sandbox['current_node'],
+  ));;
+
+  $answers = $q
+      ->extend('PagerDefault')
+      ->limit(10)
+      ->execute();
+
+
+
+  foreach ($answers as $answer){
+
+
+    $admin_uids = [];
+
+    $wrapper = entity_metadata_wrapper('node', $answer->nid);
+
+    if($wrapper->__isset('og_group_ref')){
+      $group_refs = $wrapper->og_group_ref->raw();
+
+      foreach ($group_refs as $group_ref){
+
+        $members = ed_get_group_members($group_ref, false, true, false);
+
+        foreach ($members as $member) {
+          if (in_array(OG_ADMINISTRATOR_ROLE, $member['roles'])) array_push($admin_uids, $member['uid']);
+        }
+
+      }
+    }
+
+    //  get all comments regarding the answer node ordered backwards chronologically
+    $query_comments = db_select('comment', 'c');
+    $query_comments->condition('nid', $answer->nid);
+    $query_comments->fields('c', ['uid', 'cid']);
+    $query_comments->orderBy('created', 'DESC');
+
+    $query_comments->leftJoin('field_data_ed_answer_grade', 'fg', 'fg.entity_id = c.cid');
+    $query_comments->fields('fg', ['ed_answer_grade_value']);
+
+    $query_comments->leftJoin('field_data_ed_answer_status', 'fs', 'fs.entity_id = c.cid');
+    $query_comments->fields('fs', ['ed_answer_status_value']);
+
+    $comments = $query_comments->execute()->fetchAll(PDO::FETCH_ASSOC);
+    unset($query_comments);
+
+
+    //  get last status from an admin role user
+    $answer->status = 'unchecked';
+    $answer->grade = null;
+
+    for ($i = 0; $i < count($comments); $i++) {
+      if ($comments[$i]['ed_answer_status_value'] != NULL && in_array($comments[$i]['uid'], $admin_uids)) {
+        $answer->status = $comments[$i]['ed_answer_status_value'];
+        //add grade if available
+        if($comments[$i]['ed_answer_status_value'] != NULL){
+          $answer->grade = $comments[$i]['ed_answer_grade_value'];
+        }
+
+        $wrapper = entity_metadata_wrapper('node', $answer->nid);
+        $wrapper->ed_answer_last_status->set(array('status' =>  $answer->status, 'grade' => $answer->grade, 'cid' => $comments[$i]['cid']));
+        $wrapper->save();
+
+        $sandbox['updated']++;
+        break;
+      }
+    }
+    $sandbox['current_node'] = $answer->nid;
+    $sandbox['progress']++;
+  }
+
+
+  // Set the "finished" status, to tell batch engine whether this function
+  // needs to run again.
+  $sandbox['#finished'] = ($sandbox['progress'] >= $sandbox['max']) ? TRUE : ($sandbox['progress'] / $sandbox['max']);
+
+  if ($sandbox['#finished']) {
+    return t('Updated @updated answers out of @count answers in the system', ['@count' => $sandbox['progress'], '@updated' => $sandbox['updated']]);
+  }
+
+
 
 }
