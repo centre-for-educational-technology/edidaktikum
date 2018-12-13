@@ -143,6 +143,20 @@ function ed_xapi_cron_queue_info() {
 }
 
 /**
+ * Returns absolute URL with no language element for a path provided
+ * @param  string $path Path defaults to NULL
+ * @return string       Absolute URL
+ */
+function _ed_xapi_absolute_url_no_language($path = NULL) {
+  return url($path, [
+    'absolute' => TRUE,
+    'language' => (object)[
+      'language' => FALSE,
+    ],
+  ]);
+}
+
+/**
  * Builds an Actor part from the account object provided.
  * @param  object $account System Account object
  * @return array           An array with acor data
@@ -152,6 +166,26 @@ function _ed_xapi_build_actor($account) {
     'objectType' => 'Agent',
     'name' => edidaktikum_get_full_name_for_user_account($account),
     'mbox_sha1sum' => sha1('mailto:' . $account->mail),
+  ];
+}
+
+/**
+ * Returns application structure for the statement object part.
+ * @return array Structure with appropriate data
+ */
+function _ed_xapi_build_application_object() {
+  return [
+    'objectType' => 'Activity',
+    'id' => _ed_xapi_absolute_url_no_language('/'),
+    'definition' => [
+      'type' => 'http://activitystrea.ms/schema/1.0/application',
+      'name' => [
+        'en' => 'eDidaktikum',
+      ],
+      'extensions' => [
+        'http://xapi.jisc.ac.uk/subType' => 'http://id.tincanapi.com/activitytype/lms', // TODO Need a better extension ID source
+      ],
+    ],
   ];
 }
 
@@ -202,24 +236,24 @@ function ed_xapi_user_login(&$edit, $account) {
         'en' => 'logged-in',
       ],
     ],
-    'object' => [
-      'objectType' => 'Activity',
-      'id' => url('/', [
-        'absolute' => TRUE,
-        'language' => (object)[
-          'language' => FALSE,
-        ]
-      ]),
-      'definition' => [
-        'type' => 'http://activitystrea.ms/schema/1.0/application',
-        'name' => [
-          'en' => 'eDidaktikum',
-        ],
-        'extensions' => [
-          'http://xapi.jisc.ac.uk/subType' => 'http://id.tincanapi.com/activitytype/lms', // TODO Need a better extension ID source
-        ],
-      ],
+    'object' => _ed_xapi_build_application_object(),
+  ];
+  _ed_xapi_enqueue_statement($statement);
+}
+
+/**
+ * Implements hook_user_logout()
+ */
+function ed_xapi_user_logout($account) {
+  $statement = [
+    'actor' => _ed_xapi_build_actor($account),
+    'verb' => [
+      'id' => 'https://w3id.org/xapi/adl/verbs/logged-out',
+      'display' => [
+        'en' => 'logged-out',
+      ]
     ],
+    'object' => _ed_xapi_build_application_object(),
   ];
   _ed_xapi_enqueue_statement($statement);
 }
