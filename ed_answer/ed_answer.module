@@ -549,19 +549,21 @@ function ed_answer_comment_view_alter(&$build){
   $gid = $build['#node']->og_group_ref[LANGUAGE_NONE][0]['target_id'];
   $group = node_load($gid);
   $admins = _ed_cluster_get_group_admins($group, true);
+
   if(!empty($build['comment_body'])){
     if(!in_array($build['comment_body']['#object']->uid, $admins)){
       $build['ed_answer_status']['#access'] = FALSE;
       $build['ed_answer_grade']['#access'] = FALSE;
 
-    }else{
-      $wrapper = entity_metadata_wrapper('node', $build['comment_body']['#object']->nid);
-      $last_status = $wrapper->ed_answer_last_status->value();
+    }
+  }
 
-      if($build['comment_body']['#object']->cid == $last_status['cid']){
-        $build['comment_body'][0]['#prefix'] = '<div id="highlight-comment"></div>';
+  if(!empty($build['ed_answer_status']['#items'][0]['value'])){
+    $wrapper = entity_metadata_wrapper('node', $build['ed_answer_status']['#object']->nid);
+    $last_status = $wrapper->ed_answer_last_status->value();
 
-      }
+    if($build['ed_answer_status']['#object']->cid == $last_status['cid']){
+      $build['comment_body'][0]['#prefix'] = '<div id="highlight-comment"></div>';
     }
   }
 }

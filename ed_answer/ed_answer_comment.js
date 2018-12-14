@@ -4,7 +4,7 @@
 
       $( "#highlight-comment" )
         .closest( ".comment" )
-        .css( "background-color", "rgba(254, 63, 76, .3)" )
+        .css( "background-color", "rgba(51, 122, 183, .3)" )
         .css( "padding", "10px" )
         .css( "margin", "10px" )
     }

@@ -79,7 +79,7 @@ function ed_analytics_page(){
           if(_ed_check_if_answered($user->uid, $tasktouser->nid)){
             $tmp_answer_nid = _ed_get_answer_nid($user->uid, $tasktouser->nid);
             $status = _ed_check_if_accepted($tmp_answer_nid[0]);           
-            if(!empty($status) && $status[0]=='accepted'){
+            if(!empty($status) && $status=='accepted'){
               $answers++;
             }
           }

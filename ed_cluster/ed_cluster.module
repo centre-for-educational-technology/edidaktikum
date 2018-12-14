@@ -534,7 +534,7 @@ function ed_task_listing_for_students($test, $node){
             $tmp_data['data'] = t('Answered, Unchecked');
             $tmp_data['title'] = t('Unchecked');
           }else{
-            $last_status = _ed_last_status($status);
+            $last_status = $status;
             switch($last_status){
               case('accepted'):
                 $tmp_data['class'] = 'answered';
@@ -870,10 +870,6 @@ function ed_cluster_my_inactive_listing_page(){
   $og_groups = ed_cluster_get_clusters($sql_order, $remove_user_groups, true);
   if (!empty($og_groups)) {
     $nodes = node_load_multiple($og_groups);
-
-    foreach ($nodes as $node){
-      error_log($node->nid.' '.$node->ed_field_group_state[LANGUAGE_NONE][0]['value']);
-    }
 
 	  $content['clusters'] = ed_generate_grid_of_groups($nodes);
     $content['pager'] = array(
@@ -1582,7 +1578,6 @@ function ed_task_manager($test, $node) {
 
   //  more stuff
   $tasks = ed_get_group_tasks($node->nid, true, true, true);
-  $account = $GLOBALS['user'];
   $content = [];
 
   //  add new container button
@@ -1671,8 +1666,7 @@ function ed_task_manager($test, $node) {
 
       if (ed_is_task_applicable($task, $member)) {
         //  if applicable, get answer and fill cell
-        $answer = ed_get_answer($task['nid'], $member['uid'], false, $admins);
-
+        $answer = ed_get_answer($task['nid'], $member['uid'], false, true);
 
         //  title and class
         switch($answer['status']) {
@@ -1882,7 +1876,7 @@ function ed_task_manager_OLD($test, $node){
 
 
           }else{
-            $status_last = _ed_last_status($status);
+            $status_last = $status;
 
             switch($status_last){
               case('accepted'):
@@ -2018,24 +2012,13 @@ function _ed_get_last_grade($answer) {
 
 function _ed_check_if_accepted($answer){
   $answernode = node_load($answer);
-  //dpm($answernode);
-  $groupnid = $answernode->og_group_ref[LANGUAGE_NONE][0]['target_id'];
-  $group = node_load($groupnid);
-  //dpm($group);
-  $groupadmins = _ed_cluster_get_group_admins($group, true);
-  //dpm($groupadmins);
 
-  $query = db_select('comment', 'c');
-  $query->join('field_data_ed_answer_status', 's', 'c.cid = s.entity_id');
-  $query->fields('s',array('ed_answer_status_value'));
-  $query->condition('c.nid', $answer);
-  $query->condition('c.uid', $groupadmins, 'IN');
-  $result = $query->execute()->fetchCol();
-
-  //Useful for answer status debugging
-  //print_r($answer.' comment_count '.$answernode->comment_count. ' last_comment_uid '.$answernode->last_comment_uid. '<br/>');
-
-  return $result;
+  if(!empty($answernode->ed_answer_last_status)){
+    if($answernode->ed_answer_last_status[LANGUAGE_NONE][0]['status'] != 'unchecked'){
+      return $answernode->ed_answer_last_status[LANGUAGE_NONE][0]['status'];
+    }
+  }
+  return false;
 }
 
 /*

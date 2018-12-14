@@ -226,12 +226,7 @@ function ed_dashboard_get_student_dashboard(){
 	if(!empty($my_groups)){
 		foreach ($my_groups as $my_group){
 
-
 			$months_tasks = array();
-
-			//  get members and separate out admins
-			$members = ed_get_group_members($my_group, true, true, true);
-			$admins = ed_filter_admins($members);
 
 
 			foreach ($months_in_this_semester as $month){
@@ -243,7 +238,7 @@ function ed_dashboard_get_student_dashboard(){
 					$total_tasks++;
 
 
-					$answer = ed_get_answer($group_task, $GLOBALS['user']->uid, false, $admins);
+					$answer = ed_get_answer($group_task, $GLOBALS['user']->uid, false, true);
 
 
 

@@ -169,6 +169,10 @@ function ed_answer_install() {
 	ed_answer_node_add_time_eff_feedb();
 	
 	ed_answer_node_add_field_satisf_feedb();
+
+  ed_answer_create_field_last_status();
+
+  ed_answer_node_add_field_last_status();
 }
 
 function ed_answer_add_og_audience() {
@@ -383,6 +387,8 @@ function ed_answer_uninstall() {
 	field_delete_field('ed_field_satisf_feedb');
 	
 	field_delete_field('ed_field_time_eff_feedb');
+
+  field_delete_field('ed_answer_last_status');
 
 
   $instances = field_info_instances('node', 'ed_answer');
@@ -747,7 +753,7 @@ function ed_answer_update_7118(&$sandbox)
 
   $answers = $q
       ->extend('PagerDefault')
-      ->limit(10)
+      ->limit(50)
       ->execute();
 
 
