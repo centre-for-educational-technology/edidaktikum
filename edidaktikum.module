@@ -1415,9 +1415,8 @@ function ed_is_task_applicable($task, $member) {
 //  $task_id: the task id
 //  $uid: the user id
 //  $b_content: optionally adds answer content ['content']
-//  $group_members: optionally adds answer status and comment ['status', 'grade']
-//  if provided with the output of ed_get_group_members with roles
-function ed_get_answer($task_id, $uid, $b_content = false, $group_members = false) {
+//  $status: optionally adds answer status ['status'], ['grade']
+function ed_get_answer($task_id, $uid, $b_content = false, $status = false) {
 
   //  find answer id from task id and user id
   $q = db_select('field_data_field_ref_to_task', 'rt');
@@ -1445,49 +1444,20 @@ function ed_get_answer($task_id, $uid, $b_content = false, $group_members = fals
     unset($answer['ed_field_content_value']);
   }
 
-  //  if comment and grade
-  if ($group_members !== false) {
-    //  get admin uid's
-    $admin_uids = [];
-    foreach ($group_members as $member) {
-      if (in_array(OG_ADMINISTRATOR_ROLE, $member['roles'])) array_push($admin_uids, $member['uid']);
-    }
-
-
-    //  get all comments regarding the answer node ordered backwards chronologically
-    $q = db_select('comment', 'c');
-    $q->condition('nid', $answer['nid']);
-    $q->fields('c', ['uid']);
-    $q->orderBy('created', 'DESC');
-
-    $q->leftJoin('field_data_ed_answer_grade', 'fg', 'fg.entity_id = c.cid');
-    $q->fields('fg', ['ed_answer_grade_value']);
-
-    $q->leftJoin('field_data_ed_answer_status', 'fs', 'fs.entity_id = c.cid');
-    $q->fields('fs', ['ed_answer_status_value']);
-
-    $comments = $q->execute()->fetchAll(PDO::FETCH_ASSOC);
-    unset($q);
-
-    //  get last grade from an admin role user
-    $answer['grade'] = 0;
-    for ($i = 0; $i < count($comments); $i++) {
-      if ($comments[$i]['ed_answer_grade_value'] != NULL && in_array($comments[$i]['uid'], $admin_uids)) {
-        $answer['grade'] = $comments[$i]['ed_answer_grade_value'];
-        break;
-      }
-    }
-
-    //  get last status from an admin role user
+    if($status){
+    //Get status
     $answer['status'] = 'unchecked';
-    for ($i = 0; $i < count($comments); $i++) {
-      if ($comments[$i]['ed_answer_status_value'] != NULL && in_array($comments[$i]['uid'], $admin_uids)) {
-        $answer['status'] = $comments[$i]['ed_answer_status_value'];
-        break;
-      }
-    }
+    $answer['grade'] = 0;
+    $wrapper = entity_metadata_wrapper('node', $answer['nid']);
+    if($wrapper->__isset('ed_answer_last_status')){
+      $last_status = $wrapper->ed_answer_last_status->value();
 
-    unset ($q);
+      if(!empty($last_status)){
+        $answer['status'] = $last_status['status'];
+        $answer['grade'] = $last_status['grade'] != null ? $last_status['grade'] : 0;
+      }
+
+    }
   }
 
   return $answer;

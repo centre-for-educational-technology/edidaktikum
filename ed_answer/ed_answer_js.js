@@ -1,6 +1,10 @@
 (function ($){
   Drupal.behaviors.ed_answer = {
     attach: function(context, settings){
+
+      console.log('ewdewd');
+
+
       $('.category-container', context).find('a').wrap('<li />');
       $('.competence-container', context).find('a').wrap('<li />');
 
@@ -116,6 +120,7 @@
       $("#edit-ed-field-satisf-feedb-und:radio[value="+initial_satisf_feedb+"]").hover(function() {
         $(this).css("filter","grayscale(0)")
       });
+
 
 
 
