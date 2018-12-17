@@ -213,7 +213,7 @@ function ed_task_listing_page() {
             if(empty($status)) {
               $tasknode->ed_status = "unchecked";
             } else {
-              $tasknode->ed_status = _ed_last_status($status);
+              $tasknode->ed_status = $status;
             }
           }
         } else {
@@ -576,13 +576,6 @@ function _ed_get_active_group_tasks(){
 
 
 
-/* Return last in status array that isn't unchecked */
-function _ed_last_status($statuses) {
-  for ($i = count($statuses) - 1; $i >= 0; $i--) {
-    if ($statuses[$i] != 'unchecked') return $statuses[$i];
-  }
-  return 'unchecked';
-}
 
 /**
  * Returns count of unanswered tasks for a user.
@@ -607,10 +600,6 @@ function _ed_get_user_unanswered_tasks_count($account) {
     foreach ($groups as $my_group) {
 
       $groups = array_values($groups);
-      //  get members and separate out admins
-      // that is needed to get the statutes for answers
-      $members = ed_get_group_members($my_group, true, true, true);
-      $admins = ed_filter_admins($members);
 
       $tasks = ed_get_group_tasks($my_group);
 
@@ -625,7 +614,7 @@ function _ed_get_user_unanswered_tasks_count($account) {
 
             $task = $task['nid'];
 
-            $answer = ed_get_answer($task, $account->uid, false, $admins);
+            $answer = ed_get_answer($task, $account->uid, false, true);
 
             switch ($answer['status']) {
               case 'unanswered':
