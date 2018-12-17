@@ -707,10 +707,7 @@ function ed_answer_update_7116(&$sandbox) {
  * @param $sandbox
  */
 function ed_answer_update_7117(&$sandbox) {
-
-  field_delete_field('ed_answer_last_status');
-  field_delete_instance('ed_answer_last_status');
-
+  
   ed_answer_create_field_last_status();
 
   ed_answer_node_add_field_last_status();
