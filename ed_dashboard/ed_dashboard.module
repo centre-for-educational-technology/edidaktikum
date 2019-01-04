@@ -230,7 +230,17 @@ function ed_dashboard_get_student_dashboard(){
 
 
 			foreach ($months_in_this_semester as $month){
-				$group_tasks = _ed_get_group_tasks_for_month_year($my_group, $month, date('Y'));
+        $year = date('Y');
+
+        if($month == 1 && date('n') != 1) {
+          // January case should be next year, unless it is January right now
+          $year = $year + 1;
+        } elseif (date('n') == 1 && $month != 1) {
+          // Any month except January should be last year, if it currently is January
+          $year = $year - 1;
+        }
+
+				$group_tasks = _ed_get_group_tasks_for_month_year($my_group, $month, $year);
 
 				$group_tasks_markup = '';
 
@@ -483,10 +493,6 @@ function _get_all_answers_to_task($task){
  * @return mixed
  */
 function _ed_get_group_tasks_for_month_year($gid, $month, $year){
-  // January case should be next year, unless it is January right now
-  if($month == 1 && date('n') != 1){
-    $year = $year + 1;
-  }
 	$year_month = $year.'-'.$month;
 
 	$date = date_parse_from_format ("Y-m" ,  $year_month);
