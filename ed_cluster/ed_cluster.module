@@ -1573,8 +1573,6 @@ function ed_task_manager($test, $node) {
   menu_tree_set_path('main-menu', 'clusters');
   drupal_add_css(drupal_get_path('module', 'ed_cluster').'/task_manager.css');
   drupal_add_js(drupal_get_path('module', 'ed_cluster').'/js/ed_task_manager_task_filter.js');
-  drupal_add_js(drupal_get_path('module', 'ed_cluster').'/js/table-scroll.js');
-
 
   //  more stuff
   $tasks = ed_get_group_tasks($node->nid, true, true, true);
@@ -1679,7 +1677,14 @@ function ed_task_manager($test, $node) {
             $cell['class'] = 'unchecked';
             $cell['title'] = t('Unchecked');
 	          //Check if it is late submission - if submitted on the due date or later
-            if ((int)$answer['changed'] > (int)$task['due_date']) $cell['data'] = '!&nbsp;';
+
+            $changed = date('Y-m-d', $answer['changed']);
+            $due_date = date('Y-m-d', $task['due_date']);
+
+
+            if($changed > $due_date){
+              $cell['data'] = '!&nbsp;';
+            }
 
             break;
 
@@ -1726,238 +1731,6 @@ function ed_task_manager($test, $node) {
     '#attributes' => array('data-averaging_table' => t("Average"), 'data-sticky_headers' => '', 'class' => array('table table-bordered scroll'))
   );
 
-  return $content;
-}
-
-
-/**
- * old Task Manager page. keeping it around for now, just in case
- */
-function ed_task_manager_OLD($test, $node){
-  menu_tree_set_path('main-menu', 'clusters');
-  drupal_add_css(drupal_get_path('module', 'ed_cluster').'/task_manager.css');
-  drupal_add_js(drupal_get_path('module', 'ed_cluster').'/js/ed_task_manager_task_filter.js');
-  $account = $GLOBALS['user'];
-  $query = db_select('node', 'n');
-  $query->join('og_membership', 'ogm', "n.nid = ogm.etid AND ogm.entity_type='node' AND ogm.group_type = 'node' AND ogm.gid = :gid AND ogm.state = :active", array(':gid' => $node->nid, ':active' => OG_STATE_ACTIVE));
-  $query->fields('n', array('nid'))
-    ->condition('n.type', 'ed_task');
-  $alltasknids = $query->execute()->fetchCol();
-
-  $alltasknidswithtitle = array();
-  foreach($alltasknids as $tasknid){
-    $alltasknidswithtitle[$tasknid] = node_load($tasknid)->title;
-  }
-  $firstItem = array(0 => t('All tasks'));
-  $alltasknidswithtitle = $firstItem + $alltasknidswithtitle;
-  $content = array();
-
-  $options = array(
-    'attributes' => array(),
-    'query' => array(
-      'og_group_ref' => $node->nid,
-      'destination' => _ed_cluster_destination_for_group_node_type($node, 'ed_task'),
-    ),
-  );
-  $content['add-new-container'] = array(
-    '#type' => 'container',
-    '#attributes' => array(
-      'class' => array('ed-add-new-node', 'ed-add-new-task'),
-    ),
-  );
-  $content['add-new-container']['add-new'] = array(
-    '#type' => 'markup',
-    '#markup' => l(t('Add new'), 'node/add/ed-task', $options),
-  );
-  $content['task-filter-container'] = array(
-    '#type' => 'container',
-    '#attributes' => array(
-       'class' => array('ed-filter-tasks'),
-    ),
-  );
-  $content['task-filter-container']['container'] = array(
-    '#type' => 'container',
-    '#attributes' => array(
-      'class' => array('row'),
-    ),
-  );
-  $content['task-filter-container']['container']['selection-box'] = array(
-    '#type' => 'select',
-    '#title' => t('Select task to filter'),
-    '#options' => $alltasknidswithtitle,
-    '#prefix' => '<div class="span4">',
-    '#suffix' => '</div>',
-    '#value' => (isset($_GET['tasknid']) ? $_GET['tasknid'] : 0),
-    '#attributes' => array(
-      'class' => array('ed_task_selection_for_filtering'),
-      'data-cluster' => $node->nid,
-    ),
-  );
-  $content['task-filter-container']['container']['submit-button'] = array(
-    '#type' => 'markup',
-    '#prefix' => '<div class="span4">',
-    '#suffix' => '</div>',
-    '#markup' => '<button class="btn btn-primary ed_filter_tasks">'.t('Filter').'</button>',
-
-  );
-  $group_members_uids = _get_users_in_group($node->nid);
-
-  // Remove creator
-  if (in_array($node->uid, $group_members_uids)) {
-    unset($group_members_uids[array_search($node->uid, $group_members_uids)]);
-  }
-
-  $admin_uids = _ed_cluster_get_group_admins($node);
-  // Remove admins
-  if (!empty($admin_uids)) {
-    foreach ($admin_uids as $auid) {
-      unset($group_members_uids[array_search($auid, $group_members_uids)]);
-    }
-  }
-
-  $group_members = user_load_multiple($group_members_uids);
-  sort($group_members);
-  // Get all group tasks
-
-
-  if(isset($_GET['tasknid'])){
-    $filteredtasknid = $_GET['tasknid'];
-    $query = db_select('node', 'n');
-    $query->join('og_membership', 'ogm', "n.nid = ogm.etid AND n.nid=:tasknid AND ogm.entity_type='node' AND ogm.group_type = 'node' AND ogm.gid = :gid AND ogm.state = :active", array(':gid' => $node->nid, ':active' => OG_STATE_ACTIVE, ':tasknid' => $filteredtasknid));
-    $query->fields('n', array('nid'))
-      ->condition('n.type', 'ed_task');
-    $nids = $query->execute()->fetchCol();
-  }else{
-    $nids = $alltasknids;
-  }
-
-
-  $header = array(t('Name'));
-  $nodes = node_load_multiple($nids);
-  if(isset($_GET['tasknid'])){
-    $node_single = node_load($_GET['tasknid']);
-    array_push($header, l($node_single->title, 'node/'.$_GET['tasknid'], array('attributes' => array('title' => $node_single->title))).'<br>'.'<div class="description">'.t('Due date: ').format_date($node_single->ed_task_due_date[LANGUAGE_NONE][0]['value'], 'short').'</div>');
-  }else{
-    foreach(array_values($nodes) as $key => $node_single){
-      array_push($header, l(t('Task').' '.($key+1), 'node/'.$node_single->nid, array('attributes' => array('title' => $node_single->title))).'<br>'.'<div class="description">'.t('Due date: ').format_date($node_single->ed_task_due_date[LANGUAGE_NONE][0]['value'], 'short').'</div>');
-    }
-  }
-  $rows = array();
-
-  foreach(array_values($group_members) as $index => $member){
-      $rows[] = array(
-        'data' => array(
-          $member->uid => l(edidaktikum_get_full_name_for_user_account($member), 'user/'.$member->uid),
-        ),
-      );
-      foreach($nodes as $node_single){
-        $tmp_data = array('data' => '', 'class' => '');
-
-        if (_ed_check_if_answered($member->uid, $node_single->nid)) {
-          $tmp_answer_nid = _ed_get_answer_nid($member->uid, $node_single->nid);
-
-          $grade = _ed_get_last_grade($tmp_answer_nid[0]);
-          $tmp_data['data'] = l($grade == 0 ? '&nbsp;' : $grade, 'node/' . $tmp_answer_nid[0], array('html' => TRUE));
-          $status = _ed_check_if_accepted($tmp_answer_nid[0]);
-          if(empty($status)){
-            $tmp_data['class'] = 'unchecked';
-            $tmp_data['title'] = t('Unchecked');
-
-            //Check if it is late submission - if submitted on the due date or later
-            $wrapper = entity_metadata_wrapper('node', $tmp_answer_nid[0]);
-            $task_submission_time = $wrapper->changed->value();
-
-            $due_date = $node_single->ed_task_due_date[LANGUAGE_NONE][0]['value'];
-
-
-            if(format_date($task_submission_time, 'short') > format_date($due_date, 'short')){
-              $tmp_data['data'] = l('!&nbsp;', 'node/' . $tmp_answer_nid[0], array('html' => TRUE));
-            }
-
-
-          }else{
-            $status_last = $status;
-
-            switch($status_last){
-              case('accepted'):
-                $tmp_data['class'] = 'answered';
-                $tmp_data['title'] = t('Accepted');
-              break;
-              case('rejected'):
-                $tmp_data['class'] = 'rejected';
-                $tmp_data['title'] = t('Rejected');
-              break;
-              case('unchecked'):
-                $tmp_data['class'] = 'unchecked';
-                $tmp_data['title'] = t('Unchecked');
-              break;
-            }
-
-          }
-
-        } else {
-
-          $tmp_data['class'] = 'unanswered';
-          $tmp_data['title'] = t('Not answered');
-
-
-          //Check if it is a study group case
-          $wrapper = entity_metadata_wrapper('node', $node_single->nid);
-          $task_study_groups = $wrapper->ed_task_field_study_group->raw();
-
-          if(!empty($task_study_groups)){
-
-            $tasks_to_user = _ed_get_tasks_to_user();
-            $is_to_user_task = false;
-            foreach ($tasks_to_user as $task_to_user){
-              if($task_to_user->nid == $node_single->nid){
-                $is_to_user_task=true;
-              }
-            }
-
-
-            if(!$is_to_user_task){
-              //Get user study group field
-              $wrapper = entity_metadata_wrapper('user', $member->uid);
-              $user_study_group = $wrapper->ed_field_study_group->value();
-
-
-              if(isset($user_study_group)){
-                if(in_array($user_study_group, $task_study_groups) == false ){
-                  $tmp_data['class'] = 'na';
-                  $tmp_data['title'] = t('Not applicable');
-                }
-
-              }else{
-                $tmp_data['class'] = 'na';
-                $tmp_data['title'] = t('Not applicable');
-              }
-
-            }
-
-
-          }
-
-
-          if (!empty($node_single->{ED_FIELD_TO_GROUP_MEMBER}[LANGUAGE_NONE])) {
-            if (!in_array($member->uid, array_map(function($element) { return $element['target_id']; }, $node_single->{ED_FIELD_TO_GROUP_MEMBER}[LANGUAGE_NONE]))) {
-              $tmp_data['class'] = 'can-not-be-answered';
-              $tmp_data['title'] = t('Can not be answered');
-            }
-          }
-        }
-
-
-        $rows[$index]['data'][$node_single->nid] = $tmp_data;
-      }
-  }
-
-  $content['table'] = array(
-    '#theme' => 'table',
-    '#rows' => $rows,
-    '#header' => $header,
-    '#attributes' => array('data-averaging_table' => '', 'data-sticky_headers' => '')
-  );
   return $content;
 }
 
