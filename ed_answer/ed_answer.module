@@ -195,15 +195,6 @@ function ed_answer_form_alter(&$form, &$form_state, $form_id){
     $task_content = field_get_items('node', $node, 'ed_field_content');
     $task_content_view = field_view_value('node', $node, 'ed_field_content', $task_content[0]);
     $form['ed_answer_task']['task_content'] = $task_content_view;
-    $task_cat = field_get_items('node', $node, 'ed_field_category');
-
-    foreach($task_cat as $term){
-      $cat_terms[] = field_view_value('node', $node, 'ed_field_category', $term);
-    }
-    foreach($cat_terms as $term){
-      $test[] = taxonomy_term_load($term['#options']['entity']->tid);
-    }
-    $term_nr = 0;
 
 
 
@@ -276,9 +267,6 @@ function ed_answer_form_alter(&$form, &$form_state, $form_id){
       foreach($task_comp as $competenceTerm){
         $comp_terms[] = field_view_value('node', $node, 'ed_field_competence', $competenceTerm);
       }
-      foreach($comp_terms as $term){
-        $test[] = taxonomy_term_load($term['#options']['entity']->tid);
-      }
 
       $help2 = 0;
       foreach($comp_terms as $tid){
@@ -286,10 +274,7 @@ function ed_answer_form_alter(&$form, &$form_state, $form_id){
           '#type' => 'markup',
           '#markup' => t(l(t($tid['#options']['entity']->name), $tid['#href']).'<br />'),
         );
-        if(ed_answer_check_tid_parents($tid['#options']['entity']->tid)==0){
-        /*$form['test']['test2'][$help]['#prefix'] = '<li>';
-        $form['test']['test2'][$help]['#suffix'] = '</li>';*/
-        }else{
+        if(ed_answer_check_tid_parents($tid['#options']['entity']->tid)!=0){
           $depth = 0;
           $flag = true;
           $parent = ed_answer_check_tid_parents($tid['#options']['entity']->tid);
