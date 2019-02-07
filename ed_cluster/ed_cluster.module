@@ -1573,6 +1573,7 @@ function ed_task_manager($test, $node) {
   menu_tree_set_path('main-menu', 'clusters');
   drupal_add_css(drupal_get_path('module', 'ed_cluster').'/task_manager.css');
   drupal_add_js(drupal_get_path('module', 'ed_cluster').'/js/ed_task_manager_task_filter.js');
+  drupal_add_js(drupal_get_path('module', 'ed_cluster').'/js/ed_cluster_tooltip.js');
 
   //  more stuff
   $tasks = ed_get_group_tasks($node->nid, true, true, true);
@@ -1650,6 +1651,17 @@ function ed_task_manager($test, $node) {
   foreach($tasks as $task) {
     $header = l($task['title'], 'node/' . $task['nid'], ['attributes' => ['title' => $task['title']]]);
     $header .= '<br><div class="description">'.t('Due date: ').format_date($task['due_date'], 'short').'</div>';
+
+    $header = l(
+      format_date($task['due_date'], 'custom', 'd.m'),
+      'node/' . $task['nid'],
+      ['attributes' => [
+        'title' => $task['title'].t(' - Due date: ').format_date($task['due_date'], 'short'),
+        'data-toggle' => 'tooltip',
+        'data-placement' => 'bottom'
+      ]]
+    );
+
     $headers []= $header;
   }
 
