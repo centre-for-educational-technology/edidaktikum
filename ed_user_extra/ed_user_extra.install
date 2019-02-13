@@ -190,7 +190,7 @@ function ed_user_extra_update_7100(&$sandbox){
       'label' => t('Receive notifications for the following'),
       'description' => t('Select the checkboxes you want to receive notifications from'),
       'default_value' => array(
-        array('value' => 'answer_given_to_task'), 
+        array('value' => 'answer_given_to_task'),
         array('value' => 'new_group_member'), 
         array('value' => 'new_learning_resource'), 
         array('value' => 'new_forum_topic'), 

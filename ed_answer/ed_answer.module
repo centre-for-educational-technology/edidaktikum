@@ -340,9 +340,7 @@ function _ed_answer_get_user_comments($nid){
  */
 function ed_answer_comment_insert($comment){
   $node = node_load($comment->nid);
-  $contentauthor = $node->uid;
   $group = $node->og_group_ref[LANGUAGE_NONE][0]['target_id'];
-  $group_node = node_load($group);
   $task = node_load($node->field_ref_to_task[LANGUAGE_NONE][0]['target_id']);
 
   if($comment->node_type=='comment_node_ed_answer'){
@@ -369,32 +367,6 @@ function ed_answer_comment_insert($comment){
 
     drupal_mail('ed_answer', 'answer_status_modified', $recipient->mail, $language, $params, EDIDAKTIKUM_NO_REPLY_EMAIL, TRUE);
   }
-
-  //answer comment added
-  if($node->type == 'ed_answer'){
-    $admins = _ed_cluster_get_group_admins($group_node, true);
-
-    if (($key = array_search($comment->uid, $admins)) !== false)
-    {
-      array_splice($admins, $key);
-    }
-
-    $commentator = user_load($comment->uid);
-    $params = array(
-      'commentatorfullname' => edidaktikum_get_full_name_for_user_account($commentator),
-      'taskname' => $task->title,
-      'studentfullname' => edidaktikum_get_full_name_for_user_account($contentauthor),
-      'contenturl' => url('node/' . $node->nid, array('absolute' => TRUE)),
-      'groupname' => $group_node->title, 
-    );
-
-    for ($i = 0; $i < count($admins); $i++)
-    {
-      $recipient = user_load($admins[$i]);
-      $language = user_preferred_language($recipient);
-      drupal_mail('ed_answer', 'answer_commented', $recipient->mail, $language, $params, EDIDAKTIKUM_NO_REPLY_EMAIL, TRUE);
-    }
-  }
 }
 
 /**
@@ -420,14 +392,6 @@ function ed_answer_mail($key, &$message, $params){
     }
     $message['subject'] = t('@fullname @action your answer to task @taskname', array('@fullname' => $params['fullname'],'@action' => $action, '@taskname' => $params['taskname']), $options);
     $message['body'][] = t('View your answer: @answerurl', array('@answerurl' => $params['answerurl']), $options);
-  }
-
-  //answer comment mail
-  if('answer_commented' == $key){
-    $options = array('langcode' => $message['language']->language);
-    $message['subject'] = t('New Reply - eDidaktikum', array(), $options);
-    $message['body'][] = t('@commentatorfullname commented on @studentfullname answer to task @taskname in group @groupname.', array('@commentatorfullname' => $params['commentatorfullname'], '@studentfullname' => $params['studentfullname'], '@taskname' => $params['taskname'], '@groupname' => $params['groupname']), $options);
-    $message['body'][] = t('View Answer: @contenturl', array('@contenturl' => $params['contenturl']), $options);
   }
 }
 
