@@ -374,6 +374,11 @@ function ed_answer_comment_insert($comment){
   if($node->type == 'ed_answer'){
     $admins = _ed_cluster_get_group_admins($group_node, true);
 
+    if (($key = array_search($comment->uid, $admins)) !== false)
+    {
+      array_splice($admins, $key);
+    }
+
     $commentator = user_load($comment->uid);
     $params = array(
       'commentatorfullname' => edidaktikum_get_full_name_for_user_account($commentator),
