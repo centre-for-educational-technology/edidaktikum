@@ -385,6 +385,7 @@ function ed_answer_comment_insert($comment){
       'taskname' => $task->title,
       'studentfullname' => edidaktikum_get_full_name_for_user_account($contentauthor),
       'contenturl' => url('node/' . $node->nid, array('absolute' => TRUE)),
+      'groupname' => $group_node->title, 
     );
 
     for ($i = 0; $i < count($admins); $i++)
@@ -425,7 +426,7 @@ function ed_answer_mail($key, &$message, $params){
   if('answer_commented' == $key){
     $options = array('langcode' => $message['language']->language);
     $message['subject'] = t('New Reply - eDidaktikum', array(), $options);
-    $message['body'][] = t('@commentatorfullname commented on @studentfullname answer to task @taskname.', array('@commentatorfullname' => $params['commentatorfullname'], '@studentfullname' => $params['studentfullname'], '@taskname' => $params['taskname']), $options);
+    $message['body'][] = t('@commentatorfullname commented on @studentfullname answer to task @taskname in group @groupname.', array('@commentatorfullname' => $params['commentatorfullname'], '@studentfullname' => $params['studentfullname'], '@taskname' => $params['taskname'], '@groupname' => $params['groupname']), $options);
     $message['body'][] = t('View Answer: @contenturl', array('@contenturl' => $params['contenturl']), $options);
   }
 }
