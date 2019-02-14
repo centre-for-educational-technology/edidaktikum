@@ -69,7 +69,17 @@
 }
 
 .ed_filter_tasks {
-    margin-top: 52px;
-	margin-bottom: 10px !important;
-	margin-left: 15px;
+	float: right;
+}
+
+.ed_filter_select {
+	display: inline-block;
+	width: calc(100% - 120px);
+	vertical-align: top;
+}
+
+.ed_filter_button {
+	display: inline-block;
+	width: 120px;
+	margin-top: 25px;
 }
