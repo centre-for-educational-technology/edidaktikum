@@ -39,3 +39,18 @@ div[class^="form-item form-type-checkbox-tree form-item-ed-field-competence"] la
     padding: 10px;
     font-size: 18px;
 }
+
+.ed_sort_select {
+    display: inline-block;
+    width: calc(100% - 120px);
+    vertical-align: top;
+}
+
+.ed_sort_submit {
+    display: inline-block;
+    width: 120px;
+}
+
+.ed_sort_submit button {
+    float: right;
+}
