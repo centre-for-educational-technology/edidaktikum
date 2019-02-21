@@ -425,10 +425,14 @@ function _ed_get_sorting_options($form_state){
   $form['select'] = array(
     '#type' => 'select',
     '#options' => drupal_map_assoc(array(t('Latest First'), t('Earliest First'), t('Title (A-Z)'))),
+    '#prefix' => '<div class="ed_sort_select">',
+    '#suffix' => '</div>'
   );
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Sort'),
+    '#prefix' => '<div class="ed_sort_submit">',
+    '#suffix' => '</div>'
   );
   return $form;
 }
