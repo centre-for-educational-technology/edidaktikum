@@ -63,6 +63,30 @@ function ed_cluster_menu() {
     'page arguments' => array('ed_cluster_search_page'),
     'weight' => 10,
   );
+  $items['clusters/add/studygroup'] = array(
+    'page arguments' => [2],
+    'page callback' => 'ed_cluster_group_type_create_redirect',
+    'title' => t('New Degree Studies type group'),
+    'type' => MENU_LOCAL_TASK,
+    'access callback' => 'ed_cluster_group_type_create_redirect_access_callback',
+    'weight' => 15,
+  );
+  $items['clusters/add/educationgroup'] = array(
+    'page arguments' => [2],
+    'page callback' => 'ed_cluster_group_type_create_redirect',
+    'title' => t('New Continuing Education type group'),
+    'type' => MENU_LOCAL_TASK,
+    'access callback' => 'ed_cluster_group_type_create_redirect_access_callback',
+    'weight' => 16,
+  );
+  $items['clusters/add/othergroup'] = array(
+    'page arguments' => [2],
+    'page callback' => 'ed_cluster_group_type_create_redirect',
+    'title' => t('New Project-based Learning/Other type group'),
+    'type' => MENU_LOCAL_TASK,
+    'access callback' => 'ed_cluster_group_type_create_redirect_access_callback',
+    'weight' => 17,
+  );
   $items['node/%node/task-manager'] = array(
     'title' => 'Task Manager',
     'title callback' => 'ed_cluster_title_with_unseen_count',
@@ -223,6 +247,24 @@ function ed_cluster_menu() {
   );
 
   return $items;
+}
+
+
+
+
+function ed_cluster_group_type_create_redirect($type) {
+  $types = [
+    'studygroup' => 1,
+    'educationgroup' => 2,
+    'othergroup' => 3
+  ];
+  drupal_goto('node/add/ed-cluster', ['query' => [
+    'field_group_type' => $types[$type],
+  ],]);
+}
+
+function ed_cluster_group_type_create_redirect_access_callback() {
+  return node_access('create', 'ed_cluster');
 }
 
 
@@ -651,10 +693,6 @@ function ed_cluster_my_listing_page() {
 
   $groups = ed_cluster_get_current_user_clusters($sql_order);
 
-  if(node_access('create', 'ed_cluster')){
-    ed_cluster_attach_group_create_buttons($content);
-  }
-
   if(empty($groups)){
     $content['groups-not-found'] = array(
       '#type' => 'markup',
@@ -681,9 +719,6 @@ function ed_all_groups_listing(){
   $content = array();
   $content['sorting'] = drupal_get_form('_ed_get_sorting_options');
   $sql_order = ed_get_sorting_type($content);
-  if(node_access('create', 'ed_cluster')){
-    ed_cluster_attach_group_create_buttons($content);
-  }
   drupal_add_css(drupal_get_path('module', 'ed_cluster').'/group-listing.css');
   $remove_user_groups = TRUE;
   $og_groups = ed_cluster_get_clusters($sql_order, $remove_user_groups, false);
@@ -800,61 +835,6 @@ function ed_generate_grid_of_groups($nodes){
 	return $build;
 }
 
-/**
- * Attaches group create buttons to the provided page content structure.
- * @param  array $content Page content structure
- * @return void
- */
-function ed_cluster_attach_group_create_buttons(&$content){
-	$options_type1 = array(
-			'attributes' => array(
-					'class' => 'btn btn-success new-group price-btn',
-					'role' => 'button'
-			),
-			'query' => array(
-					'field_group_type' => 1,
-			),
-	);
-	$options_type2 = array(
-			'attributes' => array(
-					'class' => 'btn btn-success new-group price-btn',
-					'role' => 'button'
-			),
-			'query' => array(
-					'field_group_type' => 2,
-			),
-	);
-	$options_type3 = array(
-			'attributes' => array(
-					'class' => 'btn btn-success new-group price-btn',
-					'role' => 'button'
-			),
-			'query' => array(
-					'field_group_type' => 3,
-			),
-	);
-	$content['new-group-buttons'] = array(
-			'#type' => 'markup',
-			'#prefix' => '<div class="new-group-buttons">',
-			'#suffix' => '</div>',
-	);
-	$content['new-group-buttons']['add-new-type-1'] = array(
-			'#type' => 'item',
-			'#title' => t(''),
-			'#markup' => l(t('New Degree Studies type group'), 'node/add/ed-cluster', $options_type1),
-
-	);
-	$content['new-group-buttons']['add-new-type-2'] = array(
-			'#type' => 'item',
-			'#title' => t(''),
-			'#markup' => l(t('New Continuing Education type group'), 'node/add/ed-cluster', $options_type2),
-	);
-	$content['new-group-buttons']['add-new-type-3'] = array(
-			'#type' => 'item',
-			'#title' => t(''),
-			'#markup' => l(t('New Project-based Learning/Other type group'), 'node/add/ed-cluster', $options_type3),
-	);
-}
 
 
 function ed_cluster_my_inactive_listing_page(){
@@ -862,9 +842,6 @@ function ed_cluster_my_inactive_listing_page(){
   $content = array();
   $content['sorting'] = drupal_get_form('_ed_get_sorting_options');
   $sql_order = ed_get_sorting_type($content);
-	if(node_access('create', 'ed_cluster')){
-		ed_cluster_attach_group_create_buttons($content);
-	}
   drupal_add_css(drupal_get_path('module', 'ed_cluster').'/group-listing.css');
   $remove_user_groups = TRUE;
   $og_groups = ed_cluster_get_clusters($sql_order, $remove_user_groups, true);
