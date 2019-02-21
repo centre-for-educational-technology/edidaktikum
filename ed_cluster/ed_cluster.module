@@ -66,7 +66,7 @@ function ed_cluster_menu() {
   $items['clusters/add/studygroup'] = array(
     'page arguments' => [2],
     'page callback' => 'ed_cluster_group_type_create_redirect',
-    'title' => 'new type group',
+    'title' => t('New Degree Studies type group'),
     'type' => MENU_LOCAL_TASK,
     'access callback' => 'ed_cluster_group_type_create_redirect_access_callback',
     'weight' => 15,
@@ -74,7 +74,7 @@ function ed_cluster_menu() {
   $items['clusters/add/educationgroup'] = array(
     'page arguments' => [2],
     'page callback' => 'ed_cluster_group_type_create_redirect',
-    'title' => 'new type group',
+    'title' => t('New Continuing Education type group'),
     'type' => MENU_LOCAL_TASK,
     'access callback' => 'ed_cluster_group_type_create_redirect_access_callback',
     'weight' => 16,
@@ -82,7 +82,7 @@ function ed_cluster_menu() {
   $items['clusters/add/othergroup'] = array(
     'page arguments' => [2],
     'page callback' => 'ed_cluster_group_type_create_redirect',
-    'title' => 'new type group',
+    'title' => t('New Project-based Learning/Other type group'),
     'type' => MENU_LOCAL_TASK,
     'access callback' => 'ed_cluster_group_type_create_redirect_access_callback',
     'weight' => 17,
