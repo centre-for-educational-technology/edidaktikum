@@ -264,19 +264,22 @@ function ed_user_extra_node_insert($node){
 function ed_user_extra_comment_insert($comment){
   $node = node_load($comment->nid);
   $contentauthor = $node->uid;
+  $authornode = user_load($contentauthor);
   $group = $node->og_group_ref[LANGUAGE_NONE][0]['target_id'];
   $group_node = node_load($group);
   $task = node_load($node->field_ref_to_task[LANGUAGE_NONE][0]['target_id']);
+  $commentator = user_load($comment->uid);
+  $commentatorfullname = edidaktikum_get_full_name_for_user_account($commentator);
+  $contenturl = url('node/' . $node->nid, array('absolute' => TRUE));
 
   if($node->type == 'ed_forum'){
     if(user_wants_notification($contentauthor, 'ed_forum')){
-      $recipient = user_load($contentauthor);
+      $recipient = $authornode;
       $language = user_preferred_language($recipient);
-      $commentator = user_load($comment->uid);
       $params = array(
-        'commentatorfullname' => edidaktikum_get_full_name_for_user_account($commentator),
+        'commentatorfullname' => $commentatorfullname,
         'contentname' => $node->title,
-        'contenturl' => url('node/' . $node->nid, array('absolute' => TRUE)),
+        'contenturl' => $contenturl,
       );
       drupal_mail('ed_user_extra', 'forum_post_commented', $recipient->mail, $language, $params, EDIDAKTIKUM_NO_REPLY_EMAIL, TRUE);
     }
@@ -285,22 +288,21 @@ function ed_user_extra_comment_insert($comment){
   if($node->type == 'ed_answer'){
     $admins = _ed_cluster_get_group_admins($group_node, true);
 
-    if (($key = array_search($comment->uid, $admins)) !== false)
-    {
-      array_splice($admins, $key);
-    }
+    if ($comment->uid == $contentauthor) $studentfullname = "their";
+    else $studentfullname = edidaktikum_get_full_name_for_user_account($authornode);
 
-    $commentator = user_load($comment->uid);
     $params = array(
-      'commentatorfullname' => edidaktikum_get_full_name_for_user_account($commentator),
+      'commentatorfullname' => $commentatorfullname,
       'taskname' => $task->title,
-      'studentfullname' => edidaktikum_get_full_name_for_user_account($contentauthor),
-      'contenturl' => url('node/' . $node->nid, array('absolute' => TRUE)),
+      'studentfullname' => $studentfullname,
+      'contenturl' => $contenturl,
       'groupname' => $group_node->title, 
     );
 
     for ($i = 0; $i < count($admins); $i++)
     {
+      if ($comment->uid == $admins[$i]) continue;
+
       if (user_wants_notification($admins[$i], $node->type))
       {
         $recipient = user_load($admins[$i]);
