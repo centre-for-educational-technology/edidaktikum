@@ -286,31 +286,29 @@ function ed_user_extra_comment_insert($comment){
   }
 
   if($node->type == 'ed_answer'){
-    $admins = _ed_cluster_get_group_admins($group_node, true);
-
-    if ($comment->uid == $contentauthor) $studentfullname = "their";
-    else $studentfullname = edidaktikum_get_full_name_for_user_account($authornode);
-
-    $params = array(
-      'commentatorfullname' => $commentatorfullname,
-      'taskname' => $task->title,
-      'studentfullname' => $studentfullname,
-      'contenturl' => $contenturl,
-      'groupname' => $group_node->title, 
-    );
-
-    for ($i = 0; $i < count($admins); $i++)
+    if ($comment->uid == $contentauthor)
     {
-      if ($comment->uid == $admins[$i]) continue;
-
-      if (user_wants_notification($admins[$i], $node->type))
+      $params = array(
+        'studentfullname' => $commentatorfullname,
+        'taskname' => $task->title,
+        'contenturl' => $contenturl,
+        'groupname' => $group_node->title, 
+      );
+  
+      $admins = _ed_cluster_get_group_admins($group_node, true);
+      for ($i = 0; $i < count($admins); $i++)
       {
-        $recipient = user_load($admins[$i]);
-        $language = user_preferred_language($recipient);
-        drupal_mail('ed_user_extra', 'answer_commented', $recipient->mail, $language, $params, EDIDAKTIKUM_NO_REPLY_EMAIL, TRUE);
+        if (user_wants_notification($admins[$i], $node->type))
+        {
+          $recipient = user_load($admins[$i]);
+          $language = user_preferred_language($recipient);
+          drupal_mail('ed_user_extra', 'answer_commented', $recipient->mail, $language, $params, EDIDAKTIKUM_NO_REPLY_EMAIL, TRUE);
+        }
       }
     }
   }
+
+
 }
 
 
@@ -367,7 +365,8 @@ function ed_user_extra_mail($key, &$message, $params) {
   if('answer_commented' == $key){
     $options = array('langcode' => $message['language']->language);
     $message['subject'] = t('New Reply - eDidaktikum', array(), $options);
-    $message['body'][] = t('@commentatorfullname commented on @studentfullname answer to task @taskname in group @groupname.', array('@commentatorfullname' => $params['commentatorfullname'], '@studentfullname' => $params['studentfullname'], '@taskname' => $params['taskname'], '@groupname' => $params['groupname']), $options);
+    $message['body'][] = t('@studentfullname commented on their answer to task @taskname.', array('@studentfullname' => $params['studentfullname'], '@taskname' => $params['taskname']), $options);
+    $message['body'][] = t('Group: @groupname', array('@groupname' => $params['groupname']));
     $message['body'][] = t('View Answer: @contenturl', array('@contenturl' => $params['contenturl']), $options);
   }
 }
