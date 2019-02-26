@@ -339,11 +339,11 @@ function _ed_answer_get_user_comments($nid){
  * Implements hook_comment_insert().
  */
 function ed_answer_comment_insert($comment){
-  $node = node_load($comment->nid);
-  $group = $node->og_group_ref[LANGUAGE_NONE][0]['target_id'];
-  $task = node_load($node->field_ref_to_task[LANGUAGE_NONE][0]['target_id']);
-
   if($comment->node_type=='comment_node_ed_answer'){
+
+
+    $node = node_load($comment->nid);
+    $task = node_load($node->field_ref_to_task[LANGUAGE_NONE][0]['target_id']);
     $recipient = user_load($node->uid);
     $teacher = user_load($comment->uid);
     $teacher_fullname = edidaktikum_get_full_name_for_user_account($teacher);
@@ -355,7 +355,7 @@ function ed_answer_comment_insert($comment){
       'status' => $comment->ed_answer_status[LANGUAGE_NONE][0]['value'],
     );
 
-    $isgadmin = ed_answer_is_group_manager($group);
+    $isgadmin = ed_answer_is_group_manager($node->og_group_ref[LANGUAGE_NONE][0]['target_id']);
 
     if($isgadmin){
       $wrapper = entity_metadata_wrapper('node', $comment->nid);
