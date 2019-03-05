@@ -98,6 +98,14 @@ function ed_cluster_menu() {
     'type' => MENU_LOCAL_TASK,
     'weight' => 50,
   );
+  $items['node/%node/task-manager/download'] = array(
+    'title' => 'Task Manager Download csv',
+    'page callback' => 'ed_task_manager_download',
+    'access callback' => 'ed_task_manager_access',
+    'page arguments' => array(1),
+    'access arguments' => array('node', 1),
+    'type' => MENU_CALLBACK,
+  );
   $items['node/%node/q_portfolio'] = array(
       'title' => 'Qualification Portfolio',
       'title callback' => 'ed_cluster_title_with_unseen_count',
@@ -1571,7 +1579,13 @@ function ed_task_manager($test, $node) {
           ]
         ]
       )
-    ]
+    ],
+    'download-table' => [
+      '#type' => 'markup',
+      '#markup' => l(t('Download table'), 'node/'.$node->nid.'/task-manager/download',
+        [ 'attributes' => [ 'class' => ['btn btn-success']]]
+      )
+    ],
   ];
 
   //  filter thingy
@@ -1723,6 +1737,10 @@ function ed_task_manager($test, $node) {
   return $content;
 }
 
+function ed_task_manager_download($node)
+{
+
+}
 
 function _ed_get_answer_nid($uid, $tnid){
   $query = db_select('node', 'n');
