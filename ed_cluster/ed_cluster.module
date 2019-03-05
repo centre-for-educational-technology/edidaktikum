@@ -1640,6 +1640,7 @@ function ed_task_manager($test, $node) {
   $headers = _ed_get_task_manager_headers($tasks);
   $rows = _ed_get_task_manager_rows($tasks, $members);
 
+
   $content['table'] = array(
     '#theme' => 'table',
     '#rows' => $rows,
@@ -1653,7 +1654,53 @@ function ed_task_manager($test, $node) {
 
 function ed_task_manager_download($node)
 {
+  $tasks = ed_get_group_tasks($node->nid, true, true, true);
 
+  $members = ed_get_group_members($node->nid, true, true, true);
+  $admins = ed_filter_admins($members);
+
+  $headers = _ed_get_task_manager_headers($tasks);
+  $rows = _ed_get_task_manager_rows($tasks, $members);
+
+  $handle = fopen('php://temp', 'wb');
+
+  //write header row
+  $csvheader = [];
+  foreach ($headers as $header)
+  {
+    $title = ed_get_value_from_html('title', $header);
+
+    if ($title == false) $title = $header;
+
+    $csvheader []= $title;
+  }
+  fputcsv($handle, $csvheader);
+
+  //write member rows
+  foreach ($rows as $row)
+  {
+    //write one row
+    $csvrow = [];
+    foreach ($row['data'] as $cell)
+    {
+      if (is_array($cell)) 
+      {
+        $string = $cell['title'];
+      }
+      else if (is_string($cell)) 
+      {
+        $string = strip_tags($cell);
+      }
+      $csvrow []= $string;
+    }
+    fputcsv($handle, $csvrow);
+  }
+
+  rewind($handle);
+
+  drupal_add_http_header('Content-Type', 'text/csv');
+  drupal_add_http_header('Content-Disposition', 'attachment; filename="answers.csv"');
+  echo(stream_get_Contents($handle));
 }
 
 function _ed_get_task_manager_headers($tasks)
@@ -1746,6 +1793,23 @@ function _ed_get_task_manager_rows($tasks, $members)
   }
   
   return $rows;
+}
+
+function ed_get_value_from_html($key, $html)
+{
+  $value = '';
+  $string = $key . '="';
+  $i = strpos($html, $string);
+
+  if ($i == false) return false;
+
+  $i += strlen($string);
+  while (($k = $html[$i]) != '"')
+  {
+    $value .= $html[$i];
+    $i++;
+  }
+  return $value;
 }
 
 function _ed_get_answer_nid($uid, $tnid){
