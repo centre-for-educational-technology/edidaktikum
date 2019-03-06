@@ -1582,7 +1582,7 @@ function ed_task_manager($test, $node) {
     ],
     'download-table' => [
       '#type' => 'markup',
-      '#markup' => l(t('Download table'), 'node/'.$node->nid.'/task-manager/download',
+      '#markup' => l(t('Download csv'), 'node/'.$node->nid.'/task-manager/download',
         [ 'attributes' => [ 'class' => ['btn btn-success ed-download-tasks']]]
       )
     ],
