@@ -98,6 +98,14 @@ function ed_cluster_menu() {
     'type' => MENU_LOCAL_TASK,
     'weight' => 50,
   );
+  $items['node/%node/task-manager/download'] = array(
+    'title' => 'Task Manager Download csv',
+    'page callback' => 'ed_task_manager_download',
+    'access callback' => 'ed_task_manager_access',
+    'page arguments' => array(1),
+    'access arguments' => array('node', 1),
+    'type' => MENU_CALLBACK,
+  );
   $items['node/%node/q_portfolio'] = array(
       'title' => 'Qualification Portfolio',
       'title callback' => 'ed_cluster_title_with_unseen_count',
@@ -1571,7 +1579,13 @@ function ed_task_manager($test, $node) {
           ]
         ]
       )
-    ]
+    ],
+    'download-table' => [
+      '#type' => 'markup',
+      '#markup' => l(t('Download csv'), 'node/'.$node->nid.'/task-manager/download',
+        [ 'attributes' => [ 'class' => ['btn btn-success ed-download-tasks']]]
+      )
+    ],
   ];
 
   //  filter thingy
@@ -1623,12 +1637,76 @@ function ed_task_manager($test, $node) {
   $members = ed_get_group_members($node->nid, true, true, true);
   $admins = ed_filter_admins($members);
 
-  //  construct table headers
+  $headers = _ed_get_task_manager_headers($tasks);
+  $rows = _ed_get_task_manager_rows($tasks, $members);
+
+
+  $content['table'] = array(
+    '#theme' => 'table',
+    '#rows' => $rows,
+    '#header' => $headers,
+    '#sticky' => false,
+    '#attributes' => array('data-averaging_table' => t("Average"), 'data-sticky_headers' => '', 'class' => array('table table-bordered scroll'))
+  );
+
+  return $content;
+}
+
+function ed_task_manager_download($node)
+{
+  $tasks = ed_get_group_tasks($node->nid, true, true, true);
+
+  $members = ed_get_group_members($node->nid, true, true, true);
+  $admins = ed_filter_admins($members);
+
+  $headers = _ed_get_task_manager_headers($tasks);
+  $rows = _ed_get_task_manager_rows($tasks, $members);
+
+  $handle = fopen('php://temp', 'wb');
+
+  //write header row
+  $csvheader = [];
+  foreach ($headers as $header)
+  {
+    $title = ed_get_value_from_html('title', $header);
+
+    if ($title == false) $title = $header;
+
+    $csvheader []= $title;
+  }
+  fputcsv($handle, $csvheader);
+
+  //write member rows
+  foreach ($rows as $row)
+  {
+    //write one row
+    $csvrow = [];
+    foreach ($row['data'] as $cell)
+    {
+      if (is_array($cell)) 
+      {
+        $string = $cell['title'];
+      }
+      else if (is_string($cell)) 
+      {
+        $string = strip_tags($cell);
+      }
+      $csvrow []= $string;
+    }
+    fputcsv($handle, $csvrow);
+  }
+
+  rewind($handle);
+
+  drupal_add_http_header('Content-Type', 'text/csv');
+  drupal_add_http_header('Content-Disposition', 'attachment; filename="answers.csv"');
+  echo(stream_get_Contents($handle));
+}
+
+function _ed_get_task_manager_headers($tasks)
+{
   $headers = [t('Name')];
   foreach($tasks as $task) {
-    $header = l($task['title'], 'node/' . $task['nid'], ['attributes' => ['title' => $task['title']]]);
-    $header .= '<br><div class="description">'.t('Due date: ').format_date($task['due_date'], 'short').'</div>';
-
     $header = l(
       format_date($task['due_date'], 'custom', 'd.m'),
       'node/' . $task['nid'],
@@ -1638,11 +1716,13 @@ function ed_task_manager($test, $node) {
         'data-placement' => 'bottom'
       ]]
     );
-
     $headers []= $header;
   }
+  return $headers;
+}
 
-  //  construct table rows
+function _ed_get_task_manager_rows($tasks, $members)
+{
   $rows = [];
   foreach ($members as $member) {
     $row = [ 'data' => [ l($member['full_name'], 'user/' . $member['uid']) ] ];
@@ -1711,18 +1791,26 @@ function ed_task_manager($test, $node) {
 
     $rows []= $row;
   }
-
-  $content['table'] = array(
-    '#theme' => 'table',
-    '#rows' => $rows,
-    '#header' => $headers,
-    '#sticky' => false,
-    '#attributes' => array('data-averaging_table' => t("Average"), 'data-sticky_headers' => '', 'class' => array('table table-bordered scroll'))
-  );
-
-  return $content;
+  
+  return $rows;
 }
 
+function ed_get_value_from_html($key, $html)
+{
+  $value = '';
+  $string = $key . '="';
+  $i = strpos($html, $string);
+
+  if ($i == false) return false;
+
+  $i += strlen($string);
+  while (($k = $html[$i]) != '"')
+  {
+    $value .= $html[$i];
+    $i++;
+  }
+  return $value;
+}
 
 function _ed_get_answer_nid($uid, $tnid){
   $query = db_select('node', 'n');
