@@ -553,14 +553,6 @@ function ed_answer_comment_view_alter(&$build){
   }
 }
 
-/**
- * Implements hook_comment_load().
- */
-function ed_answer_comment_load($comments)
-{
-  drupal_add_js(drupal_get_path('module', 'ed_answer') . '/ed_answer_comment.js');
-
-}
 
 
 //function ed_answer_comment_load($comments){
