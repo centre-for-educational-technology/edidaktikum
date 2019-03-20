@@ -618,7 +618,7 @@ function ed_dashboard_drafts_page() {
 		$content['pager_table'] = [
 			'#theme' => 'table',
 			'#rows' => $rows,
-			'#header' => array(t('Type'), t('Title)'), t('Date'))
+			'#header' => array(t('Type'), t('Title'), t('Date'))
 		];
 		$content['pager'] = array('#theme' => 'pager');
   }
