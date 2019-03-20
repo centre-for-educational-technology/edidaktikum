@@ -610,16 +610,17 @@ function ed_dashboard_drafts_page() {
           ->execute();
     }
 
+		
+		$nodes = node_load_multiple(array_keys($result['node']));
 
+		$rows = ed_blog_post_rows_table_renderable($nodes);
 
-
-    $nodes = node_load_multiple(array_keys($result['node']));
-    $build = node_view_multiple($nodes);
-    $build['pager'] = array(
-      '#theme' => 'pager',
-      '#weight' => 5,
-    );
-    $content['drafts-listing'] = $build;
+		$content['pager_table'] = [
+			'#theme' => 'table',
+			'#rows' => $rows,
+			'#header' => array(t('Type'), t('Title)'), t('Date'))
+		];
+		$content['pager'] = array('#theme' => 'pager');
   }
 
   return $content;
