@@ -886,7 +886,7 @@ function edidaktikum_get_node_type_name($node_type, $capitalize = FALSE) {
  */
 function edidaktikum_get_node_title(&$node) {
   if ('ed_aswer' == $node->type) {
-    return ed_answer_get_answer_title($node);
+    return ed_get_answer_title($node);
   }
 
   return $node->title;
@@ -1681,4 +1681,70 @@ function edidaktikum_form_user_register_form_alter(&$form, &$form_state, $form_i
 			'#required' => TRUE,
 		];
 	}
+}
+
+/**
+ * Returns answer node title.
+ * Handles three cases: references task exists and task not removed,
+ * task removed but own title is not empty, task removed and own
+ * title is empty (returns default fallback text).
+ *
+ * @param $node
+ *   Node for ed_task object
+ *
+ * @return
+ *   Task title string
+ */
+function ed_get_answer_title(&$node, $teaser=FALSE) {
+  $task_title = NULL;
+
+  if (isset($node->field_ref_to_task[LANGUAGE_NONE][0]['entity'])) {
+    $task_title = $node->field_ref_to_task[LANGUAGE_NONE][0]['entity']->title;
+  } else if (isset($node->field_ref_to_task[LANGUAGE_NONE][0]['target_id']) && $single_task = node_load($node->field_ref_to_task[LANGUAGE_NONE][0]['target_id'])) {
+    $task_title = $single_task->title;
+  }
+
+  if (isset($task_title)) {
+    if(!$teaser){
+      return t('!task-title - Answer', array(
+        '!task-title' => $task_title,
+      ));
+    }else{
+      return t('!task-title', array(
+        '!task-title' => $task_title,
+      ));
+    }
+  }
+
+  return t('Answer with task removed');
+}
+
+function ed_blog_post_rows_table_renderable($nodes) {
+  $rows = array();
+  foreach($nodes as $node) {
+    if($node->type == 'ed_blog') {
+      $rows[] = array(
+        'data' => array(
+          'type' => _get_type($node),
+          'post_name' => l($node->title, 'node/' . $node->nid),
+          'created' => format_date($node->created, 'short'),
+        ),
+      );
+    }else{
+      $dueDateText = "";
+      $dueDateTS = _ed_get_due_date($node->field_ref_to_task['und']['0']['target_id']);
+      if (!empty($dueDateTS)) {
+        $dueDate = strtotime($dueDateTS[0]);
+        $dueDateText = " (" . t('Due Date:') . format_date($dueDateTS[0], 'short') . ") ";
+      }
+      $rows[] = array(
+        'data' => array(
+          'type' => _get_type($node),
+          'post_name' => l(ed_get_answer_title($node), 'node/' . $node->nid) . $dueDateText,
+          'created' => format_date($node->created, 'short'),
+        ),
+      );
+    }
+  }
+  return $rows;
 }
