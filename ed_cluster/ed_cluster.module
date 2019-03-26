@@ -1617,7 +1617,7 @@ function ed_task_manager($test, $node) {
         '#type' => 'markup',
         '#prefix' => '<div class="span4 ed_filter_button">',
         '#suffix' => '</div>',
-        '#markup' => '<button class="btn btn-primary ed_filter_tasks">'.t('Filter').'</button>'
+        '#markup' => '<button class="btn btn-primary">'.t('Filter').'</button>'
       ]
 
     ]
