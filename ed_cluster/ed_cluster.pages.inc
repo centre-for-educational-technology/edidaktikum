@@ -36,28 +36,26 @@ function ed_cluster_to_group_member_page() {
       $node_title = edidaktikum_get_node_title($node);
       $shared_node_type_name = edidaktikum_get_node_type_name($node->type);
 
-      $rows[] = array(
-        'data' => t('!user shared @node_type_name !node @time', array(
-          '!user' => l(edidaktikum_get_full_name_for_user_account($user), 'user/' . $user->uid),
-          '@node_type_name' => $shared_node_type_name,
-          '!node' => l($node_title, 'node/' . $node->nid),
-          '@time' => format_date($node->created, 'full') ,
-        )),
-      );
+      $rows []= [
+        'data' => [
+          'type' => $shared_node_type_name,
+          'title' => l($node_title, 'node/' . $node->nid),
+          'author' => l(edidaktikum_get_full_name_for_user_account($user), 'user/' . $user->uid),
+          'date' => format_date($node->created, 'short'),
+        ],
+      ];
     }
 
-    $content['nodes-listing']['list'] = array(
-      '#theme' => 'item_list',
-      '#type' => 'ul',
-      '#attributes' => array(
-        'class' => array('ed-shared-nodes-listing'),
-      ),
-      '#items' => $rows,
-    );
-    $content['nodes-listing']['pager'] = array(
-      '#theme' => 'pager',
-      '#weight' => 5,
-    );
+    $content['pager_table'] = [
+      '#theme' => 'table',
+      '#rows' => $rows,
+      '#header' => [
+        t('Type'),
+        t('Title'),
+        t('Author'),
+        t('Date')
+      ]
+    ];
   }
 
   return $content;

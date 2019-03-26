@@ -1234,7 +1234,7 @@ function ed_cluster_node_view($node, $view_mode, $langcode){
 
             // Deal with special case of ed_answer
             if ('ed_answer' == $single->type) {
-              $single_title = l(ed_answer_get_answer_title($single), 'node/' . $single->nid);
+              $single_title = l(ed_get_answer_title($single), 'node/' . $single->nid);
             } else {
               $single_title = l($single->title, 'node/' . $single->nid);
             }

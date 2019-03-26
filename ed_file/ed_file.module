@@ -189,14 +189,14 @@ function ed_file_listing_page() {
     '#markup' => t('Add new !file or !folder', array('!file' => $add_file_url, '!folder' => $add_file_folder_url)),
   );
 
-  $content['bread-crumb'] = array(
+  /*$content['bread-crumb'] = array(
     '#type' => 'markup',
     '#markup' => ed_file_and_folder_breadcrumb($folder),
-  );
+  );*/
 
   $header = array(
     array(
-      'data' => '',
+      'data' => t('Type'),
     ),
     array(
       'data' => t('Title'),
@@ -204,7 +204,7 @@ function ed_file_listing_page() {
       'sort' => 'asc',
     ),
     array(
-      'data' => t('Type'),
+      'data' => '',
     ),
     array(
       'data' => t('Changed'),
@@ -229,9 +229,9 @@ function ed_file_listing_page() {
     }
     $rows[] = array(
       'data' => array(
-        'icon' => "<span class='ed-file-icon {$icon_class}'></span>",
-        'title' => $file_url,
         'type' => $file_type,
+        'title' => $file_url,
+        'icon' => "<span class='ed-file-icon {$icon_class}'></span>",
         'changed' => format_date($file->changed, 'short'),
         'actions' => l(t('Edit'), 'node/' . $file->nid . '/edit'),
       ),
