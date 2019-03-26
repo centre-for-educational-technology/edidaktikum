@@ -196,15 +196,15 @@ function ed_file_listing_page() {
 
   $header = array(
     array(
+      'data' => t('Type'),
+    ),
+    array(
       'data' => t('Title'),
       'field' => 'n.title',
       'sort' => 'asc',
     ),
     array(
       'data' => '',
-    ),
-    array(
-      'data' => t('Type'),
     ),
     array(
       'data' => t('Changed'),
@@ -229,9 +229,9 @@ function ed_file_listing_page() {
     }
     $rows[] = array(
       'data' => array(
+        'type' => $file_type,
         'title' => $file_url,
         'icon' => "<span class='ed-file-icon {$icon_class}'></span>",
-        'type' => $file_type,
         'changed' => format_date($file->changed, 'short'),
         'actions' => l(t('Edit'), 'node/' . $file->nid . '/edit'),
       ),
