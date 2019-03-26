@@ -828,3 +828,21 @@ function ed_answer_update_7118(&$sandbox)
 
 
 }
+
+/**
+ * Adds correct language translations for comment fields.
+ */
+function ed_answer_update_7119(&$sandbox)
+{
+  $instances = field_info_instances('comment', 'comment_node_ed_answer');
+
+  $instances['ed_answer_grade']['label'] = t('Hinne');
+  $instances['ed_answer_status']['label'] = t('Staatus');
+  $instances['ed_field_private_comment']['label'] = t('Privaatne kommentaar');
+  $instances['comment_body']['label'] = t('Kommentaar');
+
+  field_update_instance($instances['ed_answer_grade']);
+  field_update_instance($instances['ed_answer_status']);
+  field_update_instance($instances['ed_field_private_comment']);
+  field_update_instance($instances['comment_body']);
+}
