@@ -162,6 +162,7 @@ function ed_file_field_extra_fields(){
  */
 function ed_file_listing_page() {
   menu_tree_set_path('main-menu', 'dashboard');
+  drupal_add_css(drupal_get_path('module', 'ed_file').'/css/file_listing_page.css');
 
   $query_parameters = drupal_get_query_parameters();
   $folder = null;
@@ -184,10 +185,20 @@ function ed_file_listing_page() {
       'class' => array('ed-add-new-node', 'ed-add-new-ed-file', 'ed-add-new-ed-folder'),
     ),
   );
-  $content['add-new-container']['add-new'] = array(
-    '#type' => 'markup',
-    '#markup' => t('Add new !file or !folder', array('!file' => $add_file_url, '!folder' => $add_file_folder_url)),
-  );
+  $content['add-new-container']['add-new-file'] = [
+    '#type' => 'link',
+    '#title' => t('Add new file'),
+    '#href' => $add_file_url,
+    '#prefix' => '<div class="ed-file-add-new">',
+    '#suffix' => '</div>',
+  ];
+  $content['add-new-container']['add-new-folder'] = [
+    '#type' => 'link',
+    '#title' => t('Add new folder'),
+    '#href' => $add_file_folder_url,
+    '#prefix' => '<div class="ed-file-add-new ed-file-add-new-folder">',
+    '#suffix' => '</div>',
+  ];
 
   /*$content['bread-crumb'] = array(
     '#type' => 'markup',

@@ -68,19 +68,7 @@
 	color: white;
 }
 
-.ed_filter_tasks {
-	float: right;
-}
-
-.ed_filter_select {
-	display: inline-block;
-	width: calc(100% - 120px);
-	vertical-align: top;
-}
-
 .ed_filter_button {
-	display: inline-block;
-	width: 120px;
 	margin-top: 25px;
 }
 

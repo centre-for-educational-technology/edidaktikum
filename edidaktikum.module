@@ -441,10 +441,14 @@ function _ed_get_sorting_options($form_state){
 function _ed_get_sorting_by_group($form, &$form_state){
   $form = array();
   $form['select'] = array(
+      '#prefix' => '<div class="span4 ed_filter_select">',
+      '#suffix' => '</div>',
       '#type' => 'select',
       '#options' => isset($form_state['build_info']['args'][0])? $form_state['build_info']['args'][0] : array(),
   );
   $form['submit'] = array(
+      '#prefix' => '<div class="span4 ed_filter_button">',
+      '#suffix' => '</div>',
       '#type' => 'submit',
       '#value' => t('Filter'),
   );
