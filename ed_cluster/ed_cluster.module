@@ -139,17 +139,6 @@ function ed_cluster_menu() {
     'type' => MENU_LOCAL_TASK,
     'weight' => 50,
   );
-  $items['node/%node/subgroups'] = array(
-    'title' => 'Subgroups',
-    'title callback' => 'ed_cluster_title_with_unseen_count',
-    'title arguments' => ['Subgroups', 1, 'ed_subgroup'],
-    'page callback' => 'ed_subgroup_listing_from_group',
-    'access callback' => 'ed_group_content_listing_access',
-    'page arguments' => array('node', 1, 'ed_subgroup'),
-    'access arguments' => array('node', 1, 'ed_subgroup'),
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 50,
-  );
   $items['node/%node/ajax/get/events'] = array(
     'page callback' => 'ed_cluster_get_group_events_ajax',
     'access callback' => 'ed_group_content_listing_access',
