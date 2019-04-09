@@ -68,8 +68,13 @@
 	color: white;
 }
 
-.ed_filter_button {
+.span4.ed_filter_select {
+	width: calc(100% - 120px);
+}
+
+.span4.ed_filter_button {
 	margin-top: 25px;
+	width: 120px;
 }
 
 .ed-download-tasks {
