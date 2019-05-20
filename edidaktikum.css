@@ -61,11 +61,11 @@ div[class^="form-item form-type-checkbox-tree form-item-ed-field-competence"] la
 
 .ed_filter_select {
 	display: inline-block;
-	width: calc(100% - 120px);
+	width: calc(100% - 140px);
 	vertical-align: top;
 }
 
 .ed_filter_button {
 	display: inline-block;
-	width: 120px;
+	width: 140px;
 }
