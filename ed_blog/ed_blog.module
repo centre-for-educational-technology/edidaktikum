@@ -137,15 +137,24 @@ function ed_blog_listing_page() {
   }
 
 
-  $nodes = node_load_multiple(array_keys($result['node']));
+  if($result['node']){
+    $nodes = node_load_multiple(array_keys($result['node']));
 
-  $rows = ed_blog_post_rows_table_renderable($nodes);
+    $rows = ed_blog_post_rows_table_renderable($nodes);
 
-  $content[$table_type] = array(
-    '#theme' => 'table',
-    '#rows' => $rows,
-    '#header' => array(t('Type'), t('Title'), t('Date')),
-  );
+    $content[$table_type] = array(
+        '#theme' => 'table',
+        '#rows' => $rows,
+        '#header' => array(t('Type'), t('Title'), t('Date')),
+    );
+  }else{
+    $content[$table_type] = array(
+        '#theme' => 'table',
+        '#rows' => array(),
+        '#header' => array(t('Type'), t('Title'), t('Date')),
+    );
+  }
+
   $content['pager'] = array('#theme' => 'pager');
 
 
