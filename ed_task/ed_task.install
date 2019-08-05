@@ -270,6 +270,49 @@ function ed_task_node_add_field_g_drive_file() {
 	}
 }
 
+/**
+ * Creates and adds field ed_task_field_strict_sub.
+ */
+function ed_task_add_field_strict_sub() {
+  $field_name = 'ed_task_field_strict_sub';
+  if (!field_info_field($field_name)) {
+    $field = array(
+      'field_name' => $field_name,
+      'type' => 'list_boolean',
+      'entity_types' => array('node'),
+      'settings' => array(
+        'allowed_values' => array(0, 1),
+      ),
+    );
+    field_create_field($field);
+  }
+
+  if(!field_info_instance('node', $field_name, 'ed_task')){
+    $instance = array(
+      'field_name' => $field_name,
+      'label' => t('No late submission'),
+      'required' => false,
+      'entity_type' => 'node',
+      'bundle' => 'ed_task',
+      'widget' => array(
+        'type' => 'options_onoff',
+        'settings' => array(
+          'display_label' => TRUE,
+        ),
+      ),
+      'display' => array(
+        'default' => array(
+          'label' => 'hidden',
+        ),
+        'featured' => array(
+          'label' => 'hidden',
+        ),
+      )
+    );
+    field_create_instance($instance);
+  }
+}
+
 
 /**
  * Add ed_task_field_study_group field to ed_task
@@ -365,4 +408,13 @@ function ed_task_update_7112() {
       field_create_instance($instance);
     }
   }
+}
+
+/**
+ * Create field and instance for ed_task_field_strict_sub
+ */
+function ed_task_update_7113(&$sandbox) {
+//  field_delete_field('ed_task_field_strict_sub');
+//  field_delete_instance('ed_task_field_strict_sub');
+  ed_task_add_field_strict_sub();
 }
