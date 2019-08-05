@@ -38,8 +38,6 @@ function ed_answer_node_view($node, $view_mode, $langcode){
 }
 
 
-
-
 function ed_add_js_to_answer_form($form_element, &$form_state) {
 	drupal_add_library('system','ui.slider');
 
@@ -70,7 +68,7 @@ function ed_add_js_to_answer_form($form_element, &$form_state) {
 
 
 	drupal_add_js(array('ed_answer' => $settings), array('type' => 'setting'));
-	drupal_add_js(drupal_get_path('module', 'ed_answer') . '/ed_answer_js.js');
+	drupal_add_js(drupal_get_path('module', 'ed_answer') . '/js/ed_answer_js.js');
 
 
 	return $form_element;
@@ -408,23 +406,56 @@ function ed_answer_check_tid_parent($tid){
 function ed_answer_node_access($node, $op, $account) {
   $type = is_string($node) ? $node : $node->type;
 
-  if ('ed_answer' == $type && 'update' == $op) {
-    // Prevent answer edit if task removed
-    if (empty($node->field_ref_to_task[LANGUAGE_NONE])) {
-      return NODE_ACCESS_DENY;
-    } else if (!empty($node->field_ref_to_task[LANGUAGE_NONE][0]['target_id'])) {
-      // This check is needed because panels states that reference exists
-      // Need to make sure that references task is still there
-      $task = node_load($node->field_ref_to_task[LANGUAGE_NONE][0]['target_id']);
-      if (!$task) {
-        return NODE_ACCESS_DENY;
-      }
-    }
-  } else if ('ed_answer' == $type && 'view' == $op) {
-    if (!(bool) $account->uid) {
-      return NODE_ACCESS_DENY;
-    }
+ if ('ed_answer' === $type) {
+
+   if('view' == $op){
+     if (!(bool) $account->uid) {
+       return NODE_ACCESS_DENY;
+     }
+   }
+
+   if ('ed_answer' == $type && 'update' == $op) {
+     // Prevent answer edit if task removed
+     if (empty($node->field_ref_to_task[LANGUAGE_NONE])) {
+       return NODE_ACCESS_DENY;
+     } else if (!empty($node->field_ref_to_task[LANGUAGE_NONE][0]['target_id'])) {
+       // This check is needed because panels states that reference exists
+       // Need to make sure that references task is still there
+       $task = node_load($node->field_ref_to_task[LANGUAGE_NONE][0]['target_id']);
+       if (!$task) {
+         return NODE_ACCESS_DENY;
+       }
+     }
+   }
+
+   if ('ed_answer' == $type && ($op == 'create' || $op == 'update')){
+
+     $reftotask = null;
+     //Late submission case
+     if(!is_string($node) && isset($node->field_ref_to_task)){
+       $reftotask = $node->field_ref_to_task[LANGUAGE_NONE][0]['target_id'];
+     }else if (array_key_exists('field_ref_to_task', $_GET)){
+       $reftotask = $_GET['field_ref_to_task'];
+     }
+
+
+     if($reftotask){
+       $wrapper = entity_metadata_wrapper('node', $reftotask);
+       $is_strict = $wrapper->ed_task_field_strict_sub->value();
+
+
+       if ($is_strict) {
+         if(_is_late_submission($reftotask)){
+           return NODE_ACCESS_DENY;
+         }
+       }
+     }
+
+   }
+
+
   }
+
 
   return NODE_ACCESS_IGNORE;
 }
