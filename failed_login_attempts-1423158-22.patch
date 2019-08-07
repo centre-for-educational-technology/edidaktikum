@@ -1,0 +1,27 @@
+diff --git a/modules/user/user.pages.inc b/modules/user/user.pages.inc
+index 29fe6cf..25a0adf 100644
+--- a/modules/user/user.pages.inc
++++ b/modules/user/user.pages.inc
+@@ -322,6 +322,22 @@ function user_profile_form_submit($form, &$form_state) {
+   if ($category == 'account' && !empty($edit['pass'])) {
+     // Remove the password reset tag since a new password was saved.
+     unset($_SESSION['pass_reset_'. $account->uid]);
++    // bugreport: 1423158
++    // Reset the flood control when someone changes their password.
++    if (variable_get('user_failed_login_identifier_uid_only', FALSE)) {
++      // Register flood events based on the uid only, so they apply for any
++      // IP address. This is the most secure option.
++      $identifier = $account->uid;
++    }
++    else {
++      // The default identifier is a combination of uid and IP address. This
++      // is less secure but more resistant to denial-of-service attacks that
++      // could lock out all users with public user names.
++      $identifier = $account->uid . '-' . ip_address();
++    }
++    if (!flood_is_allowed('failed_login_attempt_user', variable_get('user_failed_login_user_limit', 5), variable_get('user_failed_login_user_window', 21600), $identifier)) {
++      flood_clear_event('failed_login_attempt_user', $identifier);
++    }
+   }
+   // Clear the page cache because pages can contain usernames and/or profile information:
+   cache_clear_all();
