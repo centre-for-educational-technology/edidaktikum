@@ -290,7 +290,7 @@ function ed_task_add_field_strict_sub() {
   if(!field_info_instance('node', $field_name, 'ed_task')){
     $instance = array(
       'field_name' => $field_name,
-      'label' => t('No late submission'),
+      'label' => t('Tähtaja ületamisel ei ole vastamine/muutmine lubatud'),
       'required' => false,
       'entity_type' => 'node',
       'bundle' => 'ed_task',
