@@ -1,17 +1,17 @@
---- views_bulk_operations_fixed.module	2019-08-29 14:52:03.000000000 +0300
-+++ views_bulk_operations.module	2018-03-02 06:36:38.000000000 +0200
-@@ -1103,13 +1103,7 @@
+--- views_bulk_operations.module	2019-08-29 15:15:37.000000000 +0300
++++ views_bulk_operations_fixed.module	2019-08-29 15:17:25.000000000 +0300
+@@ -1103,7 +1103,13 @@
      }
  
      // If the current entity can't be accessed, skip it and log a notice.
--    // eD patch fixes case when non-admin user cannot add run bulk operations
--    if (in_array('teacher', $account->roles)) {
--      $skip_permission_check = true;
--    }else{
--      $skip_permission_check = $operation->getAdminOption('skip_permission_check');
--    }
--
-+    $skip_permission_check = $operation->getAdminOption('skip_permission_check');
+-    $skip_permission_check = $operation->getAdminOption('skip_permission_check');
++    // eD patch fixes case when non-admin user cannot add run bulk operations
++    if (in_array('teacher', $account->roles)) {
++      $skip_permission_check = true;
++    }else{
++      $skip_permission_check = $operation->getAdminOption('skip_permission_check');
++    }
++
      if (!$skip_permission_check && !_views_bulk_operations_entity_access($operation, $entity_type, $entity, $account)) {
        $message = 'Skipped %operation on @type %title due to insufficient permissions.';
        $arguments = array(
