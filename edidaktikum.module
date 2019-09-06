@@ -1752,3 +1752,10 @@ function ed_blog_post_rows_table_renderable($nodes) {
   }
   return $rows;
 }
+
+/**
+ * Return an array of curriculums (study groups) for TLU
+ */
+function ed_get_curriculums_for_tlu(){
+  return _ed_cluster_universities_with_curriculums_structure()[19]['curriculums'];
+}

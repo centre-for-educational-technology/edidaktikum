@@ -195,20 +195,20 @@ function ed_task_update_7105(&$sandbox){
 
 
 /**
- * Creates and adds study group field to ed_task module
+ * Creates and adds curriculum field to ed_task module
  */
 function ed_task_node_add_field_study_group() {
 
   if(!field_info_field('ed_task_field_study_group')){
     $field = array(
         'field_name' => 'ed_task_field_study_group',
-        'label' => t('Study Group'),
+        'label' => t('Curriculum'),
         'type' => 'list_text',
         'cardinality' => FIELD_CARDINALITY_UNLIMITED,
         'foreign keys' => array(),
         'module' => 'list',
         'settings' => array(
-            'allowed_values' => _ed_user_extra_study_groups_options_list(),
+            'allowed_values_function' => 'ed_get_curriculums_for_tlu',
         ),
     );
     field_create_field($field);
@@ -217,7 +217,7 @@ function ed_task_node_add_field_study_group() {
   if(!field_info_instance('user', 'ed_task_field_study_group', 'user')){
     $instance = array(
         'field_name' => 'ed_task_field_study_group',
-        'label' => t('Study Group'),
+        'label' => t('Curriculum'),
         'description' => t('Select what group(s) this task belongs to'),
         'required' => false,
         'entity_type' => 'node',
@@ -417,4 +417,15 @@ function ed_task_update_7113(&$sandbox) {
 //  field_delete_field('ed_task_field_strict_sub');
 //  field_delete_instance('ed_task_field_strict_sub');
   ed_task_add_field_strict_sub();
+}
+
+
+/**
+ * Reinitialise ed_task_field_study_group field to ed_task
+ */
+function ed_task_update_7114(&$sandbox) {
+  field_delete_field('ed_task_field_study_group');
+  field_delete_instance('ed_task_field_study_group');
+  ed_task_node_add_field_study_group();
+
 }
