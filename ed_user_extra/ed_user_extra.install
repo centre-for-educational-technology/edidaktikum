@@ -402,14 +402,6 @@ function ed_user_extra_update_7105(&$sandbox) {
  * Fix typo in field name
  */
 function ed_user_extra_update_7106(&$sandbox) {
-  //$info = field_info_field('ed_notification_content_types');
-
-  //error_log(print_r($info, true));
-
-  //$info['label'] = "Teadete tellimine";
-
-  //field_update_field($info);
-
   $instance = field_info_instance('user', 'ed_notification_content_types', 'user');
 
   $instance['label'] = 'Teadete tellimine';
