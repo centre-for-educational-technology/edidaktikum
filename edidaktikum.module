@@ -1766,10 +1766,12 @@ function ed_rows_table_render($nodes) {
   return $rows;
 }
 
-
+/**
+ * Return textual string of node type
+ * @param $node
+ * @return string
+ */
 function ed_get_node_type($node){
-
-
   switch($node->type){
     case('ed_answer'):
       $type = 'Answer';
@@ -1800,6 +1802,12 @@ function ed_get_node_type($node){
       break;
     case('ed_task'):
       $type = 'Task';
+      break;
+    case('ed_q_portfolio'):
+      $type = 'Qualification Portfolio';
+      break;
+    case('ed_portfolio'):
+      $type = 'Portfolio';
       break;
   }
   return $type;
