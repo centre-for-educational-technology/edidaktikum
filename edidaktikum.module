@@ -835,47 +835,47 @@ function edidaktikum_username_alter(&$name, $account) {
  *
  * @return string
  */
-function edidaktikum_get_node_type_name($node_type, $capitalize = FALSE) {
-  $node_type_name = t('content');
+function edidaktikum_get_node_type_name($node_type) {
+  $node_type_name = t('Content');
   switch ($node_type) {
   case "ed_blog":
-    $node_type_name = t('blog post');
+    $node_type_name = t('Blog Post');
     break;
   case "ed_bookmark":
-    $node_type_name = t('bookmark');
+    $node_type_name = t('Bookmark');
     break;
   case "ed_event":
-    $node_type_name = t('event');
+    $node_type_name = t('Event');
     break;
   case "ed_news":
-    $node_type_name = t('news');
+    $node_type_name = t('News');
     break;
   case "ed_learning_resource":
-    $node_type_name = t('learning resource');
+    $node_type_name = t('Learning Resource');
     break;
   case "ed_page":
-    $node_type_name = t('page');
+    $node_type_name = t('Page');
     break;
   case "ed_forum":
-    $node_type_name = t('discussion');
+    $node_type_name = t('Discussion');
     break;
   case "ed_file":
-    $node_type_name = t('file');
+    $node_type_name = t('File');
     break;
   case "ed_portfolio":
-    $node_type_name = t('portfolio');
+    $node_type_name = t('Portfolio');
     break;
   case "ed_task":
-    $node_type_name = t('task');
+    $node_type_name = t('Task');
     break;
   case "ed_answer":
-    $node_type_name = t('answer');
+    $node_type_name = t('Answer');
+    break;
+  case "ed_q_portfolio":
+    $node_type_name = t('Qualification Portfolio');
     break;
   }
 
-  if ($capitalize) {
-    $node_type_name = ucwords($node_type_name);
-  }
 
   return $node_type_name;
 }
@@ -1746,7 +1746,7 @@ function ed_rows_table_render($nodes) {
       if(isset($dueDateText)){
         $rows[] = array(
           'data' => array(
-            'type' => ed_get_node_type($node),
+            'type' => edidaktikum_get_node_type_name($node->type),
             'post_name' => l(edidaktikum_get_node_title($node), 'node/' . $node->nid) . $dueDateText,
             'created' => format_date($node->created, 'short'),
           ),
@@ -1754,7 +1754,7 @@ function ed_rows_table_render($nodes) {
       }else{
         $rows[] = array(
           'data' => array(
-            'type' => ed_get_node_type($node),
+            'type' => edidaktikum_get_node_type_name($node->type),
             'post_name' => l(edidaktikum_get_node_title($node), 'node/' . $node->nid),
             'created' => format_date($node->created, 'short'),
           ),
@@ -1764,53 +1764,6 @@ function ed_rows_table_render($nodes) {
     }
   }
   return $rows;
-}
-
-/**
- * Return textual string of node type
- * @param $node
- * @return string
- */
-function ed_get_node_type($node){
-  switch($node->type){
-    case('ed_answer'):
-      $type = 'Answer';
-      break;
-    case('ed_learning_resource'):
-      $type = 'Learning Resource';
-      break;
-    case('ed_forum'):
-      $type = 'Post';
-      break;
-    case('ed_event'):
-      $type = 'Event';
-      break;
-    case('ed_news'):
-      $type = 'News';
-      break;
-    case('ed_blog'):
-      $type = 'Blog post';
-      break;
-    case('ed_bookmark'):
-      $type = 'Bookmark';
-      break;
-    case('ed_file'):
-      $type = 'File';
-      break;
-    case('ed_page'):
-      $type = 'Page';
-      break;
-    case('ed_task'):
-      $type = 'Task';
-      break;
-    case('ed_q_portfolio'):
-      $type = 'Qualification Portfolio';
-      break;
-    case('ed_portfolio'):
-      $type = 'Portfolio';
-      break;
-  }
-  return $type;
 }
 
 
