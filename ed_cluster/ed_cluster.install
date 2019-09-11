@@ -1102,3 +1102,17 @@ function ed_cluster_update_7111(&$sandbox) {
   field_update_field($university);
   define('ED_REMOVE_LIST_FIELD_UPDATE_FORBID', false);
 }
+
+
+/**
+ * Setting ed_field_course_aim field to plain text
+ */
+function ed_cluster_update_7112(&$sandbox) {
+
+  $instance_info = field_info_instance('node', 'ed_field_course_aim', 'ed_cluster');
+  $instance_info['settings'] = array(
+      'text_processing' => false,
+  );
+
+  field_update_instance($instance_info);
+}

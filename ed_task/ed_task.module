@@ -390,6 +390,7 @@ function _get_answer_from_task($task){
  * Implements hook_form_alter().
  */
 function ed_task_form_alter(&$form, &$form_state, $form_id) {
+
   if( $form_id == 'ed_task_node_form'){
     if (empty($form['#node']->nid)) {
       drupal_set_title(t('Create Task'));
@@ -400,8 +401,9 @@ function ed_task_form_alter(&$form, &$form_state, $form_id) {
     $form['ed_field_competence']['#suffix'] = '</div>';
 
 
-    $form['#attached']['js'][] = drupal_get_path('module', 'ed_task') . '/ed_task_js.js';
-    $form['#attached']['css'][] = drupal_get_path('module', 'ed_task') . '/ed_task_css.css';
+    $form['#attached']['js'][] = drupal_get_path('module', 'ed_task') . '/js/ed_task_js.js';
+    $form['#attached']['js'][] = drupal_get_path('module', 'ed_task') . '/js/task_edit_form.js';
+    $form['#attached']['css'][] = drupal_get_path('module', 'ed_task') . '/js/ed_task_css.css';
     $form['#submit'] []= 'ed_task_form_submit_competence';
   }
 }
@@ -462,6 +464,50 @@ function _is_task_answered($task_nid){
   }else{
     //return t('Answered');
     return true;
+  }
+}
+
+function _is_strict_submission($task_nid){
+  $wrapper = entity_metadata_wrapper('node', $task_nid);
+  $is_strict = $wrapper->ed_task_field_strict_sub->value();
+
+
+  if(!empty($is_strict)){
+    return true;
+  }else{
+    return false;
+  }
+}
+
+
+function _is_late_submission($task_nid){
+
+  $wrapper = entity_metadata_wrapper('node', $task_nid);
+  $due_date= $wrapper->ed_task_due_date->value();
+
+
+  $now = date('Y-m-d', time());
+  $due_date = date('Y-m-d', $due_date);
+
+  if($now <= $due_date){
+    return false;
+  }else{
+    return true;
+  }
+}
+
+function _get_due_date($task_nid){
+
+  $wrapper = entity_metadata_wrapper('node', $task_nid);
+  $due_date= $wrapper->ed_task_due_date->value();
+
+
+  $due_date = date('Y-m-d', $due_date);
+
+  if($due_date){
+    return $due_date;
+  }else{
+    return false;
   }
 }
 

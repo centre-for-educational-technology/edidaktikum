@@ -199,12 +199,15 @@ function ed_learning_resource_listing_from_group($gnode){
 
 
   $nodes = node_load_multiple($nids);
-  $build = node_view_multiple($nodes);
-  $build['pager'] = array(
-      '#theme' => 'pager',
-      '#weight' => 5,
-  );
-  $content['pager']['resources'] = $build;
+  if($nodes){
+    $build = node_view_multiple($nodes);
+    $build['pager'] = array(
+        '#theme' => 'pager',
+        '#weight' => 5,
+    );
+    $content['pager']['resources'] = $build;
+  }
+
 
 
   drupal_add_js('jQuery(document).ready(function(){

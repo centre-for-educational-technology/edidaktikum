@@ -543,11 +543,7 @@ function ed_task_listing_for_students($test, $node){
     }
   }
 
-
-
-
   $tasknodes = node_load_multiple($tasknids);
-
 
 
   //attach answered data
@@ -620,41 +616,41 @@ function ed_task_listing_for_students($test, $node){
           $tmp_data['title'] = t('Not answered');
 
           //Check if it is a study group case
-          $wrapper = entity_metadata_wrapper('node', $tasknode->nid);
-          $task_study_groups = $wrapper->ed_task_field_study_group->raw();
-
-
-          if(!empty($task_study_groups)){
-
-            $tasks_to_user = _ed_get_tasks_to_user();
-            $is_to_user_task = false;
-            foreach ($tasks_to_user as $task_to_user){
-              if($task_to_user->nid == $tasknode->nid){
-                $is_to_user_task=true;
-              }
-            }
-
-
-            if(!$is_to_user_task){
-              //Get user study group field
-              $wrapper = entity_metadata_wrapper('user', $user->uid);
-              $user_study_group = $wrapper->ed_field_study_group->value();
-
-
-              if(isset($user_study_group)){
-                if(in_array($user_study_group, $task_study_groups) == false ){
-                  $tmp_data['class'] = 'na';
-                  $tmp_data['title'] = t('Not applicable');
-                }
-
-              }else{
-                $tmp_data['class'] = 'na';
-                $tmp_data['title'] = t('Not applicable');
-              }
-
-            }
-
-          }
+//          $wrapper = entity_metadata_wrapper('node', $tasknode->nid);
+//          $task_study_groups = $wrapper->ed_task_field_study_group->raw();
+//
+//
+//          if(!empty($task_study_groups)){
+//
+//            $tasks_to_user = _ed_get_tasks_to_user();
+//            $is_to_user_task = false;
+//            foreach ($tasks_to_user as $task_to_user){
+//              if($task_to_user->nid == $tasknode->nid){
+//                $is_to_user_task=true;
+//              }
+//            }
+//
+//
+//            if(!$is_to_user_task){
+//              //Get user study group field
+//              $wrapper = entity_metadata_wrapper('user', $user->uid);
+//              $user_study_group = $wrapper->ed_field_study_group->value();
+//
+//
+//              if(isset($user_study_group)){
+//                if(in_array($user_study_group, $task_study_groups) == false ){
+//                  $tmp_data['class'] = 'na';
+//                  $tmp_data['title'] = t('Not applicable');
+//                }
+//
+//              }else{
+//                $tmp_data['class'] = 'na';
+//                $tmp_data['title'] = t('Not applicable');
+//              }
+//
+//            }
+//
+//          }
 
 
           if (!empty($tasknode->{ED_FIELD_TO_GROUP_MEMBER}[LANGUAGE_NONE])) {
@@ -678,11 +674,14 @@ function ed_task_listing_for_students($test, $node){
 
   }
 
-  $content['tasks-table'] = array(
-        '#theme' => 'table',
-        '#rows' => $rows,
-        '#header' => $header,
-      );
+  if(isset($rows)){
+    $content['tasks-table'] = array(
+      '#theme' => 'table',
+      '#rows' => $rows,
+      '#header' => $header,
+    );
+  }
+
   $content['pager'] = array('#theme' => 'pager');
   return $content;
 }
@@ -923,7 +922,7 @@ function ed_listing_from_group($filler, $gnode, $type){
         'class' => array('ed-add-new-node', 'ed-add-new-'.$type_dashed),
       ),
     );
-    if($type != 'ed_q_portfolio') {
+    if($type != 'ed_q_portfolio' && $type != 'ed_event') {
       $content['add-new-container']['add-new-link'] = array(
         '#type' => 'markup',
         '#markup' => l(t('Add new'), 'node/add/' . $type_dashed, array('query' => array('og_group_ref' => $gnode->nid, 'destination' => $destination), 'attributes' => array('class' => 'btn btn-success'))),
@@ -1683,11 +1682,11 @@ function ed_task_manager_download($node)
     $csvrow = [];
     foreach ($row['data'] as $cell)
     {
-      if (is_array($cell)) 
+      if (is_array($cell))
       {
         $string = $cell['title'];
       }
-      else if (is_string($cell)) 
+      else if (is_string($cell))
       {
         $string = strip_tags($cell);
       }
@@ -1791,7 +1790,7 @@ function _ed_get_task_manager_rows($tasks, $members)
 
     $rows []= $row;
   }
-  
+
   return $rows;
 }
 
@@ -2987,7 +2986,7 @@ function _ed_cluster_universities_with_curriculums_structure() {
   			'KAALB.HR' => t('KAALB.HR - Alushariduse pedagoog'),
   			'KAEPB.HR' => t('KAEPB.HR - Eripedagoogika'),
   			'KAANB.HR' => t('KAANB.HR - Andragoogika'),
-  			'KAPB.HR' => t('KAPB.HR - Pedagoogika'),
+  			'KAPB.HR' => t('KAPB.HR - Pedagoogika alused'),
   			'KUTOM.LT' => t('KUTOM.LT - Töö- ja tehnoloogiaõpetuse õpetaja'),
   			'KUKKM.LT' => t('KUKKM.LT - Käsitöö ja kodunduse õpetaja'),
   			'MLMOM.DT' => t('MLMOM.DT - Matemaatikaõpetaja'),
@@ -3025,6 +3024,8 @@ function _ed_cluster_universities_with_curriculums_structure() {
   			'KATHM.HR' => t('KATHM.HR - Täiskasvanuõpe sotsiaalsetes muutustes'),
   			'GRVOM.HT' => t('GRVOM.HT - Võõrkeeleõpetaja'),
   			'KUIKM.LT' => t('KUIKM.LT - Tehnoloogiavaldkonna ainete õpetaja'),
+        'KAEIM.HR' => t('KAEIM.HR - Haridusinnovatsiooni juhtimine'),
+        'RKSPB/19.HR' => t('RKSPB/19.HR - Sotsiaalpedagoogika')
       ],
     ],
     20 => [

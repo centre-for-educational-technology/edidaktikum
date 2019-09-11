@@ -2,8 +2,6 @@
   Drupal.behaviors.ed_answer = {
     attach: function(context, settings){
 
-      console.log('ewdewd');
-
 
       $('.category-container', context).find('a').wrap('<li />');
       $('.competence-container', context).find('a').wrap('<li />');
