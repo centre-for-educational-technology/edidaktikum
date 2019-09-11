@@ -140,7 +140,7 @@ function ed_blog_listing_page() {
   if($result['node']){
     $nodes = node_load_multiple(array_keys($result['node']));
 
-    $rows = ed_blog_post_rows_table_renderable($nodes);
+    $rows = ed_rows_table_render($nodes);
 
     $content[$table_type] = array(
         '#theme' => 'table',

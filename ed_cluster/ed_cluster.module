@@ -2361,24 +2361,6 @@ function ed_cluster_form_submit_learning_outcomes($form, &$form_state) {
   }
 }
 
-function mymodule_format_dob($form_element, &$form_state){
-	// We unset the current values
-	unset($form_element['year']['#options']);
-
-	// Now we set the range we want
-	$max_age = date('Y') - 0; // 100 years ago
-	$min_age = date('Y') + 2; // 7 years ago
-
-	// Now we populate the array
-	$form_element['year']['#options'] = array();
-	foreach (range($max_age, $min_age) as $year){
-		$form_element['year']['#options'][$year] = $year;
-	}
-
-	// We return our modified element
-	return $form_element;
-}
-
 function ed_cluster_redirect_after_submit($form, &$form_state){
   $form_state['redirect'] = url('clusters', array('absolute' => true));
 }

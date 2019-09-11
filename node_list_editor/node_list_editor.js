@@ -329,6 +329,7 @@
 			this.rem_item(this.current_item);
 			if (this.items.length > 0) this.current_item = this.items[0];
 			else this.current_item = undefined;
+      this.create_value();
 		}.bind(this));
 
 		var data = JSON.parse(el.getAttribute("data-node_list_data"));
@@ -336,6 +337,8 @@
 			this.add_item(data[i]);
 		}
 		if (this.items.length > 0) this.current_item = this.items[0];
+
+		this.create_value();
 	}
 
 

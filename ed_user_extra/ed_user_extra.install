@@ -397,3 +397,14 @@ function ed_user_extra_update_7105(&$sandbox) {
   ed_user_extra_node_add_field_study_group();
 
 }
+
+/**
+ * Fix typo in field name
+ */
+function ed_user_extra_update_7106(&$sandbox) {
+  $instance = field_info_instance('user', 'ed_notification_content_types', 'user');
+
+  $instance['label'] = 'Teadete tellimine';
+
+  field_update_instance($instance);
+}
