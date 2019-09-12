@@ -846,3 +846,15 @@ function ed_answer_update_7119(&$sandbox)
   field_update_instance($instances['ed_field_private_comment']);
   field_update_instance($instances['comment_body']);
 }
+
+function ed_answer_update_7120(&$sandbox) {
+  $info = field_info_field('ed_answer_status');
+  $values = &$info['settings']['allowed_values'];
+
+  $values['unchecked'] = t('Kontrollimata');
+  $values['rejected'] = t('Tagasi lükatud');
+  $values['accepted'] = t('Kinnitatud');
+  $values['checked'] = t('Kontrollitud');
+
+  field_update_field($info);
+}
