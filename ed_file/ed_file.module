@@ -170,15 +170,15 @@ function ed_file_listing_page() {
     $folder_id = $query_parameters['folder'];
     $folder = node_load($folder_id);
   }
-  $url_parameters = array();
+  $url_parameters = array('absolute' => true);
   if ($folder) {
-    $url_parameters = array('query' => array('ed_file_folder_ref' => $folder->nid));
+    $url_parameters['query']['ed_file_folder_ref'] = $folder->nid;
   }
 
   $content = array();
 
-  $add_file_url = l(t('file'), 'node/add/ed-file', $url_parameters);
-  $add_file_folder_url = l(t('folder'), 'node/add/ed-file-folder', $url_parameters);
+  $add_file_url = url('node/add/ed-file', $url_parameters);
+  $add_file_folder_url = url('node/add/ed-file-folder', $url_parameters);
   $content['add-new-container'] = array(
     '#type' => 'container',
     '#attributes' => array(
@@ -200,10 +200,10 @@ function ed_file_listing_page() {
     '#suffix' => '</div>',
   ];
 
-  /*$content['bread-crumb'] = array(
+  $content['bread-crumb'] = array(
     '#type' => 'markup',
     '#markup' => ed_file_and_folder_breadcrumb($folder),
-  );*/
+  );
 
   $header = array(
     array(

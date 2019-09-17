@@ -765,11 +765,20 @@ function ed_generate_grid_of_groups($nodes){
 
 
 			$title = l($node->title, 'node/'.$node->nid);
-			$build['row-'.$row]['node-'.$node->nid] = array(
-					'#type' => 'markup',
-					'#prefix' => '<div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 text-center"><div class="price-box-01 group">',
-					'#suffix' => '</div></div>',
-			);
+      if($node->ed_field_group_state [LANGUAGE_NONE][0]['value'] == 0){
+        $build['row-'.$row]['node-'.$node->nid] = array(
+          '#type' => 'markup',
+          '#prefix' => '<div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 text-center"><div class="price-box-01 group inactive"><div class="ribbon ribbon-top-left"><span>'.t('Mitteaktiivne').'</span></div>',
+          '#suffix' => '</div></div>',
+        );
+      }else{
+        $build['row-'.$row]['node-'.$node->nid] = array(
+          '#type' => 'markup',
+          '#prefix' => '<div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 text-center"><div class="price-box-01 group">',
+          '#suffix' => '</div></div>',
+        );
+      }
+
 			$build['row-'.$row]['node-'.$node->nid]['list-item'] = array(
 					'#type' => 'markup',
 					'#prefix' => '<div class="product-list__item">',
