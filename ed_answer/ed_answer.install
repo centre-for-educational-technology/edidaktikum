@@ -846,3 +846,24 @@ function ed_answer_update_7119(&$sandbox)
   field_update_instance($instances['ed_field_private_comment']);
   field_update_instance($instances['comment_body']);
 }
+
+/**
+ * Translate allowed values and also use the correct method
+ */
+function ed_answer_update_7120(&$sandbox) {
+  $info = field_info_field('ed_answer_status');
+
+  $info['settings']['allowed_values'] = null;
+  $info['settings']['allowed_values_function'] = '_ed_answer_allowed_values';
+
+  field_update_field($info);
+}
+
+function _ed_answer_allowed_values() {
+  return [
+    'unchecked' => t('Kontrollimata'),
+    'rejected' => t('Tagasi lükatud'),
+    'accepted' => t('Kinnitatud'),
+    'checked' => t('Kontrollitud'),
+  ];
+}
