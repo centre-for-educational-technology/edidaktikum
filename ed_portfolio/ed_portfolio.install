@@ -313,3 +313,23 @@ function ed_portfolio_update_7103(&$sandbox) {
 
 
 }
+
+/**
+ * Translate some fields
+ */
+function ed_portfolio_update7103(&$sandbox) {
+  $instances = field_info_instances('node', 'ed_portfolio');
+  
+  $instances['ed_field_featured_image']['label'] = t('Pisipilt');
+  $instances['ed_field_cover_image']['label'] = t('Kaanepilt');
+  $instances['ed_field_content']['label'] = t('Kirjeldus');
+  $instances['ed_portfolio_show_comp_profile'] = t('Näita kompetentsiprofiili');
+  $instances['ed_portfolio_field_items'] = t('Portfoolio esemed');
+
+  field_update_instance($instances['ed_field_featured_image']);
+  field_update_instance($instances['ed_field_cover_image']);
+  field_update_instance($instances['ed_field_content']);
+  field_update_instance($instances['ed_portfolio_show_comp_profile']);
+  field_update_instance($instances['ed_portfolio_field_items']);
+
+}

@@ -621,3 +621,15 @@ function ed_learning_resource_update_7107(&$sandbox) {
   ed_learning_resource_node_add_field_training_url();
 }
 
+/**
+ * Translate some fields
+ */
+function ed_learning_resource_update_7108(&$sandbox) {
+  $instances = field_info_instances('node', 'ed_learning_resource');
+
+  $instances['ed_field_to_group_member']['label'] = t('Määra kasutaja');
+  $instances['og_group_ref']['label'] = t('Grupp');
+  
+  field_update_instance($instances['ed_field_to_group_member']);
+  field_update_instance($instances['og_group_ref']);
+}

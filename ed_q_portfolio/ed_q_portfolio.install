@@ -733,3 +733,18 @@ function ed_q_portfolio_update_7101(&$sandbox) {
   
 }
 
+/**
+ * Translate some fields
+ */
+function ed_q_portfolio_update_7102(&$sandbox) {
+  $instances = field_info_instances('node', 'ed_q_portfolio');
+
+  $instances['ed_field_to_group_member']['label'] = t('Määra kasutaja');
+  
+  $instances['ed_field_content']['label'] = t('Sisu');
+  $instances['og_group_ref']['label'] = t('Grupp');
+
+  field_update_instance($instances['ed_field_content']);
+  field_update_instance($instances['ed_field_to_group_member']);
+  field_update_instance($instances['og_group_ref']);
+}

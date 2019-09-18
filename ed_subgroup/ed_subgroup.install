@@ -511,3 +511,21 @@ function ed_subgroup_uninstall(){
 
   field_purge_batch(1000);
 }
+
+/**
+ * Translate some fields
+ */
+function ed_subgroup_update_7101(&$sandbox) {
+  $instances = field_info_instances('node', 'ed_subgroup');
+
+  $instances['ed_field_content']['label'] = t('Sisu');
+  
+  $instances['ed_field_to_group_member']['label'] = t('Määra kasutaja');
+  $instances['og_group_ref']['label'] = t('Grupp');
+  $instances['ed_field_featured_image']['label'] = t('Pisipilt');
+
+  field_update_instance($instances['ed_field_content']);
+  field_update_instance($instances['ed_field_to_group_member']);
+  field_update_instance($instances['og_group_ref']);
+  field_update_instance($instances['ed_field_featured_image']);
+}

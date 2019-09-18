@@ -177,3 +177,16 @@ function ed_bookmark_update_7101(&$sandbox){
 	);
 	field_create_instance($instance);
  }
+
+ /**
+ * Translate some fields
+ */
+function ed_bookmark_update_7103(&$sandbox) {
+  $instances = field_info_instances('node', 'ed_bookmark');
+
+  $instances['ed_field_to_group_member']['label'] = t('Määra kasutaja');
+  $instances['og_group_ref']['label'] = t('Grupp');
+
+  field_update_instance($instances['ed_field_to_group_member']);
+  field_update_instance($instances['og_group_ref']);
+}
