@@ -95,7 +95,7 @@ function ed_subgroup_install(){
     'bundle' => 'ed_subgroup',
     'deleted' => '0',
   ));
-  
+
   field_create_instance(array(
     'label' => 'Group',
     'description' => 'Determine if this is an OG group.',
@@ -484,7 +484,7 @@ function ed_subgroup_install(){
     'bundle' => 'ed_subgroup',
     'default_value' => NULL,
   ));
-  
+
 }
 
 /**
@@ -510,22 +510,4 @@ function ed_subgroup_uninstall(){
   node_type_delete('ed_subgroup');
 
   field_purge_batch(1000);
-}
-
-/**
- * Translate some fields
- */
-function ed_subgroup_update_7101(&$sandbox) {
-  $instances = field_info_instances('node', 'ed_subgroup');
-
-  $instances['ed_field_content']['label'] = t('Sisu');
-  
-  $instances['ed_field_to_group_member']['label'] = t('Määra kasutaja');
-  $instances['og_group_ref']['label'] = t('Grupp');
-  $instances['ed_field_featured_image']['label'] = t('Pisipilt');
-
-  field_update_instance($instances['ed_field_content']);
-  field_update_instance($instances['ed_field_to_group_member']);
-  field_update_instance($instances['og_group_ref']);
-  field_update_instance($instances['ed_field_featured_image']);
 }
