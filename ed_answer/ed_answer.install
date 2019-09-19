@@ -867,3 +867,19 @@ function _ed_answer_allowed_values() {
     'checked' => t('Kontrollitud'),
   ];
 }
+
+/**
+ * Translate some fields
+ */
+function ed_answer_update_7121(&$sandbox) {
+  $instances = field_info_instances('node', 'ed_answer');
+  
+  $instances['ed_field_to_group_member']['label'] = t('Määra kasutaja');
+
+  $instances['ed_field_content']['label'] = t('Sisu');
+  $instances['og_group_ref']['label'] = t('Grupp');
+
+  field_update_instance($instances['ed_field_content']);
+  field_update_instance($instances['ed_field_to_group_member']);
+  field_update_instance($instances['og_group_ref']);
+}

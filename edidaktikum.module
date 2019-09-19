@@ -207,7 +207,7 @@ function edidaktikum_menu() {
   );
 
   $items['user/%user/groups'] = array(
-      'title' => 'My Groups',
+      'title' => 'My groups',
       'type' => MENU_LOCAL_TASK,
       'access callback' => 'profile_groups_access',
       'access arguments' => array(1),

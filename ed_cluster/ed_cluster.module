@@ -42,14 +42,14 @@ function ed_cluster_menu() {
     'weight' => 0,
   );
   $items['clusters/mygroups'] = array(
-    'title' => 'My Groups',
+    'title' => 'My active groups',
     'type' => MENU_LOCAL_TASK,
     'access callback' => 'user_is_logged_in',
     'page callback' => 'ed_cluster_my_listing_page',
     'weight' => 5,
   );
   $items['clusters/inactivegroups'] = array(
-      'title' => 'Inactive Groups',
+      'title' => 'My inactive groups',
       'type' => MENU_LOCAL_TASK,
       'access callback' => 'user_is_logged_in',
       'page callback' => 'ed_cluster_my_inactive_listing_page',
@@ -691,7 +691,7 @@ function ed_task_listing_for_students($test, $node){
  * @return array Array with page structure
  */
 function ed_cluster_my_listing_page() {
-  drupal_set_title(t('My Groups'));
+  drupal_set_title(t('My active groups'));
 
   $content = [];
 
@@ -854,13 +854,12 @@ function ed_generate_grid_of_groups($nodes){
 
 
 function ed_cluster_my_inactive_listing_page(){
-  drupal_set_title(t('Inactive Groups'));
+  drupal_set_title(t('My inactive groups'));
   $content = array();
   $content['sorting'] = drupal_get_form('_ed_get_sorting_options');
   $sql_order = ed_get_sorting_type($content);
   drupal_add_css(drupal_get_path('module', 'ed_cluster').'/group-listing.css');
-  $remove_user_groups = TRUE;
-  $og_groups = ed_cluster_get_clusters($sql_order, $remove_user_groups, true);
+  $og_groups = ed_cluster_get_current_user_clusters($sql_order, true);
   if (!empty($og_groups)) {
     $nodes = node_load_multiple($og_groups);
 
@@ -2152,9 +2151,10 @@ function ed_cluster_get_clusters($order, $remove_user_groups = FALSE, $inactive)
  * Applies the node_access check and make sure that membership status is active,
  * also applies some more cheks (e.g. type of group and type of member entity).
  * @param  string $order   Order to apply to the query being made
+ * @param boolean $inactive If false, only active are shown, otherwise only inactive
  * @return array           Array of identifiers
  */
-function ed_cluster_get_current_user_clusters($order) {
+function ed_cluster_get_current_user_clusters($order, $inactive = false) {
   global $user;
   $account = clone $user;
 
@@ -2163,6 +2163,29 @@ function ed_cluster_get_current_user_clusters($order) {
     ->fields('n', array('nid'))
     ->condition('n.type', 'ed_cluster')
     ->addTag('node_access');
+
+
+  $exclude_query = new EntityFieldQuery();
+  if($inactive) {
+    $exclude_query->entityCondition('entity_type', 'node')
+      ->entityCondition('bundle', 'ed_cluster')
+      ->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT')
+      ->fieldCondition('ed_field_group_state', 'value', 1);
+    $exclude_result = $exclude_query->execute();
+  }else{
+    $exclude_query->entityCondition('entity_type', 'node')
+      ->entityCondition('bundle', 'ed_cluster')
+      ->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT')
+      ->fieldCondition('ed_field_group_state', 'value', 0);
+    $exclude_result = $exclude_query->execute();
+  }
+
+  $excluded = array_keys($exclude_result['node']);
+  if ( $excluded ) {
+    $query->condition('n.nid', $excluded, 'NOT IN');
+  }
+
+
   $query->join('og_membership', 'ogm', "n.nid = ogm.gid AND ogm.entity_type = 'user' AND ogm.group_type = 'node' AND ogm.state = 1 AND ogm.field_name = 'og_user_node'");
   $query->condition('ogm.etid', $account->uid);
   if($order == 'title'){

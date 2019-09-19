@@ -144,7 +144,7 @@ function ed_collection_node_add_field_cover_image(){
     );
     $field = field_create_field($field);
   }
-  
+
   $field_name = 'ed_field_cover_image';
   $field = field_info_field($field_name);
   if (!empty($field) && !field_info_instance('node', $field_name, 'ed_collection')) {
@@ -164,7 +164,7 @@ function ed_collection_node_add_field_cover_image(){
     );
     field_create_instance($instance);
   }
-  
+
 }
 
 
@@ -259,10 +259,10 @@ function ed_collection_delete_ed_collection_nodes() {
 function ed_collection_delete_ed_collection_node_type() {
   if (array_key_exists('ed_collection', node_type_get_names())) {
     node_type_delete('ed_collection');
-    node_types_rebuild();  
+    node_types_rebuild();
     variable_del('comment_ed_collection');
     variable_del('node_options_ed_collection');
-  }  
+  }
 }
 
 
@@ -279,4 +279,19 @@ function ed_collection_update_7100(&$sandbox) {
 
 
 
+}
+
+/**
+ * Translate some fields
+ */
+function ed_collection_update_7101(&$sandbox) {
+  $instances = field_info_instances('node', 'ed_collection');
+
+  $instances['ed_field_excerpt']['label'] = t('Lühikirjeldus');
+  $instances['ed_field_featured_image']['label'] = t('Pisipilt');
+  $instances['ed_field_cover_image']['label'] = t('Kaanepilt');
+
+  field_update_instance($instances['ed_field_excerpt']);
+  field_update_instance($instances['ed_field_featured_image']);
+  field_update_instance($instances['ed_field_cover_image']);
 }

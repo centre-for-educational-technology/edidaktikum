@@ -95,7 +95,7 @@ function ed_subgroup_install(){
     'bundle' => 'ed_subgroup',
     'deleted' => '0',
   ));
-  
+
   field_create_instance(array(
     'label' => 'Group',
     'description' => 'Determine if this is an OG group.',
@@ -484,7 +484,7 @@ function ed_subgroup_install(){
     'bundle' => 'ed_subgroup',
     'default_value' => NULL,
   ));
-  
+
 }
 
 /**
