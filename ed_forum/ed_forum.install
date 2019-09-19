@@ -79,3 +79,17 @@ function ed_forum_update_7100(&$sandbox) {
   field_create_instance($instance);
 }
 
+/**
+ * Translate some fields
+ */
+function ed_forum_update_7101(&$sandbox) {
+  $instances = field_info_instances('node', 'ed_forum');
+
+  $instances['ed_field_to_group_member']['label'] = t('Määra kasutaja');
+  $instances['ed_field_content']['label'] = t('Sisu');
+  $instances['og_group_ref']['label'] = t('Grupp');
+
+  field_update_instance($instances['ed_field_content']);
+  field_update_instance($instances['ed_field_to_group_member']);
+  field_update_instance($instances['og_group_ref']);
+}

@@ -175,3 +175,18 @@ function ed_blog_update_7103(&$sandbox){
   $instance['bundle'] = 'ed_blog';
   field_create_instance($instance);
 }
+
+/**
+ * Translate some fields
+ */
+function ed_blog_update_7104(&$sandbox) {
+  $instances = field_info_instances('node', 'ed_blog');
+
+  $instances['ed_field_to_group_member']['label'] = t('Määra kasutaja');
+  $instances['og_group_ref']['label'] = t('Grupp');
+  $instances['group_content_access']['label'] = t('Grupi sisu nähtavus');
+  
+  field_update_instance($instances['ed_field_to_group_member']);
+  field_update_instance($instances['og_group_ref']);
+  field_update_instance($instances['group_content_access']);
+}

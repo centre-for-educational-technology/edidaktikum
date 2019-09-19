@@ -280,3 +280,20 @@ function ed_collection_update_7100(&$sandbox) {
 
 
 }
+
+/**
+ * Translate some fields
+ */
+function ed_collection_update_7101(&$sandbox) {
+  $instances = field_info_instances('node', 'ed_collection');
+
+  $instances['ed_field_content']['label'] = t('Sisu');
+  $instances['ed_field_excerpt']['label'] = t('Lühikirjeldus');
+  $instances['ed_field_featured_image']['label'] = t('Pisipilt');
+  $instances['ed_field_cover_image']['label'] = t('Kaanepilt');
+
+  field_update_instance($instances['ed_field_content']);
+  field_update_instance($instances['ed_field_excerpt']);
+  field_update_instance($instances['ed_field_featured_image']);
+  field_update_instance($instances['ed_field_cover_image']);
+}
