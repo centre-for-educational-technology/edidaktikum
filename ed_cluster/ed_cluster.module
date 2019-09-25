@@ -2258,6 +2258,22 @@ function ed_cluster_form_alter(&$form, &$form_state, $form_id) {
 
 	  if(isset($form['#node']->ed_field_group_type)){
 		  $group_type = $form['#node']->ed_field_group_type[LANGUAGE_NONE][0]['value'];
+
+      global $user;
+      $account = clone $user;
+
+      //Only group author can clone
+      if ($account->uid == $form['#node']->uid){
+        $form['clone_group'] = array(
+          '#type' => 'submit',
+          '#value' => "<i class='fa fa-clone'></i> ".t('Clone the group'),
+          '#weight' => 150,
+        );
+
+        $form['clone_group']['#submit'][] = 'ed_cluster_clone_group_handler';
+      }
+
+
 	  }
 	  else {
 		  $group_type = $_GET['field_group_type'];
@@ -2287,6 +2303,7 @@ function ed_cluster_form_alter(&$form, &$form_state, $form_id) {
 		  $form['ed_field_category']['und']['#access'] = 0;
 		  $form['ed_field_assessment_method']['und']['#access'] = 0;
 	  }
+
 
   }
   // Change group user add form autocomplete to our own endpoint.
@@ -2349,6 +2366,39 @@ function ed_cluster_form_alter(&$form, &$form_state, $form_id) {
 
     $form['#submit'] []= "ed_cluster_form_submit_learning_outcomes";
   }
+
+
+}
+
+/**
+ * Handler function to clone group and set learning resources of original group to point to that cloned group as well.
+ * @param $form
+ * @param $form_state
+ * @throws Exception
+ */
+function ed_cluster_clone_group_handler($form, &$form_state){
+
+  $node = $form['#node'];
+
+  $new = clone $node;
+  $new->is_new = true;
+  $new->title = t('COPY OF '). $node->title;
+  unset($new->nid);
+  unset($new->vid);
+  unset($new->tnid);
+
+  node_save($new);
+
+  //Set learning resources
+  $learning_resources_nids = _ed_get_group_content_by_type($node->nid, 'ed_learning_resource');
+  foreach ($learning_resources_nids as $nid){
+    $wrapper = entity_metadata_wrapper('node', $nid);
+    $wrapper->og_group_ref[] = $new->nid;
+    $wrapper->save();
+  }
+
+  drupal_goto('node/'.$new->nid.'/edit');
+
 
 }
 
