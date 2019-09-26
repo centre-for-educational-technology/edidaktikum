@@ -883,3 +883,17 @@ function ed_answer_update_7121(&$sandbox) {
   field_update_instance($instances['ed_field_to_group_member']);
   field_update_instance($instances['og_group_ref']);
 }
+
+/**
+ * Turn off translatable for comment answer status field
+ */
+function ed_answer_update_7122(&$sandbox) {
+  $instance = field_info_instance('comment', 'comment_node_ed_answer', 'ed_answer_status');
+  $instance['display']['type'] = 'list_default';
+  field_update_instance($instance);
+}
+
+
+
+ 
+ 
