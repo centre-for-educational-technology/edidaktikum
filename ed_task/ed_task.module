@@ -254,21 +254,19 @@ function ed_task_listing_page() {
       if ($order == $header[0]['data']) {
         //sort according to title alphabetically
         if ($sort == 'asc') {
-          uasort($tasknodes, function($a, $b) {
-            $cmp = strcmp($a->title, $b->title);
-            return $cmp > 0 ? 1 : -1;
-          });
+          uasort($tasknodes, function($a, $b) { return strcmp($a->title, $b->title); });
         }
         else {
-          uasort($tasknodes, function($a, $b) {
-            $cmp = strcmp($a->title, $b->title);
-            return $cmp < 0 ? 1 : -1;
-          });
+          uasort($tasknodes, function($a, $b) { return strcmp($b->title, $a->title); });
         }
       }
       else if ($order == $header[2]['data']) {
-        //sort according to date
-        
+        if ($sort == 'asc') {
+          uasort($tasknodes, function($a, $b) { return $a->ed_task_due_date[LANGUAGE_NONE][0]['value'] - $b->ed_task_due_date[LANGUAGE_NONE][0]['value']; });
+        }
+        else {
+          uasort($tasknodes, function($a, $b) { return $b->ed_task_due_date[LANGUAGE_NONE][0]['value'] - $a->ed_task_due_date[LANGUAGE_NONE][0]['value']; });
+        }
       }
       else {
         //sort according to status in severity
