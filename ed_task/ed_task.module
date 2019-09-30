@@ -261,25 +261,35 @@ function ed_task_listing_page() {
         }
       }
       else if ($order == $header[1]['data']) {
-        //sort according to group name
+        //sort according to group name alphabetically
         if ($sort == 'asc') {
           uasort($tasknodes, function($a, $b) {
-            return strcmp(_ed_get_group_name_from_id($a->og_group_ref[LANGUAGE_NONE][0]['target_id']), _ed_get_group_name_from_id($b->og_group_ref[LANGUAGE_NONE][0]['target_id']));
+            return strcmp(
+              _ed_get_group_name_from_id($a->og_group_ref[LANGUAGE_NONE][0]['target_id']),
+              _ed_get_group_name_from_id($b->og_group_ref[LANGUAGE_NONE][0]['target_id'])
+            );
           });
         }
         else {
           uasort($tasknodes, function($a, $b) {
-            return strcmp(_ed_get_group_name_from_id($b->og_group_ref[LANGUAGE_NONE][0]['target_id']), _ed_get_group_name_from_id($a->og_group_ref[LANGUAGE_NONE][0]['target_id']));
+            return strcmp(
+              _ed_get_group_name_from_id($b->og_group_ref[LANGUAGE_NONE][0]['target_id']),
+              _ed_get_group_name_from_id($a->og_group_ref[LANGUAGE_NONE][0]['target_id'])
+            );
           });
         }
       }
       else if ($order == $header[2]['data']) {
         //sort according to due date
         if ($sort == 'asc') {
-          uasort($tasknodes, function($a, $b) { return $a->ed_task_due_date[LANGUAGE_NONE][0]['value'] - $b->ed_task_due_date[LANGUAGE_NONE][0]['value']; });
+          uasort($tasknodes, function($a, $b) { 
+            return $a->ed_task_due_date[LANGUAGE_NONE][0]['value'] - $b->ed_task_due_date[LANGUAGE_NONE][0]['value']; 
+          });
         }
         else {
-          uasort($tasknodes, function($a, $b) { return $b->ed_task_due_date[LANGUAGE_NONE][0]['value'] - $a->ed_task_due_date[LANGUAGE_NONE][0]['value']; });
+          uasort($tasknodes, function($a, $b) { 
+            return $b->ed_task_due_date[LANGUAGE_NONE][0]['value'] - $a->ed_task_due_date[LANGUAGE_NONE][0]['value']; 
+          });
         }
       }
       else {
