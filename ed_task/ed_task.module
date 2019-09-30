@@ -236,7 +236,7 @@ function ed_task_listing_page() {
 
       $header = [
         [ 'data' => t('Task'), 'field' => '', ],
-        [ 'data' => t('Group'), ],
+        [ 'data' => t('Group'), 'field' => '' ],
         [ 'data' => t('Due Date'), 'field' => '', ],
         [ 'data' => t('Status'), 'field' => '', 'sort' => 'asc' ],
       ];
@@ -260,7 +260,21 @@ function ed_task_listing_page() {
           uasort($tasknodes, function($a, $b) { return strcmp($b->title, $a->title); });
         }
       }
+      else if ($order == $header[1]['data']) {
+        //sort according to group name
+        if ($sort == 'asc') {
+          uasort($tasknodes, function($a, $b) {
+            return strcmp(_ed_get_group_name_from_id($a->og_group_ref[LANGUAGE_NONE][0]['target_id']), _ed_get_group_name_from_id($b->og_group_ref[LANGUAGE_NONE][0]['target_id']));
+          });
+        }
+        else {
+          uasort($tasknodes, function($a, $b) {
+            return strcmp(_ed_get_group_name_from_id($b->og_group_ref[LANGUAGE_NONE][0]['target_id']), _ed_get_group_name_from_id($a->og_group_ref[LANGUAGE_NONE][0]['target_id']));
+          });
+        }
+      }
       else if ($order == $header[2]['data']) {
+        //sort according to due date
         if ($sort == 'asc') {
           uasort($tasknodes, function($a, $b) { return $a->ed_task_due_date[LANGUAGE_NONE][0]['value'] - $b->ed_task_due_date[LANGUAGE_NONE][0]['value']; });
         }
@@ -270,20 +284,17 @@ function ed_task_listing_page() {
       }
       else {
         //sort according to status in severity
-
-        //Sort tasks, so that unanswered and with earlier due date are up
-        uasort($tasknodes, function($a, $b) {
-          $a_score = 0;
-          if ($a->ed_status == 'rejected') $a_score = 2;
-          if ($a->ed_status == 'unanswered') $a_score = 1;
-
-          $b_score = 0;
-          if ($b->ed_status == 'rejected') $b_score = 2;
-          if ($b->ed_status == 'unanswered') $b_score = 1;
-
-          if ($a_score != $b_score) return $b_score - $a_score;
-          return $a->ed_task_due_date[LANGUAGE_NONE][0]['value'] - $b->ed_task_due_date[LANGUAGE_NONE][0]['value'];
-        });
+        $status_order = [ 0 => 'rejected', 1 => 'unanswered', 2 => 'unchecked', 3 => 'checked', 4 => 'accepted' ];
+        if ($sort == 'asc') {
+          uasort($tasknodes, function($a, $b) use ($status_order) {
+            return array_search($a->ed_status, $status_order) - array_search($b->ed_status, $status_order); 
+          });
+        }
+        else {
+          uasort($tasknodes, function($a, $b) use ($status_order) {
+            return array_search($b->ed_status, $status_order) - array_search($a->ed_status, $status_order);
+          });
+        }
       }
 
 
