@@ -163,93 +163,68 @@ function ed_answer_form_alter(&$form, &$form_state, $form_id){
 	  $form['ed_field_difficulty_feedb'][LANGUAGE_NONE]['#default_value'] = 1;
 	  $form['ed_field_time_eff_feedb'][LANGUAGE_NONE]['#default_value'] = 1;
 
+    //Get categories
     $form['ed_answer_task_cat'] = array(
       '#tree' => TRUE,
       '#type' => 'fieldset',
       '#title' => t('Category'),
       '#group' => 'tabs',
     );
+
+    $display = array('type' => 'term_reference_tree');
+
+    $task_cats = field_view_field('node', $node, 'ed_field_category', $display);
+    if(!empty($task_cats)){
+      $form['ed_answer_task_cat']['category'] = array(
+        '#type' => 'markup',
+        '#markup' => render($task_cats),
+      );
+    }
+
+
+    //Get competencies
     $form['ed_answer_task_comp'] = array(
       '#tree' => TRUE,
       '#type' => 'fieldset',
       '#title' => t('Competence'),
       '#group' => 'tabs',
     );
-    $form['ed_answer_task_comp']['competence'] = array(
-      '#tree' => TRUE,
-      '#type' => 'container',
-      '#prefix' => '<ul class="competence-container">',
-      '#suffix' => '</ul>',
-    );
 
     $group_node = node_load($node->og_group_ref[LANGUAGE_NONE][0]['target_id']);
 
-// XXX TODO Categories and learning outcomes
-//    $task_comp = field_get_items('node', $group_node, 'ed_field_learning_outcome_ref');
-//
-//
-//    $outcomes = [];
-//    if (is_array($task_comp) && !empty($task_comp)) {
-//      for ($i = 0; $i < count($task_comp); $i++) {
-//
-//        $lo_id = $task_comp[$i]["target_id"];
-//        $outcome = node_load($lo_id);
-//
-//        $competences = [];
-//        foreach ($outcome->ed_field_category["und"] as $tid_container) {
-//          $competences []=  $tid_container["tid"];
-//        }
-//        $outcomes []= [
-//          "name" => $outcome->title,
-//          "description" => $outcome->ed_field_learning_outcomes["und"][0]["value"],
-//          "assessment_method" => $outcome->ed_field_assessment_method["und"][0]["value"],
-//          "competences" => $competences
-//        ];
-//      }
-//    }
+    $task_comp = field_get_items('node', $group_node, 'ed_field_learning_outcome_ref');
+
+    $outcomes = [];
+    if (is_array($task_comp) && !empty($task_comp)) {
+      for ($i = 0; $i < count($task_comp); $i++) {
+
+        $lo_id = $task_comp[$i]["target_id"];
+        $outcome = node_load($lo_id);
+
+        $display = array('type' => 'term_reference_tree');
+        $outcome_comps = field_view_field('node', $outcome, 'ed_field_category', $display);
 
 
+        $outcomes []= [
+          "name" => $outcome->title,
+          "description" => $outcome->ed_field_learning_outcomes["und"][0]["value"],
+          "assessment_method" => $outcome->ed_field_assessment_method["und"][0]["value"],
+          "competences" => $outcome_comps,
+        ];
+      }
+    }
 
 
-//    if ($task_comp) {
-//      foreach($task_comp as $competenceTerm){
-//        $comp_terms[] = field_view_value('node', $node, 'ed_field_competence', $competenceTerm);
-//      }
-//      foreach($comp_terms as $term){
-//        $test[] = taxonomy_term_load($term['#options']['entity']->tid);
-//      }
-//
-//      $help2 = 0;
-//      foreach($comp_terms as $tid){
-//        $form['ed_answer_task_comp']['competence'][$help2] = array(
-//          '#type' => 'markup',
-//          '#markup' => t(l(t($tid['#options']['entity']->name), $tid['#href']).'<br />'),
-//        );
-//        if(ed_answer_check_tid_parents($tid['#options']['entity']->tid)==0){
-//        /*$form['test']['test2'][$help]['#prefix'] = '<li>';
-//        $form['test']['test2'][$help]['#suffix'] = '</li>';*/
-//        }else{
-//          $depth = 0;
-//          $flag = true;
-//          $parent = ed_answer_check_tid_parents($tid['#options']['entity']->tid);
-//          $form['ed_answer_task_comp']['competence'][$help2]['#prefix']='';
-//          $form['ed_answer_task_comp']['competence'][$help2]['#suffix']='';
-//          while($flag){
-//            if($parent==0){
-//              for($i = 0;$i<$depth;$i++){
-//                $form['ed_answer_task_comp']['competence'][$help2]['#prefix'].='<ul>';
-//              }
-//              $form['ed_answer_task_comp']['competence'][$help2]['#suffix'].='</ul>';
-//              $flag = false;
-//            }else{
-//              $depth++;
-//              $parent = ed_answer_check_tid_parents($parent);
-//            }
-//          }
-//        }
-//        $help2++;
-//      }
-//    }
+    if(!empty($outcomes)){
+      foreach($outcomes as $key => $outcome){
+        $form['ed_answer_task_comp']['competence'][$key] = array(
+          '#type' => 'markup',
+          '#markup' => '<h4>'.$outcome['name'].'</h4><p>'.$outcome['description'].'</p><p>'.$outcome['assessment_method'].'</p>'.render($outcome['competences']),
+        );
+      }
+    }
+
+
 
   }else if($form_id == 'comment_node_ed_answer_form'){
     $isgadmin = ed_answer_is_group_manager($form['#node']->og_group_ref[LANGUAGE_NONE][0]['target_id']);

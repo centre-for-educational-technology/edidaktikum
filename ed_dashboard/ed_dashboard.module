@@ -610,10 +610,10 @@ function ed_dashboard_drafts_page() {
           ->execute();
     }
 
-		
+
 		$nodes = node_load_multiple(array_keys($result['node']));
 
-		$rows = ed_blog_post_rows_table_renderable($nodes);
+		$rows = ed_rows_table_render($nodes);
 
 		$content['pager_table'] = [
 			'#theme' => 'table',

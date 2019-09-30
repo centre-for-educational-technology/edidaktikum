@@ -207,7 +207,7 @@ function edidaktikum_menu() {
   );
 
   $items['user/%user/groups'] = array(
-      'title' => 'My Groups',
+      'title' => 'My groups',
       'type' => MENU_LOCAL_TASK,
       'access callback' => 'profile_groups_access',
       'access arguments' => array(1),
@@ -835,47 +835,47 @@ function edidaktikum_username_alter(&$name, $account) {
  *
  * @return string
  */
-function edidaktikum_get_node_type_name($node_type, $capitalize = FALSE) {
-  $node_type_name = t('content');
+function edidaktikum_get_node_type_name($node_type) {
+  $node_type_name = t('Content');
   switch ($node_type) {
   case "ed_blog":
-    $node_type_name = t('blog post');
+    $node_type_name = t('Blog Post');
     break;
   case "ed_bookmark":
-    $node_type_name = t('bookmark');
+    $node_type_name = t('Bookmark');
     break;
   case "ed_event":
-    $node_type_name = t('event');
+    $node_type_name = t('Event');
     break;
   case "ed_news":
-    $node_type_name = t('news');
+    $node_type_name = t('News');
     break;
   case "ed_learning_resource":
-    $node_type_name = t('learning resource');
+    $node_type_name = t('Learning Resource');
     break;
   case "ed_page":
-    $node_type_name = t('page');
+    $node_type_name = t('Page');
     break;
   case "ed_forum":
-    $node_type_name = t('discussion');
+    $node_type_name = t('Discussion');
     break;
   case "ed_file":
-    $node_type_name = t('file');
+    $node_type_name = t('File');
     break;
   case "ed_portfolio":
-    $node_type_name = t('portfolio');
+    $node_type_name = t('Portfolio');
     break;
   case "ed_task":
-    $node_type_name = t('task');
+    $node_type_name = t('Task');
     break;
   case "ed_answer":
-    $node_type_name = t('answer');
+    $node_type_name = t('Answer');
+    break;
+  case "ed_q_portfolio":
+    $node_type_name = t('Qualification Portfolio');
     break;
   }
 
-  if ($capitalize) {
-    $node_type_name = ucwords($node_type_name);
-  }
 
   return $node_type_name;
 }
@@ -889,7 +889,7 @@ function edidaktikum_get_node_type_name($node_type, $capitalize = FALSE) {
  * @return string
  */
 function edidaktikum_get_node_title(&$node) {
-  if ('ed_aswer' == $node->type) {
+  if ('ed_answer' == $node->type) {
     return ed_get_answer_title($node);
   }
 
@@ -1723,7 +1723,7 @@ function ed_get_answer_title(&$node, $teaser=FALSE) {
   return t('Answer with task removed');
 }
 
-function ed_blog_post_rows_table_renderable($nodes) {
+function ed_rows_table_render($nodes) {
   $rows = array();
   foreach($nodes as $node) {
     if($node->type == 'ed_blog') {
@@ -1735,23 +1735,38 @@ function ed_blog_post_rows_table_renderable($nodes) {
         ),
       );
     }else{
-      $dueDateText = "";
-      $dueDateTS = _ed_get_due_date($node->field_ref_to_task['und']['0']['target_id']);
-      if (!empty($dueDateTS)) {
-        $dueDate = strtotime($dueDateTS[0]);
-        $dueDateText = " (" . t('Due Date:') . format_date($dueDateTS[0], 'short') . ") ";
+      if(!empty($node->field_ref_to_task['und']['0']['target_id'])){
+        $dueDateText = "";
+        $dueDateTS = _ed_get_due_date($node->field_ref_to_task['und']['0']['target_id']);
+        if (!empty($dueDateTS)) {
+          $dueDateText = " (" . t('Due Date: ') . format_date($dueDateTS[0], 'short') . ") ";
+        }
       }
-      $rows[] = array(
-        'data' => array(
-          'type' => _get_type($node),
-          'post_name' => l(ed_get_answer_title($node), 'node/' . $node->nid) . $dueDateText,
-          'created' => format_date($node->created, 'short'),
-        ),
-      );
+
+      if(isset($dueDateText)){
+        $rows[] = array(
+          'data' => array(
+            'type' => edidaktikum_get_node_type_name($node->type),
+            'post_name' => l(edidaktikum_get_node_title($node), 'node/' . $node->nid) . $dueDateText,
+            'created' => format_date($node->created, 'short'),
+          ),
+        );
+      }else{
+        $rows[] = array(
+          'data' => array(
+            'type' => edidaktikum_get_node_type_name($node->type),
+            'post_name' => l(edidaktikum_get_node_title($node), 'node/' . $node->nid),
+            'created' => format_date($node->created, 'short'),
+          ),
+        );
+      }
+
     }
   }
   return $rows;
 }
+
+
 
 /**
  * Return an array of curriculums (study groups) for TLU
