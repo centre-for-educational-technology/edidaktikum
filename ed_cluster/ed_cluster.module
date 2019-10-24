@@ -422,6 +422,9 @@ function ed_cluster_search_page($form, &$form_state){
   $searchstring = isset($_GET['search_term']) ? $_GET['search_term'] : '';
   $form['form_container'] = array(
     '#type' => 'container',
+    '#attributes' => array(
+      'class' => array('input-group input-group-lg'),
+    ),
   );
 //  $form['form_container']['label'] = array(
 //    '#type' => 'markup',
@@ -430,16 +433,19 @@ function ed_cluster_search_page($form, &$form_state){
   $form['form_container']['textfield'] = array(
     '#type' => 'textfield',
     '#value' => $searchstring,
-    '#size' => 60,
 	  '#attributes' => array(
-			  'class' => array('reply-form__name'),
+			  'class' => array('reply-form__name input-group-lg'),
 			  'placeholder' => t('Search'),
 	  ),
   );
   $form['form_container']['submit_button'] = array(
     '#type' => 'submit',
     '#value' => t('Search'),
-	  '#attributes'=>array('style'=>"display:none"),
+    '#prefix' => '<span class="input-group-btn">',
+    '#suffix' => '</span>',
+    '#attributes' => array(
+      'id' => array('search_button'),
+    ),
   );
   $form['#submit'][] = 'ed_cluster_cluster_search_submit_handler';
 
@@ -2544,7 +2550,8 @@ function ed_cluster_get_groups_members_ajax() {
       ->condition('u.status', 1, '=')
       ->condition('ogm.gid', $groups)
       ->fields('u', array('uid', 'name'))
-      ->fields('ufn', array('ed_field_full_name_value'));
+      ->fields('ufn', array('ed_field_full_name_value'))
+      ->orderBy('ufn.ed_field_full_name_value', 'ASC');
     $result = $query->execute()->fetchAll();
 
     if ($result) {
@@ -3232,9 +3239,12 @@ function ed_cluster_unseen_counts_by_type($gid, $uid) {
 	$q->fields('n', ['type',]);
   $q->isNull('ev.eid');
   $q->groupBy('n.type');
+  $q->addTag('node_access');
   $q->addExpression('COUNT(DISTINCT(n.nid))', 'count');
 
 	$response = $q->execute()->fetchAll(PDO::FETCH_ASSOC);
+
+  error_log(print_r($response, true));
 
   $tmp_data = [];
   if ($response && is_array($response) && count($response) > 0) {
