@@ -1641,7 +1641,7 @@ function edidaktikum_get_short_content_or_excerpt($node){
 function edidaktikum_theme_bs3_theme()
 {
 
-  global $user;
+  //global $user;
   return array(
       'ed_collection' => array(
           'template' => 'templates/ed_collection',
@@ -1659,6 +1659,15 @@ function edidaktikum_theme_bs3_theme()
           'template' => 'templates/user-profile-edit',
       ),
   );
+}
+
+
+/**
+ * Implement hook_form_user_profile_form_alter().
+ *
+ */
+function edidaktikum_form_user_profile_form_alter(&$form, &$form_state) {
+  $form['og_user_node']['#access'] = FALSE;
 }
 
 /**
