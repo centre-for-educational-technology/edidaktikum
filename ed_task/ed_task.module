@@ -206,9 +206,12 @@ function ed_task_listing_page() {
           $answernode_status = $answer_wrapper->status->value();
 
 
+
           if ($answernode_status == 0) {
-            $tasknode->ed_status = "unanswered";
+            $tasknode->ed_status = "unchecked";
+            $tasknode->publishing_status = false;
           }else {
+            $tasknode->publishing_status = true;
             $status = _ed_check_if_accepted($tmp_answer_nid[0]);
             if(empty($status)) {
               $tasknode->ed_status = "unchecked";
@@ -282,13 +285,13 @@ function ed_task_listing_page() {
       else if ($order == $header[2]['data']) {
         //sort according to due date
         if ($sort == 'asc') {
-          uasort($tasknodes, function($a, $b) { 
-            return $a->ed_task_due_date[LANGUAGE_NONE][0]['value'] - $b->ed_task_due_date[LANGUAGE_NONE][0]['value']; 
+          uasort($tasknodes, function($a, $b) {
+            return $a->ed_task_due_date[LANGUAGE_NONE][0]['value'] - $b->ed_task_due_date[LANGUAGE_NONE][0]['value'];
           });
         }
         else {
-          uasort($tasknodes, function($a, $b) { 
-            return $b->ed_task_due_date[LANGUAGE_NONE][0]['value'] - $a->ed_task_due_date[LANGUAGE_NONE][0]['value']; 
+          uasort($tasknodes, function($a, $b) {
+            return $b->ed_task_due_date[LANGUAGE_NONE][0]['value'] - $a->ed_task_due_date[LANGUAGE_NONE][0]['value'];
           });
         }
       }
@@ -297,7 +300,7 @@ function ed_task_listing_page() {
         $status_order = [ 0 => 'rejected', 1 => 'unanswered', 2 => 'unchecked', 3 => 'checked', 4 => 'accepted' ];
         if ($sort == 'asc') {
           uasort($tasknodes, function($a, $b) use ($status_order) {
-            return array_search($a->ed_status, $status_order) - array_search($b->ed_status, $status_order); 
+            return array_search($a->ed_status, $status_order) - array_search($b->ed_status, $status_order);
           });
         }
         else {
@@ -362,6 +365,10 @@ function ed_task_listing_page() {
               $tmp_data['data'] = t('Answered, Unchecked');
               $tmp_data['title'] = t('Unchecked');
               break;
+          }
+
+          if($tasknode->publishing_status == false){
+            $tmp_data['data'] .= ' <span class="label label-danger">'.t('Not published').'</span>';
           }
 
           $grade = _ed_get_last_grade($tasknode->answer_nid);
