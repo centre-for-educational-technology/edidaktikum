@@ -14,7 +14,8 @@ define('ED_ACCESS_REALM', 'ed_access');
 /**
  * Implements hook_menu().
  */
-function ed_cluster_menu() {
+function ed_cluster_menu()
+{
   $items['node/%node/tasks'] = array(
     'title' => 'Tasks',
     'title callback' => 'ed_cluster_title_with_unseen_count',
@@ -49,11 +50,11 @@ function ed_cluster_menu() {
     'weight' => 5,
   );
   $items['clusters/inactivegroups'] = array(
-      'title' => 'My inactive groups',
-      'type' => MENU_LOCAL_TASK,
-      'access callback' => 'user_is_logged_in',
-      'page callback' => 'ed_cluster_my_inactive_listing_page',
-      'weight' => 9,
+    'title' => 'My inactive groups',
+    'type' => MENU_LOCAL_TASK,
+    'access callback' => 'user_is_logged_in',
+    'page callback' => 'ed_cluster_my_inactive_listing_page',
+    'weight' => 9,
   );
   $items['clusters/searchgroup'] = array(
     'title' => 'Search for a group',
@@ -107,15 +108,15 @@ function ed_cluster_menu() {
     'type' => MENU_CALLBACK,
   );
   $items['node/%node/q_portfolio'] = array(
-      'title' => 'Qualification Portfolio',
-      'title callback' => 'ed_cluster_title_with_unseen_count',
-      'title arguments' => ['Qualification Portfolio', 1, 'ed_q_portfolio'],
-      'page callback' => 'ed_listing_from_group',
-      'access callback' => 'ed_group_assessors_ed_q_portfolio_listing_access',
-      'page arguments' => array('node', 1, 'ed_q_portfolio'),
-      'access arguments' => array('node', 1, 'ed_q_portfolio'),
-      'type' => MENU_LOCAL_TASK,
-      'weight' => 3,
+    'title' => 'Qualification Portfolio',
+    'title callback' => 'ed_cluster_title_with_unseen_count',
+    'title arguments' => ['Qualification Portfolio', 1, 'ed_q_portfolio'],
+    'page callback' => 'ed_listing_from_group',
+    'access callback' => 'ed_group_assessors_ed_q_portfolio_listing_access',
+    'page arguments' => array('node', 1, 'ed_q_portfolio'),
+    'access arguments' => array('node', 1, 'ed_q_portfolio'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 3,
   );
   $items['node/%node/news'] = array(
     'title' => 'News',
@@ -258,9 +259,8 @@ function ed_cluster_menu() {
 }
 
 
-
-
-function ed_cluster_group_type_create_redirect($type) {
+function ed_cluster_group_type_create_redirect($type)
+{
   $types = [
     'studygroup' => 1,
     'educationgroup' => 2,
@@ -271,17 +271,14 @@ function ed_cluster_group_type_create_redirect($type) {
   ],]);
 }
 
-function ed_cluster_group_type_create_redirect_access_callback() {
+function ed_cluster_group_type_create_redirect_access_callback()
+{
   return node_access('create', 'ed_cluster');
 }
 
 
-
-
-function ed_subgroup_listing_from_group($filler, $gnode, $type){
-
-
-
+function ed_subgroup_listing_from_group($filler, $gnode, $type)
+{
 
 
   $content = array();
@@ -295,7 +292,7 @@ function ed_subgroup_listing_from_group($filler, $gnode, $type){
     ),
   );
 
-  if(node_access('create', 'ed_subgroup')){
+  if (node_access('create', 'ed_subgroup')) {
     $content['add-new'] = array(
       '#type' => 'link',
       '#title' => t('Add new subgroup'),
@@ -305,120 +302,118 @@ function ed_subgroup_listing_from_group($filler, $gnode, $type){
       '#options' => $l_options,
     );
   }
-  drupal_add_css(drupal_get_path('module', 'ed_cluster').'/group-listing.css');
+  drupal_add_css(drupal_get_path('module', 'ed_cluster') . '/group-listing.css');
   $subgroup_nids = ed_cluster_get_subgroups($sql_order, $gnode->nid);
   $nodes = node_load_multiple($subgroup_nids);
   $nodeschunked = array_chunk($nodes, 4);
 
   $lastchunk = end($nodeschunked);
 
-  if($lastchunk && count($lastchunk<4)){
-      foreach(range(1, 4-count($lastchunk))as $i){
-        $x = new stdClass();
-        array_push($lastchunk, $x);
-      }
+  if ($lastchunk && count($lastchunk < 4)) {
+    foreach (range(1, 4 - count($lastchunk)) as $i) {
+      $x = new stdClass();
+      array_push($lastchunk, $x);
     }
-    $nodeschunked[count($nodeschunked)-1] = $lastchunk;
-    $counter = 1;
-    foreach($nodeschunked as $nodeschunk){
-      $build['row-'.$counter] = array(
-        '#type' => 'markup',
-        '#prefix' => '<div class="row" id="row-'.$counter.'">',
-        '#suffix' => '</div>',
-      );
-      for($i=0;$i<count($nodeschunk);$i++){
-        if(isset($nodeschunk[$i]->nid)){
-
-          $query = new EntityFieldQuery();
-          $query->entityCondition('entity_type', 'user')
-              ->fieldCondition('og_user_node', 'target_id', $nodeschunk[$i]->nid, '=');
-          $results = $query->execute();
-          $uids = array_keys($results['user']);
-          $groupnode = node_load($nodeschunk[$i]->nid);
-          $groupadmins = _ed_cluster_get_group_admins($groupnode, TRUE);
-          $adminimages = array();
-          foreach($groupadmins as $groupadmin){
-            $admin = user_load($groupadmin);
-            if($admin->picture){
-              $adminimages[] =l('<img src="'.image_style_url('thumbnail', $admin->picture->uri).'" title="'.$admin->ed_field_full_name[LANGUAGE_NONE][0]['safe_value'].'" />', 'user/'.$admin->uid, array('html' => TRUE));
-            }else{
-              $adminimages[] =l('<img src="'.$GLOBALS['base_url'].'/'.path_to_theme().'/images/user_icon_default.png" title="'.$admin->ed_field_full_name[LANGUAGE_NONE][0]['safe_value'].'"/>', 'user/'.$admin->uid, array('html' => TRUE));
-            }
-          }
-          if($nodeschunk[$i]->group_access[LANGUAGE_NONE][0]['value']){
-            $title = l($nodeschunk[$i]->title, 'node/'.$nodeschunk[$i]->nid).' <p class="private-group-title">'.t('Private Group').'</p>';
-          }else{
-            $title = l($nodeschunk[$i]->title, 'node/'.$nodeschunk[$i]->nid);
-          }
-          $build['row-'.$counter][$i] = array(
-            '#type' => 'markup',
-            '#prefix' => '<div class="span3 group-div-outer">',
-            '#suffix' => '</div>',
-          );
-          $build['row-'.$counter][$i]['top'] = array(
-            '#type' => 'markup',
-            '#prefix' => '<div class="group-div-top">',
-            '#suffix' => '</div>',
-          );
-          $build['row-'.$counter][$i]['top']['top-top'] = array(
-            '#type' => 'markup',
-            '#prefix' => '<div class="group-div-top-cover">',
-            '#markup' => !empty($nodeschunk[$i]->ed_field_featured_image) ? l('<img src="'.image_style_url('medium', $nodeschunk[$i]->ed_field_featured_image[LANGUAGE_NONE][0]['uri']).'">', 'node/'.$nodeschunk[$i]->nid, array('html' => TRUE)):l('<img src="'.$GLOBALS['base_url'].'/'.path_to_theme().'/images/icons/ed_group_icon_default.png">', 'node/'.$nodeschunk[$i]->nid, array('html' => true)),
-            '#suffix' => '</div>',
-          );
-          $build['row-'.$counter][$i]['top']['top-bottom'] = array(
-            '#type' => 'markup',
-            '#prefix' => '<div class="group-div-top-title">',
-            '#markup' => $title,
-            '#suffix' => '</div>',
-          );
-          $build['row-'.$counter][$i]['bottom'] = array(
-            '#type' => 'markup',
-            '#prefix' => '<div class="row group-div-bottom">',
-            '#suffix' => '</div>',
-          );
-          $build['row-'.$counter][$i]['bottom']['bottom-left'] = array(
-            '#type' => 'markup',
-            '#prefix' => '<div class="span9 group-div-bottom-left">',
-            '#markup' => implode(' ', $adminimages),
-            '#suffix' => '</div>',
-          );
-          $build['row-'.$counter][$i]['bottom']['bottom-right'] = array(
-            '#type' => 'markup',
-
-            '#suffix' => '</div>',
-          );
-          //If user is not a member of that group:
-          if(og_is_member('node', $nodeschunk[$i]->nid, 'user')){
-            $build['row-'.$counter][$i]['bottom']['bottom-right']['#prefix'] = '<div class="span3 group-div-bottom-right label label-success">';
-            $build['row-'.$counter][$i]['bottom']['bottom-right']['#markup'] = l(t('Join'),'group/node/'.$nodeschunk[$i]->nid.'/subscribe/og_user_node');
-          }else{
-
-            $build['row-'.$counter][$i]['bottom']['bottom-right']['#prefix'] = '<div class="span3 group-div-bottom-right label label-important">';
-            $build['row-'.$counter][$i]['bottom']['bottom-right']['#markup'] = l(t('Leave'),'group/node/'.$nodeschunk[$i]->nid.'/unsubscribe');
-          }
-
-          //If user is a member of that group:
-
-        }
-      }
-      $counter++;
-    }
-
-    $content['clusters'] = $build;
-    $content['pager'] = array(
-      '#theme' => 'pager',
+  }
+  $nodeschunked[count($nodeschunked) - 1] = $lastchunk;
+  $counter = 1;
+  foreach ($nodeschunked as $nodeschunk) {
+    $build['row-' . $counter] = array(
+      '#type' => 'markup',
+      '#prefix' => '<div class="row" id="row-' . $counter . '">',
+      '#suffix' => '</div>',
     );
+    for ($i = 0; $i < count($nodeschunk); $i++) {
+      if (isset($nodeschunk[$i]->nid)) {
 
+        $query = new EntityFieldQuery();
+        $query->entityCondition('entity_type', 'user')
+          ->fieldCondition('og_user_node', 'target_id', $nodeschunk[$i]->nid, '=');
+        $results = $query->execute();
+        $uids = array_keys($results['user']);
+        $groupnode = node_load($nodeschunk[$i]->nid);
+        $groupadmins = _ed_cluster_get_group_admins($groupnode, TRUE);
+        $adminimages = array();
+        foreach ($groupadmins as $groupadmin) {
+          $admin = user_load($groupadmin);
+          if ($admin->picture) {
+            $adminimages[] = l('<img src="' . image_style_url('thumbnail', $admin->picture->uri) . '" title="' . $admin->ed_field_full_name[LANGUAGE_NONE][0]['safe_value'] . '" />', 'user/' . $admin->uid, array('html' => TRUE));
+          } else {
+            $adminimages[] = l('<img src="' . $GLOBALS['base_url'] . '/' . path_to_theme() . '/images/user_icon_default.png" title="' . $admin->ed_field_full_name[LANGUAGE_NONE][0]['safe_value'] . '"/>', 'user/' . $admin->uid, array('html' => TRUE));
+          }
+        }
+        if ($nodeschunk[$i]->group_access[LANGUAGE_NONE][0]['value']) {
+          $title = l($nodeschunk[$i]->title, 'node/' . $nodeschunk[$i]->nid) . ' <p class="private-group-title">' . t('Private Group') . '</p>';
+        } else {
+          $title = l($nodeschunk[$i]->title, 'node/' . $nodeschunk[$i]->nid);
+        }
+        $build['row-' . $counter][$i] = array(
+          '#type' => 'markup',
+          '#prefix' => '<div class="span3 group-div-outer">',
+          '#suffix' => '</div>',
+        );
+        $build['row-' . $counter][$i]['top'] = array(
+          '#type' => 'markup',
+          '#prefix' => '<div class="group-div-top">',
+          '#suffix' => '</div>',
+        );
+        $build['row-' . $counter][$i]['top']['top-top'] = array(
+          '#type' => 'markup',
+          '#prefix' => '<div class="group-div-top-cover">',
+          '#markup' => !empty($nodeschunk[$i]->ed_field_featured_image) ? l('<img src="' . image_style_url('medium', $nodeschunk[$i]->ed_field_featured_image[LANGUAGE_NONE][0]['uri']) . '">', 'node/' . $nodeschunk[$i]->nid, array('html' => TRUE)) : l('<img src="' . $GLOBALS['base_url'] . '/' . path_to_theme() . '/images/icons/ed_group_icon_default.png">', 'node/' . $nodeschunk[$i]->nid, array('html' => true)),
+          '#suffix' => '</div>',
+        );
+        $build['row-' . $counter][$i]['top']['top-bottom'] = array(
+          '#type' => 'markup',
+          '#prefix' => '<div class="group-div-top-title">',
+          '#markup' => $title,
+          '#suffix' => '</div>',
+        );
+        $build['row-' . $counter][$i]['bottom'] = array(
+          '#type' => 'markup',
+          '#prefix' => '<div class="row group-div-bottom">',
+          '#suffix' => '</div>',
+        );
+        $build['row-' . $counter][$i]['bottom']['bottom-left'] = array(
+          '#type' => 'markup',
+          '#prefix' => '<div class="span9 group-div-bottom-left">',
+          '#markup' => implode(' ', $adminimages),
+          '#suffix' => '</div>',
+        );
+        $build['row-' . $counter][$i]['bottom']['bottom-right'] = array(
+          '#type' => 'markup',
 
+          '#suffix' => '</div>',
+        );
+        //If user is not a member of that group:
+        if (og_is_member('node', $nodeschunk[$i]->nid, 'user')) {
+          $build['row-' . $counter][$i]['bottom']['bottom-right']['#prefix'] = '<div class="span3 group-div-bottom-right label label-success">';
+          $build['row-' . $counter][$i]['bottom']['bottom-right']['#markup'] = l(t('Join'), 'group/node/' . $nodeschunk[$i]->nid . '/subscribe/og_user_node');
+        } else {
 
+          $build['row-' . $counter][$i]['bottom']['bottom-right']['#prefix'] = '<div class="span3 group-div-bottom-right label label-important">';
+          $build['row-' . $counter][$i]['bottom']['bottom-right']['#markup'] = l(t('Leave'), 'group/node/' . $nodeschunk[$i]->nid . '/unsubscribe');
+        }
+
+        //If user is a member of that group:
+
+      }
+    }
+    $counter++;
+  }
+
+  $content['clusters'] = $build;
+  $content['pager'] = array(
+    '#theme' => 'pager',
+  );
 
 
   return $content;
 }
 
 
-function ed_cluster_search_page($form, &$form_state){
+function ed_cluster_search_page($form, &$form_state)
+{
   $searchstring = isset($_GET['search_term']) ? $_GET['search_term'] : '';
   $form['form_container'] = array(
     '#type' => 'container',
@@ -433,10 +428,10 @@ function ed_cluster_search_page($form, &$form_state){
   $form['form_container']['textfield'] = array(
     '#type' => 'textfield',
     '#value' => $searchstring,
-	  '#attributes' => array(
-			  'class' => array('reply-form__name input-group-lg'),
-			  'placeholder' => t('Search'),
-	  ),
+    '#attributes' => array(
+      'class' => array('reply-form__name input-group-lg'),
+      'placeholder' => t('Search'),
+    ),
   );
   $form['form_container']['submit_button'] = array(
     '#type' => 'submit',
@@ -449,30 +444,30 @@ function ed_cluster_search_page($form, &$form_state){
   );
   $form['#submit'][] = 'ed_cluster_cluster_search_submit_handler';
 
-  if( $searchstring!=''){
+  if ($searchstring != '') {
 
     $nids = _ed_cluster_search_for_clusters($searchstring);
-    if(empty($nids)){
+    if (empty($nids)) {
       $form['listing'] = array(
         '#type' => 'markup',
         '#markup' => t('<b><i> @querystring </i></b>did not return any results', array('@querystring' => $searchstring)),
         '#prefix' => '<div class="alert alert-warning" role="alert">',
         '#suffix' => '</div>',
       );
-    }else{
+    } else {
 
-	    $nodes = node_load_multiple($nids);
+      $nodes = node_load_multiple($nids);
 
 
-	    $form['listing'] = ed_generate_grid_of_groups($nodes);
-	    $form['pager'] = array(
-			    '#theme' => 'pager',
-	    );
+      $form['listing'] = ed_generate_grid_of_groups($nodes);
+      $form['pager'] = array(
+        '#theme' => 'pager',
+      );
 
     }
 
 
-  }else{
+  } else {
     $form['listing'] = ed_all_groups_listing();
     drupal_set_title(t('Search for a group'));
     unset($form['listing']['sorting']);
@@ -482,16 +477,18 @@ function ed_cluster_search_page($form, &$form_state){
   return $form;
 }
 
-function ed_cluster_cluster_search_submit_handler($form, &$form_state){
+function ed_cluster_cluster_search_submit_handler($form, &$form_state)
+{
   $form_state['rebuild'] = TRUE;
   $searchstring = $form_state['input']['textfield'];
 
-  drupal_goto(current_path(),array('query' => array('search_term' => $searchstring)));
+  drupal_goto(current_path(), array('query' => array('search_term' => $searchstring)));
 }
 
-function ed_task_listing_for_students_access($test, $node){
+function ed_task_listing_for_students_access($test, $node)
+{
   $tasknids = _ed_get_group_tasks_for_group_task_page($node->nid);
-  if(empty($tasknids)){
+  if (empty($tasknids)) {
     return false;
   }
   $account = $GLOBALS['user'];
@@ -514,9 +511,10 @@ function ed_task_listing_for_students_access($test, $node){
   return false;
 }
 
-function ed_task_listing_for_students($test, $node){
+function ed_task_listing_for_students($test, $node)
+{
   $content = array();
-  drupal_add_css(drupal_get_path('module', 'ed_cluster').'/task_manager.css');
+  drupal_add_css(drupal_get_path('module', 'ed_cluster') . '/task_manager.css');
   $tasknids = _ed_get_group_tasks_for_group_task_page($node->nid);
 
 
@@ -528,22 +526,21 @@ function ed_task_listing_for_students($test, $node){
   $user_study_group = $wrapper->ed_field_study_group->value();
 
   //Check if these tasks belong to this user study group
-  foreach ($tasknids as $key => $tasknid){
+  foreach ($tasknids as $key => $tasknid) {
 
     $wrapper = entity_metadata_wrapper('node', $tasknid);
     $task_study_groups = $wrapper->ed_task_field_study_group->raw();
 
-    if(!empty($task_study_groups)){
-      if(isset($user_study_group)){
+    if (!empty($task_study_groups)) {
+      if (isset($user_study_group)) {
 
-        if(in_array($user_study_group, $task_study_groups) == false){
+        if (in_array($user_study_group, $task_study_groups) == false) {
           unset($tasknids[$key]);
         }
 
-      }else{
+      } else {
         unset($tasknids[$key]);
       }
-
 
 
     }
@@ -553,7 +550,7 @@ function ed_task_listing_for_students($test, $node){
 
 
   //attach answered data
-  foreach($tasknodes as &$tasknode) {
+  foreach ($tasknodes as &$tasknode) {
     $answer_nid = _ed_get_answer_nid($user->uid, $tasknode->nid);
     $tasknode->is_answered = !empty($answer_nid);
     if ($tasknode->is_answered) $tasknode->answer_nid = $answer_nid[0];
@@ -562,66 +559,66 @@ function ed_task_listing_for_students($test, $node){
 
 
   // sort by unanswered first, due date second, created last
-  uasort($tasknodes, function($a, $b) {
-      if (!$a->is_answered && $b->is_answered) return -1;
-      if (!$b->is_answered && $a->is_answered) return 1;
-      $d = $a->ed_task_due_date[LANGUAGE_NONE][0]['value'] - $b->ed_task_due_date[LANGUAGE_NONE][0]['value'];
-      if ($d == 0) return $b->created - $a->created;
-      return $d;
-    });
+  uasort($tasknodes, function ($a, $b) {
+    if (!$a->is_answered && $b->is_answered) return -1;
+    if (!$b->is_answered && $a->is_answered) return 1;
+    $d = $a->ed_task_due_date[LANGUAGE_NONE][0]['value'] - $b->ed_task_due_date[LANGUAGE_NONE][0]['value'];
+    if ($d == 0) return $b->created - $a->created;
+    return $d;
+  });
 
   $header = array(t('Task'), t('Due Date'), t('Status'));
 
-  foreach($tasknodes as $tasknode){
-    $titlelink = l($tasknode->title, 'node/'.$tasknode->nid);
-    $deadline = format_date($tasknode->ed_task_due_date[LANGUAGE_NONE][0]['value'],'custom','d/m/Y');
+  foreach ($tasknodes as $tasknode) {
+    $titlelink = l($tasknode->title, 'node/' . $tasknode->nid);
+    $deadline = format_date($tasknode->ed_task_due_date[LANGUAGE_NONE][0]['value'], 'custom', 'd/m/Y');
 
     $tmp_data = array('data' => '', 'class' => '');
 
-        if ($tasknode->is_answered) {
-          $status = _ed_check_if_accepted($tasknode->answer_nid);
+    if ($tasknode->is_answered) {
+      $status = _ed_check_if_accepted($tasknode->answer_nid);
 
-          if(empty($status)){
+      if (empty($status)) {
+        $tmp_data['class'] = 'unchecked';
+        $tmp_data['data'] = t('Answered, Unchecked');
+        $tmp_data['title'] = t('Unchecked');
+      } else {
+        $last_status = $status;
+        switch ($last_status) {
+          case('accepted'):
+            $tmp_data['class'] = 'answered';
+            $tmp_data['data'] = t('Answered, Accepted');
+            $tmp_data['title'] = t('Accepted');
+            break;
+          case('rejected'):
+            $tmp_data['class'] = 'rejected';
+            $tmp_data['data'] = t('Answered, Rejected');
+            $tmp_data['title'] = t('Rejected');
+            break;
+          case('checked'):
+            $tmp_data['class'] = 'checked';
+            $tmp_data['data'] = t('Answered, Checked');
+            $tmp_data['title'] = t('Checked');
+            break;
+          case('unchecked'):
             $tmp_data['class'] = 'unchecked';
             $tmp_data['data'] = t('Answered, Unchecked');
             $tmp_data['title'] = t('Unchecked');
-          }else{
-            $last_status = $status;
-            switch($last_status){
-              case('accepted'):
-                $tmp_data['class'] = 'answered';
-                $tmp_data['data'] = t('Answered, Accepted');
-                $tmp_data['title'] = t('Accepted');
-              break;
-              case('rejected'):
-                $tmp_data['class'] = 'rejected';
-                $tmp_data['data'] = t('Answered, Rejected');
-                $tmp_data['title'] = t('Rejected');
-              break;
-              case('checked'):
-                $tmp_data['class'] = 'checked';
-                $tmp_data['data'] = t('Answered, Checked');
-                $tmp_data['title'] = t('Checked');
-              break;
-              case('unchecked'):
-                $tmp_data['class'] = 'unchecked';
-                $tmp_data['data'] = t('Answered, Unchecked');
-                $tmp_data['title'] = t('Unchecked');
-              break;
-            }
-          }
+            break;
+        }
+      }
 
-          $grade = _ed_get_last_grade($tasknode->answer_nid);
-          $grade_str = $grade == 0 ? "" : t(', Graded ') . $grade;
-          $tmp_data['data'] = l($tmp_data['data'] . $grade_str, 'node/' . $tasknode->answer_nid, array('html' => TRUE));
+      $grade = _ed_get_last_grade($tasknode->answer_nid);
+      $grade_str = $grade == 0 ? "" : t(', Graded ') . $grade;
+      $tmp_data['data'] = l($tmp_data['data'] . $grade_str, 'node/' . $tasknode->answer_nid, array('html' => TRUE));
 
-        } else {
+    } else {
 
-          $tmp_data['class'] = 'unanswered';
-          $tmp_data['data'] = t('Not Answered');
-          $tmp_data['title'] = t('Not answered');
+      $tmp_data['class'] = 'unanswered';
+      $tmp_data['data'] = t('Not Answered');
+      $tmp_data['title'] = t('Not answered');
 
-          //Check if it is a study group case
+      //Check if it is a study group case
 //          $wrapper = entity_metadata_wrapper('node', $tasknode->nid);
 //          $task_study_groups = $wrapper->ed_task_field_study_group->raw();
 //
@@ -659,15 +656,32 @@ function ed_task_listing_for_students($test, $node){
 //          }
 
 
-          if (!empty($tasknode->{ED_FIELD_TO_GROUP_MEMBER}[LANGUAGE_NONE])) {
-            if (!in_array($user->uid, array_map(function($element) { return $element['target_id']; }, $tasknode->{ED_FIELD_TO_GROUP_MEMBER}[LANGUAGE_NONE]))) {
-              $tmp_data['class'] = 'can-not-be-answered';
-              $tmp_data['data'] = t('Can not be answered');
-              $tmp_data['title'] = t('Can not be answered');
-            }
-          }
+      if (!empty($tasknode->{ED_FIELD_TO_GROUP_MEMBER}[LANGUAGE_NONE])) {
+        if (!in_array($user->uid, array_map(function ($element) {
+          return $element['target_id'];
+        }, $tasknode->{ED_FIELD_TO_GROUP_MEMBER}[LANGUAGE_NONE]))) {
+          $tmp_data['class'] = 'can-not-be-answered';
+          $tmp_data['data'] = t('Can not be answered');
+          $tmp_data['title'] = t('Can not be answered');
         }
+      }
+    }
 
+    $is_published = null;
+    //Check if node is published
+    if (!empty($tasknode->answer_nid)) {
+      $query = db_select('node', 'n')
+        ->fields('n', array('status'))
+        ->condition('n.nid', $tasknode->answer_nid)
+        ->execute();
+      $result = $query->fetchObject();
+      $is_published = $result ? $result->status : FALSE;
+    }
+
+
+    if ($tasknode->answer_nid && $is_published == false) {
+      $tmp_data['data'] .= ' <span class="label label-danger">'.t('Not published').'</span>';
+    }
 
 
     $rows[] = array(
@@ -680,7 +694,7 @@ function ed_task_listing_for_students($test, $node){
 
   }
 
-  if(isset($rows)){
+  if (isset($rows)) {
     $content['tasks-table'] = array(
       '#theme' => 'table',
       '#rows' => $rows,
@@ -696,7 +710,8 @@ function ed_task_listing_for_students($test, $node){
  * Retruns a content of groups listing page for current user.
  * @return array Array with page structure
  */
-function ed_cluster_my_listing_page() {
+function ed_cluster_my_listing_page()
+{
   drupal_set_title(t('My active groups'));
 
   $content = [];
@@ -706,38 +721,38 @@ function ed_cluster_my_listing_page() {
 
   $groups = ed_cluster_get_current_user_clusters($sql_order);
 
-  if(empty($groups)){
+  if (empty($groups)) {
     $content['groups-not-found'] = array(
       '#type' => 'markup',
       '#prefix' => '<div class="ed-message ed-message-notice">',
       '#markup' => t('Hi! Nothing to show here at the moment. Join some groups to see them here.'),
       '#suffix' => '</div>',
     );
-  }else{
-    drupal_add_css(drupal_get_path('module', 'ed_cluster').'/group-listing.css');
+  } else {
+    drupal_add_css(drupal_get_path('module', 'ed_cluster') . '/group-listing.css');
     $nodes = node_load_multiple($groups);
 
-	  $content['clusters'] = ed_generate_grid_of_groups($nodes);
-	  $content['pager'] = array(
-			  '#theme' => 'pager',
-	  );
+    $content['clusters'] = ed_generate_grid_of_groups($nodes);
+    $content['pager'] = array(
+      '#theme' => 'pager',
+    );
   }
 
   return $content;
 }
 
 
-function ed_all_groups_listing(){
+function ed_all_groups_listing()
+{
   drupal_set_title(t('All Groups'));
   $content = array();
   $content['sorting'] = drupal_get_form('_ed_get_sorting_options');
   $sql_order = ed_get_sorting_type($content);
-  drupal_add_css(drupal_get_path('module', 'ed_cluster').'/group-listing.css');
+  drupal_add_css(drupal_get_path('module', 'ed_cluster') . '/group-listing.css');
   $remove_user_groups = TRUE;
   $og_groups = ed_cluster_get_clusters($sql_order, $remove_user_groups, false);
   if (!empty($og_groups)) {
     $nodes = node_load_multiple($og_groups);
-
 
 
     $content['clusters'] = ed_generate_grid_of_groups($nodes);
@@ -750,128 +765,126 @@ function ed_all_groups_listing(){
 }
 
 
-function ed_generate_grid_of_groups($nodes){
-	$counter = 1;
-	$row = 1;
+function ed_generate_grid_of_groups($nodes)
+{
+  $counter = 1;
+  $row = 1;
 
   drupal_add_js('https://cdn.jsdelivr.net/npm/sweetalert2@7.28.4/dist/sweetalert2.all.min.js', 'external');
   drupal_add_js(drupal_get_path('module', 'ed_cluster') . '/js/grid_of_groups.js');
 
 
-	$build['row-'.$row] = array(
-			'#type' => 'markup',
-			'#prefix' => '<div class="row">',
-			'#suffix' => '</div>',
-	);
+  $build['row-' . $row] = array(
+    '#type' => 'markup',
+    '#prefix' => '<div class="row">',
+    '#suffix' => '</div>',
+  );
 
 
-	foreach($nodes as $node){
+  foreach ($nodes as $node) {
 
-		if(isset($node->nid)){
+    if (isset($node->nid)) {
 
 
-			$title = l($node->title, 'node/'.$node->nid);
-      if($node->ed_field_group_state [LANGUAGE_NONE][0]['value'] == 0){
-        $build['row-'.$row]['node-'.$node->nid] = array(
+      $title = l($node->title, 'node/' . $node->nid);
+      if ($node->ed_field_group_state [LANGUAGE_NONE][0]['value'] == 0) {
+        $build['row-' . $row]['node-' . $node->nid] = array(
           '#type' => 'markup',
-          '#prefix' => '<div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 text-center"><div class="price-box-01 group inactive"><div class="ribbon ribbon-top-left"><span>'.t('Mitteaktiivne').'</span></div>',
+          '#prefix' => '<div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 text-center"><div class="price-box-01 group inactive"><div class="ribbon ribbon-top-left"><span>' . t('Mitteaktiivne') . '</span></div>',
           '#suffix' => '</div></div>',
         );
-      }else{
-        $build['row-'.$row]['node-'.$node->nid] = array(
+      } else {
+        $build['row-' . $row]['node-' . $node->nid] = array(
           '#type' => 'markup',
           '#prefix' => '<div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 text-center"><div class="price-box-01 group">',
           '#suffix' => '</div></div>',
         );
       }
 
-			$build['row-'.$row]['node-'.$node->nid]['list-item'] = array(
-					'#type' => 'markup',
-					'#prefix' => '<div class="product-list__item">',
-					'#suffix' => '</div>',
-			);
-			$build['row-'.$row]['node-'.$node->nid]['list-item']['list-img'] = array(
-					'#type' => 'markup',
-					'#prefix' => '<figure class="product-list__img">',
-					'#markup' => !empty($node->ed_field_featured_image) ? l('<img src="'.image_style_url('medium', $node->ed_field_featured_image[LANGUAGE_NONE][0]['uri']).'">', 'node/'.$node->nid, array('html' => TRUE)):l('<img src="'.$GLOBALS['base_url'].'/'.path_to_theme().'/images/icons/ed_group_icon_default.png">', 'node/'.$node->nid, array('html' => true)),
-					'#suffix' => '</figure>',
-			);
-			$build['row-'.$row]['node-'.$node->nid]['title'] = array(
-					'#type' => 'markup',
-					'#prefix' => '<h3 class="product-list__title">',
-					'#markup' => $title,
-					'#suffix' => '</h3>',
-			);
+      $build['row-' . $row]['node-' . $node->nid]['list-item'] = array(
+        '#type' => 'markup',
+        '#prefix' => '<div class="product-list__item">',
+        '#suffix' => '</div>',
+      );
+      $build['row-' . $row]['node-' . $node->nid]['list-item']['list-img'] = array(
+        '#type' => 'markup',
+        '#prefix' => '<figure class="product-list__img">',
+        '#markup' => !empty($node->ed_field_featured_image) ? l('<img src="' . image_style_url('medium', $node->ed_field_featured_image[LANGUAGE_NONE][0]['uri']) . '">', 'node/' . $node->nid, array('html' => TRUE)) : l('<img src="' . $GLOBALS['base_url'] . '/' . path_to_theme() . '/images/icons/ed_group_icon_default.png">', 'node/' . $node->nid, array('html' => true)),
+        '#suffix' => '</figure>',
+      );
+      $build['row-' . $row]['node-' . $node->nid]['title'] = array(
+        '#type' => 'markup',
+        '#prefix' => '<h3 class="product-list__title">',
+        '#markup' => $title,
+        '#suffix' => '</h3>',
+      );
 
 
+      if ($node->group_access[LANGUAGE_NONE][0]['value']) {
 
-			if($node->group_access[LANGUAGE_NONE][0]['value']){
-
-				$build['row-'.$row]['node-'.$node->nid]['status'] = array(
-						'#type' => 'markup',
-						'#markup' => '<a class="product-list__category padding-bottom-10" href="'.'node/'.$node->nid.'">'.t('Private Group').' <i class="fa fa-lock" aria-hidden="true"></i></a>',
-						'#suffix' => '<br>',
-				);
-			}else{
-				$build['row-'.$row]['node-'.$node->nid]['status'] = array(
-						'#type' => 'markup',
-						'#markup' => l(t('Open Group'), 'node/'.$node->nid, array('attributes' => array('class' => 'product-list__category padding-bottom-10'))),
-						'#suffix' => '<br>',
-				);
-			}
+        $build['row-' . $row]['node-' . $node->nid]['status'] = array(
+          '#type' => 'markup',
+          '#markup' => '<a class="product-list__category padding-bottom-10" href="' . 'node/' . $node->nid . '">' . t('Private Group') . ' <i class="fa fa-lock" aria-hidden="true"></i></a>',
+          '#suffix' => '<br>',
+        );
+      } else {
+        $build['row-' . $row]['node-' . $node->nid]['status'] = array(
+          '#type' => 'markup',
+          '#markup' => l(t('Open Group'), 'node/' . $node->nid, array('attributes' => array('class' => 'product-list__category padding-bottom-10'))),
+          '#suffix' => '<br>',
+        );
+      }
 
 
-			if(!(og_is_member('node', $node->nid)) && $node->ed_field_group_state[LANGUAGE_NONE][0]['value']){
+      if (!(og_is_member('node', $node->nid)) && $node->ed_field_group_state[LANGUAGE_NONE][0]['value']) {
 
-				$build['row-'.$row]['node-'.$node->nid]['button'] = array(
-						'#type' => 'markup',
-						'#markup' => '<a href="'.url('group/node/' . $node->nid . '/subscribe/og_user_node').'"><button class="price-btn" type="button">'.t('Join').'</button></a>'
-				);
+        $build['row-' . $row]['node-' . $node->nid]['button'] = array(
+          '#type' => 'markup',
+          '#markup' => '<a href="' . url('group/node/' . $node->nid . '/subscribe/og_user_node') . '"><button class="price-btn" type="button">' . t('Join') . '</button></a>'
+        );
 
-				//Add access denied alerts if this is private group
-        if($node->group_access[LANGUAGE_NONE][0]['value'] && !user_access('administer nodes')){
+        //Add access denied alerts if this is private group
+        if ($node->group_access[LANGUAGE_NONE][0]['value'] && !user_access('administer nodes')) {
 
-          $build['row-'.$row]['node-'.$node->nid]['title']['#prefix'] = '<h3 class="product-list__title no-access">';
-          $build['row-'.$row]['node-'.$node->nid]['list-item']['list-img']['#prefix'] = '<figure class="product-list__img no-access">';
+          $build['row-' . $row]['node-' . $node->nid]['title']['#prefix'] = '<h3 class="product-list__title no-access">';
+          $build['row-' . $row]['node-' . $node->nid]['list-item']['list-img']['#prefix'] = '<figure class="product-list__img no-access">';
 
         }
 
 
-			}else if(og_is_member('node', $node->nid)){
-				$build['row-'.$row]['node-'.$node->nid]['button'] = array(
-						'#type' => 'markup',
-						'#markup' => '<a href="'.url('group/node/' . $node->nid . '/unsubscribe').'"><button class="price-btn leave-group" type="button">'.t('Leave').'</button></a>'
-				);
-			}
+      } else if (og_is_member('node', $node->nid)) {
+        $build['row-' . $row]['node-' . $node->nid]['button'] = array(
+          '#type' => 'markup',
+          '#markup' => '<a href="' . url('group/node/' . $node->nid . '/unsubscribe') . '"><button class="price-btn leave-group" type="button">' . t('Leave') . '</button></a>'
+        );
+      }
 
 
-
-			}
-
-
-			$counter++;
+    }
 
 
+    $counter++;
 
-	}
-	return $build;
+
+  }
+  return $build;
 }
 
 
-
-function ed_cluster_my_inactive_listing_page(){
+function ed_cluster_my_inactive_listing_page()
+{
   drupal_set_title(t('My inactive groups'));
   $content = array();
   $content['sorting'] = drupal_get_form('_ed_get_sorting_options');
   $sql_order = ed_get_sorting_type($content);
-  drupal_add_css(drupal_get_path('module', 'ed_cluster').'/group-listing.css');
+  drupal_add_css(drupal_get_path('module', 'ed_cluster') . '/group-listing.css');
   $og_groups = ed_cluster_get_current_user_clusters($sql_order, true);
   if (!empty($og_groups)) {
     $nodes = node_load_multiple($og_groups);
 
-	  $content['clusters'] = ed_generate_grid_of_groups($nodes);
+    $content['clusters'] = ed_generate_grid_of_groups($nodes);
     $content['pager'] = array(
-        '#theme' => 'pager',
+      '#theme' => 'pager',
     );
 
   }
@@ -882,14 +895,16 @@ function ed_cluster_my_inactive_listing_page(){
 /**
  * Implements hook_menu_alter().
  */
-function ed_cluster_menu_alter(&$items) {
+function ed_cluster_menu_alter(&$items)
+{
   if (isset($items['node/%/group'])) {
     $items['node/%/group']['title callback'] = '_ed_cluster_group_menu_title';
     $items['node/%/group']['title arguments'] = array('node', 1);
   }
 }
 
-function ed_cluster_og_ui_get_group_admin_alter(&$data, $gid){
+function ed_cluster_og_ui_get_group_admin_alter(&$data, $gid)
+{
   global $user;
   if (!in_array('administrator', $user->roles)) {
     unset($data['roles']);
@@ -898,9 +913,10 @@ function ed_cluster_og_ui_get_group_admin_alter(&$data, $gid){
 }
 
 
-function ed_group_content_listing_access($filler, $gnode, $type){
+function ed_group_content_listing_access($filler, $gnode, $type)
+{
 
-  if($gnode->type!='ed_cluster' && $gnode->type!='ed_subgroup'){
+  if ($gnode->type != 'ed_cluster' && $gnode->type != 'ed_subgroup') {
     return false;
   }
   return node_access('view', $gnode);
@@ -912,16 +928,18 @@ function ed_group_content_listing_access($filler, $gnode, $type){
 /*
  * Check if this is group Hindajad and enable Qualifications Portfolio tab
  */
-function ed_group_assessors_ed_q_portfolio_listing_access($filler, $gnode, $type){
+function ed_group_assessors_ed_q_portfolio_listing_access($filler, $gnode, $type)
+{
 
-  if(!($gnode->title=='Hindajad')){
+  if (!($gnode->title == 'Hindajad')) {
     return false;
   }
 
   return ed_group_content_listing_access($filler, $gnode, $type);
 }
 
-function ed_listing_from_group($filler, $gnode, $type){
+function ed_listing_from_group($filler, $gnode, $type)
+{
 
 
   $content = array();
@@ -933,10 +951,10 @@ function ed_listing_from_group($filler, $gnode, $type){
     $content['add-new-container'] = array(
       '#type' => 'container',
       '#attributes' => array(
-        'class' => array('ed-add-new-node', 'ed-add-new-'.$type_dashed),
+        'class' => array('ed-add-new-node', 'ed-add-new-' . $type_dashed),
       ),
     );
-    if($type != 'ed_q_portfolio' && $type != 'ed_event') {
+    if ($type != 'ed_q_portfolio' && $type != 'ed_event') {
       $content['add-new-container']['add-new-link'] = array(
         '#type' => 'markup',
         '#markup' => l(t('Add new'), 'node/add/' . $type_dashed, array('query' => array('og_group_ref' => $gnode->nid, 'destination' => $destination), 'attributes' => array('class' => 'btn btn-success'))),
@@ -951,14 +969,14 @@ function ed_listing_from_group($filler, $gnode, $type){
     $type[] = 'ed_answer';
   }
   $nosorting = array('ed_news', 'ed_event', 'ed_forum', 'ed_blog', 'ed_answer', 'ed_q_portfolio');
-  if(is_array($type)){
+  if (is_array($type)) {
     $content_nids = _ed_get_group_content_by_type($gnode->nid, $type);
-  }else{
-    if(!in_array($type, $nosorting)){
+  } else {
+    if (!in_array($type, $nosorting)) {
       $content['sorting'] = drupal_get_form('_ed_get_sorting_options');
       $sql_order = ed_get_sorting_type($content);
       $content_nids = _ed_get_group_content_by_type($gnode->nid, $type, $sql_order);
-    }else{
+    } else {
       $content_nids = _ed_get_group_content_by_type($gnode->nid, $type);
     }
   }
@@ -988,7 +1006,8 @@ function ed_listing_from_group($filler, $gnode, $type){
 /**
  * Implements hook_field_extra_fields().
  */
-function ed_cluster_field_extra_fields(){
+function ed_cluster_field_extra_fields()
+{
   $extra['node']['ed_cluster']['display'] = array(
     'ed_cluster_content' => array(
       'label' => t('Group content paged'),
@@ -1002,20 +1021,21 @@ function ed_cluster_field_extra_fields(){
 /**
  * Implements hook_preprocess_node().
  */
-function ed_cluster_preprocess_node(&$vars) {
+function ed_cluster_preprocess_node(&$vars)
+{
   if ('ed_cluster' == $vars['node']->type) {
     if (isset($vars['dashboard']) && TRUE == $vars['dashboard']) {
       $vars['user_picture'] = '';
       $vars['display_submitted'] = FALSE;
-      $vars['classes_array'] []= 'node-dashboard';
+      $vars['classes_array'] [] = 'node-dashboard';
     }
 
-	  drupal_add_js(drupal_get_path('module', 'edidaktikum') . '/js/ed_likes.js', 'file');
-	  drupal_add_js(drupal_get_path('module', 'edidaktikum') . '/js/ed_share.js', 'file');
+    drupal_add_js(drupal_get_path('module', 'edidaktikum') . '/js/ed_likes.js', 'file');
+    drupal_add_js(drupal_get_path('module', 'edidaktikum') . '/js/ed_share.js', 'file');
 
-	  if($vars['view_mode'] == 'full'){
-		  $vars['theme_hook_suggestions'][] = 'node__ed_cluster_full';
-	  }
+    if ($vars['view_mode'] == 'full') {
+      $vars['theme_hook_suggestions'][] = 'node__ed_cluster_full';
+    }
 
 
     if ('teaser' === $vars['view_mode'] && isset($vars['group_access'][LANGUAGE_NONE][0]['value']) && 1 == $vars['group_access'][LANGUAGE_NONE][0]['value']) {
@@ -1027,10 +1047,11 @@ function ed_cluster_preprocess_node(&$vars) {
 /**
  * Implements hook_node_view().
  */
-function ed_cluster_node_view($node, $view_mode, $langcode){
-  switch ($node->type){
+function ed_cluster_node_view($node, $view_mode, $langcode)
+{
+  switch ($node->type) {
     case 'ed_cluster':
-      if($view_mode=='full'){
+      if ($view_mode == 'full') {
         menu_tree_set_path('main-menu', 'clusters');
         $content_nids = _ed_get_group_content($node->nid);
         $content = node_load_multiple($content_nids);
@@ -1039,9 +1060,9 @@ function ed_cluster_node_view($node, $view_mode, $langcode){
 
         // Get rid of unrelated study group tasks
         // User with task manager access sees the same number as in Task Manager (includes the tasks of all the study groups)
-        if(!ed_task_manager_access('node', $node)){
-          foreach ($content as $key => $content_node){
-            if($content_node->type == 'ed_task'){
+        if (!ed_task_manager_access('node', $node)) {
+          foreach ($content as $key => $content_node) {
+            if ($content_node->type == 'ed_task') {
               if (!empty($content_node->ed_task_field_study_group)) {
                 //Get user study group field
                 global $user;
@@ -1050,7 +1071,7 @@ function ed_cluster_node_view($node, $view_mode, $langcode){
 
                 if (isset($user_study_group)) {
 
-                  if(in_array(array('value'=>$user_study_group), $content_node->ed_task_field_study_group[LANGUAGE_NONE]) == false){
+                  if (in_array(array('value' => $user_study_group), $content_node->ed_task_field_study_group[LANGUAGE_NONE]) == false) {
 
                     unset($content[$key]);
                     $extracted_study_groups_count++;
@@ -1075,7 +1096,7 @@ function ed_cluster_node_view($node, $view_mode, $langcode){
 
 
         $types = array();
-        foreach($content as $content_single){
+        foreach ($content as $content_single) {
           $types[] = $content_single->type;
         }
 
@@ -1087,14 +1108,14 @@ function ed_cluster_node_view($node, $view_mode, $langcode){
           'attributes' => array(),
           'query' => array(
             'og_group_ref' => $node->nid,
-            'destination' => 'node/'.$node->nid,
+            'destination' => 'node/' . $node->nid,
           ),
         );
 
         // Check if current user is a member of the group
         $is_group_member = og_is_member('node', $node->nid);
 
-        foreach($types_unique as $type) {
+        foreach ($types_unique as $type) {
           $show_link = true;
           $destination_no_ed_task_manager_access = "";
           if ($type != 'ed_answer' && $type != 'ed_subgroup') {
@@ -1107,7 +1128,7 @@ function ed_cluster_node_view($node, $view_mode, $langcode){
 
             $type_nodes_count = _ed_get_group_content_by_type_count($node->nid, $type);
             //Extract unrelated study groups tasks
-            if ($type == 'ed_task'){
+            if ($type == 'ed_task') {
               $type_nodes_count = $type_nodes_count - $extracted_study_groups_count;
             }
 
@@ -1115,15 +1136,15 @@ function ed_cluster_node_view($node, $view_mode, $langcode){
             $headingmarkup = _ed_cluster_plural_title_for_group_node_type($type) . ' (' . t('Total') . ': ' . $type_nodes_count . ')';
             if ($show_link) {
               $headingmarkup = l($headingmarkup, _ed_cluster_destination_for_group_node_type($node, $type));
-            }else{
+            } else {
               $headingmarkup = l($headingmarkup, $destination_no_ed_task_manager_access);
             }
 
             $node->content['ed_cluster_content'][$type]['heading'] = array(
-                '#type' => 'markup',
-                '#prefix' => '<h2 class="' . $type . '">',
-                '#markup' => $headingmarkup,
-                '#suffix' => '</h2>',
+              '#type' => 'markup',
+              '#prefix' => '<h2 class="' . $type . '">',
+              '#markup' => $headingmarkup,
+              '#suffix' => '</h2>',
             );
             // Add new link is only shown to group members
             //if ($is_group_member) {
@@ -1205,7 +1226,7 @@ function ed_cluster_node_view($node, $view_mode, $langcode){
             if (typeof node.innerHTML === "undefined") continue;
             node.innerHTML = og_members_sortable[og_members_used++].inner;
          }
-        });','inline');
+        });', 'inline');
       } else if ('dashboard' == $view_mode) {
         $recent_content = _ed_get_group_recent_content($node->nid, 5);
         $recnt_content_nodes = node_load_multiple($recent_content);
@@ -1216,13 +1237,11 @@ function ed_cluster_node_view($node, $view_mode, $langcode){
 
             $single_type = $single->type;
 
-            if($single_type == 'ed_task'){
+            if ($single_type == 'ed_task') {
               $single_type = t('Task');
-            }
-            else if($single_type == 'ed_news'){
+            } else if ($single_type == 'ed_news') {
               $single_type = t('news');
-            }
-            else{
+            } else {
               $single_type = node_type_get_name($single);
             }
             // Determine the user who really acted in case of changed
@@ -1254,11 +1273,11 @@ function ed_cluster_node_view($node, $view_mode, $langcode){
 
             if ('created' == $single_action) {
               $items[] = array(
-                'data' => t('!name added !node @time', array('!name' => $single_name, '!node' => $single_title, '@time' => format_date($single->created, 'short'))).' ('.ucfirst($single_type).')',
+                'data' => t('!name added !node @time', array('!name' => $single_name, '!node' => $single_title, '@time' => format_date($single->created, 'short'))) . ' (' . ucfirst($single_type) . ')',
               );
             } else {
               $items[] = array(
-                'data' => t('!name changed !node @time', array('!name' => $single_name, '!node' => $single_title, '@time' => format_date($single->changed, 'short'))).' ('.ucfirst($single_type).')',
+                'data' => t('!name changed !node @time', array('!name' => $single_name, '!node' => $single_title, '@time' => format_date($single->changed, 'short'))) . ' (' . ucfirst($single_type) . ')',
               );
 
             }
@@ -1287,20 +1306,21 @@ function ed_cluster_node_view($node, $view_mode, $langcode){
   }
 }
 
-function _ed_get_last_content_by_type($type, $content){
+function _ed_get_last_content_by_type($type, $content)
+{
   $all_latest_nids = array();
-  foreach($content as $content_single){
-    if($content_single->type == $type){
+  foreach ($content as $content_single) {
+    if ($content_single->type == $type) {
       $all_latest_nids[] = $content_single;
     }
   }
   usort($all_latest_nids, "cmp");
   $count = 0;
   $latest_nids = array();
-  foreach($all_latest_nids as $nid){
+  foreach ($all_latest_nids as $nid) {
     $latest_nids[] = $nid;
     $count++;
-    if($count==3){
+    if ($count == 3) {
       break;
     }
   }
@@ -1308,8 +1328,10 @@ function _ed_get_last_content_by_type($type, $content){
   return $latest_nids;
 
 }
-function cmp($a, $b){
-    return strcmp($b->created, $a->created);
+
+function cmp($a, $b)
+{
+  return strcmp($b->created, $a->created);
 }
 
 /**
@@ -1321,15 +1343,16 @@ function cmp($a, $b){
  * @return
  *   An array of node identifiers if any exist
  */
-function _ed_get_group_recent_content($gid, $limit = NULL){
+function _ed_get_group_recent_content($gid, $limit = NULL)
+{
   $query = db_select('node', 'n');
   $query->join('og_membership', 'ogm', "n.nid = ogm.etid AND ogm.entity_type = 'node'");
   $query->fields('n', array('nid'))
-      ->condition('ogm.gid', $gid)
-      ->condition('n.nid', $gid, '!=')
-      ->addTag('node_access')
-      ->orderBy('n.changed', 'DESC')
-      ->distinct();
+    ->condition('ogm.gid', $gid)
+    ->condition('n.nid', $gid, '!=')
+    ->addTag('node_access')
+    ->orderBy('n.changed', 'DESC')
+    ->distinct();
   if ($limit) {
     $query->range(0, 5);
   }
@@ -1337,31 +1360,33 @@ function _ed_get_group_recent_content($gid, $limit = NULL){
   return $result;
 }
 
-function _ed_get_group_content($gid){
+function _ed_get_group_content($gid)
+{
   $query = db_select('node', 'n');
   $query->join('og_membership', 'ogm', "n.nid = ogm.etid AND ogm.entity_type = 'node'");
   $query->fields('n', array('nid'))
-      ->condition('ogm.gid', $gid)
-      ->condition('n.nid', $gid, '!=')
-      ->addTag('node_access')
-      ->distinct();
+    ->condition('ogm.gid', $gid)
+    ->condition('n.nid', $gid, '!=')
+    ->addTag('node_access')
+    ->distinct();
   $result = $query->execute()->fetchCol();
   return $result;
 }
 
-function _ed_get_group_content_by_type($gid, $type, $order = 'DESC'){
+function _ed_get_group_content_by_type($gid, $type, $order = 'DESC')
+{
   $query = db_select('node', 'n')
-      ->extend('PagerDefault');
+    ->extend('PagerDefault');
   $query->join('og_membership', 'ogm', "n.nid = ogm.etid AND ogm.entity_type = 'node'");
   $query->fields('n', array('nid'))
-      ->condition('ogm.gid', $gid)
-      ->condition('n.nid', $gid, '!=')
-      ->condition('n.type', $type)
-      ->addTag('node_access')
-      ->orderBy('n.sticky', 'DESC');
-  if($order == 'title'){
+    ->condition('ogm.gid', $gid)
+    ->condition('n.nid', $gid, '!=')
+    ->condition('n.type', $type)
+    ->addTag('node_access')
+    ->orderBy('n.sticky', 'DESC');
+  if ($order == 'title') {
     $query->orderBy('n.title', 'ASC');
-  }else{
+  } else {
     $query->orderBy('n.created', $order);
   }
 
@@ -1374,37 +1399,39 @@ function _ed_get_group_content_by_type($gid, $type, $order = 'DESC'){
 /**
  * Responds with node identifiers for group according to type provided,
  * uses TableSort based on provided header data.
- * @param  int    $gid    Group identifier
- * @param  string $type   Node type
- * @param  array  $header Table header
+ * @param int $gid Group identifier
+ * @param string $type Node type
+ * @param array $header Table header
  * @return array          Array of node identifiers
  */
-function _ed_get_group_content_by_type_with_table_sort($gid, $type, $header){
+function _ed_get_group_content_by_type_with_table_sort($gid, $type, $header)
+{
   $query = db_select('node', 'n');
   $query->join('og_membership', 'ogm', "n.nid = ogm.etid AND ogm.entity_type = 'node'");
   $query->fields('n', array('nid'))
-      ->condition('ogm.gid', $gid)
-      ->condition('n.nid', $gid, '!=')
-      ->condition('n.type', $type)
-      ->addTag('node_access')
-      ->extend('TableSort')
-      ->orderByHeader($header)
-      ->extend('PagerDefault')
-      ->limit(ed_get_paging_nr());
+    ->condition('ogm.gid', $gid)
+    ->condition('n.nid', $gid, '!=')
+    ->condition('n.type', $type)
+    ->addTag('node_access')
+    ->extend('TableSort')
+    ->orderByHeader($header)
+    ->extend('PagerDefault')
+    ->limit(ed_get_paging_nr());
   $query->distinct();
   $result = $query->execute()->fetchCol();
   return $result;
 }
 
-function _ed_get_group_tasks_for_group_task_page($gid){
+function _ed_get_group_tasks_for_group_task_page($gid)
+{
   $query = db_select('node', 'n');
   $query->join('og_membership', 'ogm', "n.nid = ogm.etid AND ogm.entity_type = 'node'");
   $query->fields('n', array('nid'))
-      ->condition('ogm.gid', $gid)
-      ->condition('n.nid', $gid, '!=')
-      ->condition('n.type', 'ed_task')
-      ->addTag('node_access')
-      ->orderBy('n.sticky', 'DESC');
+    ->condition('ogm.gid', $gid)
+    ->condition('n.nid', $gid, '!=')
+    ->condition('n.type', 'ed_task')
+    ->addTag('node_access')
+    ->orderBy('n.sticky', 'DESC');
   $query->distinct();
   $result = $query->execute()->fetchCol();
   return $result;
@@ -1413,20 +1440,21 @@ function _ed_get_group_tasks_for_group_task_page($gid){
 
 /**
  * Returns count for nodes of centain type within a group.
- * @param int     $gid  Group identifier
- * @param string  $type Node type
+ * @param int $gid Group identifier
+ * @param string $type Node type
  *
  * @return int
  */
-function _ed_get_group_content_by_type_count($gid, $type){
+function _ed_get_group_content_by_type_count($gid, $type)
+{
   $query = db_select('node', 'n');
   $query->join('og_membership', 'ogm', "n.nid = ogm.etid AND ogm.entity_type = 'node'");
   $query->fields('n', array('nid'))
-      ->condition('ogm.gid', $gid)
-      ->condition('n.nid', $gid, '!=')
-      ->condition('n.type', $type)
-      ->addTag('node_access')
-      ->distinct();
+    ->condition('ogm.gid', $gid)
+    ->condition('n.nid', $gid, '!=')
+    ->condition('n.type', $type)
+    ->addTag('node_access')
+    ->distinct();
   return $query->countQuery()->execute()->fetchField();
 }
 
@@ -1436,7 +1464,8 @@ function _ed_get_group_content_by_type_count($gid, $type){
  * creator or group admin.
  * @return boolean
  */
-function ed_task_manager_access($test, $node){
+function ed_task_manager_access($test, $node)
+{
   if ('ed_cluster' != $node->type) {
     return false;
   }
@@ -1463,7 +1492,8 @@ function ed_task_manager_access($test, $node){
 
 //  new new task manager page
 
-function ed_task_manager_experimental($arg_type, $node) {
+function ed_task_manager_experimental($arg_type, $node)
+{
   menu_tree_set_path('main-menu', 'clusters');
 
   drupal_add_js(drupal_get_path('module', 'edidaktikum') . '/supertable/loader.js');
@@ -1493,9 +1523,9 @@ function ed_task_manager_experimental($arg_type, $node) {
   ];
 
   foreach ($tasks as &$task) {
-    $cols []= [
+    $cols [] = [
       'id' => $task['task_id'],
-      'title' => $task['title'] . "<br>" . date("d/m/y", $task['due_date'])  ,
+      'title' => $task['title'] . "<br>" . date("d/m/y", $task['due_date']),
       'group' => 'Tasks',
       'sort_key' => 'grade',
       'url_temp_disabled' => "../" . $task['task_id']
@@ -1514,7 +1544,7 @@ function ed_task_manager_experimental($arg_type, $node) {
     if ($group_data['admin']) continue;
 
     //  build cells
-    $data = [ 'full_name' => [
+    $data = ['full_name' => [
       'data' => $user['full_name'],
       'url' => "../../user/" . $user['uid']
     ]];
@@ -1530,7 +1560,7 @@ function ed_task_manager_experimental($arg_type, $node) {
       unset($task);
     }
 
-    $rows []= [
+    $rows [] = [
       'id' => $user['uid'],
       'title' => $user['full_name'],
       'group' => 'All Students',
@@ -1548,8 +1578,8 @@ function ed_task_manager_experimental($arg_type, $node) {
     <script id="tme_placeholder">
       window.addEventListener("load", function() {
         var table = new edf.table();
-        table.add_rows('. $rows_json .');
-        table.add_cols('. $cols_json .');
+        table.add_rows(' . $rows_json . ');
+        table.add_cols(' . $cols_json . ');
         table.header_row.size = 50;
 
         var el = document.querySelector("#tme_placeholder");
@@ -1566,12 +1596,13 @@ function ed_task_manager_experimental($arg_type, $node) {
 
 //  new task manager page
 
-function ed_task_manager($test, $node) {
+function ed_task_manager($test, $node)
+{
   //  stuff
   menu_tree_set_path('main-menu', 'clusters');
-  drupal_add_css(drupal_get_path('module', 'ed_cluster').'/task_manager.css');
-  drupal_add_js(drupal_get_path('module', 'ed_cluster').'/js/ed_task_manager_task_filter.js');
-  drupal_add_js(drupal_get_path('module', 'ed_cluster').'/js/ed_cluster_tooltip.js');
+  drupal_add_css(drupal_get_path('module', 'ed_cluster') . '/task_manager.css');
+  drupal_add_js(drupal_get_path('module', 'ed_cluster') . '/js/ed_task_manager_task_filter.js');
+  drupal_add_js(drupal_get_path('module', 'ed_cluster') . '/js/ed_cluster_tooltip.js');
 
   //  more stuff
   $tasks = ed_get_group_tasks($node->nid, true, true, true);
@@ -1580,12 +1611,12 @@ function ed_task_manager($test, $node) {
   //  add new container button
   $content['add-new-container'] = [
     '#type' => 'container',
-    '#attributes' => [ 'class' => ['ed-add-new-node', 'ed-add-new-task'] ],
+    '#attributes' => ['class' => ['ed-add-new-node', 'ed-add-new-task']],
 
     'add-new' => [
       '#type' => 'markup',
       '#markup' => l(t('Add new'), 'node/add/ed-task',
-        [ 'attributes' =>[ 'class' => ['btn btn-success']],
+        ['attributes' => ['class' => ['btn btn-success']],
           'query' => [
             'og_group_ref' => $node->nid,
             'destination' => _ed_cluster_destination_for_group_node_type($node, 'ed_task')
@@ -1595,8 +1626,8 @@ function ed_task_manager($test, $node) {
     ],
     'download-table' => [
       '#type' => 'markup',
-      '#markup' => l(t('Download csv'), 'node/'.$node->nid.'/task-manager/download',
-        [ 'attributes' => [ 'class' => ['btn btn-success ed-download-tasks']]]
+      '#markup' => l(t('Download csv'), 'node/' . $node->nid . '/task-manager/download',
+        ['attributes' => ['class' => ['btn btn-success ed-download-tasks']]]
       )
     ],
   ];
@@ -1607,11 +1638,11 @@ function ed_task_manager($test, $node) {
 
   $content['task-filter-container'] = [
     '#type' => 'container',
-    '#attributes' => [ 'class' => ['ed-filter-tasks'] ],
+    '#attributes' => ['class' => ['ed-filter-tasks']],
 
     'container' => [
       '#type' => 'container',
-      '#attributes' => [ 'class' => ['row'] ],
+      '#attributes' => ['class' => ['row']],
 
       'selection-box' => [
         '#type' => 'select',
@@ -1630,14 +1661,14 @@ function ed_task_manager($test, $node) {
         '#type' => 'markup',
         '#prefix' => '<div class="span4 ed_filter_button">',
         '#suffix' => '</div>',
-        '#markup' => '<button class="btn btn-primary ed_filter_tasks">'.t('Filter').'</button>'
+        '#markup' => '<button class="btn btn-primary ed_filter_tasks">' . t('Filter') . '</button>'
       ]
 
     ]
   ];
 
   //  if task id filter is set, remove all other tasks
-  if ( isset($_GET['tasknid']) ) {
+  if (isset($_GET['tasknid'])) {
     foreach ($tasks as $task) {
       if ($task['nid'] == $_GET['tasknid']) {
         $tasks = [$task];
@@ -1679,32 +1710,26 @@ function ed_task_manager_download($node)
 
   //write header row
   $csvheader = [];
-  foreach ($headers as $header)
-  {
+  foreach ($headers as $header) {
     $title = ed_get_value_from_html('title', $header);
 
     if ($title == false) $title = $header;
 
-    $csvheader []= $title;
+    $csvheader [] = $title;
   }
   fputcsv($handle, $csvheader);
 
   //write member rows
-  foreach ($rows as $row)
-  {
+  foreach ($rows as $row) {
     //write one row
     $csvrow = [];
-    foreach ($row['data'] as $cell)
-    {
-      if (is_array($cell))
-      {
+    foreach ($row['data'] as $cell) {
+      if (is_array($cell)) {
         $string = $cell['title'];
-      }
-      else if (is_string($cell))
-      {
+      } else if (is_string($cell)) {
         $string = strip_tags($cell);
       }
-      $csvrow []= $string;
+      $csvrow [] = $string;
     }
     fputcsv($handle, $csvrow);
   }
@@ -1719,17 +1744,17 @@ function ed_task_manager_download($node)
 function _ed_get_task_manager_headers($tasks)
 {
   $headers = [t('Name')];
-  foreach($tasks as $task) {
+  foreach ($tasks as $task) {
     $header = l(
       format_date($task['due_date'], 'custom', 'd.m'),
       'node/' . $task['nid'],
       ['attributes' => [
-        'title' => $task['title'].t(' - Due date: ').format_date($task['due_date'], 'short'),
+        'title' => $task['title'] . t(' - Due date: ') . format_date($task['due_date'], 'short'),
         'data-toggle' => 'tooltip',
         'data-placement' => 'bottom'
       ]]
     );
-    $headers []= $header;
+    $headers [] = $header;
   }
   return $headers;
 }
@@ -1738,18 +1763,18 @@ function _ed_get_task_manager_rows($tasks, $members)
 {
   $rows = [];
   foreach ($members as $member) {
-    $row = [ 'data' => [ l($member['full_name'], 'user/' . $member['uid']) ] ];
+    $row = ['data' => [l($member['full_name'], 'user/' . $member['uid'])]];
 
     //  construct cells
     foreach ($tasks as $task) {
-      $cell = [ 'data' => '&nbsp' ];
+      $cell = ['data' => '&nbsp'];
 
       if (ed_is_task_applicable($task, $member)) {
         //  if applicable, get answer and fill cell
         $answer = ed_get_answer($task['nid'], $member['uid'], false, true);
 
         //  title and class
-        switch($answer['status']) {
+        switch ($answer['status']) {
           case 'unanswered':
             $cell['class'] = 'unanswered';
             $cell['title'] = t('Not answered');
@@ -1758,13 +1783,13 @@ function _ed_get_task_manager_rows($tasks, $members)
           case 'unchecked':
             $cell['class'] = 'unchecked';
             $cell['title'] = t('Unchecked');
-	          //Check if it is late submission - if submitted on the due date or later
+            //Check if it is late submission - if submitted on the due date or later
 
             $changed = date('Y-m-d', $answer['changed']);
             $due_date = date('Y-m-d', $task['due_date']);
 
 
-            if($changed > $due_date){
+            if ($changed > $due_date) {
               $cell['data'] = '!&nbsp;';
             }
 
@@ -1799,10 +1824,10 @@ function _ed_get_task_manager_rows($tasks, $members)
         $cell['title'] = t('Not applicable');
       }
 
-      $row['data'] []= $cell;
+      $row['data'] [] = $cell;
     }
 
-    $rows []= $row;
+    $rows [] = $row;
   }
 
   return $rows;
@@ -1817,34 +1842,35 @@ function ed_get_value_from_html($key, $html)
   if ($i == false) return false;
 
   $i += strlen($string);
-  while (($k = $html[$i]) != '"')
-  {
+  while (($k = $html[$i]) != '"') {
     $value .= $html[$i];
     $i++;
   }
   return $value;
 }
 
-function _ed_get_answer_nid($uid, $tnid){
+function _ed_get_answer_nid($uid, $tnid)
+{
   $query = db_select('node', 'n');
   $query->join('field_data_field_ref_to_task', 'ref', 'n.nid = ref.entity_id');
   $query->fields('n', array('nid'));
   $query->condition('n.uid', $uid)
-      ->condition('ref.field_ref_to_task_target_id', $tnid);
+    ->condition('ref.field_ref_to_task_target_id', $tnid);
   $result = $query->execute()->fetchCol();
   return $result;
 }
 
 
-function _ed_check_if_answered($uid, $tnid){
+function _ed_check_if_answered($uid, $tnid)
+{
   $query = db_select('node', 'n');
   $query->join('field_data_field_ref_to_task', 'ref', 'n.nid = ref.entity_id');
   $query->fields('n', array('nid'));
   $query->condition('n.uid', $uid)
-      ->condition('n.status', 1);
+    ->condition('n.status', 1);
   $query->condition('ref.field_ref_to_task_target_id', $tnid);
   $result = $query->execute()->fetchCol();
-  if(!empty($result)){
+  if (!empty($result)) {
     return TRUE;
   } else {
     return FALSE;
@@ -1853,7 +1879,8 @@ function _ed_check_if_answered($uid, $tnid){
 
 }
 
-function _ed_get_last_grade($answer) {
+function _ed_get_last_grade($answer)
+{
   $answernode = node_load($answer);
   $groupnid = $answernode->og_group_ref[LANGUAGE_NONE][0]['target_id'];
   $group = node_load($groupnid);
@@ -1861,7 +1888,7 @@ function _ed_get_last_grade($answer) {
 
   $query = db_select('comment', 'c');
   $query->join('field_data_ed_answer_grade', 's', 'c.cid = s.entity_id');
-  $query->fields('s',array('ed_answer_grade_value'));
+  $query->fields('s', array('ed_answer_grade_value'));
   $query->condition('c.nid', $answer);
   $query->condition('c.uid', $groupadmins, 'IN');
   $result = $query->execute()->fetchCol();
@@ -1871,13 +1898,12 @@ function _ed_get_last_grade($answer) {
 }
 
 
-
-
-function _ed_check_if_accepted($answer){
+function _ed_check_if_accepted($answer)
+{
   $answernode = node_load($answer);
 
-  if(!empty($answernode->ed_answer_last_status)){
-    if($answernode->ed_answer_last_status[LANGUAGE_NONE][0]['status'] != 'unchecked'){
+  if (!empty($answernode->ed_answer_last_status)) {
+    if ($answernode->ed_answer_last_status[LANGUAGE_NONE][0]['status'] != 'unchecked') {
       return $answernode->ed_answer_last_status[LANGUAGE_NONE][0]['status'];
     }
   }
@@ -1887,12 +1913,13 @@ function _ed_check_if_accepted($answer){
 /*
  * Get all answers from selected user.
  */
-function _ed_check_for_answers($uid){
+function _ed_check_for_answers($uid)
+{
   $query = db_select('node', 'n');
   $query
-      ->condition('n.type', 'ed_answer')
-      ->condition('n.uid', $uid)
-      ->fields('n', array('nid'));
+    ->condition('n.type', 'ed_answer')
+    ->condition('n.uid', $uid)
+    ->fields('n', array('nid'));
   return $query->execute()->fetchCol();
 }
 
@@ -1901,7 +1928,8 @@ function _ed_check_for_answers($uid){
 /*
  * Get all tasks that the user has made for this group
  */
-function _ed_get_user_group_tasks($uid, $nid){
+function _ed_get_user_group_tasks($uid, $nid)
+{
   $query = db_select('node', 'n');
   $query->join('og_membership', 'ogm', "n.nid = ogm.etid AND ogm.entity_type='node' AND ogm.group_type = 'node' AND ogm.gid = :gid AND ogm.state = :active", array(':gid' => $nid, ':active' => OG_STATE_ACTIVE));
   $query->fields('n', array('nid'))
@@ -1912,13 +1940,11 @@ function _ed_get_user_group_tasks($uid, $nid){
 }
 
 
-
-
-
 /**
  * Get all users of a group
  */
-function _get_users_in_group($gid) {
+function _get_users_in_group($gid)
+{
   $query = db_select('users', 'u');
 
   $query
@@ -1941,7 +1967,8 @@ function _get_users_in_group($gid) {
  * @return array
  *   An array with group identifiers or empty array
  */
-function _ed_cluster_get_all_administered_groups(&$account) {
+function _ed_cluster_get_all_administered_groups(&$account)
+{
   $administered_groups = array();
   $query = db_select('node', 'n')
     ->fields('n', array('nid'))
@@ -1987,7 +2014,8 @@ function _ed_cluster_get_all_administered_groups(&$account) {
  * @return
  *   User identifiers or empty
  */
-function _ed_cluster_get_group_admins(&$node, $add_creator = false) {
+function _ed_cluster_get_group_admins(&$node, $add_creator = false)
+{
   // Determine general role identifier (rid) for group admin
   $group_roles = og_roles('node', 'ed_cluster', $node->nid);
   $admin_rid = array_search(OG_ADMINISTRATOR_ROLE, $group_roles);
@@ -1998,7 +2026,7 @@ function _ed_cluster_get_group_admins(&$node, $add_creator = false) {
   $admins = $query->execute()->fetchCol();
 
   if ($add_creator && !in_array($node->uid, $admins)) {
-    $admins []= $node->uid;
+    $admins [] = $node->uid;
   }
 
   return $admins;
@@ -2014,7 +2042,8 @@ function _ed_cluster_get_group_admins(&$node, $add_creator = false) {
  * @return
  *   Boolean value
  */
-function _ed_cluster_is_groups_admin_or_creator($uid, $groups) {
+function _ed_cluster_is_groups_admin_or_creator($uid, $groups)
+{
   // Return FALSE if no groups provided
   if (empty($groups) || !is_array($groups)) {
     return FALSE;
@@ -2027,7 +2056,7 @@ function _ed_cluster_is_groups_admin_or_creator($uid, $groups) {
     ->condition('n.nid', $groups, 'IN')
     ->countQuery();
 
-  if ((int) $query->execute()->fetchField() > 0) {
+  if ((int)$query->execute()->fetchField() > 0) {
     return TRUE;
   }
 
@@ -2042,7 +2071,7 @@ function _ed_cluster_is_groups_admin_or_creator($uid, $groups) {
     ->condition('ogur.gid', $groups, 'IN')
     ->countQuery();
 
-  if ((int) $query->execute()->fetchField() > 0) {
+  if ((int)$query->execute()->fetchField() > 0) {
     return TRUE;
   }
 
@@ -2050,15 +2079,14 @@ function _ed_cluster_is_groups_admin_or_creator($uid, $groups) {
 }
 
 
-
-
-function _ed_cluster_search_for_clusters($searchstring){
+function _ed_cluster_search_for_clusters($searchstring)
+{
   $query = db_select('node', 'n')
-      ->extend('PagerDefault')
-      ->fields('n', array('nid'))
-      ->condition('n.type', 'ed_cluster')
-      ->condition('n.status', 1)
-      ->condition('n.title', '%' . db_like($searchstring) . '%', 'LIKE');
+    ->extend('PagerDefault')
+    ->fields('n', array('nid'))
+    ->condition('n.type', 'ed_cluster')
+    ->condition('n.status', 1)
+    ->condition('n.title', '%' . db_like($searchstring) . '%', 'LIKE');
   $query->limit(ed_get_grid_paging_nr());
   $nids = $query->execute()->fetchCol();
   return $nids;
@@ -2069,26 +2097,27 @@ function _ed_cluster_search_for_clusters($searchstring){
  * Returns paged ed_subgroup node indentifiers
  * NB! Ignores node_access
  */
-function ed_cluster_get_subgroups($order, $gnid) {
+function ed_cluster_get_subgroups($order, $gnid)
+{
   $query = db_select('node', 'n')
-      ->extend('PagerDefault');
+    ->extend('PagerDefault');
   $query->join('og_membership', 'ogm', 'n.nid = ogm.etid');
   $query->fields('n', array('nid'))
-      ->condition('ogm.entity_type', 'node')
-      ->condition('ogm.gid', $gnid)
-      ->condition('n.status', 1)
-      ->condition('n.type', 'ed_subgroup');
+    ->condition('ogm.entity_type', 'node')
+    ->condition('ogm.gid', $gnid)
+    ->condition('n.status', 1)
+    ->condition('n.type', 'ed_subgroup');
 
-    if($order == 'title'){
-      $query->orderBy('TRIM(n.title)', 'ASC');
-    }else{
-      $query->orderBy('n.created', $order);
-    }
-    $query->limit(ed_get_grid_paging_nr());
+  if ($order == 'title') {
+    $query->orderBy('TRIM(n.title)', 'ASC');
+  } else {
+    $query->orderBy('n.created', $order);
+  }
+  $query->limit(ed_get_grid_paging_nr());
 
-    $nids = $query->execute()->fetchCol();
+  $nids = $query->execute()->fetchCol();
 
-    return $nids;
+  return $nids;
 }
 
 
@@ -2096,8 +2125,9 @@ function ed_cluster_get_subgroups($order, $gnid) {
  * Returns paged ed_cluster node identifiers
  * NB! Ignores node_access
  */
-function ed_cluster_get_clusters($order, $remove_user_groups = FALSE, $inactive) {
-  if($remove_user_groups){
+function ed_cluster_get_clusters($order, $remove_user_groups = FALSE, $inactive)
+{
+  if ($remove_user_groups) {
     $usergroups = og_get_groups_by_user();
 
     $query = db_select('node', 'n')
@@ -2105,26 +2135,26 @@ function ed_cluster_get_clusters($order, $remove_user_groups = FALSE, $inactive)
       ->fields('n', array('nid'))
       ->condition('n.status', 1);
 
-    if($inactive) {
+    if ($inactive) {
       $exclude_query = new EntityFieldQuery();
       $exclude_query->entityCondition('entity_type', 'node')
-          ->entityCondition('bundle', 'ed_cluster')
-          ->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT')
-          ->fieldCondition('ed_field_group_state', 'value', 1);
+        ->entityCondition('bundle', 'ed_cluster')
+        ->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT')
+        ->fieldCondition('ed_field_group_state', 'value', 1);
       $exclude_result = $exclude_query->execute();
       $excluded = array_keys($exclude_result['node']);
-      if ( $excluded ) {
+      if ($excluded) {
         $query->condition('n.nid', $excluded, 'NOT IN');
       }
     }
 
-    if($usergroups){
+    if ($usergroups) {
       $query->condition('n.nid', $usergroups['node'], 'not in');
     }
     $query->condition('n.type', 'ed_cluster');
-    if($order == 'title'){
+    if ($order == 'title') {
       $query->orderBy('TRIM(title)', 'ASC');
-    }else{
+    } else {
       $query->orderBy('created', $order);
     }
     $query->limit(ed_get_grid_paging_nr());
@@ -2133,15 +2163,15 @@ function ed_cluster_get_clusters($order, $remove_user_groups = FALSE, $inactive)
     $nids = $query->execute()->fetchCol();
 
     return $nids;
-  }else{
+  } else {
     $query = db_select('node', 'n')
       ->extend('PagerDefault')
       ->fields('n', array('nid'))
       ->condition('n.status', 1)
       ->condition('n.type', 'ed_cluster');
-    if($order == 'title'){
+    if ($order == 'title') {
       $query->orderBy('TRIM(title)', 'ASC');
-    }else{
+    } else {
       $query->orderBy('created', $order);
     }
     $query->limit(ed_get_grid_paging_nr());
@@ -2156,11 +2186,12 @@ function ed_cluster_get_clusters($order, $remove_user_groups = FALSE, $inactive)
  * Returns paged ed_cluster nodes where current user is a member of.
  * Applies the node_access check and make sure that membership status is active,
  * also applies some more cheks (e.g. type of group and type of member entity).
- * @param  string $order   Order to apply to the query being made
+ * @param string $order Order to apply to the query being made
  * @param boolean $inactive If false, only active are shown, otherwise only inactive
  * @return array           Array of identifiers
  */
-function ed_cluster_get_current_user_clusters($order, $inactive = false) {
+function ed_cluster_get_current_user_clusters($order, $inactive = false)
+{
   global $user;
   $account = clone $user;
 
@@ -2172,13 +2203,13 @@ function ed_cluster_get_current_user_clusters($order, $inactive = false) {
 
 
   $exclude_query = new EntityFieldQuery();
-  if($inactive) {
+  if ($inactive) {
     $exclude_query->entityCondition('entity_type', 'node')
       ->entityCondition('bundle', 'ed_cluster')
       ->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT')
       ->fieldCondition('ed_field_group_state', 'value', 1);
     $exclude_result = $exclude_query->execute();
-  }else{
+  } else {
     $exclude_query->entityCondition('entity_type', 'node')
       ->entityCondition('bundle', 'ed_cluster')
       ->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT')
@@ -2187,16 +2218,16 @@ function ed_cluster_get_current_user_clusters($order, $inactive = false) {
   }
 
   $excluded = array_keys($exclude_result['node']);
-  if ( $excluded ) {
+  if ($excluded) {
     $query->condition('n.nid', $excluded, 'NOT IN');
   }
 
 
   $query->join('og_membership', 'ogm', "n.nid = ogm.gid AND ogm.entity_type = 'user' AND ogm.group_type = 'node' AND ogm.state = 1 AND ogm.field_name = 'og_user_node'");
   $query->condition('ogm.etid', $account->uid);
-  if($order == 'title'){
+  if ($order == 'title') {
     $query->orderBy('TRIM(title)', 'ASC');
-  }else{
+  } else {
     $query->orderBy('n.created', $order);
   }
   $query->limit(ed_get_grid_paging_nr());
@@ -2209,7 +2240,8 @@ function ed_cluster_get_current_user_clusters($order, $inactive = false) {
 /**
  * Implements hook_ctools_plugin_api().
  */
-function ed_cluster_ctools_plugin_api() {
+function ed_cluster_ctools_plugin_api()
+{
   list($module, $api) = func_get_args();
   if ($module == "page_manager" && $api == "pages_default") {
     return array("version" => "1");
@@ -2219,7 +2251,8 @@ function ed_cluster_ctools_plugin_api() {
 /**
  * Implements hooks_views_api().
  */
-function ed_cluster_views_api() {
+function ed_cluster_views_api()
+{
   return array(
     'api' => 3,
     'path' => drupal_get_path('module', 'ed_cluster') . '/includes/views',
@@ -2229,7 +2262,8 @@ function ed_cluster_views_api() {
 /**
  * Implements hook_form_alter().
  */
-function ed_cluster_form_alter(&$form, &$form_state, $form_id) {
+function ed_cluster_form_alter(&$form, &$form_state, $form_id)
+{
   if ('ed_cluster_node_form' == $form_id) {
     menu_tree_set_path('main-menu', 'clusters');
     if (empty($form['#node']->nid)) {
@@ -2242,37 +2276,37 @@ function ed_cluster_form_alter(&$form, &$form_state, $form_id) {
     $form['group_access']['#weight'] = $tmp;
 
     //Translate group title
-	  $form['title']['#title'] = t('Title');
+    $form['title']['#title'] = t('Title');
 
     // Group types related
 
 
-	  $form['ed_field_group_type']['#weight'] = -7;
-	  $form['ed_field_course_code']['#weight'] = -6;
-	  $form['ed_field_university']['#weight'] = 2;
-	  $form['ed_field_curriculum']['#weight'] = 3;
-	  $form['ed_field_study_year']['#weight'] = 4;
-	  $form['ed_field_excerpt']['#weight'] = 5;
-	  $form['ed_field_content']['#weight'] = 6;
-	  $form['ed_field_course_aim']['#weight'] = 7;
-	  $form['ed_field_learning_outcomes']['#weight'] = 8;
-	  $form['ed_field_category']['#weight'] = 9;
-	  $form['ed_field_assessment_method']['#weight'] = 10;
-	  $form['group_access']['#weight'] = 11;
-	  $form['ed_field_featured_image']['#weight'] = 12;
+    $form['ed_field_group_type']['#weight'] = -7;
+    $form['ed_field_course_code']['#weight'] = -6;
+    $form['ed_field_university']['#weight'] = 2;
+    $form['ed_field_curriculum']['#weight'] = 3;
+    $form['ed_field_study_year']['#weight'] = 4;
+    $form['ed_field_excerpt']['#weight'] = 5;
+    $form['ed_field_content']['#weight'] = 6;
+    $form['ed_field_course_aim']['#weight'] = 7;
+    $form['ed_field_learning_outcomes']['#weight'] = 8;
+    $form['ed_field_category']['#weight'] = 9;
+    $form['ed_field_assessment_method']['#weight'] = 10;
+    $form['group_access']['#weight'] = 11;
+    $form['ed_field_featured_image']['#weight'] = 12;
 
 
-	  if(isset($form['#node']->ed_field_group_type)){
-		  $group_type = $form['#node']->ed_field_group_type[LANGUAGE_NONE][0]['value'];
+    if (isset($form['#node']->ed_field_group_type)) {
+      $group_type = $form['#node']->ed_field_group_type[LANGUAGE_NONE][0]['value'];
 
       global $user;
       $account = clone $user;
 
       //Only group author can clone
-      if ($account->uid == $form['#node']->uid){
+      if ($account->uid == $form['#node']->uid) {
         $form['clone_group'] = array(
           '#type' => 'submit',
-          '#value' => "<i class='fa fa-clone'></i> ".t('Clone the group'),
+          '#value' => "<i class='fa fa-clone'></i> " . t('Clone the group'),
           '#weight' => 150,
         );
 
@@ -2280,35 +2314,34 @@ function ed_cluster_form_alter(&$form, &$form_state, $form_id) {
       }
 
 
-	  }
-	  else {
-		  $group_type = $_GET['field_group_type'];
+    } else {
+      $group_type = $_GET['field_group_type'];
 
-		  $form['ed_field_group_type']['und'][0]['value']['#default_value'] = $group_type;
+      $form['ed_field_group_type']['und'][0]['value']['#default_value'] = $group_type;
 
-	  }
+    }
 
-	  $form['ed_field_group_type']['#attributes']['style'][] = 'display:none';
-
-
-	  //Disabling the field causes it losing its value after any ajax call from this page (disabled in css instead)
-	  //$form['ed_field_group_type']['und']['#disabled'] = true;
-	  if($group_type==1){
+    $form['ed_field_group_type']['#attributes']['style'][] = 'display:none';
 
 
-	  }elseif ($group_type==2){
-		  $form['ed_field_curriculum']['und']['#access'] = 0;
-		  $form['ed_field_study_year']['und']['#access'] = 0;
+    //Disabling the field causes it losing its value after any ajax call from this page (disabled in css instead)
+    //$form['ed_field_group_type']['und']['#disabled'] = true;
+    if ($group_type == 1) {
 
-	  }elseif ($group_type==3){
-		  $form['ed_field_university']['und']['#access'] = 0;
-		  $form['ed_field_curriculum']['und']['#access'] = 0;
-		  $form['ed_field_study_year']['und']['#access'] = 0;
-		  $form['ed_field_course_code']['und']['#access'] = 0;
-		  $form['ed_field_learning_outcomes']['und']['#access'] = 0;
-		  $form['ed_field_category']['und']['#access'] = 0;
-		  $form['ed_field_assessment_method']['und']['#access'] = 0;
-	  }
+
+    } elseif ($group_type == 2) {
+      $form['ed_field_curriculum']['und']['#access'] = 0;
+      $form['ed_field_study_year']['und']['#access'] = 0;
+
+    } elseif ($group_type == 3) {
+      $form['ed_field_university']['und']['#access'] = 0;
+      $form['ed_field_curriculum']['und']['#access'] = 0;
+      $form['ed_field_study_year']['und']['#access'] = 0;
+      $form['ed_field_course_code']['und']['#access'] = 0;
+      $form['ed_field_learning_outcomes']['und']['#access'] = 0;
+      $form['ed_field_category']['und']['#access'] = 0;
+      $form['ed_field_assessment_method']['und']['#access'] = 0;
+    }
 
 
   }
@@ -2317,9 +2350,9 @@ function ed_cluster_form_alter(&$form, &$form_state, $form_id) {
     $form['og_user']['name']['#title'] = t('Full name');
     $form['og_user']['name']['#autocomplete_path'] = 'clusters/user/autocomplete';
   }
-  if('og_ui_confirm_subscribe' == $form_id){
+  if ('og_ui_confirm_subscribe' == $form_id) {
     $group = node_load($form['gid']['#value']);
-    if($group->group_access['und'][0]['value']){
+    if ($group->group_access['und'][0]['value']) {
       array_push($form['#submit'], 'ed_cluster_redirect_after_submit');
 
     }
@@ -2336,9 +2369,9 @@ function ed_cluster_form_alter(&$form, &$form_state, $form_id) {
 
         $competences = [];
         foreach ($outcome->ed_field_category["und"] as $tid_container) {
-          $competences []=  $tid_container["tid"];
+          $competences [] = $tid_container["tid"];
         }
-        $outcomes []= [
+        $outcomes [] = [
           "name" => $outcome->title,
           "description" => $outcome->ed_field_learning_outcomes["und"][0]["value"],
           "assessment_method" => $outcome->ed_field_assessment_method["und"][0]["value"],
@@ -2361,16 +2394,16 @@ function ed_cluster_form_alter(&$form, &$form_state, $form_id) {
     ];
 
     $form["ed_field_learning_outcome_ref"] = [
-        "#type" => "textfield",
-        "#title" => t("Learning outcomes"),
-        "#default_value" => "",
-        "#prefix" => '<div data-node_list_editor = "' . base64_encode(json_encode($nle_data)) . '" data-node_list_data = "' . base64_encode(json_encode($outcomes)) . '">',
-        "#suffix" => "</div>",
-        "#language" => LANGUAGE_NONE,
+      "#type" => "textfield",
+      "#title" => t("Learning outcomes"),
+      "#default_value" => "",
+      "#prefix" => '<div data-node_list_editor = "' . base64_encode(json_encode($nle_data)) . '" data-node_list_data = "' . base64_encode(json_encode($outcomes)) . '">',
+      "#suffix" => "</div>",
+      "#language" => LANGUAGE_NONE,
     ];
 
 
-    $form['#submit'] []= "ed_cluster_form_submit_learning_outcomes";
+    $form['#submit'] [] = "ed_cluster_form_submit_learning_outcomes";
   }
 
 
@@ -2382,13 +2415,14 @@ function ed_cluster_form_alter(&$form, &$form_state, $form_id) {
  * @param $form_state
  * @throws Exception
  */
-function ed_cluster_clone_group_handler($form, &$form_state){
+function ed_cluster_clone_group_handler($form, &$form_state)
+{
 
   $node = $form['#node'];
 
   $new = clone $node;
   $new->is_new = true;
-  $new->title = t('COPY OF '). $node->title;
+  $new->title = t('COPY OF ') . $node->title;
   unset($new->nid);
   unset($new->vid);
   unset($new->tnid);
@@ -2397,18 +2431,19 @@ function ed_cluster_clone_group_handler($form, &$form_state){
 
   //Set learning resources
   $learning_resources_nids = _ed_get_group_content_by_type($node->nid, 'ed_learning_resource');
-  foreach ($learning_resources_nids as $nid){
+  foreach ($learning_resources_nids as $nid) {
     $wrapper = entity_metadata_wrapper('node', $nid);
     $wrapper->og_group_ref[] = $new->nid;
     $wrapper->save();
   }
 
-  drupal_goto('node/'.$new->nid.'/edit');
+  drupal_goto('node/' . $new->nid . '/edit');
 
 
 }
 
-function ed_cluster_form_submit_learning_outcomes($form, &$form_state) {
+function ed_cluster_form_submit_learning_outcomes($form, &$form_state)
+{
   global $user;
   $learning_outcomes = json_decode($form_state["input"]["learning_outcomes_json"]);
   $nid = $form["nid"]["#value"];
@@ -2422,7 +2457,7 @@ function ed_cluster_form_submit_learning_outcomes($form, &$form_state) {
   }
 
   //  add new
-  if(!isset($form_state["values"]["ed_field_learning_outcome_ref"]) || !is_array($form_state["values"]["ed_field_learning_outcome_ref"])){
+  if (!isset($form_state["values"]["ed_field_learning_outcome_ref"]) || !is_array($form_state["values"]["ed_field_learning_outcome_ref"])) {
     $form_state["values"]["ed_field_learning_outcome_ref"] = [];
   }
   $form_state["values"]["ed_field_learning_outcome_ref"]["und"] = [];
@@ -2431,10 +2466,10 @@ function ed_cluster_form_submit_learning_outcomes($form, &$form_state) {
     $node->title = $outcome->name;
     $node->body = "";
     $node->ed_field_learning_outcomes["und"][0]["value"] = $outcome->description;
-    $node->ed_field_assessment_method["und"][0]["value"]  = $outcome->assessment_method;
-    $node->ed_field_category["und"]  = [];
+    $node->ed_field_assessment_method["und"][0]["value"] = $outcome->assessment_method;
+    $node->ed_field_category["und"] = [];
     foreach ($outcome->competences as $tid) {
-      $node->ed_field_category["und"] []= ["tid" => $tid];
+      $node->ed_field_category["und"] [] = ["tid" => $tid];
     }
     $node->uid = $user->uid;
     $node->name = $user->name;
@@ -2449,14 +2484,16 @@ function ed_cluster_form_submit_learning_outcomes($form, &$form_state) {
   }
 }
 
-function ed_cluster_redirect_after_submit($form, &$form_state){
+function ed_cluster_redirect_after_submit($form, &$form_state)
+{
   $form_state['redirect'] = url('clusters', array('absolute' => true));
 }
 
 /**
  * Returns group menu title. Used within an override.
  */
-function _ed_cluster_group_menu_title($type, $gid) {
+function _ed_cluster_group_menu_title($type, $gid)
+{
   $pending_users_count = _ed_cluster_get_group_pending_members_count($gid);
   if ($pending_users_count > 0) {
     return t('Members (@count)', array('@count' => $pending_users_count));
@@ -2471,7 +2508,8 @@ function _ed_cluster_group_menu_title($type, $gid) {
  * @return
  *   Pending members count
  */
-function _ed_cluster_get_group_pending_members_count($gid) {
+function _ed_cluster_get_group_pending_members_count($gid)
+{
   static $count;
 
   if (isset($count)) {
@@ -2493,7 +2531,8 @@ function _ed_cluster_get_group_pending_members_count($gid) {
 /**
  * Implements hook_field_widget_alter().
  */
-function ed_cluster_field_widget_form_alter(&$element, &$form_state, $context) {
+function ed_cluster_field_widget_form_alter(&$element, &$form_state, $context)
+{
   if (!empty($element['#field_name']) && ED_FIELD_TO_GROUP_MEMBER == $element['#field_name']) {
     $element['#attached']['js'][] = drupal_get_path('module', 'ed_cluster') . '/js/field_to_group_member.js';
     $element['#multiple'] = TRUE;
@@ -2520,7 +2559,8 @@ function ed_cluster_field_widget_form_alter(&$element, &$form_state, $context) {
  * This serves data to be used by ED_FIELD_TO_GROUP_MEMBER field.
  * Field is repopulated with data once selection is made.
  */
-function ed_cluster_get_groups_members_ajax() {
+function ed_cluster_get_groups_members_ajax()
+{
   $group_data = array(
     array(
       'value' => '_none',
@@ -2556,7 +2596,7 @@ function ed_cluster_get_groups_members_ajax() {
 
     if ($result) {
       foreach ($result as $single) {
-        $group_data []= array(
+        $group_data [] = array(
           'value' => $single->uid,
           'name' => (!empty($single->ed_field_full_name_value)) ? $single->ed_field_full_name_value : $single->name,
         );
@@ -2568,10 +2608,11 @@ function ed_cluster_get_groups_members_ajax() {
 
 /**
  * Returns competence ids for groups or an empty array
- * @param  array $groups An array with group identifiers
+ * @param array $groups An array with group identifiers
  * @return array         An array with competence identifiers
  */
-function ed_cluster_get_groups_competences_ids($groups) {
+function ed_cluster_get_groups_competences_ids($groups)
+{
   $ids = [];
 
   if (!empty($groups)) {
@@ -2591,7 +2632,7 @@ function ed_cluster_get_groups_competences_ids($groups) {
 
     if ($result) {
       foreach ($result as $single) {
-        $ids []= $single->ed_field_category_tid;
+        $ids [] = $single->ed_field_category_tid;
       }
     }
   }
@@ -2604,7 +2645,8 @@ function ed_cluster_get_groups_competences_ids($groups) {
  * Responds with an object that has applicable competence identifiers wihin a
  * key "competences", defaults to an empty array.
  */
-function ed_cluster_get_groups_competences_ajax() {
+function ed_cluster_get_groups_competences_ajax()
+{
   $data = [
     'competences' => [],
   ];
@@ -2630,7 +2672,8 @@ function ed_cluster_get_groups_competences_ajax() {
 /**
  * Implements hook_comment_view_alter().
  */
-function ed_cluster_comment_view_alter(&$build) {
+function ed_cluster_comment_view_alter(&$build)
+{
   if (isset($build['#comment']->{ED_FIELD_PRIVATE_COMMENT}[LANGUAGE_NONE][0]['value']) && 1 == $build['#comment']->{ED_FIELD_PRIVATE_COMMENT}[LANGUAGE_NONE][0]['value']) {
     global $user;
     if (!(user_is_logged_in() && ($build['#comment']->uid == $user->uid || $build['#node']->uid == $user->uid))) {
@@ -2638,10 +2681,10 @@ function ed_cluster_comment_view_alter(&$build) {
       $build['#access'] = FALSE;
 
       // Check if this user is group manager
-      if(isset($build['#node']->og_group_ref)){
-        foreach ($build['#node']->og_group_ref[LANGUAGE_NONE] as $referenced_group){
+      if (isset($build['#node']->og_group_ref)) {
+        foreach ($build['#node']->og_group_ref[LANGUAGE_NONE] as $referenced_group) {
 
-          if(ed_task_manager_access('node', node_load($referenced_group['target_id']))){
+          if (ed_task_manager_access('node', node_load($referenced_group['target_id']))) {
 
             //Group manager can see private comments
             $build['#access'] = TRUE;
@@ -2656,7 +2699,8 @@ function ed_cluster_comment_view_alter(&$build) {
 /**
  * Implements hook_node_grants().
  */
-function ed_cluster_node_grants($account, $op) {
+function ed_cluster_node_grants($account, $op)
+{
   if ('view' != $op) {
     return;
   }
@@ -2685,20 +2729,21 @@ function ed_cluster_node_grants($account, $op) {
     }
   }
 
-  return !empty($grants) ? $grants: array();
+  return !empty($grants) ? $grants : array();
 }
 
 /**
  * Implements hook_node_access_records().
  */
-function ed_cluster_node_access_records($node) {
+function ed_cluster_node_access_records($node)
+{
   if (empty($node->status)) {
     return array();
   }
 
   if (!empty($node->{ED_FIELD_TO_GROUP_MEMBER}[LANGUAGE_NONE])) {
     $grants[] = array(
-      'realm' => ED_ACCESS_REALM .':node',
+      'realm' => ED_ACCESS_REALM . ':node',
       'gid' => $node->nid,
       'grant_view' => 1,
       'grant_update' => 0,
@@ -2737,8 +2782,9 @@ function ed_cluster_node_access_records($node) {
 /**
  * Implements hook_ctools_plugin_directory().
  */
-function ed_cluster_ctools_plugin_directory($module, $plugin) {
-  if('entityreference' == $module || ('content_types' == $plugin && 'ctools' == $module)) {
+function ed_cluster_ctools_plugin_directory($module, $plugin)
+{
+  if ('entityreference' == $module || ('content_types' == $plugin && 'ctools' == $module)) {
     return 'plugins/' . $plugin;
   }
 }
@@ -2755,9 +2801,10 @@ function ed_cluster_ctools_plugin_directory($module, $plugin) {
  * @return
  *   Destination string
  */
-function _ed_cluster_destination_for_group_node_type(&$gnode, $type) {
+function _ed_cluster_destination_for_group_node_type(&$gnode, $type)
+{
   $destination = 'node/' . $gnode->nid;
-  switch($type) {
+  switch ($type) {
     case 'ed_blog':
     case 'ed_bookmark':
     case 'ed_forum':
@@ -2787,8 +2834,9 @@ function _ed_cluster_destination_for_group_node_type(&$gnode, $type) {
  * @return
  *   Translated title string
  */
-function _ed_cluster_plural_title_for_group_node_type($type) {
-  switch($type) {
+function _ed_cluster_plural_title_for_group_node_type($type)
+{
+  switch ($type) {
     case 'ed_blog':
       $title = t('Blog');
       break;
@@ -2820,7 +2868,7 @@ function _ed_cluster_plural_title_for_group_node_type($type) {
       $title = t('Qualification portfolios');
       break;
     default:
-      $title = t(ucwords(str_replace('ed', '', str_replace('_',' ',$type))));
+      $title = t(ucwords(str_replace('ed', '', str_replace('_', ' ', $type))));
       break;
   }
 
@@ -2838,9 +2886,10 @@ function _ed_cluster_plural_title_for_group_node_type($type) {
  * @return string
  *   Themed breadcrumb
  */
-function _ed_cluster_node_group_breadcrumb(&$node, &$group) {
+function _ed_cluster_node_group_breadcrumb(&$node, &$group)
+{
   $destination = _ed_cluster_destination_for_group_node_type($group, $node->type);
-  $breadcrumb[] = l($group->title, 'node/'. $group->nid);
+  $breadcrumb[] = l($group->title, 'node/' . $group->nid);
   if (('node/' . $group->nid) != $destination) {
     $breadcrumb[] = l(_ed_cluster_plural_title_for_group_node_type($node->type), $destination);
   }
@@ -2858,15 +2907,17 @@ function _ed_cluster_node_group_breadcrumb(&$node, &$group) {
  * @return array
  *   Array with markup
  */
-function _ed_cluster_node_group_greadcrumbs(&$node) {
+function _ed_cluster_node_group_greadcrumbs(&$node)
+{
   $output = array();
   if (!empty($node->{OG_AUDIENCE_FIELD}[LANGUAGE_NONE])) {
-    $groups = node_load_multiple(array_map(function($element) { return $element['target_id']; }, $node->{OG_AUDIENCE_FIELD}[LANGUAGE_NONE]));
+    $groups = node_load_multiple(array_map(function ($element) {
+      return $element['target_id'];
+    }, $node->{OG_AUDIENCE_FIELD}[LANGUAGE_NONE]));
     if (!empty($groups)) {
       $output['group-breadcrumbs'] = array(
         '#type' => 'container',
-        '#attributes' => array(
-        ),
+        '#attributes' => array(),
       );
       foreach ($groups as $group) {
         $output['group-breadcrumbs']['bread-crumb-' . $group->nid] = array(
@@ -2884,46 +2935,47 @@ function _ed_cluster_node_group_greadcrumbs(&$node) {
 /**
  * Implements hook_node_presave().
  */
-function ed_cluster_node_presave( $node ) {
+function ed_cluster_node_presave($node)
+{
   $account = $GLOBALS['user'];
   // Any new node created by teacher is sticky
   if (in_array('teacher', $account->roles) && $node->is_new) {
     $node->sticky = 1;
   }
 
-	if ('ed_cluster' == $node->type) {
-		$group_type = 3;
-		if(isset($node->ed_field_group_type)){
-			$group_type = $node->ed_field_group_type[LANGUAGE_NONE][0]['value'];
-		}
+  if ('ed_cluster' == $node->type) {
+    $group_type = 3;
+    if (isset($node->ed_field_group_type)) {
+      $group_type = $node->ed_field_group_type[LANGUAGE_NONE][0]['value'];
+    }
 
-		//Make composite title of Course code + Title for the 1st and 2nd type groups
-		if($group_type == 1 || $group_type == 2){
-			if(isset($node->ed_field_course_code[LANGUAGE_NONE][0]['value'])){
-				//Check if there is already Course code in Title
-				if (strpos($node->title, $node->ed_field_course_code[LANGUAGE_NONE][0]['value']) === false) {
-					$node->title = $node->ed_field_course_code[LANGUAGE_NONE][0]['value'].' '.$node->title;
-				}
+    //Make composite title of Course code + Title for the 1st and 2nd type groups
+    if ($group_type == 1 || $group_type == 2) {
+      if (isset($node->ed_field_course_code[LANGUAGE_NONE][0]['value'])) {
+        //Check if there is already Course code in Title
+        if (strpos($node->title, $node->ed_field_course_code[LANGUAGE_NONE][0]['value']) === false) {
+          $node->title = $node->ed_field_course_code[LANGUAGE_NONE][0]['value'] . ' ' . $node->title;
+        }
 
-			}
+      }
 
-		}
+    }
 
-	}
+  }
 
 }
-
 
 
 /**
  * Implements hook_page_alter().
  */
-function ed_cluster_page_alter(&$page){
-  if(isset($page['content']['system_main']['#form_id']) && $page['content']['system_main']['#form_id']=='og_ui_add_users'){
+function ed_cluster_page_alter(&$page)
+{
+  if (isset($page['content']['system_main']['#form_id']) && $page['content']['system_main']['#form_id'] == 'og_ui_add_users') {
     $gid = $page['content']['system_main']['gid']['#value'];
     $page['content']['system_main']['backtofront'] = array(
       '#type' => 'markup',
-      '#markup' => l(t('Return to group front page'), 'node/'.$gid),
+      '#markup' => l(t('Return to group front page'), 'node/' . $gid),
     );
   }
 }
@@ -2931,7 +2983,8 @@ function ed_cluster_page_alter(&$page){
 /**
  * Implements hook_node_access
  */
-function ed_cluster_node_access($node, $op, $account) {
+function ed_cluster_node_access($node, $op, $account)
+{
   if (in_array('supervisor', $account->roles) && $op == 'view') return NODE_ACCESS_ALLOW;
 }
 
@@ -2939,14 +2992,16 @@ function ed_cluster_node_access($node, $op, $account) {
 /**
  * Implements hook_field_formatter_info_alter
  */
-function ed_cluster_field_formatter_info_alter(&$info) {
+function ed_cluster_field_formatter_info_alter(&$info)
+{
   $info['og_group_subscribe']['module'] = 'ed_cluster';
 }
 
 /**
  * Implements hook_field_formatter_view
  */
-function ed_cluster_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+function ed_cluster_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display)
+{
   $element = og_ui_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display);
 
   // Remove membership request if group inactive
@@ -2969,7 +3024,8 @@ function ed_cluster_field_formatter_view($entity_type, $entity, $field, $instanc
  * university in question).
  * @return array Array of universities with title and curriculums
  */
-function _ed_cluster_universities_with_curriculums_structure() {
+function _ed_cluster_universities_with_curriculums_structure()
+{
   return [
     0 => [
       'title' => t('Eesti Kunstiakadeemia'),
@@ -3052,49 +3108,49 @@ function _ed_cluster_universities_with_curriculums_structure() {
       'weight' => 1,
       'curriculums' => [
         'IFHTM.DT' => t('IFHTM.DT - Haridustehnoloogia'),
-  			'KAKLI.HR' => t('KAKLI.HR - Klassiõpetaja'),
-  			'KAKPB.HR' => t('KAKPB.HR - Kutsepedagoogika'),
-  			'KAALB.HR' => t('KAALB.HR - Alushariduse pedagoog'),
-  			'KAEPB.HR' => t('KAEPB.HR - Eripedagoogika'),
-  			'KAANB.HR' => t('KAANB.HR - Andragoogika'),
-  			'KAPB.HR' => t('KAPB.HR - Pedagoogika alused'),
-  			'KUTOM.LT' => t('KUTOM.LT - Töö- ja tehnoloogiaõpetuse õpetaja'),
-  			'KUKKM.LT' => t('KUKKM.LT - Käsitöö ja kodunduse õpetaja'),
-  			'MLMOM.DT' => t('MLMOM.DT - Matemaatikaõpetaja'),
-  			'KAMOM.HR' => t('KAMOM.HR - Mitme aine õpetaja'),
-  			'IFIOM.DT' => t('IFIOM.DT - Informaatikaõpetaja, kooli infojuht'),
-  			'GRIOM.HT' => t('GRIOM.HT - Inglise keele õpetaja'),
-  			'KUKUM.FK' => t('KUKUM.FK - Kunstiõpetaja'),
-  			'SKVOM.HT' => t('SKVOM.HT - Vene keele ja kirjanduse õpetaja'),
-  			'KUMOM.FK' => t('KUMOM.FK - Muusikaõpetaja'),
-  			'GRPOM.HT' => t('GRPOM.HT - Prantsuse keele õpetaja'),
-  			'GRSOM.HT' => t('GRSOM.HT - Saksa keele õpetaja'),
-  			'AIAOM.HT' => t('AIAOM.HT - Ajaloo ja ühiskonnaõpetuse õpetaja'),
-  			'MLBOM.LT' => t('MLBOM.LT - Bioloogiaõpetaja'),
-  			'EKEOM.HT' => t('EKEOM.HT - Eesti keele ja kirjanduse õpetaja'),
-  			'EKEVM.HT' => t('EKEVM.HT - Eesti keele kui teise keele õpetaja'),
-  			'MLFOM.LT' => t('MLFOM.LT - Füüsikaõpetaja'),
-  			'KAALM.HR' => t('KAALM.HR - Alushariduse pedagoog'),
-  			'KAANM.HR' => t('KAANM.HR - Andragoogika'),
-  			'KAEPM.HR' => t('KAEPM.HR - Eripedagoog-nõustaja'),
-  			'KAHJM.HR' => t('KAHJM.HR - Hariduse juhtimine'),
-  			'MLGOM.LT' => t('MLGOM.LT - Geograafiaõpetaja'),
-  			'TSKOM.LT' => t('TSKOM.LT - Teacher of Physical Education'),
-  			'KAKTM.HR' => t('KAKTM.HR - Kasvatusteadused'),
-  			'KAKTD.HR' => t('KAKTD.HR - Kasvatusteadused'),
-  			'KAKOM.HR' => t('KAKOM.HR - Kutseõpetaja'),
-  			'TPNR.HR' => t('TPNR.HR - Noorsootöö'),
-  			'TPLR.HR' => t('TPLR.HR - Koolieelse lasteasutuse õpetaja'),
-  			'MLLOM.LT' => t('MLLOM.LT - Põhikooli loodus- ja täppisteaduslike ainete õpetaja'),
-  			'TPNM.HR' => t('TPNM.HR - Noorsootöö korraldus'),
-  			'MLGLM.LT' => t('MLGLM.LT - Gümnaasiumi loodusteaduslike ainete õpetaja'),
-  			'DTLGM.DT' => t('DTLGM.DT - Digitaalsed õpimängud'),
-  			'KAKPM.HR' => t('KAKPM.HR - Kutseõpetaja'),
-  			'KUKAM.FK' => t('KUKAM.FK - Kunstiõpetaja'),
-  			'KUMUM.FK' => t('KUMUM.FK - Muusikaõpetaja'),
-  			'KATHM.HR' => t('KATHM.HR - Täiskasvanuõpe sotsiaalsetes muutustes'),
-  			'GRVOM.HT' => t('GRVOM.HT - Võõrkeeleõpetaja'),
-  			'KUIKM.LT' => t('KUIKM.LT - Tehnoloogiavaldkonna ainete õpetaja'),
+        'KAKLI.HR' => t('KAKLI.HR - Klassiõpetaja'),
+        'KAKPB.HR' => t('KAKPB.HR - Kutsepedagoogika'),
+        'KAALB.HR' => t('KAALB.HR - Alushariduse pedagoog'),
+        'KAEPB.HR' => t('KAEPB.HR - Eripedagoogika'),
+        'KAANB.HR' => t('KAANB.HR - Andragoogika'),
+        'KAPB.HR' => t('KAPB.HR - Pedagoogika alused'),
+        'KUTOM.LT' => t('KUTOM.LT - Töö- ja tehnoloogiaõpetuse õpetaja'),
+        'KUKKM.LT' => t('KUKKM.LT - Käsitöö ja kodunduse õpetaja'),
+        'MLMOM.DT' => t('MLMOM.DT - Matemaatikaõpetaja'),
+        'KAMOM.HR' => t('KAMOM.HR - Mitme aine õpetaja'),
+        'IFIOM.DT' => t('IFIOM.DT - Informaatikaõpetaja, kooli infojuht'),
+        'GRIOM.HT' => t('GRIOM.HT - Inglise keele õpetaja'),
+        'KUKUM.FK' => t('KUKUM.FK - Kunstiõpetaja'),
+        'SKVOM.HT' => t('SKVOM.HT - Vene keele ja kirjanduse õpetaja'),
+        'KUMOM.FK' => t('KUMOM.FK - Muusikaõpetaja'),
+        'GRPOM.HT' => t('GRPOM.HT - Prantsuse keele õpetaja'),
+        'GRSOM.HT' => t('GRSOM.HT - Saksa keele õpetaja'),
+        'AIAOM.HT' => t('AIAOM.HT - Ajaloo ja ühiskonnaõpetuse õpetaja'),
+        'MLBOM.LT' => t('MLBOM.LT - Bioloogiaõpetaja'),
+        'EKEOM.HT' => t('EKEOM.HT - Eesti keele ja kirjanduse õpetaja'),
+        'EKEVM.HT' => t('EKEVM.HT - Eesti keele kui teise keele õpetaja'),
+        'MLFOM.LT' => t('MLFOM.LT - Füüsikaõpetaja'),
+        'KAALM.HR' => t('KAALM.HR - Alushariduse pedagoog'),
+        'KAANM.HR' => t('KAANM.HR - Andragoogika'),
+        'KAEPM.HR' => t('KAEPM.HR - Eripedagoog-nõustaja'),
+        'KAHJM.HR' => t('KAHJM.HR - Hariduse juhtimine'),
+        'MLGOM.LT' => t('MLGOM.LT - Geograafiaõpetaja'),
+        'TSKOM.LT' => t('TSKOM.LT - Teacher of Physical Education'),
+        'KAKTM.HR' => t('KAKTM.HR - Kasvatusteadused'),
+        'KAKTD.HR' => t('KAKTD.HR - Kasvatusteadused'),
+        'KAKOM.HR' => t('KAKOM.HR - Kutseõpetaja'),
+        'TPNR.HR' => t('TPNR.HR - Noorsootöö'),
+        'TPLR.HR' => t('TPLR.HR - Koolieelse lasteasutuse õpetaja'),
+        'MLLOM.LT' => t('MLLOM.LT - Põhikooli loodus- ja täppisteaduslike ainete õpetaja'),
+        'TPNM.HR' => t('TPNM.HR - Noorsootöö korraldus'),
+        'MLGLM.LT' => t('MLGLM.LT - Gümnaasiumi loodusteaduslike ainete õpetaja'),
+        'DTLGM.DT' => t('DTLGM.DT - Digitaalsed õpimängud'),
+        'KAKPM.HR' => t('KAKPM.HR - Kutseõpetaja'),
+        'KUKAM.FK' => t('KUKAM.FK - Kunstiõpetaja'),
+        'KUMUM.FK' => t('KUMUM.FK - Muusikaõpetaja'),
+        'KATHM.HR' => t('KATHM.HR - Täiskasvanuõpe sotsiaalsetes muutustes'),
+        'GRVOM.HT' => t('GRVOM.HT - Võõrkeeleõpetaja'),
+        'KUIKM.LT' => t('KUIKM.LT - Tehnoloogiavaldkonna ainete õpetaja'),
         'KAEIM.HR' => t('KAEIM.HR - Haridusinnovatsiooni juhtimine'),
         'RKSPB/19.HR' => t('RKSPB/19.HR - Sotsiaalpedagoogika')
       ],
@@ -3116,19 +3172,20 @@ function _ed_cluster_universities_with_curriculums_structure() {
       'weight' => 2,
       'curriculums' => [],
     ],
-	];
+  ];
 }
 
 /**
  * Returns the values used for options list of ed_field_university
  * @return array Array of key => title values
  */
-function _ed_cluster_universities_options_list() {
+function _ed_cluster_universities_options_list()
+{
   $structure = _ed_cluster_universities_with_curriculums_structure();
 
   // Weight is most important for sorting (is a special case)
   // If weight is missing, then title comes into play (default)
-  uasort($structure, function($a, $b) {
+  uasort($structure, function ($a, $b) {
     if (isset($a['weight']) && isset($b['weight'])) {
       if ($a['weight'] === $b['weight']) {
         // This can not happen as weights should never be the same
@@ -3150,7 +3207,7 @@ function _ed_cluster_universities_options_list() {
     return ($a['title'] < $b['title']) ? -1 : 1;
   });
 
-  return array_map(function($single) {
+  return array_map(function ($single) {
     return $single['title'];
   }, $structure);
 }
@@ -3159,11 +3216,12 @@ function _ed_cluster_universities_options_list() {
  * Returns the values used for options list of ed_field_curriculum
  * @return array Array of key => title
  */
-function _ed_cluster_curriculum_options_list() {
+function _ed_cluster_curriculum_options_list()
+{
   $curriculums = [];
   $structure = _ed_cluster_universities_with_curriculums_structure();
 
-  array_walk($structure, function($single) use (&$curriculums) {
+  array_walk($structure, function ($single) use (&$curriculums) {
     if (is_array($single['curriculums']) && sizeof($single['curriculums']) > 0) {
       $curriculums = array_merge($curriculums, $single['curriculums']);
     }
@@ -3176,13 +3234,14 @@ function _ed_cluster_curriculum_options_list() {
  * Returns curriculum keys with corresponding university identifiers
  * @return array Array of curriculum key => university key
  */
-function _ed_cluster_curriculum_university_data() {
+function _ed_cluster_curriculum_university_data()
+{
   $structure = _ed_cluster_universities_with_curriculums_structure();
   $data = [];
 
-  array_walk($structure, function($item, $key) use (&$data) {
+  array_walk($structure, function ($item, $key) use (&$data) {
     if (is_array($item['curriculums']) && sizeof($item['curriculums']) > 0) {
-      $data = array_merge($data, array_map(function() use ($key) {
+      $data = array_merge($data, array_map(function () use ($key) {
         return $key;
       }, $item['curriculums']));
     }
@@ -3194,7 +3253,8 @@ function _ed_cluster_curriculum_university_data() {
 /**
  * Implements hook_module_implements_alter()
  */
-function ed_cluster_module_implements_alter(&$implementations, $hook) {
+function ed_cluster_module_implements_alter(&$implementations, $hook)
+{
   // This one could have serious implications and would only remove the hook if
   // and only if the constant is set and the value equals true.
   // This hack is required to prevnt field update protection in case change to
@@ -3211,11 +3271,12 @@ function ed_cluster_module_implements_alter(&$implementations, $hook) {
 
 /**
  * Returns data with counts of unseen resources by type.
- * @param  int $gid Group identifier
- * @param  int $uid User identifier
+ * @param int $gid Group identifier
+ * @param int $uid User identifier
  * @return array         An array of type => count
  */
-function ed_cluster_unseen_counts_by_type($gid, $uid) {
+function ed_cluster_unseen_counts_by_type($gid, $uid)
+{
   static $data;
   $data_key = $gid . ':' . $uid;
 
@@ -3231,40 +3292,39 @@ function ed_cluster_unseen_counts_by_type($gid, $uid) {
     return $data[$data_key];
   }
 
-	$q = db_select('og_membership', 'ogm');
-	$q->condition('ogm.gid', $gid);
-	$q->condition('ogm.entity_type', 'node');
-	$q->join('node', 'n', 'n.nid = ogm.etid AND n.status = 1');
+  $q = db_select('og_membership', 'ogm');
+  $q->condition('ogm.gid', $gid);
+  $q->condition('ogm.entity_type', 'node');
+  $q->join('node', 'n', 'n.nid = ogm.etid AND n.status = 1');
   $q->leftJoin('ed_entity_view', 'ev', 'ev.entity_type = \'node\' AND ev.eid = ogm.etid AND ev.uid = ' . $uid);
-	$q->fields('n', ['type',]);
+  $q->fields('n', ['type',]);
   $q->isNull('ev.eid');
   $q->groupBy('n.type');
   $q->addTag('node_access');
   $q->addExpression('COUNT(DISTINCT(n.nid))', 'count');
 
-	$response = $q->execute()->fetchAll(PDO::FETCH_ASSOC);
-
-  error_log(print_r($response, true));
+  $response = $q->execute()->fetchAll(PDO::FETCH_ASSOC);
 
   $tmp_data = [];
   if ($response && is_array($response) && count($response) > 0) {
-    array_walk($response, function($value) use (&$tmp_data) {
+    array_walk($response, function ($value) use (&$tmp_data) {
       $tmp_data[$value['type']] = $value['count'];
     });
   }
   $data[$data_key] = $tmp_data;
 
-	return $data[$data_key];
+  return $data[$data_key];
 }
 
 /**
  * Returns title of a menu, with an optional addition of resources unseen by current user.
- * @param  string $title Initial title that would be translated
- * @param  object $node  Group node object
- * @param  string $type  Node type
+ * @param string $title Initial title that would be translated
+ * @param object $node Group node object
+ * @param string $type Node type
  * @return string        Translated title with an option addition of unseen resources
  */
-function ed_cluster_title_with_unseen_count($title, $node, $type) {
+function ed_cluster_title_with_unseen_count($title, $node, $type)
+{
   if (user_is_logged_in()) {
     $data = ed_cluster_unseen_counts_by_type($node->nid, $GLOBALS['user']->uid);
     if (array_key_exists($type, $data)) {
