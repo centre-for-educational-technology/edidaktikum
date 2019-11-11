@@ -459,8 +459,250 @@ function ed_portfolio_views_api() {
  */
 function ed_portfolio_form_alter(&$form, &$form_state, $form_id) {
   if ('ed_portfolio_node_form' == $form_id) {
+
     if (empty($form['#node']->nid)) {
       drupal_set_title(t('Create Portfolio'));
     }
+
+
+    //XXX Delete this field
+    $form['ed_portfolio_field_items']['#access'] = false;
+
+    $form['ed_portfolio_competence_desc']['#access'] = false;
+
+    $form['#tree'] = TRUE;
+
+
+    $form['add_more'] = array(
+      '#type' => 'button',
+      '#value' => t('Select'),
+      '#weight' => $form['ed_q_portfolio_field_level']['#weight'] + 1,
+      '#ajax' => array(
+        'callback' => 'ed_portfolio_get_competencies_ajax_callback',
+        'wrapper' => 'names-fieldset-wrapper',
+      ),
+    );
+
+
+    $form['competencies'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('My competencies'),
+      // Set up the wrapper so that AJAX will be able to replace the fieldset.
+      '#prefix' => '<div id="names-fieldset-wrapper">',
+      '#weight' => $form['ed_q_portfolio_field_level']['#weight'] + 2,
+      '#suffix' => '</div>',
+    );
+
   }
+  return $form;
+}
+
+
+function ed_portfolio_get_competencies_ajax_callback($form, &$form_state) {
+
+
+  $selected_level = $form_state['input']['ed_q_portfolio_field_level'][LANGUAGE_NONE];
+
+  $terms = taxonomy_get_tree(taxonomy_vocabulary_machine_name_load('ed_competence_voc')->vid, $selected_level, 1);
+
+  //error_log(print_r($form_state['node']->uid, true));
+
+  //Get user content that has category in it
+//  $query = db_select('node', 'n');
+//  $query->join('field_data_ed_field_category', 'cat', 'n.nid = cat.entity_id');
+//
+//  $query
+//    ->fields('n', array('nid'))
+//    ->condition('n.status', 1)
+//    ->condition('n.uid', $form_state['node']->uid);
+//
+//  $db_or = db_or();
+//  $db_or->condition('n.type', 'ed_blog');
+//  $db_or->condition('n.type', 'ed_file');
+//  $db_or->condition('n.type', 'ed_learning_resource');
+//  $query->condition($db_or);
+//
+//  $nids = $query->execute()->fetchCol();
+//
+//  if (!empty($nids)) {
+//    error_log(print_r($nids, true));
+//  }
+
+
+
+
+  foreach($terms as $key => $term){
+
+    $nids = _ed_portfolio_get_content_for_parent_competency($form_state['node']->uid, $term->tid);
+
+    error_log(print_r($nids, true));
+
+    $form['competencies'][$key]['name'] = array(
+      '#type' => 'item',
+      '#markup' => $term->name,
+    );
+    $form['competencies'][$key]['items'] = array(
+      '#type' => 'item',
+      '#markup' => print_r($nids, true),
+    );
+  }
+
+
+
+
+  return $form['competencies'];
+}
+
+
+function _ed_portfolio_get_content_for_parent_competency($uid, $parent_competency){
+
+  $child_terms = array_column(taxonomy_get_tree(taxonomy_vocabulary_machine_name_load('ed_competence_voc')->vid, $parent_competency), 'tid');
+
+  $query = db_select('node', 'n');
+  $query->join('field_data_ed_field_competence', 'com', 'n.nid = com.entity_id');
+  $query->fields('n', array('nid'))
+    ->condition('n.status', 1)
+    ->condition('n.uid', $uid)
+    ->condition('com.ed_field_competence_tid', $child_terms, 'IN');
+  $db_or = db_or();
+  $db_or->condition('n.type', 'ed_blog');
+  $db_or->condition('n.type', 'ed_file');
+  $db_or->condition('n.type', 'ed_learning_resource');
+  $query->condition($db_or);
+
+  $nids = $query->execute()->fetchCol();
+
+  if (!empty($nids)) {
+    return $nids;
+  }else{
+    return null;
+  }
+}
+
+
+/*
+ * Implements hook_field_info
+ */
+
+function ed_portfolio_field_info() {
+  return array (
+    'ed_portfolio_competence_desc' => array (
+      'label' => t('Competence description'),
+      'description' => t('This field stores competence description'),
+      'default_widget' => 'ed_portfolio_competence_desc_widget',
+      'default_formatter' => 'ed_portfolio_competence_desc_default',
+      'property_type' => 'ed_portfolio_competence_desc', // we add the propert type here
+      'property_callbacks' => array('ed_portfolio_competence_desc_property_info_callback'), // we add the callback
+    ),
+  );
+}
+
+function ed_portfolio_competence_desc_property_info_callback(&$info, $entity_type, $field, $instance, $field_type) {
+  $property = &$info[$entity_type]['bundles'][$instance['bundle']]['properties'][$field['field_name']];
+
+  $property['getter callback'] = 'entity_metadata_field_verbatim_get';
+  $property['setter callback'] = 'entity_metadata_field_verbatim_set';
+  unset($property['query callback']);
+
+  $property['property info']['tid'] = array(
+    'type' => 'integer',
+    'label' => t('tid'),
+    'setter callback' => 'entity_property_verbatim_set',
+  );
+  $property['property info']['desc'] = array(
+    'type' => 'text',
+    'label' => t('desc'),
+    'setter callback' => 'entity_property_verbatim_set',
+  );
+}
+
+/**
+ * Implements hook_field_widget_info().
+ */
+function ed_portfolio_field_widget_info() {
+  return array(
+    'ed_portfolio_competence_desc_widget' => array(
+      'label' => t('Default'),
+      'field types' => array('ed_portfolio_competence_desc'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_widget_form().
+ */
+function ed_portfolio_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
+
+  $element['tid'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Taxonomy id'),
+    '#required' => $element['#required'],
+    '#size' => 7,
+    '#attributes' => array('maxlength' => 7),
+  );
+  $element['desc'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Competence desc'),
+    '#required' => $element['#required'],
+    '#size' => 2000,
+    '#attributes' => array('maxlength' => 2000),
+  );
+//      break;
+//  }
+  return $element;
+}
+
+
+
+function ed_portfolio_field_is_empty($item, $field) {
+  $temp = array_keys($field['columns']);
+  $key = array_shift($temp);
+  return empty($item[$key]);
+}
+
+/**
+ * Implements hook_field_validate().
+ */
+function ed_portfolio_field_validate($entity_type, $entity, $field, $instance, $langcode, $items, &$errors) {
+  // Loop through field items in the case of multiple values.
+  foreach ($items as $delta => $item) {
+    if (isset($item['desc']) && $item['desc'] != '') {
+      if (strlen($item['desc']) > 2000) {
+        $errors[$field['field_name']][$langcode][$delta][] = array(
+          'error' => 'ed_portfolio_invalid_full',
+          'message' => t('%title: Competence description cannot be empty', array('%title' => $instance['label'])),
+        );
+      }
+    }
+  }
+
+}
+
+/**
+ * Implements hook_field_formatter_info().
+ */
+function ed_portfolio_field_formatter_info() {
+  return array(
+    'ed_portfolio_competence_desc_default' => array(
+      'label' => t('Default'),
+      'field types' => array('ed_portfolio_competence_desc'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_formatter_view().
+ */
+function ed_portfolio_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  $element = array();
+  switch ($display['type']) {
+    case 'ed_portfolio_competence_desc_default' :
+      foreach ($items as $delta => $item) {
+        if (isset($item['tid'])) {
+          $element[$delta]['#markup'] = $item['tid'] . ' ' . $item['desc'];
+        }
+      }
+      break;
+  }
+  return $element;
 }
