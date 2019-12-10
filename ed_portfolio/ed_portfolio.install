@@ -304,7 +304,12 @@ function ed_portfolio_field_schema($field) {
         'length' => 2000,
         'not null' => FALSE,
       ),
+      'cid' => array(
+        'type' => 'blob',
+        'not null' => FALSE,
+      ),
     ),
+
 
   );
 
@@ -425,14 +430,14 @@ function ed_portfolio_update_7103(&$sandbox) {
 /**
  * @param $sandbox
  */
-function ed_portfolio_update_7110(&$sandbox) {
+function ed_portfolio_update_7112(&$sandbox) {
 
 
-  //field_delete_field('ed_q_portfolio_field_level');
-  //field_delete_instance('ed_field_to_group_member');
+//  field_delete_field('ed_portfolio_competence_desc');
+//  field_delete_instance('ed_portfolio_competence_desc');
 
 
-  //ed_portfolio_node_add_field_level();
+  ed_portfolio_node_add_field_level();
 
   ed_portfolio_create_field_competence_desc();
   ed_portfolio_node_add_field_competence_desc();

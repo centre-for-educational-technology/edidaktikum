@@ -8,7 +8,8 @@
 /**
  * Implements hook_menu().
  */
-function ed_portfolio_menu() {
+function ed_portfolio_menu()
+{
   $items['dashboard/portfolio'] = array(
     'title' => 'Portfolio',
     'page callback' => 'ed_portfolio_listing_page',
@@ -34,27 +35,28 @@ function ed_portfolio_menu() {
   return $items;
 }
 
-function ed_portfolio_competency_profile($node){
+function ed_portfolio_competency_profile($node)
+{
   $content = array();
 
   drupal_add_js(drupal_get_path('module', 'ed_portfolio') . '/ed_competence_profile_portfolio.js', 'file');
   drupal_add_css(drupal_get_path('module', 'ed_portfolio') . '/ed_competence_profile_portfolio.css', 'file');
-  if(!empty($node->ed_field_cover_image)) {
+  if (!empty($node->ed_field_cover_image)) {
     $imguri = $node->ed_field_cover_image[LANGUAGE_NONE][0]['uri'];
     $imgurl = file_create_url($imguri);
-    drupal_add_css('.node-type-ed-portfolio {background: white url('.$imgurl.') no-repeat;}',$option['type'] = 'inline');
-  }else{
-      $themepath = drupal_get_path('theme',$GLOBALS['theme']);
-      $defaultimagepath = $themepath.'/images/portfolio_bg.jpg';
-      $defimageurl = file_create_url($defaultimagepath);
-      drupal_add_css('.node-type-ed-portfolio {background: white url('.$defimageurl.') no-repeat;}',$option['type'] = 'inline');
+    drupal_add_css('.node-type-ed-portfolio {background: white url(' . $imgurl . ') no-repeat;}', $option['type'] = 'inline');
+  } else {
+    $themepath = drupal_get_path('theme', $GLOBALS['theme']);
+    $defaultimagepath = $themepath . '/images/portfolio_bg.jpg';
+    $defimageurl = file_create_url($defaultimagepath);
+    drupal_add_css('.node-type-ed-portfolio {background: white url(' . $defimageurl . ') no-repeat;}', $option['type'] = 'inline');
   }
 
-  if(!empty($node->ed_portfolio_field_items)){
+  if (!empty($node->ed_portfolio_field_items)) {
     $portfolioitemsnodes = array();
-    foreach($node->ed_portfolio_field_items[LANGUAGE_NONE] as $portfolioitem){
+    foreach ($node->ed_portfolio_field_items[LANGUAGE_NONE] as $portfolioitem) {
       $itemnode = node_load($portfolioitem['target_id']);
-      if(!empty($itemnode->ed_field_competence)){
+      if (!empty($itemnode->ed_field_competence)) {
         array_push($portfolioitemsnodes, $itemnode);
       }
     }
@@ -64,8 +66,8 @@ function ed_portfolio_competency_profile($node){
 
     $fullvocabulary = taxonomy_get_nested_tree(taxonomy_vocabulary_machine_name_load('ed_competence_voc')->vid);
 
-    foreach($portfolioitemsnodes as $portfolioitem){
-      foreach($portfolioitem->ed_field_competence[LANGUAGE_NONE] as $competence){
+    foreach ($portfolioitemsnodes as $portfolioitem) {
+      foreach ($portfolioitem->ed_field_competence[LANGUAGE_NONE] as $competence) {
 
         if (!isset($competences[$competence['tid']])) {
           $competences[$competence['tid']] = array('tid' => $competence['tid'], 'evidences' => array($portfolioitem->nid));
@@ -75,7 +77,7 @@ function ed_portfolio_competency_profile($node){
       }
     }
 
-    foreach($fullvocabulary as &$highestterm){
+    foreach ($fullvocabulary as &$highestterm) {
       $leaves = array();
       get_all_leaves($leaves, $highestterm);
       $highestterm->leaves = $leaves;
@@ -91,7 +93,7 @@ function ed_portfolio_competency_profile($node){
     );
 
 
-    foreach($fullvocabulary as $parentterm){
+    foreach ($fullvocabulary as $parentterm) {
       $colorcode = taxonomy_term_load($parentterm->tid)->ed_competence_color_field[LANGUAGE_NONE][0]['safe_value'];
       $content['container'][$parentterm->tid] = array(
         '#type' => 'container',
@@ -107,21 +109,21 @@ function ed_portfolio_competency_profile($node){
       );
       $content['container'][$parentterm->tid]['progress-row']['name'] = array(
         '#type' => 'markup',
-        '#markup' => l($parentterm->name, 'taxonomy/term/'.$parentterm->tid).' <i class="fa fa-angle-down"></i>',
+        '#markup' => l($parentterm->name, 'taxonomy/term/' . $parentterm->tid) . ' <i class="fa fa-angle-down"></i>',
         '#prefix' => '<div class="term-name span5">',
         '#suffix' => '</div>'
       );
       $content['container'][$parentterm->tid]['progress-row']['progress'] = array(
         '#type' => 'markup',
-        '#markup' => '<div class="bar" style="width:'. round(count($parentterm->acquired)/count($parentterm->leaves)*100) .'%; background-image:none; background-color:'.$colorcode.';"></div>',
+        '#markup' => '<div class="bar" style="width:' . round(count($parentterm->acquired) / count($parentterm->leaves) * 100) . '%; background-image:none; background-color:' . $colorcode . ';"></div>',
         '#prefix' => '<div class="progress span4">',
         '#suffix' => '</div>'
       );
       $content['container'][$parentterm->tid]['progress-row']['summary'] = array(
         '#type' => 'markup',
-        '#markup' => '<div class="description span3 competence-profile-summary">'. round(count($parentterm->acquired)/count($parentterm->leaves)*100) .'% '.t('done').' '.count($parentterm->acquired).'/'.count($parentterm->leaves).'</div>',
+        '#markup' => '<div class="description span3 competence-profile-summary">' . round(count($parentterm->acquired) / count($parentterm->leaves) * 100) . '% ' . t('done') . ' ' . count($parentterm->acquired) . '/' . count($parentterm->leaves) . '</div>',
       );
-      if(count($parentterm->acquired)!=0){
+      if (count($parentterm->acquired) != 0) {
         $content['container'][$parentterm->tid]['detailed-view'] = array(
           '#type' => 'container',
           '#attributes' => array(),
@@ -143,27 +145,26 @@ function ed_portfolio_competency_profile($node){
 
         $content['container'][$parentterm->tid]['detailed-view']['body']['competence-description'] = array(
           '#type' => 'markup',
-          '#markup' => (!empty($parentterm->description)) ? t($parentterm->description): '',
+          '#markup' => (!empty($parentterm->description)) ? t($parentterm->description) : '',
           '#prefix' => '<div class="row acquired-competence-description">',
           '#suffix' => '</div>',
         );
 
         $rows = array();
-        $number=1;
-        foreach($parentterm->acquired as $acquiredcompetence){
-
+        $number = 1;
+        foreach ($parentterm->acquired as $acquiredcompetence) {
 
 
           $evidences = $competences[$acquiredcompetence]['evidences'];
           $evidenceslinks = array();
-          foreach($evidences as $evidence){
-            array_push($evidenceslinks, l(url('node/'.$evidence, array('absolute' => true)), 'node/'.$evidence));
+          foreach ($evidences as $evidence) {
+            array_push($evidenceslinks, l(url('node/' . $evidence, array('absolute' => true)), 'node/' . $evidence));
           }
           $evidences = implode('<br>', $evidenceslinks);
           $rows[] = array(
             'data' => array(
               'number' => $number,
-              'comp_peace' => (!empty(taxonomy_term_load($acquiredcompetence)->description)) ? '<p title="'.t(taxonomy_term_load($acquiredcompetence)->description).'">'.t(taxonomy_term_load($acquiredcompetence)->name).'</p>' : t(taxonomy_term_load($acquiredcompetence)->name),
+              'comp_peace' => (!empty(taxonomy_term_load($acquiredcompetence)->description)) ? '<p title="' . t(taxonomy_term_load($acquiredcompetence)->description) . '">' . t(taxonomy_term_load($acquiredcompetence)->name) . '</p>' : t(taxonomy_term_load($acquiredcompetence)->name),
               'evidences' => $evidences,
             ),
           );
@@ -188,9 +189,10 @@ function ed_portfolio_competency_profile($node){
 }
 
 
-function get_all_leaves(&$leaves, $term){
+function get_all_leaves(&$leaves, $term)
+{
   if (isset($term->children)) {
-    foreach($term->children as $child) {
+    foreach ($term->children as $child) {
       get_all_leaves($leaves, $child);
     }
   } else {
@@ -204,18 +206,19 @@ function get_all_leaves(&$leaves, $term){
  * @param type $vocabulary - Competence vocabulary with term->done = true as acquired competence
  * @return type array - Full competency profile
  */
-function _ed_get_competency_profile($vocabulary){
+function _ed_get_competency_profile($vocabulary)
+{
 
   $profile = array();
   return $profile;
 }
 
 
-
 /**
  * https://api.drupal.org/comment/50023#comment-50023
  */
-function taxonomy_get_nested_tree($vid_or_terms = array(), $max_depth = NULL, $parent = 0, $parents_index = array(), $depth = 0) {
+function taxonomy_get_nested_tree($vid_or_terms = array(), $max_depth = NULL, $parent = 0, $parents_index = array(), $depth = 0)
+{
 
   if (!is_array($vid_or_terms)) {
     $vid_or_terms = taxonomy_get_tree($vid_or_terms);
@@ -226,8 +229,7 @@ function taxonomy_get_nested_tree($vid_or_terms = array(), $max_depth = NULL, $p
     foreach ($term->parents as $term_parent) {
       if ($term_parent == $parent) {
         $return[$term->tid] = $term;
-      }
-      else {
+      } else {
         $parents_index[$term_parent][$term->tid] = $term;
       }
     }
@@ -242,13 +244,14 @@ function taxonomy_get_nested_tree($vid_or_terms = array(), $max_depth = NULL, $p
   return $return;
 }
 
-function ed_portfolio_competency_profile_access($node){
-  if($node->type != 'ed_portfolio'){
+function ed_portfolio_competency_profile_access($node)
+{
+  if ($node->type != 'ed_portfolio') {
     return false;
-  }else{
-    if($node->ed_portfolio_show_comp_profile[LANGUAGE_NONE][0]['value']){
+  } else {
+    if ($node->ed_portfolio_show_comp_profile[LANGUAGE_NONE][0]['value']) {
       return true;
-    }else{
+    } else {
       return false;
     }
   }
@@ -258,7 +261,8 @@ function ed_portfolio_competency_profile_access($node){
 /**
  * Portfolios listing page.
  */
-function ed_portfolio_listing_page(){
+function ed_portfolio_listing_page()
+{
   menu_tree_set_path('main-menu', 'dashboard');
   //drupal_add_css('ul.links.inline {display: none;}', array('group' => CSS_THEME, 'type' => 'inline'));
   $content = array();
@@ -279,18 +283,18 @@ function ed_portfolio_listing_page(){
   $user_portfolio_ids = ed_portfolio_get_user_portfolios();
   $nodes = node_load_multiple($user_portfolio_ids);
   $rows = array();
-  foreach($nodes as $node){
-    if($node->status=='1'){
-      $status = '<span class="pub-portfolio">'.t('Public').'</span>';
-    }else if($node->status=='0'){
-      $status = '<span class="priv-portfolio">'.t('Private').'</span>';
-    }else{
+  foreach ($nodes as $node) {
+    if ($node->status == '1') {
+      $status = '<span class="pub-portfolio">' . t('Public') . '</span>';
+    } else if ($node->status == '0') {
+      $status = '<span class="priv-portfolio">' . t('Private') . '</span>';
+    } else {
       $status = t('error');
     }
     $rows[] = array(
       'data' => array(
         'status' => $status,
-        'title' => l($node->title, 'node/'.$node->nid),
+        'title' => l($node->title, 'node/' . $node->nid),
         'created' => format_date($node->created, 'custom', 'd/m/Y'),
       ),
     );
@@ -312,7 +316,8 @@ function ed_portfolio_listing_page(){
 /**
  * User portfolio ids.
  */
-function ed_portfolio_get_user_portfolios() {
+function ed_portfolio_get_user_portfolios()
+{
   global $user;
   $query = db_select('node', 'n')
     ->fields('n', array('nid'))
@@ -325,7 +330,8 @@ function ed_portfolio_get_user_portfolios() {
   return $nids;
 }
 
-function ed_portfolio_page($portfolio_id) {
+function ed_portfolio_page($portfolio_id)
+{
   $portfolio = node_load($portfolio_id);
   if ($portfolio && $portfolio->type == 'ed_portfolio') {
     echo theme('ed_portfolio_page', array('node_view' => node_view($portfolio, 'entity_view')));
@@ -334,7 +340,8 @@ function ed_portfolio_page($portfolio_id) {
   return array();
 }
 
-function ed_portfolio_theme($existing, $type, $theme, $path) {
+function ed_portfolio_theme($existing, $type, $theme, $path)
+{
   return array(
     'ed_portfolio_page' => array(
       'variables' => array('node_view' => '', 'site_name' => variable_get('site_name', 'Drupal'), 'front_page' => variable_get('site_frontpage')),
@@ -345,15 +352,16 @@ function ed_portfolio_theme($existing, $type, $theme, $path) {
   );
 }
 
-function ed_portfolio_get_competency_profile_bar($nid){
+function ed_portfolio_get_competency_profile_bar($nid)
+{
   $node = node_load($nid);
 
 
-  if(!empty($node->ed_portfolio_field_items)){
+  if (!empty($node->ed_portfolio_field_items)) {
     $portfolioitemsnodes = array();
-    foreach($node->ed_portfolio_field_items[LANGUAGE_NONE] as $portfolioitem){
+    foreach ($node->ed_portfolio_field_items[LANGUAGE_NONE] as $portfolioitem) {
       $itemnode = node_load($portfolioitem['target_id']);
-      if(!empty($itemnode->ed_field_competence)){
+      if (!empty($itemnode->ed_field_competence)) {
         array_push($portfolioitemsnodes, $itemnode);
       }
     }
@@ -363,8 +371,8 @@ function ed_portfolio_get_competency_profile_bar($nid){
 
     $fullvocabulary = taxonomy_get_nested_tree(taxonomy_vocabulary_machine_name_load('ed_competence_voc')->vid);
 
-    foreach($portfolioitemsnodes as $portfolioitem){
-      foreach($portfolioitem->ed_field_competence[LANGUAGE_NONE] as $competence){
+    foreach ($portfolioitemsnodes as $portfolioitem) {
+      foreach ($portfolioitem->ed_field_competence[LANGUAGE_NONE] as $competence) {
 
         if (!isset($competences[$competence['tid']])) {
           $competences[$competence['tid']] = array('tid' => $competence['tid'], 'evidences' => array($portfolioitem->nid));
@@ -374,7 +382,7 @@ function ed_portfolio_get_competency_profile_bar($nid){
       }
     }
 
-    foreach($fullvocabulary as &$highestterm){
+    foreach ($fullvocabulary as &$highestterm) {
       $leaves = array();
       get_all_leaves($leaves, $highestterm);
       $highestterm->leaves = $leaves;
@@ -382,8 +390,8 @@ function ed_portfolio_get_competency_profile_bar($nid){
     }
     $acquired = 0;
     $profile = array();
-    foreach($fullvocabulary as $highestlevel){
-      if(count($highestlevel->acquired)!=0){
+    foreach ($fullvocabulary as $highestlevel) {
+      if (count($highestlevel->acquired) != 0) {
         $acquired += count($highestlevel->acquired);
         $profile[$highestlevel->tid] = array(
           'color' => taxonomy_term_load($highestlevel->tid)->ed_competence_color_field[LANGUAGE_NONE][0]['safe_value'],
@@ -391,8 +399,8 @@ function ed_portfolio_get_competency_profile_bar($nid){
         );
       }
     }
-    foreach($profile as &$acqterm){
-      $acqterm['count'] = $acqterm['count']/$acquired;
+    foreach ($profile as &$acqterm) {
+      $acqterm['count'] = $acqterm['count'] / $acquired;
     }
     //$profile['nid'] = $nid;
     $setting = array('ed_portfolio' => array('profile' => $profile, 'nid' => $nid));
@@ -402,20 +410,21 @@ function ed_portfolio_get_competency_profile_bar($nid){
 
 }
 
-function ed_portfolio_ctools_render_alter(&$info, &$page, &$context){
-  if(isset($context['contexts']['argument_entity_id:node_1']) && $context['contexts']['argument_entity_id:node_1']->data->type == 'ed_portfolio'){
+function ed_portfolio_ctools_render_alter(&$info, &$page, &$context)
+{
+  if (isset($context['contexts']['argument_entity_id:node_1']) && $context['contexts']['argument_entity_id:node_1']->data->type == 'ed_portfolio') {
     $nid = $context['contexts']['argument_entity_id:node_1']->data->nid;
     $progressbar = ed_portfolio_get_competency_profile_bar($nid);
     drupal_add_js(drupal_get_path('module', 'ed_portfolio') . '/ed_portfolio_progress_bar.js', 'file');
-    if(!empty($context['contexts']['argument_entity_id:node_1']->data->ed_field_cover_image)){
+    if (!empty($context['contexts']['argument_entity_id:node_1']->data->ed_field_cover_image)) {
       $imguri = $context['contexts']['argument_entity_id:node_1']->data->ed_field_cover_image[LANGUAGE_NONE][0]['uri'];
       $imgurl = file_create_url($imguri);
-      drupal_add_css('.node-type-ed-portfolio {background: white url('.$imgurl.') no-repeat;}',$option['type'] = 'inline');
-    }else{
-      $themepath = drupal_get_path('theme',$GLOBALS['theme']);
-      $defaultimagepath = $themepath.'/images/portfolio_bg.jpg';
+      drupal_add_css('.node-type-ed-portfolio {background: white url(' . $imgurl . ') no-repeat;}', $option['type'] = 'inline');
+    } else {
+      $themepath = drupal_get_path('theme', $GLOBALS['theme']);
+      $defaultimagepath = $themepath . '/images/portfolio_bg.jpg';
       $defimageurl = file_create_url($defaultimagepath);
-      drupal_add_css('.node-type-ed-portfolio {background: white url('.$defimageurl.') no-repeat;}',$option['type'] = 'inline');
+      drupal_add_css('.node-type-ed-portfolio {background: white url(' . $defimageurl . ') no-repeat;}', $option['type'] = 'inline');
     }
   }
 }
@@ -424,7 +433,8 @@ function ed_portfolio_ctools_render_alter(&$info, &$page, &$context){
 /**
  * Implements hook_ctools_plugin_api().
  */
-function ed_portfolio_ctools_plugin_api() {
+function ed_portfolio_ctools_plugin_api()
+{
   list($module, $api) = func_get_args();
   if ($module == "page_manager" && $api == "pages_default") {
     return array("version" => "1");
@@ -447,7 +457,8 @@ function ed_portfolio_ctools_plugin_api() {
 /**
  * Implements hook_views_api().
  */
-function ed_portfolio_views_api() {
+function ed_portfolio_views_api()
+{
   return array(
     'api' => 3,
     'path' => drupal_get_path('module', 'ed_portfolio') . '/includes/views',
@@ -457,104 +468,219 @@ function ed_portfolio_views_api() {
 /**
  * Implements hook_form_alter().
  */
-function ed_portfolio_form_alter(&$form, &$form_state, $form_id) {
+function ed_portfolio_form_alter(&$form, &$form_state, $form_id)
+{
   if ('ed_portfolio_node_form' == $form_id) {
+
+
+    //error_log(print_r('form', true));
+
+
+    if (isset($form_state['storage']['nid']) && $form_state['storage']['nid']) {
+      $form['#node']->nid = $form_state['storage']['nid'];
+    }
 
     if (empty($form['#node']->nid)) {
       drupal_set_title(t('Create Portfolio'));
     }
 
+//    error_log(print_r('form', true));
+//    error_log(print_r($form_state['storage']['nid'], true));
+//    error_log(print_r($form['#node']->nid, true));
+
 
     //XXX Delete this field
     $form['ed_portfolio_field_items']['#access'] = false;
 
-    $form['ed_portfolio_competence_desc']['#access'] = false;
+    $form['ed_portfolio_competence_desc']['#prefix'] = '<div style="display:none;">';
+    $form['ed_portfolio_competence_desc']['#suffix'] = '</div>';
 
     $form['#tree'] = TRUE;
 
 
     $form['add_more'] = array(
       '#type' => 'button',
-      '#value' => t('Select'),
+      '#value' => t('Save and continue'),
       '#weight' => $form['ed_q_portfolio_field_level']['#weight'] + 1,
+      '#attributes' => array('class' => array('ed-add-new-node')),
       '#ajax' => array(
         'callback' => 'ed_portfolio_get_competencies_ajax_callback',
         'wrapper' => 'names-fieldset-wrapper',
+        'method' => 'replace',
       ),
     );
 
 
-    $form['competencies'] = array(
+    $form['competency'] = array(
       '#type' => 'fieldset',
       '#title' => t('My competencies'),
-      // Set up the wrapper so that AJAX will be able to replace the fieldset.
-      '#prefix' => '<div id="names-fieldset-wrapper">',
       '#weight' => $form['ed_q_portfolio_field_level']['#weight'] + 2,
-      '#suffix' => '</div>',
+      '#tree' => true,
+      '#attributes' => array('id' => 'names-fieldset-wrapper'),
     );
 
+
+//    $form['competency']['competence_desc'] = array(
+//      '#type' => 'container',
+//      '#tree' => true
+//    );
+
+
+    //SUPER PANEL
+    if(isset($form_state['input']['ed_q_portfolio_field_level'])){
+      $selected_level = $form_state['input']['ed_q_portfolio_field_level'][LANGUAGE_NONE];
+    }else if (isset($form['#node']->ed_q_portfolio_field_level[LANGUAGE_NONE][0]['value'])){
+      $selected_level = $form['#node']->ed_q_portfolio_field_level[LANGUAGE_NONE][0]['value'];
+    } else{
+      $selected_level = null;
+    }
+
+    if ($selected_level) {
+
+      $terms = taxonomy_get_tree(taxonomy_vocabulary_machine_name_load('ed_competence_voc')->vid, $selected_level, 1);
+
+      foreach ($terms as $key => $term) {
+
+        $nids = _ed_portfolio_get_content_for_parent_competency($form_state['node']->uid, $term->tid);
+
+        // parent term
+        $form['competency'][$key]['name'] = array(
+          '#type' => 'item',
+          '#markup' => $term->name,
+        );
+
+        $form['competency'][$key]['tid'] = array(
+          '#type' => 'hidden',
+          '#value' => $term->tid,
+        );
+
+
+        $desc = '';
+        $shown_content = array();
+        $shown_options = array();
+
+        if($form['#node']){
+          if(!empty($form['#node']->ed_portfolio_competence_desc[LANGUAGE_NONE])){
+            foreach ($form['#node']->ed_portfolio_competence_desc[LANGUAGE_NONE] as $value){
+              if($value['tid'] == $term->tid){
+                $desc = $value['desc'];
+                $shown_content = drupal_json_decode($value['cid']);
+              }
+            }
+          }
+        }
+
+        if(!empty($shown_content)){
+          foreach ($shown_content as $item){
+            $shown_options[$item] = true;
+          }
+        }
+
+
+
+        $rows = array();
+
+        if (!empty($nids)) {
+          //content items
+          foreach ($nids as $item_key => $nid) {
+
+            $query = db_select('node', 'n');
+            $query->fields('n', array('title', 'changed'));
+            $query->condition('n.nid', $nid);
+            $node = $query->execute()->fetchAll();
+
+            $rows[$nid] = array(
+              'title' => l($node[0]->title, 'node/' . $nid),
+              'date' => format_date($node[0]->changed, 'short'),
+            );
+
+          }
+
+          $header = array(
+            'title' => t('Title'),
+            'date' => t('Date'),
+          );
+
+          //error_log(print_r($shown_options, true));
+
+
+          $form['competency'][$key]['table'] = array(
+            '#type' => 'tableselect',
+            '#options' => $rows,
+            '#header' => $header,
+            '#js_select' => FALSE,
+            '#empty' => t('No content found'),
+            '#default_value' => $shown_options,
+          );
+
+
+          $form['competency'][$key]['desc'] = array(
+            '#type' => 'textarea',
+            '#title' => t('Description'),
+            '#default_value' => $desc,
+          );
+        }
+
+      }
+
+    }
+
+
   }
+  $form['#submit'][] = 'ed_portfolio_submit_function';
   return $form;
 }
 
 
-function ed_portfolio_get_competencies_ajax_callback($form, &$form_state) {
+function ed_portfolio_get_competencies_ajax_callback($form, &$form_state)
+{
 
+  return $form['competency'];
+}
 
-  $selected_level = $form_state['input']['ed_q_portfolio_field_level'][LANGUAGE_NONE];
+function ed_portfolio_submit_function(&$form, &$form_state)
+{
 
-  $terms = taxonomy_get_tree(taxonomy_vocabulary_machine_name_load('ed_competence_voc')->vid, $selected_level, 1);
+  //error_log(print_r('e_portfolio_submit_function', true));
+  //error_log(print_r($form_state['values']['competency'], true));
+//  error_log(print_r( $form_state['values']['ed_portfolio_competence_desc'], true));
 
-  //error_log(print_r($form_state['node']->uid, true));
+  foreach ($form_state['values']['competency'] as $value){
 
-  //Get user content that has category in it
-//  $query = db_select('node', 'n');
-//  $query->join('field_data_ed_field_category', 'cat', 'n.nid = cat.entity_id');
-//
-//  $query
-//    ->fields('n', array('nid'))
-//    ->condition('n.status', 1)
-//    ->condition('n.uid', $form_state['node']->uid);
-//
-//  $db_or = db_or();
-//  $db_or->condition('n.type', 'ed_blog');
-//  $db_or->condition('n.type', 'ed_file');
-//  $db_or->condition('n.type', 'ed_learning_resource');
-//  $query->condition($db_or);
-//
-//  $nids = $query->execute()->fetchCol();
-//
-//  if (!empty($nids)) {
-//    error_log(print_r($nids, true));
-//  }
+    $content_items_to_show = array();
 
+    if(!empty($value['desc'])){
 
+      if(!empty($value['table'])){
 
+        //Get all content items
+        $values = array_values($value['table']);
 
-  foreach($terms as $key => $term){
+        //Check if they should be visible
+        foreach ($values as $item){
 
-    $nids = _ed_portfolio_get_content_for_parent_competency($form_state['node']->uid, $term->tid);
+          if($item != 0){
+            $content_items_to_show[] = $item;
+          }
+        }
 
-    error_log(print_r($nids, true));
+      }
 
-    $form['competencies'][$key]['name'] = array(
-      '#type' => 'item',
-      '#markup' => $term->name,
-    );
-    $form['competencies'][$key]['items'] = array(
-      '#type' => 'item',
-      '#markup' => print_r($nids, true),
-    );
+      $form_state['values']['ed_portfolio_competence_desc'][LANGUAGE_NONE][] = array(
+        'tid' => $value['tid'],
+        'desc' => $value['desc'],
+        'cid' => drupal_json_encode($content_items_to_show),
+      );
+      //error_log(print_r($value, true));
+    }
   }
 
 
-
-
-  return $form['competencies'];
 }
 
 
-function _ed_portfolio_get_content_for_parent_competency($uid, $parent_competency){
+function _ed_portfolio_get_content_for_parent_competency($uid, $parent_competency)
+{
 
   $child_terms = array_column(taxonomy_get_tree(taxonomy_vocabulary_machine_name_load('ed_competence_voc')->vid, $parent_competency), 'tid');
 
@@ -572,9 +698,28 @@ function _ed_portfolio_get_content_for_parent_competency($uid, $parent_competenc
 
   $nids = $query->execute()->fetchCol();
 
+
+
+  $query_answers = db_select('node', 'n');
+  $query_answers->fields('n', array('nid'))
+    ->condition('n.type', 'ed_answer')
+    ->condition('n.status', 1)
+    ->condition('n.uid', $uid);
+  $query_answers->join('field_data_field_ref_to_task', 'ref', 'ref.entity_id = n.nid');
+  $query_answers->join('node', 'n2', 'n2.nid = ref.field_ref_to_task_target_id');
+  $query_answers->join('field_data_ed_field_competence', 'com', 'n2.nid = com.entity_id');
+  $query_answers->condition('com.ed_field_competence_tid', $child_terms, 'IN');
+
+
+  $nids_answers = $query_answers->execute()->fetchCol();
+
+  error_log(print_r('query', true));
+  error_log(print_r($nids_answers , true));
+
+
   if (!empty($nids)) {
-    return $nids;
-  }else{
+    return array_merge($nids, $nids_answers);
+  } else {
     return null;
   }
 }
@@ -584,9 +729,10 @@ function _ed_portfolio_get_content_for_parent_competency($uid, $parent_competenc
  * Implements hook_field_info
  */
 
-function ed_portfolio_field_info() {
-  return array (
-    'ed_portfolio_competence_desc' => array (
+function ed_portfolio_field_info()
+{
+  return array(
+    'ed_portfolio_competence_desc' => array(
       'label' => t('Competence description'),
       'description' => t('This field stores competence description'),
       'default_widget' => 'ed_portfolio_competence_desc_widget',
@@ -597,7 +743,8 @@ function ed_portfolio_field_info() {
   );
 }
 
-function ed_portfolio_competence_desc_property_info_callback(&$info, $entity_type, $field, $instance, $field_type) {
+function ed_portfolio_competence_desc_property_info_callback(&$info, $entity_type, $field, $instance, $field_type)
+{
   $property = &$info[$entity_type]['bundles'][$instance['bundle']]['properties'][$field['field_name']];
 
   $property['getter callback'] = 'entity_metadata_field_verbatim_get';
@@ -619,7 +766,8 @@ function ed_portfolio_competence_desc_property_info_callback(&$info, $entity_typ
 /**
  * Implements hook_field_widget_info().
  */
-function ed_portfolio_field_widget_info() {
+function ed_portfolio_field_widget_info()
+{
   return array(
     'ed_portfolio_competence_desc_widget' => array(
       'label' => t('Default'),
@@ -631,7 +779,8 @@ function ed_portfolio_field_widget_info() {
 /**
  * Implements hook_field_widget_form().
  */
-function ed_portfolio_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
+function ed_portfolio_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element)
+{
 
   $element['tid'] = array(
     '#type' => 'textfield',
@@ -647,14 +796,13 @@ function ed_portfolio_field_widget_form(&$form, &$form_state, $field, $instance,
     '#size' => 2000,
     '#attributes' => array('maxlength' => 2000),
   );
-//      break;
-//  }
+
   return $element;
 }
 
 
-
-function ed_portfolio_field_is_empty($item, $field) {
+function ed_portfolio_field_is_empty($item, $field)
+{
   $temp = array_keys($field['columns']);
   $key = array_shift($temp);
   return empty($item[$key]);
@@ -663,7 +811,8 @@ function ed_portfolio_field_is_empty($item, $field) {
 /**
  * Implements hook_field_validate().
  */
-function ed_portfolio_field_validate($entity_type, $entity, $field, $instance, $langcode, $items, &$errors) {
+function ed_portfolio_field_validate($entity_type, $entity, $field, $instance, $langcode, $items, &$errors)
+{
   // Loop through field items in the case of multiple values.
   foreach ($items as $delta => $item) {
     if (isset($item['desc']) && $item['desc'] != '') {
@@ -681,7 +830,8 @@ function ed_portfolio_field_validate($entity_type, $entity, $field, $instance, $
 /**
  * Implements hook_field_formatter_info().
  */
-function ed_portfolio_field_formatter_info() {
+function ed_portfolio_field_formatter_info()
+{
   return array(
     'ed_portfolio_competence_desc_default' => array(
       'label' => t('Default'),
@@ -693,7 +843,8 @@ function ed_portfolio_field_formatter_info() {
 /**
  * Implements hook_field_formatter_view().
  */
-function ed_portfolio_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+function ed_portfolio_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display)
+{
   $element = array();
   switch ($display['type']) {
     case 'ed_portfolio_competence_desc_default' :
@@ -706,3 +857,7 @@ function ed_portfolio_field_formatter_view($entity_type, $entity, $field, $insta
   }
   return $element;
 }
+
+
+
+
