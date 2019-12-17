@@ -8,7 +8,8 @@
 /**
  * Implements hook_install().
  */
-function ed_portfolio_install() {
+function ed_portfolio_install()
+{
   ed_portfolio_create_field_items();
   ed_portfolio_create_ed_portfolio_node_type();
   ed_portfolio_node_add_field_content();
@@ -25,7 +26,8 @@ function ed_portfolio_install() {
 /**
  * Implements hook_uninstall().
  */
-function ed_portfolio_uninstall() {
+function ed_portfolio_uninstall()
+{
   ed_portfolio_delete_ed_portfolio_nodes();
   ed_portfolio_delete_ed_portfolio_node_type();
   field_delete_field('ed_portfolio_field_items');
@@ -34,9 +36,10 @@ function ed_portfolio_uninstall() {
 /**
  * Creates portfolio show competence field if not exists
  */
-function ed_portfolio_create_field_show_competence_profile(){
+function ed_portfolio_create_field_show_competence_profile()
+{
   $field_name = 'ed_portfolio_show_comp_profile';
-  if(!field_info_field($field_name)) {
+  if (!field_info_field($field_name)) {
     $field = array(
       'field_name' => $field_name,
       'type' => 'list_boolean',
@@ -55,7 +58,8 @@ function ed_portfolio_create_field_show_competence_profile(){
 /**
  * Creates portfolio items field if not exists.
  */
-function ed_portfolio_create_field_items() {
+function ed_portfolio_create_field_items()
+{
   $field_name = 'ed_portfolio_field_items';
   if (!field_info_field($field_name)) {
     $field = array(
@@ -82,7 +86,8 @@ function ed_portfolio_create_field_items() {
 /**
  * Creates ed_portfolio node type.
  */
-function ed_portfolio_create_ed_portfolio_node_type() {
+function ed_portfolio_create_ed_portfolio_node_type()
+{
   if (!in_array('ed_portfolio', node_type_get_names())) {
     $type = array(
       'type' => 'ed_portfolio',
@@ -101,7 +106,8 @@ function ed_portfolio_create_ed_portfolio_node_type() {
   }
 }
 
-function ed_portfolio_node_add_field_content() {
+function ed_portfolio_node_add_field_content()
+{
   $field_name = 'ed_field_content';
   $field = field_info_field($field_name);
   if (!empty($field) && !field_info_instance('node', $field_name, 'ed_portfolio')) {
@@ -134,10 +140,11 @@ function ed_portfolio_node_add_field_content() {
 /**
  * Adds show competence profile field instance
  */
-function ed_portfolio_node_add_field_show_competence_profile(){
+function ed_portfolio_node_add_field_show_competence_profile()
+{
   $field_name = 'ed_portfolio_show_comp_profile';
   $field = field_info_field($field_name);
-  if(!empty($field) && !field_info_instance('node', $field_name, 'ed_portfolio')) {
+  if (!empty($field) && !field_info_instance('node', $field_name, 'ed_portfolio')) {
     $instance = array(
       'field_name' => $field_name,
       'entity_type' => 'node',
@@ -160,7 +167,8 @@ function ed_portfolio_node_add_field_show_competence_profile(){
   }
 }
 
-function ed_portfolio_node_add_field_featured_image() {
+function ed_portfolio_node_add_field_featured_image()
+{
   $field_name = 'ed_field_featured_image';
   $field = field_info_field($field_name);
   if (!empty($field) && !field_info_instance('node', $field_name, 'ed_portfolio')) {
@@ -185,7 +193,8 @@ function ed_portfolio_node_add_field_featured_image() {
 /**
  * Adds field ed_portfolio_field_items to ed_portfolio node type.
  */
-function ed_portfolio_node_add_field_items() {
+function ed_portfolio_node_add_field_items()
+{
   $field_name = 'ed_portfolio_field_items';
   $field = field_info_field($field_name);
   if (!empty($field) && !field_info_instance('node', $field_name, 'ed_portfolio')) {
@@ -209,7 +218,8 @@ function ed_portfolio_node_add_field_items() {
   }
 }
 
-function ed_portfolio_node_add_field_level() {
+function ed_portfolio_node_add_field_level()
+{
   $field_name = 'ed_q_portfolio_field_level';
   $field = field_info_field($field_name);
   if (!empty($field) && !field_info_instance('node', $field_name, 'ed_portfolio')) {
@@ -234,13 +244,13 @@ function ed_portfolio_node_add_field_level() {
 }
 
 
-
 /**
  * Creates portfolio competence description
  */
-function ed_portfolio_create_field_competence_desc(){
+function ed_portfolio_create_field_competence_desc()
+{
   $field_name = 'ed_portfolio_competence_desc';
-  if(!field_info_field($field_name)) {
+  if (!field_info_field($field_name)) {
     $field = array(
       'field_name' => $field_name,
       'type' => 'ed_portfolio_competence_desc',
@@ -250,7 +260,8 @@ function ed_portfolio_create_field_competence_desc(){
   }
 }
 
-function ed_portfolio_node_add_field_competence_desc() {
+function ed_portfolio_node_add_field_competence_desc()
+{
   $field_name = 'ed_portfolio_competence_desc';
   $field = field_info_field($field_name);
   if (!empty($field) && !field_info_instance('node', $field_name, 'ed_portfolio')) {
@@ -285,12 +296,12 @@ function ed_portfolio_node_add_field_competence_desc() {
 }
 
 
-
 /**
  * Implements hook_field_schema().
  * Used by ed_portfolio_competence_desc field
  */
-function ed_portfolio_field_schema($field) {
+function ed_portfolio_field_schema($field)
+{
   $schema = array(
     'columns' => array(
       'tid' => array(
@@ -321,7 +332,8 @@ function ed_portfolio_field_schema($field) {
 /**
  * Sets permissions for ed_portfolio.
  */
-function ed_portfolio_set_permissions() {
+function ed_portfolio_set_permissions()
+{
   $permissions = array(
     'create ed_portfolio content' => TRUE,
     'edit own ed_portfolio content' => TRUE,
@@ -333,7 +345,8 @@ function ed_portfolio_set_permissions() {
 /**
  * Deletes all ed_portfolio nodes.
  */
-function ed_portfolio_delete_ed_portfolio_nodes() {
+function ed_portfolio_delete_ed_portfolio_nodes()
+{
   $nids = array();
   $query = db_select('node', 'n')
     ->fields('n', array('nid'))
@@ -347,7 +360,8 @@ function ed_portfolio_delete_ed_portfolio_nodes() {
 /**
  * Deletes ed_portfolio node type.
  */
-function ed_portfolio_delete_ed_portfolio_node_type() {
+function ed_portfolio_delete_ed_portfolio_node_type()
+{
   if (array_key_exists('ed_portfolio', node_type_get_names())) {
     node_type_delete('ed_portfolio');
     node_types_rebuild();
@@ -360,7 +374,8 @@ function ed_portfolio_delete_ed_portfolio_node_type() {
  */
 
 
-function ed_portfolio_update_7100(&$sandbox){
+function ed_portfolio_update_7100(&$sandbox)
+{
   $field_name = 'ed_field_cover_image';
   if (!field_info_field($field_name)) {
     $field = array(
@@ -400,12 +415,11 @@ function ed_portfolio_update_7100(&$sandbox){
 }
 
 
-
-
 /**
  * creates and adds ed_portfolio_show_competence_profile field and instanciates it on ed_portfolio
  */
-function ed_portfolio_update_7102(&$sandbox) {
+function ed_portfolio_update_7102(&$sandbox)
+{
   ed_portfolio_create_field_show_competence_profile();
 
   ed_portfolio_node_add_field_show_competence_profile();
@@ -415,7 +429,8 @@ function ed_portfolio_update_7102(&$sandbox) {
 /**
  * Fix EntityReference args related bug
  */
-function ed_portfolio_update_7103(&$sandbox) {
+function ed_portfolio_update_7103(&$sandbox)
+{
 
   $field = field_info_field('ed_portfolio_field_items');
 
@@ -423,19 +438,33 @@ function ed_portfolio_update_7103(&$sandbox) {
   field_update_field($field);
 
 
-
 }
 
 
 /**
+ * ed-Portfolio 2.0
  * @param $sandbox
  */
-function ed_portfolio_update_7112(&$sandbox) {
+function ed_portfolio_update_7104(&$sandbox)
+{
 
 
-//  field_delete_field('ed_portfolio_competence_desc');
-//  field_delete_instance('ed_portfolio_competence_desc');
+  field_delete_field('ed_portfolio_show_comp_profile');
+  field_delete_instance('ed_portfolio_show_comp_profile');
 
+  field_delete_field('ed_portfolio_field_items');
+  field_delete_instance('ed_portfolio_field_items');
+
+
+  if ($instance = field_info_instance('node', 'ed_field_featured_image', 'ed_portfolio')) {
+    field_delete_instance($instance, TRUE);
+    field_purge_batch(1);
+  }
+
+  if ($instance = field_info_instance('node', 'ed_field_cover_image', 'ed_portfolio')) {
+    field_delete_instance($instance, TRUE);
+    field_purge_batch(1);
+  }
 
   ed_portfolio_node_add_field_level();
 
