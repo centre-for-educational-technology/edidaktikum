@@ -603,6 +603,38 @@ function _ed_portfolio_get_content_for_parent_competency($uid, $parent_competenc
 }
 
 
+/**
+ * XXX
+ * THIS IS FOR PHP 5.4 THAT DOES NOT HAVE array_column FUNCTION
+ */
+if (! function_exists('array_column')) {
+  function array_column(array $input, $columnKey, $indexKey = null) {
+    $array = array();
+    foreach ($input as $value) {
+      if ( !array_key_exists($columnKey, $value)) {
+        trigger_error("Key \"$columnKey\" does not exist in array");
+        return false;
+      }
+      if (is_null($indexKey)) {
+        $array[] = $value[$columnKey];
+      }
+      else {
+        if ( !array_key_exists($indexKey, $value)) {
+          trigger_error("Key \"$indexKey\" does not exist in array");
+          return false;
+        }
+        if ( ! is_scalar($value[$indexKey])) {
+          trigger_error("Key \"$indexKey\" does not contain scalar value");
+          return false;
+        }
+        $array[$value[$indexKey]] = $value[$columnKey];
+      }
+    }
+    return $array;
+  }
+}
+
+
 function _ed_portfolio_get_complete_level_for_competency($uid, $parent_competency)
 {
 
