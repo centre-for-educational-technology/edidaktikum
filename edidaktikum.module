@@ -1708,7 +1708,7 @@ function edidaktikum_form_user_register_form_alter(&$form, &$form_state, $form_i
  * @return
  *   Task title string
  */
-function ed_get_answer_title(&$node, $teaser=FALSE) {
+function ed_get_answer_title($node, $teaser=FALSE) {
   $task_title = NULL;
 
   if (isset($node->field_ref_to_task[LANGUAGE_NONE][0]['entity'])) {
