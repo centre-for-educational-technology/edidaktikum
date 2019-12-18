@@ -94,7 +94,7 @@ function ed_competency_profile_page($node)
 
 
   $user = $node->uid;
-  $competency_desc = $node->ed_portfolio_competence_desc[LANGUAGE_NONE];
+  $competency_desc = $node->ed_portfolio_competence_desc;
 
 
   if ($selected_level) {
@@ -117,7 +117,7 @@ function ed_competency_profile_page($node)
       $desc = '';
 
       if (!empty($competency_desc)) {
-        foreach ($competency_desc as $value) {
+        foreach ($competency_desc[LANGUAGE_NONE] as $value) {
 
 
           if ($value['tid'] == $term->tid) {
@@ -531,7 +531,7 @@ function ed_portfolio_submit_function(&$form, &$form_state)
 
     $content_items_to_show = array();
 
-    if (!empty($value['desc'])) {
+
 
       if (!empty($value['table'])) {
 
@@ -550,10 +550,10 @@ function ed_portfolio_submit_function(&$form, &$form_state)
 
       $form_state['values']['ed_portfolio_competence_desc'][LANGUAGE_NONE][] = array(
         'tid' => $value['tid'],
-        'desc' => $value['desc'],
+        'desc' => !empty($value['desc']) ? $value['desc'] : '',
         'cid' => drupal_json_encode($content_items_to_show),
       );
-    }
+
   }
 
 
@@ -562,7 +562,15 @@ function ed_portfolio_submit_function(&$form, &$form_state)
 
 function _ed_portfolio_get_content_for_parent_competency($uid, $parent_competency)
 {
-  $child_terms = array_column(taxonomy_get_tree(taxonomy_vocabulary_machine_name_load('ed_competence_voc')->vid, $parent_competency), 'tid');
+  $a = taxonomy_get_tree(taxonomy_vocabulary_machine_name_load('ed_competence_voc')->vid, $parent_competency);
+
+  $child_terms = array_map(function($element) {
+    return $element->tid;
+  }, $a);
+
+  //For PHP 5.5+
+  //$child_terms = array_column(taxonomy_get_tree(taxonomy_vocabulary_machine_name_load('ed_competence_voc')->vid, $parent_competency), 'tid');
+
 
   //For blog, file, learning resource
   $query = db_select('node', 'n');
@@ -603,44 +611,19 @@ function _ed_portfolio_get_content_for_parent_competency($uid, $parent_competenc
 }
 
 
-/**
- * XXX
- * THIS IS FOR PHP 5.4 THAT DOES NOT HAVE array_column FUNCTION
- */
-if (! function_exists('array_column')) {
-  function array_column(array $input, $columnKey, $indexKey = null) {
-    $array = array();
-    foreach ($input as $value) {
-      if ( !array_key_exists($columnKey, $value)) {
-        trigger_error("Key \"$columnKey\" does not exist in array");
-        return false;
-      }
-      if (is_null($indexKey)) {
-        $array[] = $value[$columnKey];
-      }
-      else {
-        if ( !array_key_exists($indexKey, $value)) {
-          trigger_error("Key \"$indexKey\" does not exist in array");
-          return false;
-        }
-        if ( ! is_scalar($value[$indexKey])) {
-          trigger_error("Key \"$indexKey\" does not contain scalar value");
-          return false;
-        }
-        $array[$value[$indexKey]] = $value[$columnKey];
-      }
-    }
-    return $array;
-  }
-}
-
 
 function _ed_portfolio_get_complete_level_for_competency($uid, $parent_competency)
 {
 
-  $child_terms = array_column(taxonomy_get_tree(taxonomy_vocabulary_machine_name_load('ed_competence_voc')->vid, $parent_competency), 'tid');
+  $a = taxonomy_get_tree(taxonomy_vocabulary_machine_name_load('ed_competence_voc')->vid, $parent_competency);
 
+  $child_terms = array_map(function($element) {
+    return $element->tid;
+  }, $a);
 
+  //For PHP 5.5+
+  //$child_terms = array_column(taxonomy_get_tree(taxonomy_vocabulary_machine_name_load('ed_competence_voc')->vid, $parent_competency), 'tid');
+  
   $query_complete = db_select('field_data_ed_field_competence', 'com');
   $query_complete->join('node', 'n', 'n.nid = com.entity_id');
   $query_complete->fields('com', array('ed_field_competence_tid'))
