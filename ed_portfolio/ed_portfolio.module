@@ -511,10 +511,9 @@ function ed_portfolio_form_alter(&$form, &$form_state, $form_id)
 
     }
 
-
+    $form['#submit'][] = 'ed_portfolio_submit_function';
   }
-  $form['#submit'][] = 'ed_portfolio_submit_function';
-  return $form;
+
 }
 
 
@@ -623,7 +622,7 @@ function _ed_portfolio_get_complete_level_for_competency($uid, $parent_competenc
 
   //For PHP 5.5+
   //$child_terms = array_column(taxonomy_get_tree(taxonomy_vocabulary_machine_name_load('ed_competence_voc')->vid, $parent_competency), 'tid');
-  
+
   $query_complete = db_select('field_data_ed_field_competence', 'com');
   $query_complete->join('node', 'n', 'n.nid = com.entity_id');
   $query_complete->fields('com', array('ed_field_competence_tid'))
