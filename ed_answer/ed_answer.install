@@ -6,7 +6,8 @@ require_once('ed_answer_functions.inc');
  * Implements hook_install().
  */
 
-function ed_answer_install() {
+function ed_answer_install()
+{
   node_types_rebuild();
   $types = node_type_get_types();
 
@@ -148,7 +149,7 @@ function ed_answer_install() {
     'bundle' => 'ed_answer',
     'deleted' => '0',
   ));
-  foreach(_ed_answer_installed_instances() as $instance) {
+  foreach (_ed_answer_installed_instances() as $instance) {
     $instance['entity_type'] = 'node';
     $instance['bundle'] = 'ed_answer';
     field_create_instance($instance);
@@ -162,21 +163,22 @@ function ed_answer_install() {
 
   ed_answer_add_og_audience();
 
-	ed_answer_node_add_field_g_drive_file();
+  ed_answer_node_add_field_g_drive_file();
 
-	ed_answer_node_add_field_difficulty_feedb();
+  ed_answer_node_add_field_difficulty_feedb();
 
-	ed_answer_node_add_time_eff_feedb();
+  ed_answer_node_add_time_eff_feedb();
 
-	ed_answer_node_add_field_satisf_feedb();
+  ed_answer_node_add_field_satisf_feedb();
 
   ed_answer_create_field_last_status();
 
   ed_answer_node_add_field_last_status();
 }
 
-function ed_answer_add_og_audience() {
-  if(function_exists('og_create_field') && defined('OG_AUDIENCE_FIELD')) {
+function ed_answer_add_og_audience()
+{
+  if (function_exists('og_create_field') && defined('OG_AUDIENCE_FIELD')) {
     $og_field = og_fields_info(OG_AUDIENCE_FIELD);
     $og_field['instance']['label'] = t('Group');
     $og_field['instance']['required'] = TRUE;
@@ -193,79 +195,81 @@ function ed_answer_add_og_audience() {
 /**
  * Adds ed_g_drive_file field instance
  */
-function ed_answer_node_add_field_g_drive_file() {
-	$field_name = 'ed_g_drive_file';
-	$field = field_info_field($field_name);
-	if (!empty($field) && !field_info_instance('node', $field_name, 'ed_answer')) {
-		$instance = array(
-				'field_name' => $field_name,
-				'entity_type' => 'node',
-				'bundle' => 'ed_answer',
-				'label' => t('Failid Google Drive-st'),
-				'description' => '',
-				'widget' => array(
-						'settings' => array(
-								'rows' => 1,
-						),
-				),
-				'required' => FALSE,
-				'display' => array(
-						'default' => array(
-								'label' => 'hidden',
-						),
-						'featured' => array(
-								'label' => 'hidden',
-						),
-				)
-		);
-		field_create_instance($instance);
-	}
+function ed_answer_node_add_field_g_drive_file()
+{
+  $field_name = 'ed_g_drive_file';
+  $field = field_info_field($field_name);
+  if (!empty($field) && !field_info_instance('node', $field_name, 'ed_answer')) {
+    $instance = array(
+      'field_name' => $field_name,
+      'entity_type' => 'node',
+      'bundle' => 'ed_answer',
+      'label' => t('Failid Google Drive-st'),
+      'description' => '',
+      'widget' => array(
+        'settings' => array(
+          'rows' => 1,
+        ),
+      ),
+      'required' => FALSE,
+      'display' => array(
+        'default' => array(
+          'label' => 'hidden',
+        ),
+        'featured' => array(
+          'label' => 'hidden',
+        ),
+      )
+    );
+    field_create_instance($instance);
+  }
 }
 
 
 /**
  * Creates and adds difficulty_feedb field
  */
-function ed_answer_node_add_field_difficulty_feedb() {
-	$field_name = 'ed_field_difficulty_feedb';
-	if (!field_info_field($field_name)) {
-		$field = array(
-				'field_name' => $field_name,
-				'type' => 'list_integer',
-				'cardinality' => 1,
-				'settings' => array(
-						'allowed_values' => array(
-								1 => '',
-								2 => '',
-								3 => '',
-								4 => '',
-						),
-				),
+function ed_answer_node_add_field_difficulty_feedb()
+{
+  $field_name = 'ed_field_difficulty_feedb';
+  if (!field_info_field($field_name)) {
+    $field = array(
+      'field_name' => $field_name,
+      'type' => 'list_integer',
+      'cardinality' => 1,
+      'settings' => array(
+        'allowed_values' => array(
+          1 => '',
+          2 => '',
+          3 => '',
+          4 => '',
+        ),
+      ),
 
-		);
-		field_create_field($field);
-	}
+    );
+    field_create_field($field);
+  }
 
 
-	if (!field_info_instance('node', 'ed_field_difficulty_feedb', 'ed_answer')) {
-		$instance = array(
-				'field_name' => $field_name,
-				'entity_type' => 'node',
-				'bundle' => 'ed_answer',
-				'label' => t('Raskusaste'),
-				'description' => t("1 – Lihtne ülesanne; 4 – Keeruline ülesanne"),
-				'default_value' => null,
-				'required' => TRUE,
-				'weight' => '-1',
-				'widget' => array(
-						'active' => 1,
-						'module' => 'options',
-						'settings' => array(),
-						'type' => 'options_buttons'
-				),
-		);
-		field_create_instance($instance);
-	}
+  if (!field_info_instance('node', 'ed_field_difficulty_feedb', 'ed_answer')) {
+    $instance = array(
+      'field_name' => $field_name,
+      'entity_type' => 'node',
+      'bundle' => 'ed_answer',
+      'label' => t('Raskusaste'),
+      'description' => t("1 – Lihtne ülesanne; 4 – Keeruline ülesanne"),
+      'default_value' => null,
+      'required' => TRUE,
+      'weight' => '-1',
+      'widget' => array(
+        'active' => 1,
+        'module' => 'options',
+        'settings' => array(),
+        'type' => 'options_buttons'
+      ),
+    );
+    field_create_instance($instance);
+  }
 
 }
 
@@ -273,99 +277,186 @@ function ed_answer_node_add_field_difficulty_feedb() {
 /**
  * Creates and adds satisf_feedb field
  */
-function ed_answer_node_add_field_satisf_feedb() {
-	$field_name = 'ed_field_satisf_feedb';
-	if (!field_info_field($field_name)) {
-		$field = array(
-				'field_name' => $field_name,
-				'type' => 'list_integer',
-				'cardinality' => array(1),
-				'settings' => array(
-						'allowed_values' => array(
-								1 => '',
-								2 => '',
-								3 => '',
-								4 => '',
-						),
-				),
+function ed_answer_node_add_field_satisf_feedb()
+{
+  $field_name = 'ed_field_satisf_feedb';
+  if (!field_info_field($field_name)) {
+    $field = array(
+      'field_name' => $field_name,
+      'type' => 'list_integer',
+      'cardinality' => array(1),
+      'settings' => array(
+        'allowed_values' => array(
+          1 => '',
+          2 => '',
+          3 => '',
+          4 => '',
+        ),
+      ),
 
-		);
-		field_create_field($field);
-	}
+    );
+    field_create_field($field);
+  }
 
 
-	if (!field_info_instance('node', 'ed_field_satisf_feedb', 'ed_answer')) {
-		$instance = array(
-				'field_name' => $field_name,
-				'entity_type' => 'node',
-				'bundle' => 'ed_answer',
-				'label' => t('Rahuolu'),
-				'description' => '',
-				'default_value' => null,
-				'required' => TRUE,
-				'widget' => array(
-						'active' => 3,
-						'module' => 'options',
-						'settings' => array(),
-						'type' => 'options_buttons'
-				),
-		);
-		field_create_instance($instance);
-	}
+  if (!field_info_instance('node', 'ed_field_satisf_feedb', 'ed_answer')) {
+    $instance = array(
+      'field_name' => $field_name,
+      'entity_type' => 'node',
+      'bundle' => 'ed_answer',
+      'label' => t('Rahuolu'),
+      'description' => '',
+      'default_value' => null,
+      'required' => TRUE,
+      'widget' => array(
+        'active' => 3,
+        'module' => 'options',
+        'settings' => array(),
+        'type' => 'options_buttons'
+      ),
+    );
+    field_create_instance($instance);
+  }
 
 }
-
 
 
 /**
  * Creates and adds time_eff_feedb field
  */
-function ed_answer_node_add_time_eff_feedb() {
-	$field_name = 'ed_field_time_eff_feedb';
-	if (!field_info_field($field_name)) {
-		$field = array(
-				'field_name' => $field_name,
-				'type' => 'list_integer',
-				'cardinality' => 1,
-				'settings' => array(
-						'allowed_values' => array(
-								1 => '',
-								2 => '',
-								3 => '',
-								4 => '',
-						),
-				),
+function ed_answer_node_add_time_eff_feedb()
+{
+  $field_name = 'ed_field_time_eff_feedb';
+  if (!field_info_field($field_name)) {
+    $field = array(
+      'field_name' => $field_name,
+      'type' => 'list_integer',
+      'cardinality' => 1,
+      'settings' => array(
+        'allowed_values' => array(
+          1 => '',
+          2 => '',
+          3 => '',
+          4 => '',
+        ),
+      ),
 
-		);
-		field_create_field($field);
-	}
+    );
+    field_create_field($field);
+  }
 
 
-	if (!field_info_instance('node', 'ed_field_time_eff_feedb', 'ed_answer')) {
-		$instance = array(
-				'field_name' => $field_name,
-				'entity_type' => 'node',
-				'bundle' => 'ed_answer',
-				'label' => t('Aeg/Pingutus'),
-				'description' => t("1 – Oli lihtne, ei võtnud palju aega; 4 – Oli raske, võttis palju aega"),
-				'default_value' => null,
-				'required' => TRUE,
-				'widget' => array(
-						'active' => 1,
-						'module' => 'options',
-						'settings' => array(),
-						'type' => 'options_buttons'
-				),
-		);
-		field_create_instance($instance);
-	}
+  if (!field_info_instance('node', 'ed_field_time_eff_feedb', 'ed_answer')) {
+    $instance = array(
+      'field_name' => $field_name,
+      'entity_type' => 'node',
+      'bundle' => 'ed_answer',
+      'label' => t('Aeg/Pingutus'),
+      'description' => t("1 – Oli lihtne, ei võtnud palju aega; 4 – Oli raske, võttis palju aega"),
+      'default_value' => null,
+      'required' => TRUE,
+      'widget' => array(
+        'active' => 1,
+        'module' => 'options',
+        'settings' => array(),
+        'type' => 'options_buttons'
+      ),
+    );
+    field_create_instance($instance);
+  }
 
 }
 
 
+/**
+ * Creates and adds answer_emotions field
+ */
+function ed_answer_node_add_answer_emotions()
+{
+  $field_name = 'ed_field_answer_emotions';
+  if (!field_info_field($field_name)) {
+    $field = array(
+      'field_name' => $field_name,
+      'type' => 'list_text',
+      'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+      'settings' => array(
+        'allowed_values' => _ed_answer_emotions_list(),
+      ),
 
-function ed_answer_uninstall() {
-  $result = db_select('node','n')
+    );
+    field_create_field($field);
+  }
+
+
+  if (!field_info_instance('node', 'ed_field_answer_emotions', 'ed_answer')) {
+    $instance = array(
+      'field_name' => $field_name,
+      'entity_type' => 'node',
+      'bundle' => 'ed_answer',
+      'label' => t('Milliseid emotsioone ülesande sooritamisel kogesid?'),
+      'description' => t("Vali kõik sobivad!"),
+      'default_value' => null,
+      'required' => TRUE,
+      'widget' => array(
+        'active' => 1,
+        'module' => 'options',
+        'settings' => array(),
+        'type' => 'options_buttons'
+      ),
+    );
+    field_create_instance($instance);
+  }
+
+}
+
+
+function _ed_answer_emotions_list()
+{
+  $statuses = array(
+    'curiosity' => t('Uudishimu'),
+    'confusion' => t('Segadus'),
+    'anxiety' => t('Ärevus'),
+    'boredom' => t('Igavus'),
+    'surprise' => t('Üllatus'),
+    'frustration' => t('Frustratsioon'),
+    'enjoyment' => t('Rõõm'),
+  );
+  return $statuses;
+}
+
+
+function ed_answer_node_add_field_time_spent()
+{
+  $field_name = 'ed_answer_field_time_spent';
+
+  if (!field_info_field($field_name)) {
+    $field = array(
+      'field_name' => $field_name,
+      'type' => 'ed_answer_time_spent',
+      'cardinality' => 1,
+      'locked' => FALSE,
+    );
+    field_create_field($field);
+  }
+
+  if (!empty($field) && !field_info_instance('node', $field_name, 'ed_answer')) {
+    $instance = array(
+      'field_name' => $field_name,
+      'entity_type' => 'node',
+      'bundle' => 'ed_answer',
+      'label' => t('Palun hinda ülesandele kulunud aega'),
+      'description' => '',
+      'required' => TRUE,
+
+    );
+    field_create_instance($instance);
+  }
+}
+
+
+function ed_answer_uninstall()
+{
+  $result = db_select('node', 'n')
     ->fields('n', array('nid'))
     ->condition('n.type', 'ed_answer')
     ->execute();
@@ -380,24 +471,24 @@ function ed_answer_uninstall() {
 
   field_delete_field('field_ref_to_task');
 
-	field_delete_field('ed_g_drive_file');
+  field_delete_field('ed_g_drive_file');
 
-	field_delete_field('ed_field_difficulty_feedb');
+  field_delete_field('ed_field_difficulty_feedb');
 
-	field_delete_field('ed_field_satisf_feedb');
+  field_delete_field('ed_field_satisf_feedb');
 
-	field_delete_field('ed_field_time_eff_feedb');
+  field_delete_field('ed_field_time_eff_feedb');
 
   field_delete_field('ed_answer_last_status');
 
 
   $instances = field_info_instances('node', 'ed_answer');
-  foreach($instances as $instance_name => $instance) {
+  foreach ($instances as $instance_name => $instance) {
     field_delete_instance($instance);
   }
 
   $comment_instances = field_info_instances('comment', 'comment_node_ed_answer');
-  foreach($comment_instances as $instance_name => $instance) {
+  foreach ($comment_instances as $instance_name => $instance) {
     field_delete_instance($instance);
   }
 
@@ -409,7 +500,8 @@ function ed_answer_uninstall() {
 /**
  * Adds private comment field instance to ed_answer comment.
  */
-function ed_answer_update_7100(&$sandbox) {
+function ed_answer_update_7100(&$sandbox)
+{
   $instances = _ed_answer_installed_comment_instances();
   $instance = $instances['ed_field_private_comment'];
   $instance['entity_type'] = 'comment';
@@ -420,7 +512,8 @@ function ed_answer_update_7100(&$sandbox) {
 /**
  * Add to_group_member field instance to ed_answer.
  */
-function ed_answer_update_7101(&$sandbox) {
+function ed_answer_update_7101(&$sandbox)
+{
   $instances = _ed_answer_installed_instances();
   $instance = $instances[ED_FIELD_TO_GROUP_MEMBER];
   $instance['entity_type'] = 'node';
@@ -434,135 +527,150 @@ function ed_answer_update_7101(&$sandbox) {
  * Add Status field to ed_answer comment.
  */
 
-function ed_answer_update_7109(&$sandbox){
+function ed_answer_update_7109(&$sandbox)
+{
   $field = _ed_answer_create_status_field();
   field_create_field($field);
   $instance = _ed_answer_create_status_field_instance();
   field_create_instance($instance);
 }
 
-function _ed_answer_create_status_field(){
+function _ed_answer_create_status_field()
+{
   $field = array(
     'field_name' => 'ed_answer_status',
-	  'label' => t('Type'),
-	  'type' => 'list_text',
-	  'cardinality' => 1,
-	  'foreign keys' => array(),
-	  'indexes' => array(
-	    'value' => array(
-	      0 => 'value',
-	    ),
-	  ),
-	  'module' => 'list',
-	  'settings' => array(
-	    'allowed_values' => _ed_answer_status_list(),
-	  ),
+    'label' => t('Type'),
+    'type' => 'list_text',
+    'cardinality' => 1,
+    'foreign keys' => array(),
+    'indexes' => array(
+      'value' => array(
+        0 => 'value',
+      ),
+    ),
+    'module' => 'list',
+    'settings' => array(
+      'allowed_values' => _ed_answer_status_list(),
+    ),
   );
   return $field;
 }
 
 
-
-function _ed_answer_status_list(){
+function _ed_answer_status_list()
+{
   $statuses = array(
-      'unchecked' => t('Unchecked'),
-      'rejected' => t('Rejected'),
-      'accepted' => t('Accepted'),
-      'checked' => t('Checked'),
-    );
+    'unchecked' => t('Unchecked'),
+    'rejected' => t('Rejected'),
+    'accepted' => t('Accepted'),
+    'checked' => t('Checked'),
+  );
   return $statuses;
 }
 
-function _ed_answer_create_status_field_instance(){
+function _ed_answer_create_status_field_instance()
+{
   $instance = array(
     'field_name' => 'ed_answer_status',
-	  'label' => t('Status'),
+    'label' => t('Status'),
     'entity_type' => 'comment',
     'bundle' => 'comment_node_ed_answer',
-	  'description' => t(''),
-	  'default_value' => array(array('value' => 'unchecked')),
-	  'widget' => array(
-	    'active' => 1,
-	    'module' => 'options',
-	    'settings' => array(),
-	    'type' => 'options_select',
-	  ),
+    'description' => t(''),
+    'default_value' => array(array('value' => 'unchecked')),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_select',
+    ),
   );
   return $instance;
 }
 
 
-
-function ed_answer_create_field_last_status(){
+function ed_answer_create_field_last_status()
+{
   $field_name = 'ed_answer_last_status';
-  if(!field_info_field($field_name)) {
+  if (!field_info_field($field_name)) {
     $field = array(
-        'field_name' => $field_name,
-        'type' => 'ed_answer_last_status',
-        'cardinality' => 1,
+      'field_name' => $field_name,
+      'type' => 'ed_answer_last_status',
+      'cardinality' => 1,
     );
     field_create_field($field);
   }
 }
 
-function ed_answer_node_add_field_last_status() {
+function ed_answer_node_add_field_last_status()
+{
   $field_name = 'ed_answer_last_status';
   $field = field_info_field($field_name);
   if (!empty($field) && !field_info_instance('node', $field_name, 'ed_answer')) {
     $instance = array(
-        'field_name' => $field_name,
-        'entity_type' => 'node',
-        'bundle' => 'ed_answer',
-        'label' => t('Last status'),
-        'description' => '',
-        'widget' => array(
-            'settings' => array(
-                'rows' => 1,
-            ),
+      'field_name' => $field_name,
+      'entity_type' => 'node',
+      'bundle' => 'ed_answer',
+      'label' => t('Last status'),
+      'description' => '',
+      'widget' => array(
+        'settings' => array(
+          'rows' => 1,
         ),
-        'required' => FALSE,
-        'display' => array(
-            'default' => array(
-                'label' => 'hidden',
-            ),
-            'featured' => array(
-                'label' => 'hidden',
-            ),
-        )
+      ),
+      'required' => FALSE,
+      'display' => array(
+        'default' => array(
+          'label' => 'hidden',
+        ),
+        'featured' => array(
+          'label' => 'hidden',
+        ),
+      )
     );
     field_create_instance($instance);
   }
 }
 
 
-
-
 /**
  * Implements hook_field_schema().
  * Used by ed_answer_last_status field
  */
-function ed_answer_field_schema($field) {
+function ed_answer_field_schema($field)
+{
 
   switch ($field['type']) {
     case 'ed_answer_last_status':
       $schema = array(
-          'columns' => array(
-              'cid' => array(
-                  'type' => 'int',
-                  'length' => 10,
-                  'not null' => false,
-              ),
-              'status' => array(
-                  'type' => 'varchar',
-                  'length' => 255,
-                  'not null' => false,
-              ),
-              'grade' => array(
-                  'type' => 'int',
-                  'length' => 10,
-                  'not null' => false,
-              ),
+        'columns' => array(
+          'cid' => array(
+            'type' => 'int',
+            'length' => 10,
+            'not null' => false,
           ),
+          'status' => array(
+            'type' => 'varchar',
+            'length' => 255,
+            'not null' => false,
+          ),
+          'grade' => array(
+            'type' => 'int',
+            'length' => 10,
+            'not null' => false,
+          ),
+        ),
+
+      );
+      break;
+    case 'ed_answer_time_spent':
+      $schema = array(
+        'columns' => array(
+          'mins' => array(
+            'type' => 'int',
+            'length' => 10,
+            'not null' => false,
+          ),
+        ),
 
       );
       break;
@@ -573,11 +681,11 @@ function ed_answer_field_schema($field) {
 }
 
 
-
 /**
  * Update ed_status comment field instance to translatable.
  */
-function ed_answer_update_7110(&$sandbox){
+function ed_answer_update_7110(&$sandbox)
+{
   field_update_instance(array(
     'label' => 'Status',
     'description' => '',
@@ -616,7 +724,8 @@ function ed_answer_update_7110(&$sandbox){
 /**
  * Makes comment body field in ed_answer not required.
  */
-function ed_answer_update_7111(&$sandbox){
+function ed_answer_update_7111(&$sandbox)
+{
   $instances = field_info_instances('comment', 'comment_node_ed_answer');
   $instances['comment_body']['required'] = FALSE;
 
@@ -627,22 +736,23 @@ function ed_answer_update_7111(&$sandbox){
 /**
  * Add grade field to ed_answer
  */
-function ed_answer_update_7112(&$sandbox) {
-    $field = array(
-        'field_name' => 'ed_answer_grade',
-        'type' => 'number_integer',
-        'module' => 'ed_answer',
-        'cardinality' => 1,
-    );
-    field_create_field($field);
+function ed_answer_update_7112(&$sandbox)
+{
+  $field = array(
+    'field_name' => 'ed_answer_grade',
+    'type' => 'number_integer',
+    'module' => 'ed_answer',
+    'cardinality' => 1,
+  );
+  field_create_field($field);
 
-    $instance = array(
-        'field_name' => 'ed_answer_grade',
-        'label' => t('Grade'),
-        'entity_type' => 'comment',
-        'bundle' => 'comment_node_ed_answer',
-      );
-    field_create_instance($instance);
+  $instance = array(
+    'field_name' => 'ed_answer_grade',
+    'label' => t('Grade'),
+    'entity_type' => 'comment',
+    'bundle' => 'comment_node_ed_answer',
+  );
+  field_create_instance($instance);
 
 }
 
@@ -650,15 +760,17 @@ function ed_answer_update_7112(&$sandbox) {
 /**
  * Adds ed_g_drive_file field instance to ed_answer
  */
-function ed_answer_update_7113(&$sandbox) {
-	ed_answer_node_add_field_g_drive_file();
+function ed_answer_update_7113(&$sandbox)
+{
+  ed_answer_node_add_field_g_drive_file();
 
 }
 
 /**
  * Add checked value to ed_answer_status field
  */
-function ed_answer_update_7115(&$sandbox) {
+function ed_answer_update_7115(&$sandbox)
+{
   $info = field_info_field('ed_answer_status');
   $values = &$info['settings']['allowed_values'];
   $values['checked'] = 'Checked';
@@ -688,15 +800,15 @@ function ed_answer_update_7115(&$sandbox) {
 /**
  * Create and add feedback related fields to ed_answer
  */
-function ed_answer_update_7116(&$sandbox) {
+function ed_answer_update_7116(&$sandbox)
+{
 
 
-	ed_answer_node_add_field_difficulty_feedb();
+  ed_answer_node_add_field_difficulty_feedb();
 
-	ed_answer_node_add_time_eff_feedb();
+  ed_answer_node_add_time_eff_feedb();
 
-	ed_answer_node_add_field_satisf_feedb();
-
+  ed_answer_node_add_field_satisf_feedb();
 
 
 }
@@ -706,7 +818,8 @@ function ed_answer_update_7116(&$sandbox) {
  * Create and add ed_answer_last_status field
  * @param $sandbox
  */
-function ed_answer_update_7117(&$sandbox) {
+function ed_answer_update_7117(&$sandbox)
+{
 
   ed_answer_create_field_last_status();
 
@@ -744,28 +857,27 @@ function ed_answer_update_7118(&$sandbox)
   $q->join('node', 'n', 'n.nid = rt.entity_id AND n.status = 1');
   $q->fields('n', ['nid', 'created', 'changed']);
   $q->orderBy('n.nid', 'ASC')
-      ->where('n.nid > :nid', array(
+    ->where('n.nid > :nid', array(
       ':nid' => $sandbox['current_node'],
-  ));;
+    ));;
 
   $answers = $q
-      ->extend('PagerDefault')
-      ->limit(50)
-      ->execute();
+    ->extend('PagerDefault')
+    ->limit(50)
+    ->execute();
 
 
-
-  foreach ($answers as $answer){
+  foreach ($answers as $answer) {
 
 
     $admin_uids = [];
 
     $wrapper = entity_metadata_wrapper('node', $answer->nid);
 
-    if($wrapper->__isset('og_group_ref')){
+    if ($wrapper->__isset('og_group_ref')) {
       $group_refs = $wrapper->og_group_ref->raw();
 
-      foreach ($group_refs as $group_ref){
+      foreach ($group_refs as $group_ref) {
 
         $members = ed_get_group_members($group_ref, false, true, false);
 
@@ -800,12 +912,12 @@ function ed_answer_update_7118(&$sandbox)
       if ($comments[$i]['ed_answer_status_value'] != NULL && in_array($comments[$i]['uid'], $admin_uids)) {
         $answer->status = $comments[$i]['ed_answer_status_value'];
         //add grade if available
-        if($comments[$i]['ed_answer_status_value'] != NULL){
+        if ($comments[$i]['ed_answer_status_value'] != NULL) {
           $answer->grade = $comments[$i]['ed_answer_grade_value'];
         }
 
         $wrapper = entity_metadata_wrapper('node', $answer->nid);
-        $wrapper->ed_answer_last_status->set(array('status' =>  $answer->status, 'grade' => $answer->grade, 'cid' => $comments[$i]['cid']));
+        $wrapper->ed_answer_last_status->set(array('status' => $answer->status, 'grade' => $answer->grade, 'cid' => $comments[$i]['cid']));
         $wrapper->save();
 
         $sandbox['updated']++;
@@ -824,7 +936,6 @@ function ed_answer_update_7118(&$sandbox)
   if ($sandbox['#finished']) {
     return t('Updated @updated answers out of @count answers in the system', ['@count' => $sandbox['progress'], '@updated' => $sandbox['updated']]);
   }
-
 
 
 }
@@ -850,7 +961,8 @@ function ed_answer_update_7119(&$sandbox)
 /**
  * Translate allowed values and also use the correct method
  */
-function ed_answer_update_7120(&$sandbox) {
+function ed_answer_update_7120(&$sandbox)
+{
   $info = field_info_field('ed_answer_status');
 
   $info['settings']['allowed_values'] = null;
@@ -859,7 +971,8 @@ function ed_answer_update_7120(&$sandbox) {
   field_update_field($info);
 }
 
-function _ed_answer_allowed_values() {
+function _ed_answer_allowed_values()
+{
   return [
     'unchecked' => t('Kontrollimata'),
     'rejected' => t('Tagasi lükatud'),
@@ -871,7 +984,8 @@ function _ed_answer_allowed_values() {
 /**
  * Translate some fields
  */
-function ed_answer_update_7121(&$sandbox) {
+function ed_answer_update_7121(&$sandbox)
+{
   $instances = field_info_instances('node', 'ed_answer');
 
   $instances['ed_field_to_group_member']['label'] = t('Määra kasutaja');
@@ -885,4 +999,20 @@ function ed_answer_update_7121(&$sandbox) {
 }
 
 
+/**
+ * Add new fields for answer feedback
+ * @param $sandbox
+ */
+function ed_answer_update_7122(&$sandbox)
+{
+  field_delete_field('ed_field_time_eff_feedb');
+  field_delete_instance('ed_field_time_eff_feedb');
 
+  $instances = field_info_instances('node', 'ed_answer');
+  $instances['ed_field_satisf_feedb']['description'] = t('Palun hinda rahulolu oma sooritusega! 1 – ei ole üldse nõus, 5 – olen täiesti nõus.');
+  field_update_instance($instances['ed_field_satisf_feedb']);
+
+  ed_answer_node_add_answer_emotions();
+  ed_answer_node_add_field_time_spent();
+
+}

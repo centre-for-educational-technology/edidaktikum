@@ -109,7 +109,6 @@
 }
 
 .node_list_editor .form {
-	max-height:500px;
 	transition:max-height 0.2s;
 }
 
