@@ -339,7 +339,6 @@ function ed_dashboard_get_student_dashboard(){
 function _ed_get_average_satisfaction_for_task($answer_id){
 
 	$difficulty = 0;
-	$time_eff = 0;
 	$satisfaction = 0;
 
 	$wrapper = entity_metadata_wrapper('node', $answer_id);
@@ -350,10 +349,6 @@ function _ed_get_average_satisfaction_for_task($answer_id){
 		$difficulty = 100 - $wrapper->ed_field_difficulty_feedb->value()*100/4;
 	}
 
-	if($wrapper->__isset('ed_field_time_eff_feedb')){
-		//100 - very time consuming - lower rating
-		$time_eff = 100 - $wrapper->ed_field_time_eff_feedb->value()*100/4;
-	}
 
 	if($wrapper->__isset('ed_field_satisf_feedb')){
 		$satisfaction = $wrapper->ed_field_satisf_feedb->value()*100/4;
@@ -361,7 +356,7 @@ function _ed_get_average_satisfaction_for_task($answer_id){
 
 
 
-	$rating = ($difficulty+$time_eff+$satisfaction)/3;
+	$rating = ($difficulty+$satisfaction)/3;
 
 	return $rating;
 }
