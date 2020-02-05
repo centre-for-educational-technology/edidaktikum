@@ -243,6 +243,7 @@ function ed_answer_node_add_field_difficulty_feedb()
           2 => '',
           3 => '',
           4 => '',
+          5 => '',
         ),
       ),
 
@@ -256,7 +257,7 @@ function ed_answer_node_add_field_difficulty_feedb()
       'field_name' => $field_name,
       'entity_type' => 'node',
       'bundle' => 'ed_answer',
-      'label' => t('Raskusaste'),
+      'label' => t('Palun hinda ülesande raskusastet!'),
       'description' => t("1 – Lihtne ülesanne; 4 – Keeruline ülesanne"),
       'default_value' => null,
       'required' => TRUE,
@@ -291,6 +292,7 @@ function ed_answer_node_add_field_satisf_feedb()
           2 => '',
           3 => '',
           4 => '',
+          5 => '',
         ),
       ),
 
@@ -304,8 +306,8 @@ function ed_answer_node_add_field_satisf_feedb()
       'field_name' => $field_name,
       'entity_type' => 'node',
       'bundle' => 'ed_answer',
-      'label' => t('Rahuolu'),
-      'description' => '',
+      'label' => t('Palun hinda rahulolu oma sooritusega'),
+      'description' => t('Arvan, et sain ülesandega hästi hakkama 1 – ei ole üldse nõus, 5 – olen täiesti nõus.'),
       'default_value' => null,
       'required' => TRUE,
       'widget' => array(
@@ -1014,5 +1016,22 @@ function ed_answer_update_7122(&$sandbox)
 
   ed_answer_node_add_answer_emotions();
   ed_answer_node_add_field_time_spent();
+
+}
+
+function ed_answer_update_7123(&$sandbox)
+{
+
+  field_delete_field('ed_field_satisf_feedb');
+  field_delete_instance('ed_field_satisf_feedb');
+
+  field_delete_field('ed_field_difficulty_feedb');
+  field_delete_instance('ed_field_difficulty_feedb');
+
+  ed_answer_node_add_field_satisf_feedb();
+  ed_answer_node_add_field_difficulty_feedb();
+
+
+
 
 }

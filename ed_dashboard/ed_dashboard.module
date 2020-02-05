@@ -344,19 +344,18 @@ function _ed_get_average_satisfaction_for_task($answer_id){
 	$wrapper = entity_metadata_wrapper('node', $answer_id);
 
 
-	if($wrapper->__isset('ed_field_difficulty_feedb')){
-		//100 - very difficult - lower rating
-		$difficulty = 100 - $wrapper->ed_field_difficulty_feedb->value()*100/4;
-	}
+//	if($wrapper->__isset('ed_field_difficulty_feedb')){
+//		//100 - very difficult - lower rating
+//		$difficulty = 100 - $wrapper->ed_field_difficulty_feedb->value()*100/5;
+//	}
 
 
 	if($wrapper->__isset('ed_field_satisf_feedb')){
-		$satisfaction = $wrapper->ed_field_satisf_feedb->value()*100/4;
+		$satisfaction = $wrapper->ed_field_satisf_feedb->value()*100/5;
 	}
 
-
-
-	$rating = ($difficulty+$satisfaction)/3;
+	//$rating = ($difficulty+$satisfaction)/2;
+	$rating = $difficulty+$satisfaction;
 
 	return $rating;
 }

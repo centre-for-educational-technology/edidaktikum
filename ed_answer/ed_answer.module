@@ -169,6 +169,9 @@ function ed_answer_form_alter(&$form, &$form_state, $form_id)
     $form['ed_field_difficulty_feedb']['#attributes']['data-toggle'][] = 'buttons';
     $form['ed_field_satisf_feedb']['#attributes']['data-toggle'][] = 'buttons';
 
+    $form['ed_field_difficulty_feedb']['#weight'] = $form['ed_field_answer_emotions']['#weight'] - 2;
+    $form['ed_field_satisf_feedb']['#weight'] = $form['ed_field_answer_emotions']['#weight'] - 1;
+
 
     if (!empty($form['#node']->ed_answer_field_time_spent[LANGUAGE_NONE][0]['mins']) && $form['#node']->ed_answer_field_time_spent[LANGUAGE_NONE][0]['mins'] > 0) {
       $time_spent_mins = $form['#node']->ed_answer_field_time_spent[LANGUAGE_NONE][0]['mins'];
@@ -185,6 +188,8 @@ function ed_answer_form_alter(&$form, &$form_state, $form_id)
 
     $form['ed_answer_field_time_spent']['#prefix'] = '<label class="control-label">' . t("Palun hinda ülesandele kulunud aega") . '</label><div class="row"><div class="col-xs-2">';
     $form['ed_answer_field_time_spent']['#suffix'] = '</div></div>';
+
+
 
 
     //Get categories
