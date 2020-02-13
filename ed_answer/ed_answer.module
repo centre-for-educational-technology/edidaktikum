@@ -186,7 +186,7 @@ function ed_answer_form_alter(&$form, &$form_state, $form_id)
     }
 
 
-    $form['ed_answer_field_time_spent']['#prefix'] = '<label class="control-label">' . t("Palun hinda ülesandele kulunud aega") . '</label><div class="row"><div class="col-xs-2">';
+    $form['ed_answer_field_time_spent']['#prefix'] = '<label class="control-label">' . t("Please estimate the time spent on the task!") . '</label><div class="row"><div class="col-xs-2">';
     $form['ed_answer_field_time_spent']['#suffix'] = '</div></div>';
 
 
@@ -804,13 +804,13 @@ function ed_answer_field_widget_form(&$form, &$form_state, $field, $instance, $l
     case 'ed_answer_time_spent_widget' :
       $element['hours'] = array(
         '#type' => 'textfield',
-        '#title' => t('Tundi'),
+        '#title' => t('Hours'),
         '#size' => 1,
         '#required' => true,
       );
       $element['mins'] = array(
         '#type' => 'textfield',
-        '#title' => t('Minutit'),
+        '#title' => t('Minutes'),
         '#size' => 1,
         '#required' => true,
       );
