@@ -1031,7 +1031,22 @@ function ed_answer_update_7123(&$sandbox)
   ed_answer_node_add_field_satisf_feedb();
   ed_answer_node_add_field_difficulty_feedb();
 
+}
 
+/**
+ * Updating translations
+ * @param $sandbox
+ * @throws FieldException
+ */
+function ed_answer_update_7124(&$sandbox)
+{
 
+  $instances = field_info_instances('node', 'ed_answer');
+  $instances['ed_field_difficulty_feedb']['label'] = t('Please rate the difficulty of the task!');
+  field_update_instance($instances['ed_field_difficulty_feedb']);
+
+  $instances = field_info_instances('node', 'ed_answer');
+  $instances['ed_field_satisf_feedb']['label'] = t('Please rate satisfaction with your perfomance!');
+  field_update_instance($instances['ed_field_satisf_feedb']);
 
 }
