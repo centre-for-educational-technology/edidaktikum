@@ -1051,73 +1051,73 @@ function ed_answer_update_7124(&$sandbox)
 
 }
 
-/**
- * Updating ed_answer_field_time_spent field to conatin default value 0
- * @param $sandbox
- * @throws FieldException
- */
-function ed_answer_update_7129(&$sandbox)
-{
-
-  // Initialize batch
-  if (!isset($sandbox['total'])) {
-
-    $query = db_select('node', 'n')
-      ->fields('n', ['nid'])
-      ->condition('n.status', 1)
-      ->condition('n.type', 'ed_answer');
-    $query->join('field_data_ed_field_difficulty_feedb', 'diff', 'diff.entity_id = n.nid');
-
-    $total = $query
-      ->countQuery()
-      ->execute()
-      ->fetchField();
-
-
-    $sandbox['total'] = $total;
-    $sandbox['progress'] = 0;
-    $sandbox['updated'] = 0;
-
-    if (empty($sandbox['total'])) {
-      $sandbox['#finished'] = 1;
-    }
-  }
-
-  $nids_query = db_select('node', 'n')
-    ->fields('n', array('nid'))
-    ->condition('n.status', 1)
-    ->condition('n.type', 'ed_answer');
-  $nids_query->join('field_data_ed_field_difficulty_feedb', 'diff', 'diff.entity_id = n.nid');
-  $nids = $nids_query->range(0, 10)
-    ->execute()
-    ->fetchCol();
-
-  if (!empty($nids)) {
-    $nodes = node_load_multiple($nids, NULL, TRUE);
-
-    foreach ($nodes as $node) {
-
-      if (empty($node->ed_answer_field_time_spent)) {
-        $node->ed_answer_field_time_spent[LANGUAGE_NONE][0]['mins'] = 0;
-
-        // Optional lines to make this change a new revision
-        $node->revision = 1;
-        $node->log = 'This node was programmatically updated on ' . date('c');
-        $sandbox['updated']++;
-        // Save the updated node
-        //node_save($node);
-      }
-    }
-  }
-
-  // Increment and check progress
-  $sandbox['progress'] += count($nids);
-  if (empty($nids) || $sandbox['progress'] >= $sandbox['total']) {
-    $sandbox['#finished'] = 1;
-    return t('Updated @updated nodes out of @count nodes.', array('@count' => $sandbox['progress'], '@updated' => $sandbox['updated']));
-  } else {
-    $sandbox['#finished'] = $sandbox['progress'] / $sandbox['total'];
-  }
-
-
-}
+///**
+// * Updating ed_answer_field_time_spent field to conatin default value 0
+// * @param $sandbox
+// * @throws FieldException
+// */
+//function ed_answer_update_7125(&$sandbox)
+//{
+//
+//  // Initialize batch
+//  if (!isset($sandbox['total'])) {
+//
+//    $query = db_select('node', 'n')
+//      ->fields('n', ['nid'])
+//      ->condition('n.status', 1)
+//      ->condition('n.type', 'ed_answer');
+//    $query->join('field_data_ed_field_difficulty_feedb', 'diff', 'diff.entity_id = n.nid');
+//
+//    $total = $query
+//      ->countQuery()
+//      ->execute()
+//      ->fetchField();
+//
+//
+//    $sandbox['total'] = $total;
+//    $sandbox['progress'] = 0;
+//    $sandbox['updated'] = 0;
+//
+//    if (empty($sandbox['total'])) {
+//      $sandbox['#finished'] = 1;
+//    }
+//  }
+//
+//  $nids_query = db_select('node', 'n')
+//    ->fields('n', array('nid'))
+//    ->condition('n.status', 1)
+//    ->condition('n.type', 'ed_answer');
+//  $nids_query->join('field_data_ed_field_difficulty_feedb', 'diff', 'diff.entity_id = n.nid');
+//  $nids = $nids_query->range(0, 10)
+//    ->execute()
+//    ->fetchCol();
+//
+//  if (!empty($nids)) {
+//    $nodes = node_load_multiple($nids, NULL, TRUE);
+//
+//    foreach ($nodes as $node) {
+//
+//      if (empty($node->ed_answer_field_time_spent)) {
+//        $node->ed_answer_field_time_spent[LANGUAGE_NONE][0]['mins'] = 0;
+//
+//        // Optional lines to make this change a new revision
+//        $node->revision = 1;
+//        $node->log = 'This node was programmatically updated on ' . date('c');
+//        $sandbox['updated']++;
+//        // Save the updated node
+//        //node_save($node);
+//      }
+//    }
+//  }
+//
+//  // Increment and check progress
+//  $sandbox['progress'] += count($nids);
+//  if (empty($nids) || $sandbox['progress'] >= $sandbox['total']) {
+//    $sandbox['#finished'] = 1;
+//    return t('Updated @updated nodes out of @count nodes.', array('@count' => $sandbox['progress'], '@updated' => $sandbox['updated']));
+//  } else {
+//    $sandbox['#finished'] = $sandbox['progress'] / $sandbox['total'];
+//  }
+//
+//
+//}
