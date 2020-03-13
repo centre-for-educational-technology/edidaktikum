@@ -1056,44 +1056,63 @@ function ed_answer_update_7124(&$sandbox)
  * @param $sandbox
  * @throws FieldException
  */
-function ed_answer_update_7127(&$sandbox)
+function ed_answer_update_7128(&$sandbox)
 {
 
-  $sandbox['updated'] = 0;
-  // A message to display on screen when the function is finished
+  // Initialize batch
+  if (!isset($sandbox['total'])) {
 
-  // Your own query to get the node id (nid) and the field value you need
-  $query = db_select('node', 'n');
-  $query->fields('n', array('nid'))
-    ->condition('n.type', 'ed_answer')
-    ->condition('n.status', 1);
-  $query->join('field_data_ed_field_difficulty_feedb', 'diff', 'diff.entity_id = n.nid');
+    $query = db_select('node', 'n')
+      ->fields('n', ['nid',]);
+    $query->join('field_data_ed_field_difficulty_feedb', 'diff', 'diff.entity_id = n.nid');
 
-  $nids_answers = $query->execute()->fetchCol();
+    $total = $query
+      ->countQuery()
+      ->execute()
+      ->fetchField();
 
 
-  // Loop through each row item in the results
-  foreach ($nids_answers as $record) {
+    $sandbox['total'] = $total;
+    $sandbox['progress'] = 0;
+    $sandbox['updated'] = 0;
 
-    // Load the node to update
-    $node = node_load($record);
-
-    // Set the field value
-    if (empty($node->ed_answer_field_time_spent)) {
-      $node->ed_answer_field_time_spent[LANGUAGE_NONE][0]['mins'] = 0;
-
-      // Optional lines to make this change a new revision
-      $node->revision = 1;
-      $node->log = 'This node was programmatically updated on ' . date('c');
-
-      // Save the updated node
-      //node_save($node);
-      $sandbox['updated'] += 1;
+    if (empty($sandbox['total'])) {
+      $sandbox['#finished'] = 1;
     }
-
   }
 
-  return t('Updated @updated answers', ['@updated' => $sandbox['updated']]);
+  $nids_query = db_select('node', 'n')->fields('n', array('nid'));
+  $nids_query->join('field_data_ed_field_difficulty_feedb', 'diff', 'diff.entity_id = n.nid');
+  $nids = $nids_query->range(0, 10)
+    ->execute()
+    ->fetchCol();
+
+  if (!empty($nids)) {
+    $nodes = node_load_multiple($nids, NULL, TRUE);
+
+    foreach ($nodes as $node) {
+
+      if (empty($node->ed_answer_field_time_spent)) {
+        $node->ed_answer_field_time_spent[LANGUAGE_NONE][0]['mins'] = 0;
+
+        // Optional lines to make this change a new revision
+        $node->revision = 1;
+        $node->log = 'This node was programmatically updated on ' . date('c');
+        $sandbox['updated']++;
+        // Save the updated node
+        //node_save($node);
+      }
+    }
+  }
+
+  // Increment and check progress
+  $sandbox['progress'] += count($nids);
+  if (empty($nids) || $sandbox['progress'] >= $sandbox['total']) {
+    $sandbox['#finished'] = 1;
+    return t('Updated @updated nodes out of @count nodes.', array('@count' => $sandbox['progress'], '@updated' => $sandbox['updated']));
+  } else {
+    $sandbox['#finished'] = $sandbox['progress'] / $sandbox['total'];
+  }
 
 
 }
