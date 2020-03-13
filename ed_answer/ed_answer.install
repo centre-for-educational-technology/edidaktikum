@@ -1056,14 +1056,16 @@ function ed_answer_update_7124(&$sandbox)
  * @param $sandbox
  * @throws FieldException
  */
-function ed_answer_update_7128(&$sandbox)
+function ed_answer_update_7129(&$sandbox)
 {
 
   // Initialize batch
   if (!isset($sandbox['total'])) {
 
     $query = db_select('node', 'n')
-      ->fields('n', ['nid',]);
+      ->fields('n', ['nid'])
+      ->condition('n.status', 1)
+      ->condition('n.type', 'ed_answer');
     $query->join('field_data_ed_field_difficulty_feedb', 'diff', 'diff.entity_id = n.nid');
 
     $total = $query
@@ -1081,7 +1083,10 @@ function ed_answer_update_7128(&$sandbox)
     }
   }
 
-  $nids_query = db_select('node', 'n')->fields('n', array('nid'));
+  $nids_query = db_select('node', 'n')
+    ->fields('n', array('nid'))
+    ->condition('n.status', 1)
+    ->condition('n.type', 'ed_answer');
   $nids_query->join('field_data_ed_field_difficulty_feedb', 'diff', 'diff.entity_id = n.nid');
   $nids = $nids_query->range(0, 10)
     ->execute()
