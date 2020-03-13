@@ -1051,8 +1051,12 @@ function ed_answer_update_7124(&$sandbox)
 
 }
 
-
-function ed_answer_update_7125(&$sandbox)
+/**
+ * Updating ed_answer_field_time_spent field to conatin default value 0
+ * @param $sandbox
+ * @throws FieldException
+ */
+function ed_answer_update_7126(&$sandbox)
 {
 
   $sandbox['updated'] = 0;
@@ -1084,7 +1088,7 @@ function ed_answer_update_7125(&$sandbox)
       $node->log = 'This node was programmatically updated on ' . date('c');
 
       // Save the updated node
-      //node_save($node);
+      node_save($node);
       $sandbox['updated'] += 1;
     }
 
