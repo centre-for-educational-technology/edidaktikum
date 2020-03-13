@@ -1056,7 +1056,7 @@ function ed_answer_update_7124(&$sandbox)
  * @param $sandbox
  * @throws FieldException
  */
-function ed_answer_update_7126(&$sandbox)
+function ed_answer_update_7127(&$sandbox)
 {
 
   $sandbox['updated'] = 0;
@@ -1065,7 +1065,6 @@ function ed_answer_update_7126(&$sandbox)
   // Your own query to get the node id (nid) and the field value you need
   $query = db_select('node', 'n');
   $query->fields('n', array('nid'))
-    ->range(0, 20)
     ->condition('n.type', 'ed_answer')
     ->condition('n.status', 1);
   $query->join('field_data_ed_field_difficulty_feedb', 'diff', 'diff.entity_id = n.nid');
@@ -1088,7 +1087,7 @@ function ed_answer_update_7126(&$sandbox)
       $node->log = 'This node was programmatically updated on ' . date('c');
 
       // Save the updated node
-      node_save($node);
+      //node_save($node);
       $sandbox['updated'] += 1;
     }
 
