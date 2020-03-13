@@ -1050,3 +1050,47 @@ function ed_answer_update_7124(&$sandbox)
   field_update_instance($instances['ed_field_satisf_feedb']);
 
 }
+
+
+function ed_answer_update_7125(&$sandbox)
+{
+
+  $sandbox['updated'] = 0;
+  // A message to display on screen when the function is finished
+
+  // Your own query to get the node id (nid) and the field value you need
+  $query = db_select('node', 'n');
+  $query->fields('n', array('nid'))
+    ->range(0, 20)
+    ->condition('n.type', 'ed_answer')
+    ->condition('n.status', 1);
+  $query->join('field_data_ed_field_difficulty_feedb', 'diff', 'diff.entity_id = n.nid');
+
+  $nids_answers = $query->execute()->fetchCol();
+
+
+  // Loop through each row item in the results
+  foreach ($nids_answers as $record) {
+
+    // Load the node to update
+    $node = node_load($record);
+
+    // Set the field value
+    if (empty($node->ed_answer_field_time_spent)) {
+      $node->ed_answer_field_time_spent[LANGUAGE_NONE][0]['mins'] = 0;
+
+      // Optional lines to make this change a new revision
+      $node->revision = 1;
+      $node->log = 'This node was programmatically updated on ' . date('c');
+
+      // Save the updated node
+      //node_save($node);
+      $sandbox['updated'] += 1;
+    }
+
+  }
+
+  return t('Updated @updated answers', ['@updated' => $sandbox['updated']]);
+
+
+}
