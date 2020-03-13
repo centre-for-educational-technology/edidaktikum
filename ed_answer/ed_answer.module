@@ -180,16 +180,17 @@ function ed_answer_form_alter(&$form, &$form_state, $form_id)
 
       $form['ed_answer_field_time_spent'][LANGUAGE_NONE][0]['hours']['#default_value'] = $hours;
       $form['ed_answer_field_time_spent'][LANGUAGE_NONE][0]['mins']['#default_value'] = $minutes;
-    } else {
-      $form['ed_answer_field_time_spent'][LANGUAGE_NONE][0]['hours']['#default_value'] = 0;
-      $form['ed_answer_field_time_spent'][LANGUAGE_NONE][0]['mins']['#default_value'] = 0;
+
     }
 
 
-    $form['ed_answer_field_time_spent']['#prefix'] = '<label class="control-label">' . t("Please estimate the time spent on the task!") . '</label><div class="row"><div class="col-xs-2">';
+    $form['ed_answer_field_time_spent'][LANGUAGE_NONE][0]['hours']['#prefix'] = '<div class="col-sm-4">';
+    $form['ed_answer_field_time_spent'][LANGUAGE_NONE][0]['hours']['#suffix'] = '</div>';
+    $form['ed_answer_field_time_spent'][LANGUAGE_NONE][0]['mins']['#prefix'] = '<div class="col-sm-4">';
+    $form['ed_answer_field_time_spent'][LANGUAGE_NONE][0]['mins']['#suffix'] = '</div>';
+
+    $form['ed_answer_field_time_spent']['#prefix'] = '<label class="control-label">' . t("Please estimate the time spent on the task!") . '</label><div class="row"><div class="col-xs-6">';
     $form['ed_answer_field_time_spent']['#suffix'] = '</div></div>';
-
-
 
 
     //Get categories
@@ -272,9 +273,10 @@ function ed_answer_form_alter(&$form, &$form_state, $form_id)
 }
 
 
-function ed_answer_redirect_to_taskmanager($form, &$form_state){
+function ed_answer_redirect_to_taskmanager($form, &$form_state)
+{
   $form_state['redirect'] = array(
-    'node/'.$form['#node']->og_group_ref['und'][0]['target_id'].'/task-manager',
+    'node/' . $form['#node']->og_group_ref['und'][0]['target_id'] . '/task-manager',
     array(
       'query' => array(
         'tasknid' => $form['#node']->field_ref_to_task[LANGUAGE_NONE][0]['target_id'],
@@ -563,7 +565,7 @@ function ed_answer_node_presave($node)
       }
     }
 
-    if(!empty($node->ed_answer_field_time_spent[LANGUAGE_NONE][0]['hours'])){
+    if (!empty($node->ed_answer_field_time_spent[LANGUAGE_NONE][0]['hours'])) {
       $node->ed_answer_field_time_spent[LANGUAGE_NONE][0]['mins'] = $node->ed_answer_field_time_spent[LANGUAGE_NONE][0]['mins'] + ($node->ed_answer_field_time_spent[LANGUAGE_NONE][0]['hours'] * 60);
 
     }
