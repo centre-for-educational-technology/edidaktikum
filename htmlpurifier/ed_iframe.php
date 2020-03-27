@@ -42,11 +42,11 @@ class HTMLPurifier_Filter_EdIframe extends HTMLPurifier_Filter
      */
     protected function postFilterCallback($matches)
     {
-    	
+
 
         // // Domain Whitelist
-        $match = preg_match('#https?://www.youtube(-nocookie)?.com/|player\.vimeo\.com/video/|edpuzzle\.com/embed/|www\.google(?:-nocookie)?\.com/maps/|www\.slideshare(?:-nocookie)?\.net/|docs\.google(?:-nocookie)?\.com/|www\.powtoon(?:-nocookie)?\.com/embed/|onedrive\.live(?:-nocookie)?\.com/|app\.emaze(?:-nocookie)?\.com/|storybird(?:-nocookie)?\.com/books/|e\.issuu\.com/|cmapscloud\.ihmc\.us/#', $matches[1]);
-     
+        $match = preg_match('#https?://www.youtube(-nocookie)?.com/|player\.vimeo\.com/video/|edpuzzle\.com/embed/|www\.google(?:-nocookie)?\.com/maps/|www\.slideshare(?:-nocookie)?\.net/|docs\.google(?:-nocookie)?\.com/|www\.powtoon(?:-nocookie)?\.com/embed/|onedrive\.live(?:-nocookie)?\.com/|app\.emaze(?:-nocookie)?\.com/|storybird(?:-nocookie)?\.com/books/|e\.issuu\.com/|cmapscloud\.ihmc\.us/|sisuloome\.e-koolikott\.ee/#', $matches[1]);
+
         if ($match) {
 
             $extra = ' webkitAllowFullScreen mozallowfullscreen allowFullScreen';
