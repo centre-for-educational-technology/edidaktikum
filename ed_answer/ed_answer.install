@@ -976,10 +976,10 @@ function ed_answer_update_7120(&$sandbox)
 function _ed_answer_allowed_values()
 {
   return [
-    'unchecked' => t('Kontrollimata'),
-    'rejected' => t('Tagasi lükatud'),
-    'accepted' => t('Kinnitatud'),
-    'checked' => t('Kontrollitud'),
+    'unchecked' => t('Unchecked'),
+    'rejected' => t('Rejected'),
+    'accepted' => t('Accepted'),
+    'checked' => t('Checked'),
   ];
 }
 
