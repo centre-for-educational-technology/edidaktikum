@@ -63,36 +63,6 @@ function ed_dashboard_page() {
 
 	drupal_add_js(drupal_get_path('module', 'ed_dashboard') . '/js/ed_dashboard_student.js');
 
-//  $group_nids = _ed_dashboard_get_current_user_groups();
-//  if (!empty($group_nids)) {
-//    $groups = node_load_multiple($group_nids);
-//  }
-//
-//  if (!empty($groups)) {
-//    $content['groups-listing'] = node_view_multiple($groups, 'dashboard');
-//
-//
-//    foreach ($content['groups-listing']['nodes'] as $node){
-//      if (isset($node['#node']->picture)) {
-//        //Hide user picture
-//        $node['#node']->picture = ['#printed' => false];
-//      }
-//    }
-//    $content['groups-listing']['pager'] = array(
-//      '#theme' => 'pager',
-//      '#weight' => 5,
-//    );
-//
-//  } else {
-//    $content['groups-not-found'] = array(
-//      '#type' => 'markup',
-//      '#prefix' => '<div class="ed-message ed-message-notice">',
-//      '#markup' => t('Hi! Nothing to show here at the moment. Join some group to see latest updates from it.'),
-//      '#suffix' => '</div>',
-//    );
-//  }
-
-
 
 	$group_nids = _ed_dashboard_get_current_user_groups();
 	if (!empty($group_nids)) {
