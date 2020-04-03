@@ -168,16 +168,25 @@ function ed_task_results($test, $node)
       $wrapper = entity_metadata_wrapper('node', $answer['nid']);
 
       if ($wrapper->__isset('ed_field_satisf_feedb')) {
-        $satisfaction += $wrapper->ed_field_satisf_feedb->value() * 100 / 5;
-        $total_feedbacks++;
+        if (!empty($wrapper->ed_field_satisf_feedb->value())) {
+          $satisfaction += $wrapper->ed_field_satisf_feedb->value() * 100 / 5;
+          $total_feedbacks++;
+        }
+
       }
 
       if ($wrapper->__isset('ed_field_difficulty_feedb')) {
-        $difficulty += $wrapper->ed_field_difficulty_feedb->value() * 100 / 5;
+        if (!empty($wrapper->ed_field_difficulty_feedb->value())) {
+          $difficulty += $wrapper->ed_field_difficulty_feedb->value() * 100 / 5;
+        }
+
       }
 
       if ($wrapper->__isset('ed_answer_field_time_spent')) {
-        $time += $wrapper->ed_answer_field_time_spent->value()['mins'];
+        if (!empty($wrapper->ed_answer_field_time_spent->value()['mins'])) {
+          $time += $wrapper->ed_answer_field_time_spent->value()['mins'];
+        }
+
       }
 
       if ($wrapper->__isset('ed_field_answer_emotions')) {
@@ -197,15 +206,18 @@ function ed_task_results($test, $node)
     $emotions_count = array_count_values($emotions_all);
 
 
+    $emotions_total = array_sum(array_values($emotions_count));
+
     $emotions_results = array(
-      'curiosity' => isset($emotions_count['curiosity']) ? $emotions_count['curiosity'] * 100 / count($emotions_count) : 0,
-      'confusion' => isset($emotions_count['confusion']) ? $emotions_count['confusion'] * 100 / count($emotions_count) : 0,
-      'anxiety' => isset($emotions_count['anxiety']) ? $emotions_count['anxiety'] * 100 / count($emotions_count) : 0,
-      'boredom' => isset($emotions_count['boredom']) ? $emotions_count['boredom'] * 100 / count($emotions_count) : 0,
-      'surprise' => isset($emotions_count['surprise']) ? $emotions_count['surprise'] * 100 / count($emotions_count) : 0,
-      'frustration' => isset($emotions_count['frustration']) ? $emotions_count['frustration'] * 100 / count($emotions_count) : 0,
-      'enjoyment' => isset($emotions_count['enjoyment']) ? $emotions_count['enjoyment'] * 100 / count($emotions_count) : 0,
+      'curiosity' => isset($emotions_count['curiosity']) ? $emotions_count['curiosity'] * 100 / $emotions_total : 0,
+      'confusion' => isset($emotions_count['confusion']) ? $emotions_count['confusion'] * 100 / $emotions_total : 0,
+      'anxiety' => isset($emotions_count['anxiety']) ? $emotions_count['anxiety'] * 100 / $emotions_total : 0,
+      'boredom' => isset($emotions_count['boredom']) ? $emotions_count['boredom'] * 100 / $emotions_total : 0,
+      'surprise' => isset($emotions_count['surprise']) ? $emotions_count['surprise'] * 100 / $emotions_total : 0,
+      'frustration' => isset($emotions_count['frustration']) ? $emotions_count['frustration'] * 100 / $emotions_total : 0,
+      'enjoyment' => isset($emotions_count['enjoyment']) ? $emotions_count['enjoyment'] * 100 / $emotions_total : 0,
     );
+
 
     $content['feedback']['time']['header'] = array(
       '#type' => 'markup',
