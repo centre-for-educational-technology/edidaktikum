@@ -531,27 +531,26 @@ function ed_portfolio_submit_function(&$form, &$form_state)
     $content_items_to_show = array();
 
 
+    if (!empty($value['table'])) {
 
-      if (!empty($value['table'])) {
+      //Get all content items
+      $values = array_values($value['table']);
 
-        //Get all content items
-        $values = array_values($value['table']);
+      //Check if they should be visible
+      foreach ($values as $item) {
 
-        //Check if they should be visible
-        foreach ($values as $item) {
-
-          if ($item != 0) {
-            $content_items_to_show[] = $item;
-          }
+        if ($item != 0) {
+          $content_items_to_show[] = $item;
         }
-
       }
 
-      $form_state['values']['ed_portfolio_competence_desc'][LANGUAGE_NONE][] = array(
-        'tid' => $value['tid'],
-        'desc' => !empty($value['desc']) ? $value['desc'] : '',
-        'cid' => drupal_json_encode($content_items_to_show),
-      );
+    }
+
+    $form_state['values']['ed_portfolio_competence_desc'][LANGUAGE_NONE][] = array(
+      'tid' => $value['tid'],
+      'desc' => !empty($value['desc']) ? $value['desc'] : '',
+      'cid' => drupal_json_encode($content_items_to_show),
+    );
 
   }
 
@@ -563,7 +562,7 @@ function _ed_portfolio_get_content_for_parent_competency($uid, $parent_competenc
 {
   $a = taxonomy_get_tree(taxonomy_vocabulary_machine_name_load('ed_competence_voc')->vid, $parent_competency);
 
-  $child_terms = array_map(function($element) {
+  $child_terms = array_map(function ($element) {
     return $element->tid;
   }, $a);
 
@@ -596,7 +595,9 @@ function _ed_portfolio_get_content_for_parent_competency($uid, $parent_competenc
   $query_answers->join('field_data_field_ref_to_task', 'ref', 'ref.entity_id = n.nid');
   $query_answers->join('node', 'n2', 'n2.nid = ref.field_ref_to_task_target_id');
   $query_answers->join('field_data_ed_field_competence', 'com', 'n2.nid = com.entity_id');
+  $query_answers->join('field_data_ed_answer_last_status', 's', 's.entity_id = n.nid');
   $query_answers->condition('com.ed_field_competence_tid', $child_terms, 'IN');
+  $query_answers->condition('s.ed_answer_last_status_status', 'accepted', 'LIKE');
 
 
   $nids_answers = $query_answers->execute()->fetchCol();
@@ -610,13 +611,12 @@ function _ed_portfolio_get_content_for_parent_competency($uid, $parent_competenc
 }
 
 
-
 function _ed_portfolio_get_complete_level_for_competency($uid, $parent_competency)
 {
 
   $a = taxonomy_get_tree(taxonomy_vocabulary_machine_name_load('ed_competence_voc')->vid, $parent_competency);
 
-  $child_terms = array_map(function($element) {
+  $child_terms = array_map(function ($element) {
     return $element->tid;
   }, $a);
 
@@ -644,6 +644,8 @@ function _ed_portfolio_get_complete_level_for_competency($uid, $parent_competenc
   $query_answers->join('node', 'n2', 'n2.nid = com.entity_id');
   $query_answers->join('field_data_field_ref_to_task', 'ref', 'n2.nid = ref.field_ref_to_task_target_id');
   $query_answers->join('node', 'n', 'ref.entity_id = n.nid');
+  $query_answers->join('field_data_ed_answer_last_status', 's', 's.entity_id = n.nid');
+  $query_answers->condition('s.ed_answer_last_status_status', 'accepted', 'LIKE');
   $query_answers->fields('com', array('ed_field_competence_tid'))
     ->condition('n.type', 'ed_answer')
     ->condition('n.status', 1)
