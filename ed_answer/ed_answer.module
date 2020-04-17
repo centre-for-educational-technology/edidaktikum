@@ -499,6 +499,8 @@ function ed_answer_form_comment_form_alter(&$form, &$form_state)
 
   if (!empty($form_state['node']->field_ref_to_task)) {
 
+    $form['#validate'][] = 'ed_answer_max_points_validate';
+
     $wrapper = entity_metadata_wrapper('node', $form_state['node']->nid);
 
     $last_status = $wrapper->ed_answer_last_status->value();
@@ -514,6 +516,21 @@ function ed_answer_form_comment_form_alter(&$form, &$form_state)
 
   //disable wysiwyg
   $form['comment_body']['und'][0]['#wysiwyg'] = FALSE;
+}
+
+function ed_answer_max_points_validate($form, &$form_state) {
+
+  $task_id = $form_state['node']->field_ref_to_task[LANGUAGE_NONE][0]['target_id'];
+  $wrapper = entity_metadata_wrapper('node', $task_id);
+  $max_points = $wrapper->ed_task_field_max_points->value();
+
+  if(!empty($max_points)){
+    if($form_state['values']['ed_answer_grade'][LANGUAGE_NONE][0]['value'] > $max_points){
+      form_set_error('max_points', t('Maximum points allowed for this task is %max_points', array('%max_points' => $max_points)));
+    }
+  }
+
+
 }
 
 function ed_answer_comment_view_alter(&$build)

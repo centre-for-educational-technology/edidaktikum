@@ -314,6 +314,35 @@ function ed_task_add_field_strict_sub() {
 }
 
 
+
+/**
+ * Creates and adds field ed_task_field_max_points
+ */
+function ed_task_add_field_max_points() {
+  $field_name = 'ed_task_field_max_points';
+  if (!field_info_field($field_name)) {
+    $field = array(
+      'field_name' => $field_name,
+      'type' => 'number_integer',
+      'module' => 'ed_task',
+      'cardinality' => 1,
+    );
+    field_create_field($field);
+  }
+
+  if(!field_info_instance('node', $field_name, 'ed_task')){
+    $instance = array(
+      'field_name' => $field_name,
+      'label' => t('Maksimumpunktid'),
+      'required' => false,
+      'entity_type' => 'node',
+      'bundle' => 'ed_task',
+    );
+    field_create_instance($instance);
+  }
+}
+
+
 /**
  * Add ed_task_field_study_group field to ed_task
  */
@@ -428,4 +457,12 @@ function ed_task_update_7114(&$sandbox) {
   field_delete_instance('ed_task_field_study_group');
   ed_task_node_add_field_study_group();
 
+}
+
+
+/**
+ * Create field and instance for ed_task_field_max_points
+ */
+function ed_task_update_7115(&$sandbox) {
+  ed_task_add_field_max_points();
 }
