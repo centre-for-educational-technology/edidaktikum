@@ -2699,6 +2699,7 @@ function ed_cluster_ctools_plugin_directory($module, $plugin)
  */
 function _ed_cluster_destination_for_group_node_type(&$gnode, $type)
 {
+  global $user;
   $destination = 'node/' . $gnode->nid;
   switch ($type) {
     case 'ed_blog':
@@ -2715,7 +2716,9 @@ function _ed_cluster_destination_for_group_node_type(&$gnode, $type)
       break;
     case 'ed_task':
     case 'ed_answer':
-      $destination .= '/task-manager';
+      if(ed_task_manager_access('node', $gnode)){
+        $destination .= '/task-manager';
+      }
       break;
   }
 
