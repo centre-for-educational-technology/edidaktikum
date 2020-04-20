@@ -2714,6 +2714,7 @@ function _ed_cluster_destination_for_group_node_type(&$gnode, $type)
       $destination .= '/' . $type_dashed;
       break;
     case 'ed_task':
+    case 'ed_answer':
       $destination .= '/task-manager';
       break;
   }
@@ -2758,6 +2759,7 @@ function _ed_cluster_plural_title_for_group_node_type($type)
       $title = t('Files');
       break;
     case 'ed_task':
+    case 'ed_answer':
       $title = t('Tasks');
       break;
     case 'ed_q_portfolio':
@@ -2782,14 +2784,21 @@ function _ed_cluster_plural_title_for_group_node_type($type)
  * @return string
  *   Themed breadcrumb
  */
-function _ed_cluster_node_group_breadcrumb(&$node, &$group)
+function _ed_cluster_node_group_breadcrumb($node, &$group)
 {
   $destination = _ed_cluster_destination_for_group_node_type($group, $node->type);
+
   $breadcrumb[] = l($group->title, 'node/' . $group->nid);
   if (('node/' . $group->nid) != $destination) {
     $breadcrumb[] = l(_ed_cluster_plural_title_for_group_node_type($node->type), $destination);
   }
-  $breadcrumb[] = $node->title;
+
+  if ($node->type == 'ed_answer') {
+    $breadcrumb[] = ed_get_answer_title($node);
+  } else {
+    $breadcrumb[] = $node->title;
+  }
+
 
   return edidaktikum_theme_bs3_breadcrumb(array('breadcrumb' => $breadcrumb));
 }
