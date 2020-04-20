@@ -2699,7 +2699,6 @@ function ed_cluster_ctools_plugin_directory($module, $plugin)
  */
 function _ed_cluster_destination_for_group_node_type(&$gnode, $type)
 {
-  global $user;
   $destination = 'node/' . $gnode->nid;
   switch ($type) {
     case 'ed_blog':
