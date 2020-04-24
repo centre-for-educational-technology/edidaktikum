@@ -1382,8 +1382,7 @@ function _ed_get_group_content_by_type($gid, $type, $order = 'DESC')
     ->condition('ogm.gid', $gid)
     ->condition('n.nid', $gid, '!=')
     ->condition('n.type', $type)
-    ->addTag('node_access')
-    ->orderBy('n.sticky', 'DESC');
+    ->addTag('node_access');
   if ($order == 'title') {
     $query->orderBy('n.title', 'ASC');
   } else {
