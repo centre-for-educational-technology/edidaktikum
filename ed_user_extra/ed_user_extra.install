@@ -336,6 +336,55 @@ function ed_user_extra_node_add_field_study_group() {
   }
 }
 
+
+/**
+ * Creates and populates ed_notification_groups field
+ */
+function ed_user_extra_add_field_notification_groups()
+{
+
+  if(!field_info_field('ed_notification_groups')){
+    $field = array(
+      'field_name' => 'ed_notification_groups',
+      'label' => t('Receive notifications for the following groups'),
+      'type' => 'list_text',
+      'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+      'foreign keys' => array(),
+      'module' => 'list',
+      'settings' => array(
+        'allowed_values' => [],
+      ),
+    );
+    field_create_field($field);
+  }
+
+  if(!field_info_instance('user', 'ed_notification_groups', 'user')){
+    $instance = array(
+      'field_name' => 'ed_notification_groups',
+      'label' => t('Receive notifications for the following groups'),
+      'description' => t('Select the checkboxes you want to receive notifications from'),
+      'required' => false,
+      'entity_type' => 'user',
+      'bundle' => 'user',
+      'display' => array(
+        'default' => array(
+          'label' => 'above',
+          'type' => 'list_default',
+          'module' => 'list',
+        ),
+      ),
+      'widget' => array(
+        'active' => 1,
+        'module' => 'options',
+        'settings' => array(),
+        'type' => 'options_buttons'
+      ),
+    );
+    field_create_instance($instance);
+  }
+
+}
+
 /**
  * Add ed_field_study_group field to ed_user_extra
  */
@@ -408,3 +457,18 @@ function ed_user_extra_update_7106(&$sandbox) {
 
   field_update_instance($instance);
 }
+
+
+
+
+/**
+ * Adds group notifications field to users
+ */
+function ed_user_extra_update_7107(&$sandbox){
+
+//  field_delete_field('ed_notification_groups');
+//  field_delete_instance('ed_notification_groups');
+  ed_user_extra_add_field_notification_groups();
+
+}
+
