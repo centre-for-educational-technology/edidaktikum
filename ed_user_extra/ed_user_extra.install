@@ -346,7 +346,7 @@ function ed_user_extra_add_field_notification_groups()
   if(!field_info_field('ed_notification_groups')){
     $field = array(
       'field_name' => 'ed_notification_groups',
-      'label' => t('Receive notifications for the following groups'),
+      'label' => t('Teatete tellimine, grupid'),
       'type' => 'list_text',
       'cardinality' => FIELD_CARDINALITY_UNLIMITED,
       'foreign keys' => array(),
@@ -361,8 +361,7 @@ function ed_user_extra_add_field_notification_groups()
   if(!field_info_instance('user', 'ed_notification_groups', 'user')){
     $instance = array(
       'field_name' => 'ed_notification_groups',
-      'label' => t('Receive notifications for the following groups'),
-      'description' => t('Select the checkboxes you want to receive notifications from'),
+      'label' => t('Teatete tellimine, grupid'),
       'required' => false,
       'entity_type' => 'user',
       'bundle' => 'user',
