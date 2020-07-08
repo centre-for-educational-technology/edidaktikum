@@ -542,4 +542,7 @@ function _ed_answer_view_page_handler()
     $display->hide_title = PANELS_TITLE_FIXED;
     $display->title_pane = 'new-48ee673e-dc41-4af8-a2dd-051420fb7ae8';
     $handler->conf['display'] = $display;
+
+
+    return $handler;
 }
