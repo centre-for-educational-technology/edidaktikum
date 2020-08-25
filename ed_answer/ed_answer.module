@@ -819,3 +819,13 @@ function ed_answer_field_widget_form(&$form, &$form_state, $field, $instance, $l
 
   return $element;
 }
+
+/**
+ * Implements hook_preprocess_panels_pane().
+ */
+function ed_answer_preprocess_panels_pane(&$variables) {
+  $pane_config = $variables['pane']->configuration;
+  if (!empty($pane_config['override_title'])) {
+    $variables['title'] = t($pane_config['override_title_text']);
+  }
+}
