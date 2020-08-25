@@ -124,7 +124,7 @@ function ed_cluster_views_default_views_alter(&$views){
       'empty_column' => 0,
     ),
   );
-  /* Päis: OG membership: Group membership overview */
+  /* Header: OG membership: Group membership overview */
   $handler->display->display_options['header']['og_membership_overview']['id'] = 'og_membership_overview';
   $handler->display->display_options['header']['og_membership_overview']['table'] = 'og_membership';
   $handler->display->display_options['header']['og_membership_overview']['field'] = 'og_membership_overview';
@@ -134,12 +134,12 @@ function ed_cluster_views_default_views_alter(&$views){
   $handler->display->display_options['header']['og_membership_overview']['total_members_3'] = 0;
   $handler->display->display_options['header']['og_membership_overview']['total_members'] = 1;
   $handler->display->display_options['header']['og_membership_overview']['total_content'] = 1;
-  /* Jalus: Global: Unfiltered text */
+  /* Footer: Global: Unfiltered text */
   $handler->display->display_options['footer']['area_text_custom']['id'] = 'area_text_custom';
   $handler->display->display_options['footer']['area_text_custom']['table'] = 'views';
   $handler->display->display_options['footer']['area_text_custom']['field'] = 'area_text_custom';
   $handler->display->display_options['footer']['area_text_custom']['empty'] = TRUE;
-  $handler->display->display_options['footer']['area_text_custom']['content'] = '<a href="'.url('node').'/%2"><i class="fa fa-arrow-circle-o-left"></i> '.t('Back to group page').'</a> ';
+  $handler->display->display_options['footer']['area_text_custom']['content'] = '<a href="/edidaktikum/et/node/%2"><i class="fa fa-arrow-circle-o-left"></i> Back to group page</a> ';
   $handler->display->display_options['footer']['area_text_custom']['tokenize'] = TRUE;
   /* No results behavior: Global: Text area */
   $handler->display->display_options['empty']['area']['id'] = 'area';
@@ -147,11 +147,11 @@ function ed_cluster_views_default_views_alter(&$views){
   $handler->display->display_options['empty']['area']['field'] = 'area';
   $handler->display->display_options['empty']['area']['content'] = 'No people found matching the search criteria.';
   $handler->display->display_options['empty']['area']['format'] = 'filtered_html';
-  /* Relationship: OG membership: OG membership from Kasutaja */
+  /* Relationship: OG membership: OG membership from User */
   $handler->display->display_options['relationships']['og_membership_rel']['id'] = 'og_membership_rel';
   $handler->display->display_options['relationships']['og_membership_rel']['table'] = 'users';
   $handler->display->display_options['relationships']['og_membership_rel']['field'] = 'og_membership_rel';
-  /* Väli: Bulk operations: OG membership */
+  /* Field: Bulk operations: OG membership */
   $handler->display->display_options['fields']['views_bulk_operations']['id'] = 'views_bulk_operations';
   $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'views_entity_og_membership';
   $handler->display->display_options['fields']['views_bulk_operations']['field'] = 'views_bulk_operations';
@@ -159,80 +159,84 @@ function ed_cluster_views_default_views_alter(&$views){
   $handler->display->display_options['fields']['views_bulk_operations']['hide_alter_empty'] = FALSE;
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['display_type'] = '0';
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['enable_select_all_pages'] = 1;
+  $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['row_clickable'] = 1;
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['force_single'] = 0;
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['entity_load_capacity'] = '10';
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_operations'] = array(
-    'action::og_user_roles_action' => array(
+    'action::og_set_state_action' => array(
       'selected' => 1,
+      'postpone_processing' => 0,
       'skip_confirmation' => 0,
+      'skip_permission_check' => 1,
       'override_label' => 0,
       'label' => '',
+    ),
+    'action::og_user_roles_action' => array(
+      'selected' => 1,
       'postpone_processing' => 0,
+      'skip_confirmation' => 0,
+      'skip_permission_check' => 1,
+      'override_label' => 0,
+      'label' => '',
     ),
     'action::og_membership_delete_action' => array(
       'selected' => 1,
+      'postpone_processing' => 0,
       'skip_confirmation' => 0,
+      'skip_permission_check' => 1,
       'override_label' => 0,
       'label' => '',
-      'postpone_processing' => 0,
-    ),
-    'action::og_set_state_action' => array(
-      'selected' => 1,
-      'skip_confirmation' => 0,
-      'override_label' => 0,
-      'label' => '',
-      'postpone_processing' => 0,
     ),
   );
-  /* Väli: Kasutaja: Uid */
+  /* Field: User: Uid */
   $handler->display->display_options['fields']['uid']['id'] = 'uid';
   $handler->display->display_options['fields']['uid']['table'] = 'users';
   $handler->display->display_options['fields']['uid']['field'] = 'uid';
   $handler->display->display_options['fields']['uid']['exclude'] = TRUE;
-  /* Väli: Kasutaja: Täisnimi */
+  /* Field: User: Full Name */
   $handler->display->display_options['fields']['ed_field_full_name']['id'] = 'ed_field_full_name';
   $handler->display->display_options['fields']['ed_field_full_name']['table'] = 'field_data_ed_field_full_name';
   $handler->display->display_options['fields']['ed_field_full_name']['field'] = 'ed_field_full_name';
   $handler->display->display_options['fields']['ed_field_full_name']['alter']['alter_text'] = TRUE;
   $handler->display->display_options['fields']['ed_field_full_name']['alter']['make_link'] = TRUE;
   $handler->display->display_options['fields']['ed_field_full_name']['alter']['path'] = '/user/[uid]';
-  /* Väli: OG membership: State */
+  /* Field: OG membership: State */
   $handler->display->display_options['fields']['state']['id'] = 'state';
   $handler->display->display_options['fields']['state']['table'] = 'og_membership';
   $handler->display->display_options['fields']['state']['field'] = 'state';
   $handler->display->display_options['fields']['state']['relationship'] = 'og_membership_rel';
   $handler->display->display_options['fields']['state']['label'] = 'Staatus';
-  /* Väli: OG membership: OG user roles in group */
+  /* Field: OG membership: OG user roles in group */
   $handler->display->display_options['fields']['og_roles']['id'] = 'og_roles';
   $handler->display->display_options['fields']['og_roles']['table'] = 'og_membership';
   $handler->display->display_options['fields']['og_roles']['field'] = 'og_roles';
   $handler->display->display_options['fields']['og_roles']['relationship'] = 'og_membership_rel';
   $handler->display->display_options['fields']['og_roles']['label'] = 'Roles';
   $handler->display->display_options['fields']['og_roles']['type'] = 'ul';
-  /* Väli: OG membership: Created */
+  /* Field: OG membership: Created */
   $handler->display->display_options['fields']['created']['id'] = 'created';
   $handler->display->display_options['fields']['created']['table'] = 'og_membership';
   $handler->display->display_options['fields']['created']['field'] = 'created';
   $handler->display->display_options['fields']['created']['relationship'] = 'og_membership_rel';
   $handler->display->display_options['fields']['created']['label'] = 'Member since';
   $handler->display->display_options['fields']['created']['date_format'] = 'time ago';
-  /* Väli: OG membership: Request message */
+  /* Field: OG membership: Request message */
   $handler->display->display_options['fields']['og_membership_request']['id'] = 'og_membership_request';
   $handler->display->display_options['fields']['og_membership_request']['table'] = 'field_data_og_membership_request';
   $handler->display->display_options['fields']['og_membership_request']['field'] = 'og_membership_request';
   $handler->display->display_options['fields']['og_membership_request']['relationship'] = 'og_membership_rel';
   $handler->display->display_options['fields']['og_membership_request']['label'] = 'Liitumissõnum';
-  /* Väli: Kasutaja: Viimane külastus */
+  /* Field: User: Last access */
   $handler->display->display_options['fields']['access']['id'] = 'access';
   $handler->display->display_options['fields']['access']['table'] = 'users';
   $handler->display->display_options['fields']['access']['field'] = 'access';
   $handler->display->display_options['fields']['access']['date_format'] = 'time ago';
-  /* Väli: Kasutaja: Viimane sisselogimine */
+  /* Field: User: Last login */
   $handler->display->display_options['fields']['login']['id'] = 'login';
   $handler->display->display_options['fields']['login']['table'] = 'users';
   $handler->display->display_options['fields']['login']['field'] = 'login';
   $handler->display->display_options['fields']['login']['date_format'] = 'time ago';
-  /* Väli: OG membership: Edit link */
+  /* Field: OG membership: Edit link */
   $handler->display->display_options['fields']['edit_membership']['id'] = 'edit_membership';
   $handler->display->display_options['fields']['edit_membership']['table'] = 'og_membership';
   $handler->display->display_options['fields']['edit_membership']['field'] = 'edit_membership';
@@ -240,14 +244,14 @@ function ed_cluster_views_default_views_alter(&$views){
   $handler->display->display_options['fields']['edit_membership']['label'] = '';
   $handler->display->display_options['fields']['edit_membership']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['edit_membership']['destination'] = TRUE;
-  /* Väli: OG membership: Delete link */
+  /* Field: OG membership: Delete link */
   $handler->display->display_options['fields']['delete_membership']['id'] = 'delete_membership';
   $handler->display->display_options['fields']['delete_membership']['table'] = 'og_membership';
   $handler->display->display_options['fields']['delete_membership']['field'] = 'delete_membership';
   $handler->display->display_options['fields']['delete_membership']['relationship'] = 'og_membership_rel';
   $handler->display->display_options['fields']['delete_membership']['label'] = '';
   $handler->display->display_options['fields']['delete_membership']['element_label_colon'] = FALSE;
-  /* Sort criterion: Kasutaja: Nimi */
+  /* Sort criterion: User: Name */
   $handler->display->display_options['sorts']['name']['id'] = 'name';
   $handler->display->display_options['sorts']['name']['table'] = 'users';
   $handler->display->display_options['sorts']['name']['field'] = 'name';
@@ -274,7 +278,7 @@ function ed_cluster_views_default_views_alter(&$views){
   $handler->display->display_options['arguments']['gid']['summary']['number_of_records'] = '0';
   $handler->display->display_options['arguments']['gid']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['gid']['summary_options']['items_per_page'] = '25';
-  /* Filter criterion: Kasutaja: Active status */
+  /* Filter criterion: User: Active status */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'users';
   $handler->display->display_options['filters']['status']['field'] = 'status';
@@ -291,7 +295,7 @@ function ed_cluster_views_default_views_alter(&$views){
   $handler->display->display_options['filters']['state']['expose']['label'] = 'State';
   $handler->display->display_options['filters']['state']['expose']['operator'] = 'state_op';
   $handler->display->display_options['filters']['state']['expose']['identifier'] = 'state';
-  /* Filter criterion: Kasutaja: Nimi */
+  /* Filter criterion: User: Name */
   $handler->display->display_options['filters']['uid']['id'] = 'uid';
   $handler->display->display_options['filters']['uid']['table'] = 'users';
   $handler->display->display_options['filters']['uid']['field'] = 'uid';
@@ -301,11 +305,9 @@ function ed_cluster_views_default_views_alter(&$views){
   $handler->display->display_options['filters']['uid']['expose']['label'] = 'Name';
   $handler->display->display_options['filters']['uid']['expose']['operator'] = 'uid_op';
   $handler->display->display_options['filters']['uid']['expose']['identifier'] = 'uid';
-
   $translatables['og_members_admin'] = array(
-      '<a href="'.url('node').'/%2"><i class="fa fa-arrow-circle-o-left"></i> '.t('Back to group page').'</a> ',
+    '<a href="'.url('node').'/%2"><i class="fa fa-arrow-circle-o-left"></i> '.t('Back to group page').'</a> ',
   );
-
 
 
 
