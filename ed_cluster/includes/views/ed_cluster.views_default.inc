@@ -139,7 +139,7 @@ function ed_cluster_views_default_views_alter(&$views){
   $handler->display->display_options['footer']['area_text_custom']['table'] = 'views';
   $handler->display->display_options['footer']['area_text_custom']['field'] = 'area_text_custom';
   $handler->display->display_options['footer']['area_text_custom']['empty'] = TRUE;
-  $handler->display->display_options['footer']['area_text_custom']['content'] = '<a href="/edidaktikum/et/node/%2"><i class="fa fa-arrow-circle-o-left"></i> Back to group page</a> ';
+  $handler->display->display_options['footer']['area_text_custom']['content'] = '<a href="'.url('node').'/%2"><i class="fa fa-arrow-circle-o-left"></i> '.t('Back to group page').'</a> ';
   $handler->display->display_options['footer']['area_text_custom']['tokenize'] = TRUE;
   /* No results behavior: Global: Text area */
   $handler->display->display_options['empty']['area']['id'] = 'area';
