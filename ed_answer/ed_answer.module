@@ -304,7 +304,7 @@ function ed_answer_comment_insert($comment)
 
     $isgadmin = ed_answer_is_group_manager($node->og_group_ref[LANGUAGE_NONE][0]['target_id']);
 
-    if ($isgadmin) {
+    if ($isgadmin && empty($comment->pid)) {
       $wrapper = entity_metadata_wrapper('node', $comment->nid);
 
       $wrapper->ed_answer_last_status->set(array('status' => $comment->ed_answer_status[LANGUAGE_NONE][0]['value'], 'grade' => $comment->ed_answer_grade[LANGUAGE_NONE][0]['value'], 'cid' => $comment->cid));
@@ -497,11 +497,12 @@ function ed_answer_node_validate($node, $form, &$form_state)
 function ed_answer_form_comment_form_alter(&$form, &$form_state)
 {
 
-  if (!empty($form_state['node']->field_ref_to_task)) {
+
+  if (!empty($form_state['comment']->nid) && $form_state['comment']->node_type == 'comment_node_ed_answer' && empty($form_state['comment']->pid)) {
 
     $form['#validate'][] = 'ed_answer_max_points_validate';
 
-    $wrapper = entity_metadata_wrapper('node', $form_state['node']->nid);
+    $wrapper = entity_metadata_wrapper('node', $form_state['comment']->nid);
 
     $last_status = $wrapper->ed_answer_last_status->value();
 
@@ -512,20 +513,30 @@ function ed_answer_form_comment_form_alter(&$form, &$form_state)
     if (!empty($last_status['grade'])) {
       $form['ed_answer_grade'][LANGUAGE_NONE][0]['value']['#default_value'] = $last_status['grade'];
     }
+  } else if (!empty($form_state['comment']->pid)) {
+    //reply to comment
+    $form['ed_answer_status']['#access'] = false;
+    $form['ed_answer_grade']['#access'] = false;
+
   }
 
   //disable wysiwyg
   $form['comment_body']['und'][0]['#wysiwyg'] = FALSE;
 }
 
-function ed_answer_max_points_validate($form, &$form_state) {
+function ed_answer_max_points_validate($form, &$form_state)
+{
 
-  $task_id = $form_state['node']->field_ref_to_task[LANGUAGE_NONE][0]['target_id'];
+
+  $wrapper_answer = entity_metadata_wrapper('node', $form_state['comment']->nid);
+  $task_id = $wrapper_answer->field_ref_to_task->raw();
+
+
   $wrapper = entity_metadata_wrapper('node', $task_id);
   $max_points = $wrapper->ed_task_field_max_points->value();
 
-  if(!empty($max_points)){
-    if($form_state['values']['ed_answer_grade'][LANGUAGE_NONE][0]['value'] > $max_points){
+  if (!empty($max_points)) {
+    if ($form_state['values']['ed_answer_grade'][LANGUAGE_NONE][0]['value'] > $max_points) {
       form_set_error('max_points', t('Maximum points allowed for this task is %max_points', array('%max_points' => $max_points)));
     }
   }
@@ -544,6 +555,10 @@ function ed_answer_comment_view_alter(&$build)
       $build['ed_answer_status']['#access'] = FALSE;
       $build['ed_answer_grade']['#access'] = FALSE;
 
+
+    }elseif(!empty($build['comment_body']['#object']->pid)){
+      $build['ed_answer_status']['#access'] = FALSE;
+      $build['ed_answer_grade']['#access'] = FALSE;
     }
   }
 
@@ -823,7 +838,8 @@ function ed_answer_field_widget_form(&$form, &$form_state, $field, $instance, $l
 /**
  * Implements hook_preprocess_panels_pane().
  */
-function ed_answer_preprocess_panels_pane(&$variables) {
+function ed_answer_preprocess_panels_pane(&$variables)
+{
   $pane_config = $variables['pane']->configuration;
   if (!empty($pane_config['override_title'])) {
     $variables['title'] = t($pane_config['override_title_text']);
