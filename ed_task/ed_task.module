@@ -138,139 +138,139 @@ function ed_task_results($test, $node)
   );
 
 
-  $content['feedback'] = array(
-    '#type' => 'markup',
-    '#prefix' => '<div class="col-md-6"><div class="text-center well well-lg">',
-    '#suffix' => '</div></div>'
-  );
-
-  $satisfaction = 0;
-  $difficulty = 0;
-  $time = 0;
-  $emotions_all = array();
-  $total_feedbacks = 0;
-  $emotions_results = array(
-    'curiosity' => 0,
-    'confusion' => 0,
-    'anxiety' => 0,
-    'boredom' => 0,
-    'surprise' => 0,
-    'frustration' => 0,
-    'enjoyment' => 0,
-  );
+  foreach ($node->og_group_ref[LANGUAGE_NONE] as $item) {
 
 
-  foreach ($members as $member) {
-    $answer = ed_get_answer($task['nid'], $member['uid'], false, true);
+    $content['feedback'][$item['target_id']] = array(
+      '#type' => 'markup',
+      '#prefix' => '<div class="col-md-6"><div class="text-center well well-lg"><p>' . t('Group') . ': <strong>' . _ed_get_group_name_from_id($item['target_id']) . '</strong></p><p>' . t('Task') . ': <strong>' . $task['title'] . '</strong></p>',
+      '#suffix' => '</div></div>'
+    );
 
-    if ($answer['status'] != 'unanswered') {
 
-      $wrapper = entity_metadata_wrapper('node', $answer['nid']);
+    //Get answers for the task in a particular group
+    $query = new EntityFieldQuery;
+    $entities = $query->entityCondition('entity_type', 'node')
+      ->entityCondition('bundle', 'ed_answer')
+      ->fieldCondition('field_ref_to_task', 'target_id', $task['nid'])
+      ->fieldCondition('og_group_ref', 'target_id', $item['target_id'])
+      ->execute();
 
+
+    $satisfactions = array();
+    $difficulties = array();
+    $emotions = array();
+    $time_spent = array();
+
+    //Task answers for current group
+    foreach ($entities['node'] as $entity) {
+      $wrapper = entity_metadata_wrapper('node', $entity->nid);
       if ($wrapper->__isset('ed_field_satisf_feedb')) {
-        if (!empty($wrapper->ed_field_satisf_feedb->value())) {
-          $satisfaction += $wrapper->ed_field_satisf_feedb->value() * 100 / 5;
-          $total_feedbacks++;
-        }
 
+        if (!empty($wrapper->ed_field_satisf_feedb->value())) {
+
+          array_push($satisfactions, $wrapper->ed_field_satisf_feedb->value());
+        }
       }
 
       if ($wrapper->__isset('ed_field_difficulty_feedb')) {
+
         if (!empty($wrapper->ed_field_difficulty_feedb->value())) {
-          $difficulty += $wrapper->ed_field_difficulty_feedb->value() * 100 / 5;
+
+          array_push($difficulties, $wrapper->ed_field_difficulty_feedb->value());
         }
-
-      }
-
-      if ($wrapper->__isset('ed_answer_field_time_spent')) {
-        if (!empty($wrapper->ed_answer_field_time_spent->value()['mins'])) {
-          $time += $wrapper->ed_answer_field_time_spent->value()['mins'];
-        }
-
       }
 
       if ($wrapper->__isset('ed_field_answer_emotions')) {
-        $emotions = $wrapper->ed_field_answer_emotions->value();
-        $emotions_all = array_merge($emotions, $emotions_all);
+
+        if (!empty($wrapper->ed_field_answer_emotions->value())) {
+
+          array_push($emotions, $wrapper->ed_field_answer_emotions->value());
+        }
+      }
+
+      if ($wrapper->__isset('ed_answer_field_time_spent')) {
+
+        if (!empty($wrapper->ed_answer_field_time_spent->value()['mins'])) {
+
+          array_push($time_spent, $wrapper->ed_answer_field_time_spent->value()['mins']);
+        }
       }
 
     }
-  }
-
-  if ($total_feedbacks > 0) {
 
 
-    $satisfaction = $satisfaction / $total_feedbacks;
-    $difficulty = $difficulty / $total_feedbacks;
-    $time = $time / $total_feedbacks;
-    $emotions_count = array_count_values($emotions_all);
+    $satisfactions = array_count_values($satisfactions);
+    $difficulties = array_count_values($difficulties);
+
+    $emotions = call_user_func_array('array_merge', $emotions);
+    $emotions = array_count_values($emotions);
 
 
-    $emotions_total = array_sum(array_values($emotions_count));
 
-    $emotions_results = array(
-      'curiosity' => isset($emotions_count['curiosity']) ? $emotions_count['curiosity'] * 100 / $emotions_total : 0,
-      'confusion' => isset($emotions_count['confusion']) ? $emotions_count['confusion'] * 100 / $emotions_total : 0,
-      'anxiety' => isset($emotions_count['anxiety']) ? $emotions_count['anxiety'] * 100 / $emotions_total : 0,
-      'boredom' => isset($emotions_count['boredom']) ? $emotions_count['boredom'] * 100 / $emotions_total : 0,
-      'surprise' => isset($emotions_count['surprise']) ? $emotions_count['surprise'] * 100 / $emotions_total : 0,
-      'frustration' => isset($emotions_count['frustration']) ? $emotions_count['frustration'] * 100 / $emotions_total : 0,
-      'enjoyment' => isset($emotions_count['enjoyment']) ? $emotions_count['enjoyment'] * 100 / $emotions_total : 0,
-    );
+    $satisfactions_to_json = _ed_task_prepare_feedback_for_chart($satisfactions);
+    $difficulties_to_json = _ed_task_prepare_feedback_for_chart($difficulties);
 
 
-    $content['feedback']['time']['header'] = array(
+    //Average time spent
+    if (!empty($time_spent)) {
+      $average_time = array_sum($time_spent) / sizeof($time_spent);
+      $hours = floor($average_time / 60);
+      $minutes = $average_time % 60;
+      $content['feedback'][$item['target_id']]['time']['avg'] = array(
+        '#type' => 'markup',
+        '#prefix' => '<h4>' . t("Time") . '</h4><div class="row"><p><i class="glyphicon glyphicon-time"></i> ',
+        '#suffix' => '</p></div>',
+        '#markup' => t('Average time spent') . ': ' . $hours . ' t, ' . $minutes . ' min'
+      );
+
+
+      //Max time spent
+      $max_time = max($time_spent);
+      $hours = floor($max_time / 60);
+      $minutes = $max_time % 60;
+      $content['feedback'][$item['target_id']]['time']['max'] = array(
+        '#type' => 'markup',
+        '#prefix' => '<div class="row"><p><i class="glyphicon glyphicon-time"></i> ',
+        '#suffix' => '</p></div>',
+        '#markup' => t('Maximum time spent') . ': ' . $hours . ' t, ' . $minutes . ' min'
+      );
+
+
+      //Min time spent
+      $min_time = min($time_spent);
+      $hours = floor($min_time / 60);
+      $minutes = $min_time % 60;
+      $content['feedback'][$item['target_id']]['time']['min'] = array(
+        '#type' => 'markup',
+        '#prefix' => '<div class="row"><p><i class="glyphicon glyphicon-time"></i> ',
+        '#suffix' => '</p></div>',
+        '#markup' => t('Minimum time spent') . ': ' . $hours . ' t, ' . $minutes . ' min'
+      );
+    }
+
+    //Satisfaction
+    $content['feedback'][$item['target_id']]['charts']['satisfaction'] = array(
       '#type' => 'markup',
-      '#prefix' => '<div class="row">',
-      '#markup' => '<h4>' . t('Average time spent') . '</h4>'
+      '#markup' => '<div class="row"><h4>' . t("Satisfaction") . '</h4><div class="col-md-8 col-md-offset-2"><canvas id="animated-chart-satisf-' . $item['target_id'] . '" width="500" height="500"></canvas></div></div>',
     );
-    $hours = floor($time / 60);
-    $minutes = $time % 60;
-    $content['feedback']['time']['content'] = array(
+
+    //Difficulty
+    $content['feedback'][$item['target_id']]['charts']['difficulty'] = array(
       '#type' => 'markup',
-      '#prefix' => '<p><i class="glyphicon glyphicon-time"></i> ',
-      '#suffix' => '</p></div>',
-      '#markup' => $hours . ' t, ' . $minutes . ' min'
+      '#markup' => '<div class="row"><h4>' . t("Task difficulty") . '</h4><div class="col-md-8 col-md-offset-2"><canvas id="animated-chart-diff-' . $item['target_id'] . '" width="500" height="500"></canvas></div></div>',
     );
+
+
+    //Emotions
+    $content['feedback'][$item['target_id']]['charts']['emotions'] = array(
+      '#type' => 'markup',
+      '#markup' => '<div class="row"><h4>' . t("Emotions") . '</h4><div class="col-md-8 col-md-offset-2"><canvas id="animated-chart-emotions-' . $item['target_id'] . '" width="500" height="500"></canvas></div></div>',
+    );
+
+
+    $settings[$item['target_id']] = array('satisf' => $satisfactions_to_json, 'difficulty' => $difficulties_to_json, 'emotions' => $emotions, 'group' => $item['target_id']);
   }
-
-
-  $content['feedback']['charts']['satisfaction'] = array(
-    '#type' => 'markup',
-    '#markup' => '<div class="row"><h4>' . t("Task satisfaction") . '</h4><div class="col-md-6 col-md-offset-3"><svg id="animated-chart-satisfaction" class="animated-chart" viewbox="0 0 100 100">
-			  <circle cx="50" cy="50" r="45"/>
-			  <path id="progress-satisfaction" stroke-linecap="round" stroke-width="5" stroke="#fff" fill="none"
-			        d="M50 10
-			           a 40 40 0 0 1 0 80
-			           a 40 40 0 0 1 0 -80">
-			  </path>
-			  <text id="count-satisfaction" x="50" y="50" text-anchor="middle" dy="7" font-size="20">0%</text>
-			</svg></div></div>',
-  );
-
-
-  $content['feedback']['charts']['difficulty'] = array(
-    '#type' => 'markup',
-    '#markup' => '<div class="row"><h4>' . t("Task difficulty") . '</h4><div class="col-md-6 col-md-offset-3"><svg id="animated-chart-difficulty" class="animated-chart" viewbox="0 0 100 100">
-			  <circle cx="50" cy="50" r="45"/>
-			  <path id="progress-difficulty" stroke-linecap="round" stroke-width="5" stroke="#fff" fill="none"
-			        d="M50 10
-			           a 40 40 0 0 1 0 80
-			           a 40 40 0 0 1 0 -80">
-			  </path>
-			  <text id="count-difficulty" x="50" y="50" text-anchor="middle" dy="7" font-size="20">0%</text>
-			</svg></div></div>',
-  );
-
-  $content['feedback']['charts']['emotions'] = array(
-    '#type' => 'markup',
-    '#markup' => '<div class="row"><h4>' . t("Emotions") . '</h4><div class="col-md-8 col-md-offset-2"><canvas id="animated-chart-emotions" width="500" height="500"></canvas></div></div>',
-  );
-
-
-  $settings = array('satisf' => $satisfaction, 'difficulty' => $difficulty, 'emotions' => json_encode($emotions_results));
-
-  drupal_add_js(drupal_get_path('module', 'ed_dashboard') . '/js/snap.svg-min.js', 'file');
 
   drupal_add_js(array('ed_task' => $settings), array('type' => 'setting'));
 
@@ -281,6 +281,42 @@ function ed_task_results($test, $node)
   return $content;
 }
 
+
+function _ed_task_prepare_feedback_for_chart($array_to_prepare)
+{
+  $array_to_json = array();
+  if (!array_key_exists(1, $array_to_prepare)) {
+    $array_to_json['first'] = 0;
+  } else {
+    $array_to_json['first'] = $array_to_prepare[1];
+  }
+
+  if (!array_key_exists(2, $array_to_prepare)) {
+    $array_to_json['second'] = 0;
+  } else {
+    $array_to_json['second'] = $array_to_prepare[2];
+  }
+
+  if (!array_key_exists(3, $array_to_prepare)) {
+    $array_to_json['third'] = 0;
+  } else {
+    $array_to_json['third'] = $array_to_prepare[3];
+  }
+
+  if (!array_key_exists(4, $array_to_prepare)) {
+    $array_to_json['fourth'] = 0;
+  } else {
+    $array_to_json['fourth'] = $array_to_prepare[4];
+  }
+
+  if (!array_key_exists(5, $array_to_prepare)) {
+    $array_to_json['fifth'] = 0;
+  } else {
+    $array_to_json['fifth'] = $array_to_prepare[5];
+  }
+
+  return $array_to_json;
+}
 
 function ed_task_listing_page()
 {
@@ -1075,7 +1111,7 @@ function recursive_array_search($needle, $haystack)
 {
   foreach ($haystack as $key => $value) {
     $current_key = $key;
-    if ($needle === $value OR (is_array($value) && recursive_array_search($needle, $value) !== false)) {
+    if ($needle === $value or (is_array($value) && recursive_array_search($needle, $value) !== false)) {
       return true;
     }
   }

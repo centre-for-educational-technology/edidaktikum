@@ -3,90 +3,145 @@
     attach: function (context, settings) {
 
 
-      var satisf = 0;
-
-      try {
-        satisf = Drupal.settings.ed_task.satisf
-      } catch (e) {
-
-      }
+      Object.keys(Drupal.settings.ed_task).forEach(function (key, index) {
 
 
-      var difficulty = 0;
+        var group = Drupal.settings.ed_task[key].group;
 
-      try {
-        difficulty = Drupal.settings.ed_task.difficulty
-      } catch (e) {
+        var satisf = 0;
 
-      }
+        try {
+          satisf = Drupal.settings.ed_task[key].satisf
+        } catch (e) {
 
-      var emotions = [];
-      try {
-        emotions = JSON.parse(Drupal.settings.ed_task.emotions)
-      } catch (e) {
-
-      }
-
-
-      //Chart animation satisfaction rate
-      $('svg#animated-chart-satisfaction text').text(satisf + '%');
-
-      var count_satisfaction = $(('#count-satisfaction'));
-      $({Counter: 0}).animate({Counter: count_satisfaction.text()}, {
-        duration: 5000,
-        easing: 'linear',
-        step: function () {
-          count_satisfaction.text(Math.ceil(this.Counter) + "%");
         }
+
+
+        var difficulty = 0;
+
+        try {
+          difficulty = Drupal.settings.ed_task[key].difficulty
+        } catch (e) {
+
+        }
+
+        var emotions = 0;
+        try {
+          emotions = Drupal.settings.ed_task[key].emotions
+        } catch (e) {
+
+        }
+
+
+        //Satisf chart
+        var mySatisfChart = new Chart($('#animated-chart-satisf-' + group), {
+          type: 'bar',
+          data: {
+            datasets: [{
+              data: [satisf.first, satisf.second, satisf.third, satisf.fourth, satisf.fifth],
+              backgroundColor: ["#27f59d", "#3399FF", "#FFC575", "#99CC00", "#FF3300"],
+              borderWidth: 0, //this will hide border
+            }],
+            labels: [1, 2, 3, 4, 5]
+          },
+          options: {
+            legend: {
+              display: false
+            },
+            responsive: true,
+            scales: {
+              yAxes: [{
+                display: true,
+                ticks: {
+                  suggestedMin: 0,
+                  suggestedMax: sum(satisf),
+                  stepSize: 1
+                }
+              }]
+            }
+          }
+        });
+
+
+        //Diff chart
+        var myDiffChart = new Chart($('#animated-chart-diff-' + group), {
+          type: 'bar',
+          data: {
+            datasets: [{
+              data: [difficulty.first, difficulty.second, difficulty.third, difficulty.fourth, difficulty.fifth],
+              backgroundColor: ["#27f59d", "#3399FF", "#FFC575", "#99CC00", "#FF3300"],
+              borderWidth: 0, //this will hide border
+            }],
+            labels: [1, 2, 3, 4, 5]
+          },
+          options: {
+            legend: {
+              display: false
+            },
+            responsive: true,
+            scales: {
+              yAxes: [{
+                display: true,
+                ticks: {
+                  suggestedMin: 0,
+                  suggestedMax: sum(difficulty),
+                  stepSize: 1
+                }
+              }]
+            }
+          }
+        });
+
+        //Emotions chart
+        var myDoughnutChart = new Chart($('#animated-chart-emotions-' + group), {
+          type: 'horizontalBar',
+          data: {
+            datasets: [{
+              data: [(emotions) && emotions.curiosity !== undefined ? emotions.curiosity : 0,
+                (emotions) && emotions.confusion !== undefined ? emotions.confusion : 0,
+                (emotions) && emotions.anxiety !== undefined ? emotions.anxiety : 0,
+                (emotions) && emotions.boredom !== undefined ? emotions.boredom : 0,
+                (emotions) && emotions.surprise !== undefined ? emotions.surprise : 0,
+                (emotions) && emotions.frustration !== undefined ? emotions.frustration : 0,
+                (emotions) && emotions.enjoyment !== undefined ? emotions.enjoyment : 0
+              ],
+              backgroundColor: ["#27f59d", "#3399FF", "#FFC575", "#99CC00", "#FF3300", "#944DDB", "#fff45c"],
+              borderWidth: 0, //this will hide border
+            }],
+            labels: [Drupal.t('Uudishimu'), Drupal.t('Segadus'), Drupal.t('Ärevus'), Drupal.t('Igavus'), Drupal.t('Üllatus'), Drupal.t('Frustratsioon'), Drupal.t('Rõõm')]
+          },
+          options: {
+            legend: {
+              display: false
+            },
+            responsive: true,
+            scales: {
+              xAxes: [{
+                display: true,
+                ticks: {
+                  suggestedMin: 0,
+                  suggestedMax: sum(difficulty),
+                  stepSize: 1
+                }
+              }]
+            }
+          }
+        });
+
+
       });
 
-      var s_satisfaction = Snap('#animated-chart-satisfaction');
-      var progress_satisfaction = s_satisfaction.select('#progress-satisfaction');
-
-      progress_satisfaction.attr({strokeDasharray: '0, 251.2'});
-      Snap.animate(0, 251.2 * satisf / 100, function (value) {
-        progress_satisfaction.attr({'stroke-dasharray': value + ',251.2'});
-      }, 5000);
-
-
-      //Chart animation difficulty rate
-      $('svg#animated-chart-difficulty text').text(difficulty + '%');
-
-      var count_difficulty = $(('#count-difficulty'));
-      $({Counter: 0}).animate({Counter: count_difficulty.text()}, {
-        duration: 5000,
-        easing: 'linear',
-        step: function () {
-          count_difficulty.text(Math.ceil(this.Counter) + "%");
-        }
-      });
-
-      var s_difficulty = Snap('#animated-chart-difficulty');
-      var progress_difficulty = s_difficulty.select('#progress-difficulty');
-
-      progress_difficulty.attr({strokeDasharray: '0, 251.2'});
-      Snap.animate(0, 251.2 * difficulty / 100, function (value) {
-        progress_difficulty.attr({'stroke-dasharray': value + ',251.2'});
-      }, 5000);
-
-
-      //Emotions chart
-      var myDoughnutChart = new Chart($('#animated-chart-emotions'), {
-        type: 'doughnut',
-        data: {
-          datasets: [{
-            data: [emotions.curiosity, emotions.confusion, emotions.anxiety, emotions.boredom, emotions.surprise, emotions.frustration, emotions.enjoyment],
-            backgroundColor: ["#27f59d", "#3399FF", "#FFC575", "#99CC00", "#FF3300", "#944DDB", "#fff45c"],
-            borderWidth: 0, //this will hide border
-          }],
-          labels: [Drupal.t('Uudishimu'), Drupal.t('Segadus'), Drupal.t('Ärevus'), Drupal.t('Igavus'), Drupal.t('Üllatus'), Drupal.t('Frustratsioon'), Drupal.t('Rõõm')]
-        },
-        options: {
-          responsive: true,
-        }
-      });
 
     }
   };
 })(jQuery);
 
+function sum(obj) {
+  var sum = 0;
+  for (var el in obj) {
+    if (obj.hasOwnProperty(el)) {
+      sum += parseFloat(obj[el]);
+    }
+  }
+  return sum;
+}
