@@ -39,7 +39,7 @@
           data: {
             datasets: [{
               data: [satisf.first, satisf.second, satisf.third, satisf.fourth, satisf.fifth],
-              backgroundColor: ["#27f59d", "#3399FF", "#FFC575", "#99CC00", "#FF3300"],
+              backgroundColor: "#1abc9c",
               borderWidth: 0, //this will hide border
             }],
             labels: [1, 2, 3, 4, 5]
@@ -54,8 +54,7 @@
                 display: true,
                 ticks: {
                   suggestedMin: 0,
-                  suggestedMax: sum(satisf),
-                  stepSize: 1
+                  stepSize: 5
                 }
               }]
             }
@@ -69,7 +68,7 @@
           data: {
             datasets: [{
               data: [difficulty.first, difficulty.second, difficulty.third, difficulty.fourth, difficulty.fifth],
-              backgroundColor: ["#27f59d", "#3399FF", "#FFC575", "#99CC00", "#FF3300"],
+              backgroundColor: "#1abc9c",
               borderWidth: 0, //this will hide border
             }],
             labels: [1, 2, 3, 4, 5]
@@ -84,8 +83,7 @@
                 display: true,
                 ticks: {
                   suggestedMin: 0,
-                  suggestedMax: sum(difficulty),
-                  stepSize: 1
+                  stepSize: 5
                 }
               }]
             }
@@ -105,7 +103,7 @@
                 (emotions) && emotions.frustration !== undefined ? emotions.frustration : 0,
                 (emotions) && emotions.enjoyment !== undefined ? emotions.enjoyment : 0
               ],
-              backgroundColor: ["#27f59d", "#3399FF", "#FFC575", "#99CC00", "#FF3300", "#944DDB", "#fff45c"],
+              backgroundColor: "#1abc9c",
               borderWidth: 0, //this will hide border
             }],
             labels: [Drupal.t('Uudishimu'), Drupal.t('Segadus'), Drupal.t('Ärevus'), Drupal.t('Igavus'), Drupal.t('Üllatus'), Drupal.t('Frustratsioon'), Drupal.t('Rõõm')]
@@ -120,8 +118,7 @@
                 display: true,
                 ticks: {
                   suggestedMin: 0,
-                  suggestedMax: sum(difficulty),
-                  stepSize: 1
+                  stepSize: 5
                 }
               }]
             }
