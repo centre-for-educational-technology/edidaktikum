@@ -175,12 +175,15 @@ function ed_answer_form_alter(&$form, &$form_state, $form_id)
 
     $display = array('type' => 'term_reference_tree');
 
-    $task_cats = field_view_field('node', $node, 'ed_field_category', $display);
-    if (!empty($task_cats)) {
-      $form['ed_answer_task_cat']['category'] = array(
-        '#type' => 'markup',
-        '#markup' => render($task_cats),
-      );
+    if ($node) {
+      $task_cats = field_view_field('node', $node, 'ed_field_category', $display);
+
+      if (!empty($task_cats)) {
+        $form['ed_answer_task_cat']['category'] = array(
+          '#type' => 'markup',
+          '#markup' => render($task_cats),
+        );
+      }
     }
 
 
