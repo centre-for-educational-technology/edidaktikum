@@ -73,161 +73,161 @@ function ed_answer_form_alter(&$form, &$form_state, $form_id)
     }
     $node = node_load($reftotask);
 
+
+    // Get all groups this task belongs to, get user groups, make intersection of them and put these groups
+    // as default values, so that the members offered to user would be valid. Hide groups choice at all
+    if (isset($node->og_group_ref[LANGUAGE_NONE]) && is_array($node->og_group_ref[LANGUAGE_NONE]) && count($node->og_group_ref[LANGUAGE_NONE]) > 0) {
+
+      $task_groups_ids = array_map(function ($ref) {
+        return $ref['target_id'];
+      }, $node->og_group_ref[LANGUAGE_NONE]);
+
+      $user_groups_ids = og_get_groups_by_user();
+
+      $selected_groups_ids = array_intersect($task_groups_ids, $user_groups_ids['node']);
+
+      if ($selected_groups_ids) {
+        $form['og_group_ref']['und'][0]['default']['#value'] = $selected_groups_ids;
+      }
+
+      // This solution prevents the Specify user box from showing the right selected group members we got before;
+      // it forces to show all the members of groups this user belongs to
+      //$form['og_group_ref']['und'][0]['default']['#type'] = "hidden";
+
+
+    } else {
+      drupal_set_message(t('This task does not belong to any group'));
+    }
+
+    // Using this instead keeps the right selected groups and hence the members, but prevents from changing groups
+    $form['og_group_ref']['#disabled'] = TRUE;
+
+
+    //If this task is given to specific user, disable Specify user option in answer
+    if (isset($node->ed_field_to_group_member[LANGUAGE_NONE]) && is_array($node->ed_field_to_group_member[LANGUAGE_NONE]) && count($node->ed_field_to_group_member[LANGUAGE_NONE]) > 0) {
+      $form['ed_field_to_group_member']['#disabled'] = TRUE;
+    }
+
+
+    $form['ed_field_content']['#weight'] = 1;
+    $form['field_ref_to_task']['und']['#title'] = t('Answer To Task');
+    $form['tabs'] = array(
+      '#type' => 'vertical_tabs',
+      '#weight' => 0,
+    );
+    $form['ed_answer_task'] = array(
+      '#tree' => TRUE,
+      '#type' => 'fieldset',
+      '#title' => t('Task'),
+      '#collapsible' => FALSE,
+      '#collapsed' => FALSE,
+      '#group' => 'tabs',
+    );
+    $form['ed_answer_task']['task_title'] = array(
+      '#type' => 'markup',
+      '#markup' => '<h2>' . l($node->title, 'node/' . $reftotask) . '</h2>',
+      '#weight' => -1,
+    );
     if ($node) {
-
-      // Get all groups this task belongs to, get user groups, make intersection of them and put these groups
-      // as default values, so that the members offered to user would be valid. Hide groups choice at all
-      if (isset($node->og_group_ref[LANGUAGE_NONE]) && is_array($node->og_group_ref[LANGUAGE_NONE]) && count($node->og_group_ref[LANGUAGE_NONE]) > 0) {
-
-        $task_groups_ids = array_map(function ($ref) {
-          return $ref['target_id'];
-        }, $node->og_group_ref[LANGUAGE_NONE]);
-
-        $user_groups_ids = og_get_groups_by_user();
-
-        $selected_groups_ids = array_intersect($task_groups_ids, $user_groups_ids['node']);
-
-        if ($selected_groups_ids) {
-          $form['og_group_ref']['und'][0]['default']['#value'] = $selected_groups_ids;
-        }
-
-        // This solution prevents the Specify user box from showing the right selected group members we got before;
-        // it forces to show all the members of groups this user belongs to
-        //$form['og_group_ref']['und'][0]['default']['#type'] = "hidden";
-
-
-      } else {
-        drupal_set_message(t('This task does not belong to any group'));
-      }
-
-      // Using this instead keeps the right selected groups and hence the members, but prevents from changing groups
-      $form['og_group_ref']['#disabled'] = TRUE;
-
-
-      //If this task is given to specific user, disable Specify user option in answer
-      if (isset($node->ed_field_to_group_member[LANGUAGE_NONE]) && is_array($node->ed_field_to_group_member[LANGUAGE_NONE]) && count($node->ed_field_to_group_member[LANGUAGE_NONE]) > 0) {
-        $form['ed_field_to_group_member']['#disabled'] = TRUE;
-      }
-
-
-      $form['ed_field_content']['#weight'] = 1;
-      $form['field_ref_to_task']['und']['#title'] = t('Answer To Task');
-      $form['tabs'] = array(
-        '#type' => 'vertical_tabs',
-        '#weight' => 0,
-      );
-      $form['ed_answer_task'] = array(
-        '#tree' => TRUE,
-        '#type' => 'fieldset',
-        '#title' => t('Task'),
-        '#collapsible' => FALSE,
-        '#collapsed' => FALSE,
-        '#group' => 'tabs',
-      );
-      $form['ed_answer_task']['task_title'] = array(
-        '#type' => 'markup',
-        '#markup' => '<h2>' . l($node->title, 'node/' . $reftotask) . '</h2>',
-        '#weight' => -1,
-      );
       $task_content = field_get_items('node', $node, 'ed_field_content');
       $task_content_view = field_view_value('node', $node, 'ed_field_content', $task_content[0]);
       $form['ed_answer_task']['task_content'] = $task_content_view;
+    }
 
 
-      $form['ed_field_difficulty_feedb']['#prefix'] = '<div role="alert" class="alert alert-info feedback-notice"> ' . t('Feedback is not personalised') . '</div>';
+    $form['ed_field_difficulty_feedb']['#prefix'] = '<div role="alert" class="alert alert-info feedback-notice"> ' . t('Feedback is not personalised') . '</div>';
 
 
-      $form['ed_field_difficulty_feedb']['#attributes']['data-toggle'][] = 'buttons';
-      $form['ed_field_satisf_feedb']['#attributes']['data-toggle'][] = 'buttons';
+    $form['ed_field_difficulty_feedb']['#attributes']['data-toggle'][] = 'buttons';
+    $form['ed_field_satisf_feedb']['#attributes']['data-toggle'][] = 'buttons';
 
-      $form['ed_field_difficulty_feedb']['#weight'] = $form['ed_field_answer_emotions']['#weight'] - 2;
-      $form['ed_field_satisf_feedb']['#weight'] = $form['ed_field_answer_emotions']['#weight'] - 1;
-
-
-      if (!empty($form['#node']->ed_answer_field_time_spent[LANGUAGE_NONE][0]['mins']) && $form['#node']->ed_answer_field_time_spent[LANGUAGE_NONE][0]['mins'] >= 0) {
-        $time_spent_mins = $form['#node']->ed_answer_field_time_spent[LANGUAGE_NONE][0]['mins'];
-        $hours = floor($time_spent_mins / 60);
-        $minutes = $time_spent_mins % 60;
-
-        $form['ed_answer_field_time_spent'][LANGUAGE_NONE][0]['hours']['#default_value'] = $hours;
-        $form['ed_answer_field_time_spent'][LANGUAGE_NONE][0]['mins']['#default_value'] = $minutes;
-
-      }
+    $form['ed_field_difficulty_feedb']['#weight'] = $form['ed_field_answer_emotions']['#weight'] - 2;
+    $form['ed_field_satisf_feedb']['#weight'] = $form['ed_field_answer_emotions']['#weight'] - 1;
 
 
-      $form['ed_answer_field_time_spent'][LANGUAGE_NONE][0]['hours']['#prefix'] = '<div class="col-sm-4">';
-      $form['ed_answer_field_time_spent'][LANGUAGE_NONE][0]['hours']['#suffix'] = '</div>';
-      $form['ed_answer_field_time_spent'][LANGUAGE_NONE][0]['mins']['#prefix'] = '<div class="col-sm-4">';
-      $form['ed_answer_field_time_spent'][LANGUAGE_NONE][0]['mins']['#suffix'] = '</div>';
+    if (!empty($form['#node']->ed_answer_field_time_spent[LANGUAGE_NONE][0]['mins']) && $form['#node']->ed_answer_field_time_spent[LANGUAGE_NONE][0]['mins'] >= 0) {
+      $time_spent_mins = $form['#node']->ed_answer_field_time_spent[LANGUAGE_NONE][0]['mins'];
+      $hours = floor($time_spent_mins / 60);
+      $minutes = $time_spent_mins % 60;
 
-      $form['ed_answer_field_time_spent']['#prefix'] = '<label class="control-label">' . t("Please estimate the time spent on the task!") . '</label><div class="row"><div class="col-xs-6">';
-      $form['ed_answer_field_time_spent']['#suffix'] = '</div></div>';
+      $form['ed_answer_field_time_spent'][LANGUAGE_NONE][0]['hours']['#default_value'] = $hours;
+      $form['ed_answer_field_time_spent'][LANGUAGE_NONE][0]['mins']['#default_value'] = $minutes;
+
+    }
 
 
-      //Get categories
-      $form['ed_answer_task_cat'] = array(
-        '#tree' => TRUE,
-        '#type' => 'fieldset',
-        '#title' => t('Category'),
-        '#group' => 'tabs',
+    $form['ed_answer_field_time_spent'][LANGUAGE_NONE][0]['hours']['#prefix'] = '<div class="col-sm-4">';
+    $form['ed_answer_field_time_spent'][LANGUAGE_NONE][0]['hours']['#suffix'] = '</div>';
+    $form['ed_answer_field_time_spent'][LANGUAGE_NONE][0]['mins']['#prefix'] = '<div class="col-sm-4">';
+    $form['ed_answer_field_time_spent'][LANGUAGE_NONE][0]['mins']['#suffix'] = '</div>';
+
+    $form['ed_answer_field_time_spent']['#prefix'] = '<label class="control-label">' . t("Please estimate the time spent on the task!") . '</label><div class="row"><div class="col-xs-6">';
+    $form['ed_answer_field_time_spent']['#suffix'] = '</div></div>';
+
+
+    //Get categories
+    $form['ed_answer_task_cat'] = array(
+      '#tree' => TRUE,
+      '#type' => 'fieldset',
+      '#title' => t('Category'),
+      '#group' => 'tabs',
+    );
+
+    $display = array('type' => 'term_reference_tree');
+
+    $task_cats = field_view_field('node', $node, 'ed_field_category', $display);
+    if (!empty($task_cats)) {
+      $form['ed_answer_task_cat']['category'] = array(
+        '#type' => 'markup',
+        '#markup' => render($task_cats),
       );
+    }
 
-      $display = array('type' => 'term_reference_tree');
 
-      $task_cats = field_view_field('node', $node, 'ed_field_category', $display);
-      if (!empty($task_cats)) {
-        $form['ed_answer_task_cat']['category'] = array(
+    //Get competencies
+    $form['ed_answer_task_comp'] = array(
+      '#tree' => TRUE,
+      '#type' => 'fieldset',
+      '#title' => t('Competence'),
+      '#group' => 'tabs',
+    );
+
+    $group_node = node_load($node->og_group_ref[LANGUAGE_NONE][0]['target_id']);
+
+    $task_comp = field_get_items('node', $group_node, 'ed_field_learning_outcome_ref');
+
+    $outcomes = [];
+    if (is_array($task_comp) && !empty($task_comp)) {
+      for ($i = 0; $i < count($task_comp); $i++) {
+
+        $lo_id = $task_comp[$i]["target_id"];
+        $outcome = node_load($lo_id);
+
+        $display = array('type' => 'term_reference_tree');
+        $outcome_comps = field_view_field('node', $outcome, 'ed_field_category', $display);
+
+
+        $outcomes [] = [
+          "name" => $outcome->title,
+          "description" => $outcome->ed_field_learning_outcomes["und"][0]["value"],
+          "assessment_method" => $outcome->ed_field_assessment_method["und"][0]["value"],
+          "competences" => $outcome_comps,
+        ];
+      }
+    }
+
+
+    if (!empty($outcomes)) {
+      foreach ($outcomes as $key => $outcome) {
+        $form['ed_answer_task_comp']['competence'][$key] = array(
           '#type' => 'markup',
-          '#markup' => render($task_cats),
+          '#markup' => '<h4>' . $outcome['name'] . '</h4><p>' . $outcome['description'] . '</p><p>' . $outcome['assessment_method'] . '</p>' . render($outcome['competences']),
         );
       }
-
-
-      //Get competencies
-      $form['ed_answer_task_comp'] = array(
-        '#tree' => TRUE,
-        '#type' => 'fieldset',
-        '#title' => t('Competence'),
-        '#group' => 'tabs',
-      );
-
-      $group_node = node_load($node->og_group_ref[LANGUAGE_NONE][0]['target_id']);
-
-      $task_comp = field_get_items('node', $group_node, 'ed_field_learning_outcome_ref');
-
-      $outcomes = [];
-      if (is_array($task_comp) && !empty($task_comp)) {
-        for ($i = 0; $i < count($task_comp); $i++) {
-
-          $lo_id = $task_comp[$i]["target_id"];
-          $outcome = node_load($lo_id);
-
-          $display = array('type' => 'term_reference_tree');
-          $outcome_comps = field_view_field('node', $outcome, 'ed_field_category', $display);
-
-
-          $outcomes [] = [
-            "name" => $outcome->title,
-            "description" => $outcome->ed_field_learning_outcomes["und"][0]["value"],
-            "assessment_method" => $outcome->ed_field_assessment_method["und"][0]["value"],
-            "competences" => $outcome_comps,
-          ];
-        }
-      }
-
-
-      if (!empty($outcomes)) {
-        foreach ($outcomes as $key => $outcome) {
-          $form['ed_answer_task_comp']['competence'][$key] = array(
-            '#type' => 'markup',
-            '#markup' => '<h4>' . $outcome['name'] . '</h4><p>' . $outcome['description'] . '</p><p>' . $outcome['assessment_method'] . '</p>' . render($outcome['competences']),
-          );
-        }
-      }
-
-
-      $form['#validate'][] = 'ed_answer_callback_function';
     }
+
+
+    $form['#validate'][] = 'ed_answer_callback_function';
 
 
   } else if ($form_id == 'comment_node_ed_answer_form') {
