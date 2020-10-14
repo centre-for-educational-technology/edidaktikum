@@ -68,9 +68,12 @@ function ed_answer_form_alter(&$form, &$form_state, $form_id)
 
     if (isset($form['#node']->field_ref_to_task)) {
       $reftotask = $form['#node']->field_ref_to_task['und'][0]['target_id'];
+    } else if (isset($form_state['entityreference_prepopulate']['node']['ed_answer']['field_ref_to_task'][0])) {
+      $reftotask = $form_state['entityreference_prepopulate']['node']['ed_answer']['field_ref_to_task'][0];
     } else {
       $reftotask = $_GET['field_ref_to_task'];
     }
+
     $node = node_load($reftotask);
 
 
@@ -128,11 +131,10 @@ function ed_answer_form_alter(&$form, &$form_state, $form_id)
       '#markup' => '<h2>' . l($node->title, 'node/' . $reftotask) . '</h2>',
       '#weight' => -1,
     );
-    if ($node) {
-      $task_content = field_get_items('node', $node, 'ed_field_content');
-      $task_content_view = field_view_value('node', $node, 'ed_field_content', $task_content[0]);
-      $form['ed_answer_task']['task_content'] = $task_content_view;
-    }
+
+    $task_content = field_get_items('node', $node, 'ed_field_content');
+    $task_content_view = field_view_value('node', $node, 'ed_field_content', $task_content[0]);
+    $form['ed_answer_task']['task_content'] = $task_content_view;
 
 
     $form['ed_field_difficulty_feedb']['#prefix'] = '<div role="alert" class="alert alert-info feedback-notice"> ' . t('Feedback is not personalised') . '</div>';
@@ -175,15 +177,14 @@ function ed_answer_form_alter(&$form, &$form_state, $form_id)
 
     $display = array('type' => 'term_reference_tree');
 
-    if ($node) {
-      $task_cats = field_view_field('node', $node, 'ed_field_category', $display);
 
-      if (!empty($task_cats)) {
-        $form['ed_answer_task_cat']['category'] = array(
-          '#type' => 'markup',
-          '#markup' => render($task_cats),
-        );
-      }
+    $task_cats = field_view_field('node', $node, 'ed_field_category', $display);
+
+    if (!empty($task_cats)) {
+      $form['ed_answer_task_cat']['category'] = array(
+        '#type' => 'markup',
+        '#markup' => render($task_cats),
+      );
     }
 
 
@@ -195,60 +196,59 @@ function ed_answer_form_alter(&$form, &$form_state, $form_id)
       '#group' => 'tabs',
     );
 
-    if($node){
-      $group_node = node_load($node->og_group_ref[LANGUAGE_NONE][0]['target_id']);
 
-      $task_comp = field_get_items('node', $group_node, 'ed_field_learning_outcome_ref');
+    $group_node = node_load($node->og_group_ref[LANGUAGE_NONE][0]['target_id']);
 
-      $outcomes = [];
-      if (is_array($task_comp) && !empty($task_comp)) {
-        for ($i = 0; $i < count($task_comp); $i++) {
+    $task_comp = field_get_items('node', $group_node, 'ed_field_learning_outcome_ref');
 
-          $lo_id = $task_comp[$i]["target_id"];
-          $outcome = node_load($lo_id);
+    $outcomes = [];
+    if (is_array($task_comp) && !empty($task_comp)) {
+      for ($i = 0; $i < count($task_comp); $i++) {
 
-          $display = array('type' => 'term_reference_tree');
-          $outcome_comps = field_view_field('node', $outcome, 'ed_field_category', $display);
+        $lo_id = $task_comp[$i]["target_id"];
+        $outcome = node_load($lo_id);
 
-
-          $outcomes [] = [
-            "name" => $outcome->title,
-            "description" => $outcome->ed_field_learning_outcomes["und"][0]["value"],
-            "assessment_method" => $outcome->ed_field_assessment_method["und"][0]["value"],
-            "competences" => $outcome_comps,
-          ];
-        }
-      }
+        $display = array('type' => 'term_reference_tree');
+        $outcome_comps = field_view_field('node', $outcome, 'ed_field_category', $display);
 
 
-      if (!empty($outcomes)) {
-        foreach ($outcomes as $key => $outcome) {
-          $form['ed_answer_task_comp']['competence'][$key] = array(
-            '#type' => 'markup',
-            '#markup' => '<h4>' . $outcome['name'] . '</h4><p>' . $outcome['description'] . '</p><p>' . $outcome['assessment_method'] . '</p>' . render($outcome['competences']),
-          );
-        }
+        $outcomes [] = [
+          "name" => $outcome->title,
+          "description" => $outcome->ed_field_learning_outcomes["und"][0]["value"],
+          "assessment_method" => $outcome->ed_field_assessment_method["und"][0]["value"],
+          "competences" => $outcome_comps,
+        ];
       }
     }
 
+
+    if (!empty($outcomes)) {
+      foreach ($outcomes as $key => $outcome) {
+        $form['ed_answer_task_comp']['competence'][$key] = array(
+          '#type' => 'markup',
+          '#markup' => '<h4>' . $outcome['name'] . '</h4><p>' . $outcome['description'] . '</p><p>' . $outcome['assessment_method'] . '</p>' . render($outcome['competences']),
+        );
+      }
+    }
 
 
     $form['#validate'][] = 'ed_answer_callback_function';
 
 
-  } else if ($form_id == 'comment_node_ed_answer_form') {
-    $isgadmin = ed_answer_is_group_manager($form['#node']->og_group_ref[LANGUAGE_NONE][0]['target_id']);
-    if (!$isgadmin) {
-      $form['ed_answer_status']['#access'] = FALSE;
-      $form['ed_answer_grade']['#access'] = FALSE;
-    } else {
-      $form['#submit'][] = 'ed_answer_redirect_to_taskmanager';
+  } else
+    if ($form_id == 'comment_node_ed_answer_form') {
+      $isgadmin = ed_answer_is_group_manager($form['#node']->og_group_ref[LANGUAGE_NONE][0]['target_id']);
+      if (!$isgadmin) {
+        $form['ed_answer_status']['#access'] = FALSE;
+        $form['ed_answer_grade']['#access'] = FALSE;
+      } else {
+        $form['#submit'][] = 'ed_answer_redirect_to_taskmanager';
+      }
+
+      $form['ed_answer_grade']['und']['#prefix'] = $form['ed_answer_grade']['und']['#prefix'] . "<div data-grade_limiter>";
+      $form['ed_answer_grade']['und']['#suffix'] = "</div>" . $form['ed_answer_grade']['und']['#suffix'];
+
     }
-
-    $form['ed_answer_grade']['und']['#prefix'] = $form['ed_answer_grade']['und']['#prefix'] . "<div data-grade_limiter>";
-    $form['ed_answer_grade']['und']['#suffix'] = "</div>" . $form['ed_answer_grade']['und']['#suffix'];
-
-  }
 
 
 }
