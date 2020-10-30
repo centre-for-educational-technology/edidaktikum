@@ -7,6 +7,23 @@
 
 
         var group = Drupal.settings.ed_task[key].group;
+        var background_colors_sat = ["#1abc9c", "#1abc9c", "#1abc9c", "#1abc9c", "#1abc9c"];
+        var background_colors_diff = ["#1abc9c", "#1abc9c", "#1abc9c", "#1abc9c", "#1abc9c"];
+        var background_colors_emotions = ["#1abc9c", "#1abc9c", "#1abc9c", "#1abc9c", "#1abc9c", "#1abc9c", "#1abc9c"];
+        var emotions_order = ['curiosity', 'confusion', 'anxiety', 'boredom', 'surprise', 'frustration', 'enjoyment'];
+
+        try {
+          user_result = Drupal.settings.ed_task[key].user_result
+          background_colors_sat[user_result['ed_field_satisf_feedb'] - 1] = "#f0ad4e";
+          background_colors_diff[user_result['ed_field_difficulty_feedb'] - 1] = "#f0ad4e";
+          user_result['ed_field_answer_emotions'].forEach(function (key) {
+            background_colors_emotions[emotions_order.indexOf(key)] = "#f0ad4e";
+          });
+
+
+        } catch (e) {
+
+        }
 
         var satisf = 0;
 
@@ -15,7 +32,6 @@
         } catch (e) {
 
         }
-
 
         var difficulty = 0;
 
@@ -37,11 +53,14 @@
         var mySatisfChart = new Chart($('#animated-chart-satisf-' + group), {
           type: 'bar',
           data: {
-            datasets: [{
-              data: [satisf.first, satisf.second, satisf.third, satisf.fourth, satisf.fifth],
-              backgroundColor: "#1abc9c",
-              borderWidth: 0, //this will hide border
-            }],
+            datasets: [
+              {
+                data: [satisf.first, satisf.second, satisf.third, satisf.fourth, satisf.fifth],
+                backgroundColor: background_colors_sat,
+                borderWidth: 0, //this will hide border
+              },
+
+            ],
             labels: [1, 2, 3, 4, 5]
           },
           options: {
@@ -66,11 +85,14 @@
         var myDiffChart = new Chart($('#animated-chart-diff-' + group), {
           type: 'bar',
           data: {
-            datasets: [{
-              data: [difficulty.first, difficulty.second, difficulty.third, difficulty.fourth, difficulty.fifth],
-              backgroundColor: "#1abc9c",
-              borderWidth: 0, //this will hide border
-            }],
+            datasets: [
+              {
+                data: [difficulty.first, difficulty.second, difficulty.third, difficulty.fourth, difficulty.fifth],
+                backgroundColor: background_colors_diff,
+                borderWidth: 0, //this will hide border
+              },
+
+            ],
             labels: [1, 2, 3, 4, 5]
           },
           options: {
@@ -94,18 +116,20 @@
         var myDoughnutChart = new Chart($('#animated-chart-emotions-' + group), {
           type: 'horizontalBar',
           data: {
-            datasets: [{
-              data: [(emotions) && emotions.curiosity !== undefined ? emotions.curiosity : 0,
-                (emotions) && emotions.confusion !== undefined ? emotions.confusion : 0,
-                (emotions) && emotions.anxiety !== undefined ? emotions.anxiety : 0,
-                (emotions) && emotions.boredom !== undefined ? emotions.boredom : 0,
-                (emotions) && emotions.surprise !== undefined ? emotions.surprise : 0,
-                (emotions) && emotions.frustration !== undefined ? emotions.frustration : 0,
-                (emotions) && emotions.enjoyment !== undefined ? emotions.enjoyment : 0
-              ],
-              backgroundColor: "#1abc9c",
-              borderWidth: 0, //this will hide border
-            }],
+            datasets: [
+              {
+                data: [(emotions) && emotions.curiosity !== undefined ? emotions.curiosity : 0,
+                  (emotions) && emotions.confusion !== undefined ? emotions.confusion : 0,
+                  (emotions) && emotions.anxiety !== undefined ? emotions.anxiety : 0,
+                  (emotions) && emotions.boredom !== undefined ? emotions.boredom : 0,
+                  (emotions) && emotions.surprise !== undefined ? emotions.surprise : 0,
+                  (emotions) && emotions.frustration !== undefined ? emotions.frustration : 0,
+                  (emotions) && emotions.enjoyment !== undefined ? emotions.enjoyment : 0
+                ],
+                backgroundColor: background_colors_emotions,
+                borderWidth: 0, //this will hide border
+              }
+            ],
             labels: [Drupal.t('Uudishimu'), Drupal.t('Segadus'), Drupal.t('Ärevus'), Drupal.t('Igavus'), Drupal.t('Üllatus'), Drupal.t('Frustratsioon'), Drupal.t('Rõõm')]
           },
           options: {
