@@ -51,6 +51,7 @@ function ed_task_menu()
     'menu_name' => 'ed-dashboard-menu',
     'type' => MENU_NORMAL_ITEM,
   );
+  //This view is for teachers
   $items['node/%node/task-results'] = array(
     'title' => 'Answers and feedback',
     'title arguments' => ['Answers and feedback', 1, 'ed_task'],
@@ -60,6 +61,17 @@ function ed_task_menu()
     'access arguments' => array('node', 1),
     'type' => MENU_LOCAL_TASK,
     'weight' => 50,
+  );
+  //This view is for students
+  $items['node/%node/task-feedback'] = array(
+    'title' => 'Feedback',
+    'title arguments' => ['Feedback', 1, 'ed_task'],
+    'page callback' => 'ed_task_feedback',
+    'access callback' => 'ed_task_feedback_access',
+    'page arguments' => array('node', 1),
+    'access arguments' => array('node', 1),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 60,
   );
   return $items;
 }
@@ -92,6 +104,25 @@ function ed_task_results_access($test, $node)
   if (in_array(OG_ADMINISTRATOR_ROLE, og_get_user_roles('node', $group_node->nid, $account->uid, FALSE))) {
     return true;
   }
+
+  return false;
+}
+
+
+function ed_task_feedback_access($test, $node)
+{
+
+
+  if ('ed_task' != $node->type) {
+    return false;
+  }
+
+  $account = $GLOBALS['user'];
+
+  if (ed_task_can_user_answer_task($node, $account)) {
+    return true;
+  }
+
 
   return false;
 }
@@ -137,139 +168,227 @@ function ed_task_results($test, $node)
     '#suffix' => '</div>'
   );
 
+  ed_task_build_feedback_panel($content, $node, true);
+
+
+  return $content;
+}
+
+
+function ed_task_feedback($test, $node)
+{
+  $content = [];
+  $task = array();
+  $task['nid'] = $node->nid;
+
+  ed_task_build_feedback_panel($content, $node);
+
+  return $content;
+
+}
+
+
+/**
+ * Build task feedback panel
+ * @param $content
+ * @param $node
+ * @param bool $is_teacher
+ * @return mixed
+ * @throws EntityMetadataWrapperException
+ */
+function ed_task_build_feedback_panel(&$content, $node, $is_teacher = false)
+{
+
+  global $user;
+  $account = user_load($user->uid);
 
   foreach ($node->og_group_ref[LANGUAGE_NONE] as $item) {
 
 
-    $content['feedback'][$item['target_id']] = array(
-      '#type' => 'markup',
-      '#prefix' => '<div class="col-md-6"><div class="text-center well well-lg"><p>' . t('Group') . ': <strong>' . _ed_get_group_name_from_id($item['target_id']) . '</strong></p><p>' . t('Task') . ': <strong>' . $task['title'] . '</strong></p>',
-      '#suffix' => '</div></div>'
-    );
+    //Member of this group
+    if ((og_is_member('node', $item['target_id'], 'user', $account) && ed_task_can_user_answer_task($node, $account)) || $is_teacher) {
 
+      $user_feedback = null;
+      if (_is_task_answered($node->nid)) {
 
-    //Get answers for the task in a particular group
-    $query = new EntityFieldQuery;
-    $entities = $query->entityCondition('entity_type', 'node')
-      ->entityCondition('bundle', 'ed_answer')
-      ->fieldCondition('field_ref_to_task', 'target_id', $task['nid'])
-      ->fieldCondition('og_group_ref', 'target_id', $item['target_id'])
-      ->execute();
+        $answer = ed_get_answer($node->nid, $GLOBALS['user']->uid, false, true);
 
+        $wrapper = entity_metadata_wrapper('node', $answer['nid']);
+        if ($wrapper->__isset('ed_field_satisf_feedb')) {
 
-    $satisfactions = array();
-    $difficulties = array();
-    $emotions = array();
-    $time_spent = array();
-
-    //Task answers for current group
-    foreach ($entities['node'] as $entity) {
-      $wrapper = entity_metadata_wrapper('node', $entity->nid);
-      if ($wrapper->__isset('ed_field_satisf_feedb')) {
-
-        if (!empty($wrapper->ed_field_satisf_feedb->value())) {
-
-          array_push($satisfactions, $wrapper->ed_field_satisf_feedb->value());
+          if (!empty($wrapper->ed_field_satisf_feedb->value())) {
+            $user_feedback['ed_field_satisf_feedb'] = $wrapper->ed_field_satisf_feedb->value();
+          }
         }
+
+        if ($wrapper->__isset('ed_field_difficulty_feedb')) {
+
+          if (!empty($wrapper->ed_field_difficulty_feedb->value())) {
+            $user_feedback['ed_field_difficulty_feedb'] = $wrapper->ed_field_difficulty_feedb->value();
+          }
+        }
+
+        if ($wrapper->__isset('ed_field_answer_emotions')) {
+
+          if (!empty($wrapper->ed_field_answer_emotions->value())) {
+            $user_feedback['ed_field_answer_emotions'] = $wrapper->ed_field_answer_emotions->value();
+          }
+        }
+
+        if ($wrapper->__isset('ed_answer_field_time_spent')) {
+          if (!empty($wrapper->ed_answer_field_time_spent->value()['mins'])) {
+            $user_feedback['ed_answer_field_time_spent'] = $wrapper->ed_answer_field_time_spent->value()['mins'];
+          }
+        }
+
+
       }
 
-      if ($wrapper->__isset('ed_field_difficulty_feedb')) {
 
-        if (!empty($wrapper->ed_field_difficulty_feedb->value())) {
+      $content['feedback'][$item['target_id']] = array(
+        '#type' => 'markup',
+        '#prefix' => '<div class="col-md-6"><div class="text-center well well-lg"><p>' . t('Group') . ': <strong>' . _ed_get_group_name_from_id($item['target_id']) . '</strong></p><p>' . t('Task') . ': <strong>' . $node->title . '</strong></p>',
+        '#suffix' => '</div></div>'
+      );
 
-          array_push($difficulties, $wrapper->ed_field_difficulty_feedb->value());
+
+      //Get answers for the task in a particular group
+      $query = new EntityFieldQuery;
+      $entities = $query->entityCondition('entity_type', 'node')
+        ->entityCondition('bundle', 'ed_answer')
+        ->fieldCondition('field_ref_to_task', 'target_id', $node->nid)
+        ->fieldCondition('og_group_ref', 'target_id', $item['target_id'])
+        ->execute();
+
+
+      $satisfactions = array();
+      $difficulties = array();
+      $emotions = array();
+      $time_spent = array();
+
+      //Task answers for current group
+      foreach ($entities['node'] as $entity) {
+        $wrapper = entity_metadata_wrapper('node', $entity->nid);
+        if ($wrapper->__isset('ed_field_satisf_feedb')) {
+
+          if (!empty($wrapper->ed_field_satisf_feedb->value())) {
+
+            array_push($satisfactions, $wrapper->ed_field_satisf_feedb->value());
+          }
         }
+
+        if ($wrapper->__isset('ed_field_difficulty_feedb')) {
+
+          if (!empty($wrapper->ed_field_difficulty_feedb->value())) {
+
+            array_push($difficulties, $wrapper->ed_field_difficulty_feedb->value());
+          }
+        }
+
+        if ($wrapper->__isset('ed_field_answer_emotions')) {
+
+          if (!empty($wrapper->ed_field_answer_emotions->value())) {
+
+            array_push($emotions, $wrapper->ed_field_answer_emotions->value());
+          }
+        }
+
+        if ($wrapper->__isset('ed_answer_field_time_spent')) {
+
+          if (!empty($wrapper->ed_answer_field_time_spent->value()['mins'])) {
+
+            array_push($time_spent, $wrapper->ed_answer_field_time_spent->value()['mins']);
+          }
+        }
+
+
       }
 
-      if ($wrapper->__isset('ed_field_answer_emotions')) {
 
-        if (!empty($wrapper->ed_field_answer_emotions->value())) {
+      $satisfactions = array_count_values($satisfactions);
+      $difficulties = array_count_values($difficulties);
 
-          array_push($emotions, $wrapper->ed_field_answer_emotions->value());
-        }
+      $emotions = call_user_func_array('array_merge', $emotions);
+      $emotions = array_count_values($emotions);
+
+
+      $satisfactions_to_json = _ed_task_prepare_feedback_for_chart($satisfactions);
+      $difficulties_to_json = _ed_task_prepare_feedback_for_chart($difficulties);
+
+
+      //Average time spent
+      if (!empty($time_spent)) {
+        $average_time = array_sum($time_spent) / sizeof($time_spent);
+        $hours = floor($average_time / 60);
+        $minutes = $average_time % 60;
+        $content['feedback'][$item['target_id']]['time']['user'] = array(
+          '#type' => 'markup',
+          '#prefix' => '<h4>' . t("Time") . '</h4><div class="row"><p><i class="glyphicon glyphicon-time"></i> ',
+          '#suffix' => '</p></div>',
+          '#markup' => t('Average time spent') . ': ' . $hours . ' t, ' . $minutes . ' min'
+        );
+
+
+        //Max time spent
+        $max_time = max($time_spent);
+        $hours = floor($max_time / 60);
+        $minutes = $max_time % 60;
+        $content['feedback'][$item['target_id']]['time']['max'] = array(
+          '#type' => 'markup',
+          '#prefix' => '<div class="row"><p><i class="glyphicon glyphicon-time"></i> ',
+          '#suffix' => '</p></div>',
+          '#markup' => t('Maximum time spent') . ': ' . $hours . ' t, ' . $minutes . ' min'
+        );
+
+
+        //Min time spent
+        $min_time = min($time_spent);
+        $hours = floor($min_time / 60);
+        $minutes = $min_time % 60;
+        $content['feedback'][$item['target_id']]['time']['min'] = array(
+          '#type' => 'markup',
+          '#prefix' => '<div class="row"><p><i class="glyphicon glyphicon-time"></i> ',
+          '#suffix' => '</p></div>',
+          '#markup' => t('Minimum time spent') . ': ' . $hours . ' t, ' . $minutes . ' min'
+        );
       }
 
-      if ($wrapper->__isset('ed_answer_field_time_spent')) {
 
-        if (!empty($wrapper->ed_answer_field_time_spent->value()['mins'])) {
+      if ($user_feedback && !empty($user_feedback['ed_answer_field_time_spent'])) {
 
-          array_push($time_spent, $wrapper->ed_answer_field_time_spent->value()['mins']);
-        }
+        $user_hours = floor($user_feedback['ed_answer_field_time_spent'] / 60);
+        $user_minutes = $user_feedback['ed_answer_field_time_spent'] % 60;
+        $content['feedback'][$item['target_id']]['time']['avg'] = array(
+          '#type' => 'markup',
+          '#prefix' => '<div class="row user-feedback"><p><i class="glyphicon glyphicon-time"></i><i class="glyphicon glyphicon-user"></i> ',
+          '#suffix' => '</p></div><br><h5><span class="label label-warning"><i class="glyphicon glyphicon-user"></i> ' . t('Your answer is marked in yellow') . '</span></h5>',
+          '#markup' => '<strong>' . t('Your time spent') . ': ' . $user_hours . ' t, ' . $user_minutes . ' min' . '</strong>'
+        );
       }
+
+      //Satisfaction
+      $content['feedback'][$item['target_id']]['charts']['satisfaction'] = array(
+        '#type' => 'markup',
+        '#markup' => '<div class="row"><h4>' . t("Satisfaction") . '</h4><div class="col-md-8 col-md-offset-2"><canvas id="animated-chart-satisf-' . $item['target_id'] . '" width="500" height="500"></canvas></div></div>',
+      );
+
+      //Difficulty
+      $content['feedback'][$item['target_id']]['charts']['difficulty'] = array(
+        '#type' => 'markup',
+        '#markup' => '<div class="row"><h4>' . t("Task difficulty") . '</h4><div class="col-md-8 col-md-offset-2"><canvas id="animated-chart-diff-' . $item['target_id'] . '" width="500" height="500"></canvas></div></div>',
+      );
+
+
+      //Emotions
+      $content['feedback'][$item['target_id']]['charts']['emotions'] = array(
+        '#type' => 'markup',
+        '#markup' => '<div class="row"><h4>' . t("Emotions") . '</h4><div class="col-md-8 col-md-offset-2"><canvas id="animated-chart-emotions-' . $item['target_id'] . '" width="500" height="500"></canvas></div></div>',
+      );
+
+
+      $settings[$item['target_id']] = array('satisf' => $satisfactions_to_json, 'difficulty' => $difficulties_to_json, 'emotions' => $emotions, 'group' => $item['target_id'], 'user_result' => $user_feedback);
 
     }
-
-
-    $satisfactions = array_count_values($satisfactions);
-    $difficulties = array_count_values($difficulties);
-
-    $emotions = call_user_func_array('array_merge', $emotions);
-    $emotions = array_count_values($emotions);
-
-
-
-    $satisfactions_to_json = _ed_task_prepare_feedback_for_chart($satisfactions);
-    $difficulties_to_json = _ed_task_prepare_feedback_for_chart($difficulties);
-
-
-    //Average time spent
-    if (!empty($time_spent)) {
-      $average_time = array_sum($time_spent) / sizeof($time_spent);
-      $hours = floor($average_time / 60);
-      $minutes = $average_time % 60;
-      $content['feedback'][$item['target_id']]['time']['avg'] = array(
-        '#type' => 'markup',
-        '#prefix' => '<h4>' . t("Time") . '</h4><div class="row"><p><i class="glyphicon glyphicon-time"></i> ',
-        '#suffix' => '</p></div>',
-        '#markup' => t('Average time spent') . ': ' . $hours . ' t, ' . $minutes . ' min'
-      );
-
-
-      //Max time spent
-      $max_time = max($time_spent);
-      $hours = floor($max_time / 60);
-      $minutes = $max_time % 60;
-      $content['feedback'][$item['target_id']]['time']['max'] = array(
-        '#type' => 'markup',
-        '#prefix' => '<div class="row"><p><i class="glyphicon glyphicon-time"></i> ',
-        '#suffix' => '</p></div>',
-        '#markup' => t('Maximum time spent') . ': ' . $hours . ' t, ' . $minutes . ' min'
-      );
-
-
-      //Min time spent
-      $min_time = min($time_spent);
-      $hours = floor($min_time / 60);
-      $minutes = $min_time % 60;
-      $content['feedback'][$item['target_id']]['time']['min'] = array(
-        '#type' => 'markup',
-        '#prefix' => '<div class="row"><p><i class="glyphicon glyphicon-time"></i> ',
-        '#suffix' => '</p></div>',
-        '#markup' => t('Minimum time spent') . ': ' . $hours . ' t, ' . $minutes . ' min'
-      );
-    }
-
-    //Satisfaction
-    $content['feedback'][$item['target_id']]['charts']['satisfaction'] = array(
-      '#type' => 'markup',
-      '#markup' => '<div class="row"><h4>' . t("Satisfaction") . '</h4><div class="col-md-8 col-md-offset-2"><canvas id="animated-chart-satisf-' . $item['target_id'] . '" width="500" height="500"></canvas></div></div>',
-    );
-
-    //Difficulty
-    $content['feedback'][$item['target_id']]['charts']['difficulty'] = array(
-      '#type' => 'markup',
-      '#markup' => '<div class="row"><h4>' . t("Task difficulty") . '</h4><div class="col-md-8 col-md-offset-2"><canvas id="animated-chart-diff-' . $item['target_id'] . '" width="500" height="500"></canvas></div></div>',
-    );
-
-
-    //Emotions
-    $content['feedback'][$item['target_id']]['charts']['emotions'] = array(
-      '#type' => 'markup',
-      '#markup' => '<div class="row"><h4>' . t("Emotions") . '</h4><div class="col-md-8 col-md-offset-2"><canvas id="animated-chart-emotions-' . $item['target_id'] . '" width="500" height="500"></canvas></div></div>',
-    );
-
-
-    $settings[$item['target_id']] = array('satisf' => $satisfactions_to_json, 'difficulty' => $difficulties_to_json, 'emotions' => $emotions, 'group' => $item['target_id']);
   }
 
   drupal_add_js(array('ed_task' => $settings), array('type' => 'setting'));
