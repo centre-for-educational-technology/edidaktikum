@@ -258,7 +258,9 @@ function ed_task_build_feedback_panel(&$content, $node, $is_teacher = false)
         ->entityCondition('bundle', 'ed_answer')
         ->fieldCondition('field_ref_to_task', 'target_id', $node->nid)
         ->fieldCondition('og_group_ref', 'target_id', $item['target_id'])
+        ->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT')
         ->execute();
+
 
 
       $satisfactions = array();
@@ -268,6 +270,7 @@ function ed_task_build_feedback_panel(&$content, $node, $is_teacher = false)
 
       //Task answers for current group
       foreach ($entities['node'] as $entity) {
+
         $wrapper = entity_metadata_wrapper('node', $entity->nid);
         if ($wrapper->__isset('ed_field_satisf_feedb')) {
 
@@ -307,6 +310,8 @@ function ed_task_build_feedback_panel(&$content, $node, $is_teacher = false)
 
       $satisfactions = array_count_values($satisfactions);
       $difficulties = array_count_values($difficulties);
+
+
 
       $emotions = call_user_func_array('array_merge', $emotions);
       $emotions = array_count_values($emotions);
