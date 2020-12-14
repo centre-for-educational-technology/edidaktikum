@@ -585,10 +585,19 @@ function ed_answer_comment_view_alter(&$build)
 function ed_answer_node_presave($node)
 {
   if ($node->type == 'ed_answer') {
+    //Set status to unchecked after editing the original answer
     if (!empty($node->original)) {
       if ($node->original->ed_field_content[LANGUAGE_NONE][0]['value'] != $node->ed_field_content[LANGUAGE_NONE][0]['value']) {
         $node->ed_answer_last_status[LANGUAGE_NONE][0] = array('status' => 'unchecked', 'grade' => null, 'cid' => null);
       }
+    }
+
+    //Check if auto accepting new submissions
+    $task = $node->field_ref_to_task[LANGUAGE_NONE][0]['target_id'];
+    $wrapper = entity_metadata_wrapper('node', $task);
+    $is_auto_accept = $wrapper->ed_task_field_auto_accept->value();
+    if($is_auto_accept){
+      $node->ed_answer_last_status[LANGUAGE_NONE][0] = array('status' => 'accepted', 'grade' => null, 'cid' => null);
     }
 
   }

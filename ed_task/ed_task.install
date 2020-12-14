@@ -344,6 +344,50 @@ function ed_task_add_field_max_points() {
 
 
 /**
+ * Creates and adds field ed_task_field_auto_accept.
+ */
+function ed_task_add_field_auto_accept() {
+  $field_name = 'ed_task_field_auto_accept';
+  if (!field_info_field($field_name)) {
+    $field = array(
+      'field_name' => $field_name,
+      'type' => 'list_boolean',
+      'entity_types' => array('node'),
+      'settings' => array(
+        'allowed_values' => array(0, 1),
+      ),
+    );
+    field_create_field($field);
+  }
+
+  if(!field_info_instance('node', $field_name, 'ed_task')){
+    $instance = array(
+      'field_name' => $field_name,
+      'label' => t('Vastus kinnitatakse automaatselt peale sisestamist'),
+      'required' => false,
+      'entity_type' => 'node',
+      'bundle' => 'ed_task',
+      'widget' => array(
+        'type' => 'options_onoff',
+        'settings' => array(
+          'display_label' => TRUE,
+        ),
+      ),
+      'display' => array(
+        'default' => array(
+          'label' => 'hidden',
+        ),
+        'featured' => array(
+          'label' => 'hidden',
+        ),
+      )
+    );
+    field_create_instance($instance);
+  }
+}
+
+
+/**
  * Add ed_task_field_study_group field to ed_task
  */
 function ed_task_update_7107(&$sandbox) {
@@ -466,3 +510,13 @@ function ed_task_update_7114(&$sandbox) {
 function ed_task_update_7115(&$sandbox) {
   ed_task_add_field_max_points();
 }
+
+
+/**
+ * Create field and instance for ed_task_field_auto_accept
+ */
+function ed_task_update_7116(&$sandbox) {
+  ed_task_add_field_auto_accept();
+}
+
+
