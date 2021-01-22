@@ -680,7 +680,7 @@ function ed_task_listing_for_students($test, $node)
 
 
     if ($tasknode->answer_nid && $is_published == false) {
-      $tmp_data['data'] .= ' <span class="label label-danger">'.t('Not published').'</span>';
+      $tmp_data['data'] .= ' <span class="label label-danger">' . t('Not published') . '</span>';
     }
 
 
@@ -2158,6 +2158,8 @@ function ed_cluster_views_api()
  */
 function ed_cluster_form_alter(&$form, &$form_state, $form_id)
 {
+
+
   if ('ed_cluster_node_form' == $form_id) {
     menu_tree_set_path('main-menu', 'clusters');
     if (empty($form['#node']->nid)) {
@@ -2191,7 +2193,13 @@ function ed_cluster_form_alter(&$form, &$form_state, $form_id)
 
 
     if (isset($form['#node']->ed_field_group_type)) {
+
       $group_type = $form['#node']->ed_field_group_type[LANGUAGE_NONE][0]['value'];
+
+      if (empty($form['#node']->ed_field_group_type)) {
+        $form['ed_field_group_type']['und'][0]['value']['#default_value'] = 3;
+        $group_type = 3;
+      }
 
       global $user;
       $account = clone $user;
@@ -2714,7 +2722,7 @@ function _ed_cluster_destination_for_group_node_type(&$gnode, $type)
       break;
     case 'ed_task':
     case 'ed_answer':
-      if(ed_task_manager_access('node', $gnode)){
+      if (ed_task_manager_access('node', $gnode)) {
         $destination .= '/task-manager';
       }
       break;
