@@ -1597,8 +1597,8 @@ function ed_task_manager_download($node)
   $members = ed_get_group_members($node->nid, true, true, true);
   $admins = ed_filter_admins($members);
 
-  $headers = _ed_get_task_manager_headers($tasks);
-  $rows = _ed_get_task_manager_rows($tasks, $members);
+  $headers = _ed_get_task_manager_headers_for_csv($tasks);
+  $rows = _ed_get_task_manager_rows_for_csv($tasks, $members);
 
   $handle = fopen('php://temp', 'wb');
 
@@ -1649,6 +1649,26 @@ function _ed_get_task_manager_headers($tasks)
       ]]
     );
     $headers [] = $header;
+  }
+  return $headers;
+}
+
+
+function _ed_get_task_manager_headers_for_csv($tasks)
+{
+  $headers = [t('Name')];
+  foreach ($tasks as $task) {
+    $header = l(
+      format_date($task['due_date'], 'custom', 'd.m'),
+      'node/' . $task['nid'],
+      ['attributes' => [
+        'title' => $task['title'] . t(' - Due date: ') . format_date($task['due_date'], 'short'),
+        'data-toggle' => 'tooltip',
+        'data-placement' => 'bottom'
+      ]]
+    );
+    $headers [] = $header;
+    $headers [] = t('Grade');
   }
   return $headers;
 }
@@ -1719,6 +1739,81 @@ function _ed_get_task_manager_rows($tasks, $members)
       }
 
       $row['data'] [] = $cell;
+    }
+
+    $rows [] = $row;
+  }
+
+  return $rows;
+}
+
+function _ed_get_task_manager_rows_for_csv($tasks, $members)
+{
+  $rows = [];
+  foreach ($members as $member) {
+    $row = ['data' => [l($member['full_name'], 'user/' . $member['uid'])]];
+
+    //  construct cells
+    foreach ($tasks as $task) {
+      $cell = ['data' => '&nbsp'];
+      $cell_grade = ['data' => '', 'title' => ''];
+
+      if (ed_is_task_applicable($task, $member)) {
+        //  if applicable, get answer and fill cell
+        $answer = ed_get_answer($task['nid'], $member['uid'], false, true);
+
+        //  title and class
+        switch ($answer['status']) {
+          case 'unanswered':
+            $cell['class'] = 'unanswered';
+            $cell['title'] = t('Not answered');
+            break;
+
+          case 'unchecked':
+            $cell['class'] = 'unchecked';
+            $cell['title'] = t('Unchecked');
+            //Check if it is late submission - if submitted on the due date or later
+
+            $changed = date('Y-m-d', $answer['changed']);
+            $due_date = date('Y-m-d', $task['due_date']);
+
+
+            if ($changed > $due_date) {
+              $cell['data'] = '!&nbsp;';
+            }
+
+            break;
+
+          case 'accepted':
+            $cell['class'] = 'answered';
+            $cell['title'] = t('Accepted');
+            break;
+
+          case 'checked':
+            $cell['class'] = 'checked';
+            $cell['title'] = t('Checked');
+            break;
+
+          case 'rejected':
+            $cell['class'] = 'rejected';
+            $cell['title'] = t('Rejected');
+            break;
+
+        }
+
+        //  cell text is grade if graded, blank if ungraded, exclamation mark if late
+        if ($answer['status'] != 'unanswered') {
+          if ($answer['grade'] != 0) $cell_grade['title'] = $answer['grade'];
+        }
+
+      } else {
+        //  not applicable
+        $cell['class'] = 'na';
+        $cell['title'] = t('Not applicable');
+      }
+
+      $row['data'] [] = $cell;
+      $row['data'] [] = $cell_grade;
     }
 
     $rows [] = $row;
