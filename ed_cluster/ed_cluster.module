@@ -2429,7 +2429,7 @@ function ed_cluster_clone_group_handler($form, &$form_state)
   unset($new->ed_field_learning_outcome_ref);
 
 
-  //Set learning resources
+  //Set learning outcomes
   $learning_outcomes = json_decode($form_state["input"]["learning_outcomes_json"]);
 
   if (!empty($learning_outcomes)) {
@@ -2460,6 +2460,13 @@ function ed_cluster_clone_group_handler($form, &$form_state)
 
   node_save($new);
 
+  //Set learning resources
+  $learning_resources_nids = _ed_get_group_content_by_type($node->nid, 'ed_learning_resource');
+  foreach ($learning_resources_nids as $nid) {
+    $wrapper = entity_metadata_wrapper('node', $nid);
+    $wrapper->og_group_ref[] = $new->nid;
+    $wrapper->save();
+  }
 
   drupal_goto('node/' . $new->nid . '/edit');
 
