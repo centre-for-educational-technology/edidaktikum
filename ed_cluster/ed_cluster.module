@@ -2416,7 +2416,9 @@ function ed_cluster_form_alter(&$form, &$form_state, $form_id)
 function ed_cluster_clone_group_handler($form, &$form_state)
 {
 
-  $node = $form['#node'];
+  global $user;
+  $account = user_load($user->uid);
+  $node = node_load($form['#node']->nid);
 
   $new = clone $node;
   $new->is_new = true;
@@ -2424,9 +2426,47 @@ function ed_cluster_clone_group_handler($form, &$form_state)
   unset($new->nid);
   unset($new->vid);
   unset($new->tnid);
+  unset($new->ed_field_learning_outcome_ref);
+
+
+  //Set learning outcomes
+  $learning_outcomes = json_decode($form_state["input"]["learning_outcomes_json"]);
+
+  if (!empty($learning_outcomes)) {
+    foreach ($learning_outcomes as $outcome) {
+      $outcome_node = new stdClass();
+      $outcome_node->title = $outcome->name;
+      $outcome_node->body = "";
+      $outcome_node->ed_field_learning_outcomes["und"][0]["value"] = $outcome->description;
+      $outcome_node->ed_field_assessment_method["und"][0]["value"] = $outcome->assessment_method;
+      $outcome_node->ed_field_category["und"] = [];
+      foreach ($outcome->competences as $tid) {
+        $outcome_node->ed_field_category["und"] [] = ["tid" => $tid];
+      }
+      $outcome_node->uid = $account->uid;
+      $outcome_node->name = $account->name;
+      $outcome_node->type = "ed_learning_outcome";
+      $outcome_node->status = 1;
+      $outcome_node->promote = 0;
+      node_save($outcome_node);
+
+      $new->ed_field_learning_outcome_ref[LANGUAGE_NONE][] = array("target_id" => $outcome_node->nid);
+
+      unset($outcome);
+
+      //error_log(print_r($new->ed_field_learning_outcome_ref, true));
+    }
+  }
 
   node_save($new);
 
+  //Set learning resources
+  $learning_resources_nids = _ed_get_group_content_by_type($node->nid, 'ed_learning_resource');
+  foreach ($learning_resources_nids as $nid) {
+    $wrapper = entity_metadata_wrapper('node', $nid);
+    $wrapper->og_group_ref[] = $new->nid;
+    $wrapper->save();
+  }
 
   drupal_goto('node/' . $new->nid . '/edit');
 
