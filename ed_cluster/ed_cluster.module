@@ -3154,7 +3154,7 @@ function _ed_cluster_universities_with_curriculums_structure()
         'KAALB.HR' => t('KAALB.HR - Alushariduse pedagoog'),
         'KAEPB.HR' => t('KAEPB.HR - Eripedagoogika'),
         'KAANB.HR' => t('KAANB.HR - Andragoogika'),
-        'KAPB.HR' => t('KAPB.HR - Pedagoogika alused'),
+        'KAPB.HR' => t('KAPB.HR - Pedagoogika'),
         'KUTOM.LT' => t('KUTOM.LT - Töö- ja tehnoloogiaõpetuse õpetaja'),
         'KUKKM.LT' => t('KUKKM.LT - Käsitöö ja kodunduse õpetaja'),
         'MLMOM.DT' => t('MLMOM.DT - Matemaatikaõpetaja'),
