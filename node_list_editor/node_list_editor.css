@@ -59,10 +59,21 @@
 	display:inline-block;
 }
 
+.node_list_editor .tabber .add.tab:hover {
+  color: #1abc9c;
+  transition: 0.5s all;
+}
+
 .node_list_editor .delete {
 	position:absolute;
-	right:0px;
-	top:0px;
+	right:0;
+	top:0;
+}
+
+.node_list_editor .delete:hover {
+  color: #e07572;
+  border: 2px solid #e07572;
+  transition: 0.5s all;
 }
 
 .node_list_editor .taxonomy_list .title {
@@ -95,7 +106,7 @@
 	cursor:pointer;
 	border: 2px solid #dce4ec;
 	padding:5px;
-	border-radius:4px 4px 0px 0px;
+	border-radius:4px 4px 0 0;
 	margin-bottom:-2px;
 	background-color:white;
 }
@@ -113,5 +124,5 @@
 }
 
 .node_list_editor[data-empty] .form {
-	max-height:0px;
+	max-height:0;
 }

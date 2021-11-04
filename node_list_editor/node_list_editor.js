@@ -326,6 +326,10 @@
 
 		this.el_del = build("div", "button delete", this.el_form, Drupal.t("Delete"));
 		this.el_del.addEventListener("click", function() {
+      if (confirm(Drupal.t("Are you sure you want to delete this learning outcome? The outcome will not be removed until the form is saved.")) !== true) {
+        return;
+      }
+
 			this.rem_item(this.current_item);
 			if (this.items.length > 0) this.current_item = this.items[0];
 			else this.current_item = undefined;
