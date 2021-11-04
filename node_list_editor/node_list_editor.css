@@ -126,3 +126,30 @@
 .node_list_editor[data-empty] .form {
 	max-height:0;
 }
+
+.node_list_editor .form .taxonomy_list .taxonomies .term-reference-tree-level .parent-term {
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.node_list_editor .form .taxonomy_list .taxonomies .term-reference-tree-level {
+  list-style-type: none;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.node_list_editor .form .taxonomy_list .taxonomies .term-reference-tree-level label {
+  font-weight: normal;
+}
+
+.node_list_editor .form .taxonomy_list .taxonomies .term-reference-tree-level label input[type="checkbox"] {
+  margin-right: 0.25em;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+

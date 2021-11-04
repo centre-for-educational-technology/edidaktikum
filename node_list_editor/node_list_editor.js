@@ -142,12 +142,9 @@
 							case "text_area":
 								field.el.value = item[field.name];
 								break;
-							case "taxonomy_list":
+              case "taxonomy_list":
 								field.el.innerHTML = "";
-								for (var j = 0; j < item[field.name].length; j++) {
-									var tx = this.add_taxonomy_item(field);
-									tx.value = item[field.name][j];
-								}
+                this.fill_taxonomy_list(field, item[field.name])
 								break;
 							case "name":
 								field.el.value = item[field.name];
@@ -259,13 +256,66 @@
 
 		this.add_taxonomy_list = function(field) {
 			var el = build("div", "taxonomy_list", this.el_form);
-			var el_title = build("div", "title", el, field.title);
-			var el_taxonomies = build("div", "taxonomies", el);
-			var el_add_button = build("div", "edf_mini_button", el, '<i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i>');
-			field.el = el_taxonomies;
-
-			el_add_button.addEventListener("click", function() { this.add_taxonomy_item(field); }.bind(this) );
+			build("div", "title", el, field.title);
+      field.el = build("div", "taxonomies", el);
 		}.bind(this);
+
+    this.fill_taxonomy_list = function(field) {
+      var callback = function(child, parent) {
+        var el_li = build("li", "", parent);
+
+        if (child.children.length > 0) {
+          build("div", "parent-term", el_li, child.name)
+            .addEventListener("click", function() {
+              var el_direct_ul = this.parentNode.querySelector(':scope > ul.term-reference-tree-level');
+              el_direct_ul.style.display = (el_direct_ul.style.display === 'none') ? 'block': 'none';
+            });
+
+          var el_ul = build("ul", "term-reference-tree-level", el_li);
+          el_ul.style.display = 'none';
+
+          child.children.forEach(function(child) {
+            callback(child, el_ul);
+          });
+        } else {
+          var el_label = build("label", "", el_li)
+          var el_input = build("input", "", el_label);
+          el_input.type = "checkbox";
+          el_input.value = child.tid;
+          el_input.checked = (this.current_item[field.name].indexOf(child.tid) !== -1) ? true : false;
+
+          if (el_input.checked) {
+            var parent = el_input.parentNode;
+
+            while (parent && !parent.classList.contains('taxonomies')) {
+              if (parent.classList.contains('term-reference-tree-level')) {
+                parent.style.display = 'block';
+              }
+
+              parent = parent.parentNode;
+            }
+          }
+
+          el_input.addEventListener('click', function(e) {
+            if (!e.target.checked) {
+              this.current_item[field.name].splice(this.current_item[field.name].indexOf(e.target.value), 1);
+            } else {
+              this.current_item[field.name].push(e.target.value);
+            }
+            this.create_value();
+          }.bind(this));
+
+          var el_text = document.createTextNode(child.name)
+          el_label.appendChild(el_text);
+        }
+      }.bind(this);
+
+      field.taxonomy_tree.children.forEach(function(child) {
+        var el_ul = build("ul", "term-reference-tree-level", field.el);
+
+        callback(child, el_ul);
+      });
+    }.bind(this);
 
 		this.add_name = function(field) {
 			var el = build("div", "text", this.el_form);
@@ -346,7 +396,7 @@
 	}
 
 
-	addEventListener("load", function() {
+	addEventListener("load", function() {
 
 		var attributes_in_b64 = ["data-node_list_editor", "data-node_list_data"];
 		var node_list_editors = document.querySelectorAll("[data-node_list_editor]");
