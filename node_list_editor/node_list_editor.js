@@ -3,6 +3,16 @@
 (function() {
 
 
+  /**
+   * Builds an element. Sets the class name if a value is provided. Appends to parent if one is provided. Sets element
+   * innerHtml value, if one is provided.
+   *
+   * @param tag_name       Tag name passed to document.createElement()
+   * @param class_name     Class name, defaults to undefined
+   * @param parent_element Parent element, defaults to undefined
+   * @param inner_html     Inner HTML, defaults to undefined
+   * @returns any          Output from call to document.createElement()
+   */
 	function build(tag_name, class_name, parent_element, inner_html) {
 		var el = document.createElement(tag_name);
 		if (class_name !== undefined) el.className = class_name;
@@ -11,113 +21,12 @@
 		return el;
 	}
 
-	function taxonomy_item(node, parent, callback_changed) {
-		this.map_node_path = function(node, path) {
-			this.paths[node.tid] = path.slice();
-			this.paths[node.tid].push(node.tid);
-			path.push(node.tid);
-
-			for (var i = 0; i < node.children.length; i++) {
-				this.map_node_path(node.children[i], path.slice());
-			}
-		}.bind(this);
-
-		this.get_node_by_tid = function(tid) {
-			for (var i = 0; i < this.node.children.length; i++) {
-				if (this.node.children[i].tid == tid) return this.node.children[i];
-			}
-			return undefined;
-		}.bind(this);
-
-		this.select = function(node) {
-			var sel_node = node;
-			if (sel_node === undefined) {
-				for (var i = 0; i < this.node.children.length; i++) {
-					if (this.node.children[i].tid == this.el_sel.value) sel_node = this.node.children[i];
-				}
-			} else {
-				this.el_sel.value = node.tid;
-			}
-
-			this.remove_current_child();
-			if (node === undefined) {
-				var old_value = this.value;
-				if (sel_node === undefined) {
-					if (this.root !== this) {
-						this.root._value = this.node.tid;
-					} else {
-						this.root._value = undefined;
-					}
-				} else {
-					this.root._value = sel_node.tid;
-				}
-				this.callback_changed(this.value, old_value);
-			}
-
-			if (sel_node === undefined || sel_node.children.length == 0) return;
-			this.child = new taxonomy_item(sel_node, this, this.callback_changed);
-		}.bind(this);
-
-
-		this.remove_current_child = function() {
-			if (this.child === undefined) return;
-			this.el.removeChild(this.el.children[this.el.children.length - 1]);
-			this.child = undefined;
-		}.bind(this);
-
-		this.node = node;
-		this.parent = parent;
-		this.child = undefined;
-		this.el = build("div", "taxonomy_item");
-		this.callback_changed = callback_changed || function(value) {};
-		this._value = undefined;
-
-
-		Object.defineProperty(this, "value", {
-			"get": function() { return this.root._value; }.bind(this),
-			"set": function(v) {
-				this.root._value = v;
-				if (!(v in this.paths)) return;
-				var path = this.paths[v];
-				var ti = this;
-
-				for (var i = 1; i < path.length; i++) {
-					ti.select(ti.get_node_by_tid(path[i]));
-					ti = ti.child;
-				}
-			}.bind(this)
-		});
-
-		if (parent === undefined) {
-			this.el_del = build("div", "edf_mini_button", this.el, '<i class="fa fa-times-circle fa-2x" aria-hidden="true"></i>');
-			this.el_del.addEventListener("click", function() {
-				this.callback_changed(undefined, this.value);
-				this.el.parentElement.removeChild(this.el);
-			}.bind(this));
-
-			this.el.setAttribute("data-root", "");
-			this.root = this;
-		} else {
-			parent.el.appendChild(this.el);
-			this.root = parent.root;
-		}
-
-		this.el_sel = build("select", undefined, this.el);
-		build("option", undefined, this.el_sel, "-");
-		for (var i = 0; i < node.children.length; i++) {
-			var opt = build("option", undefined, this.el_sel, node.children[i].name);
-			opt.value = node.children[i].tid;
-		}
-
-		this.el_sel.addEventListener("change", function() { this.select(); }.bind(this));
-
-		this.paths = {};
-		this.map_node_path(node, []);
-	}
-
-
-
-	function node_list_editor(el) {
+  /**
+   * Creates a learning outcome editor widget.
+   *
+   * @param el Element that has required data-node_list_editor and data-node_list_data attributes present.
+   */
+  function node_list_editor(el) {
 
 		Object.defineProperty(this, "current_item", {
 			"get": function() { return this._current_item; },
@@ -144,7 +53,7 @@
 								break;
               case "taxonomy_list":
 								field.el.innerHTML = "";
-                this.fill_taxonomy_list(field, item[field.name])
+                this.fill_taxonomy_list(field)
 								break;
 							case "name":
 								field.el.value = item[field.name];
@@ -155,6 +64,9 @@
 			}
 		});
 
+    /**
+     * Goes through the structure and stores the current state data into the hidden input.
+     */
 		this.create_value = function() {
 			var items = [];
 			for (var i = 0; i < this.items.length; i++) {
@@ -169,6 +81,13 @@
 			this.output.value = JSON.stringify(items);
 		}.bind(this);
 
+    /**
+     * Creates new name value adding an incremented value at the end.
+     * Example: Learning outcome 1, Learning outcome 2 and so on.
+     *
+     * @param name     Name to increment.
+     * @returns string Name with increment added.
+     */
 		this.increment_name = function(name) {
 			var biggest = 0;
 			for (var i = 0; i < this.items.length; i++) {
@@ -184,12 +103,21 @@
 			return name + " " + (biggest + 1);
 		}.bind(this);
 
+    /**
+     * Removes one of the learning outcomes and deals with tabs.
+     */
 		this.rem_item = function(item) {
 			this.items.splice(this.items.indexOf(item), 1);
 			this.el_tabber.removeChild(item.el);
 		}.bind(this);
 
-		this.add_item = function(data) {
+    /**
+     * Adds a new learning outcome and deals with UI initialisation.
+     *
+     * @param data     Data to get field name from.
+     * @returns object Newly created learning outcome.
+     */
+    this.add_item = function(data) {
 			var item = {};
 			for (var i = 0; i < this.structure.length; i++) {
 				var field = this.structure[i];
@@ -222,6 +150,11 @@
 			return item;
 		}.bind(this);
 
+    /**
+     * Creates a textarea element and registers changed listeners.
+     *
+     * @param field Field object with data.
+     */
 		this.add_text_area = function(field) {
 			var el = build("div", "text_area", this.el_form);
 			var el_title = build("div", "title", el, field.title);
@@ -237,29 +170,28 @@
 			el_area.addEventListener("mouseup", changefunc);
 		}.bind(this);
 
-		this.add_taxonomy_item = function(field) {
-			var tax_changed = function(val, old_val) {
-				var idx = this.current_item[field.name].indexOf(old_val);
-				if (idx != -1) {
-					if (val !== undefined) this.current_item[field.name].splice(idx, 1, val);
-					else this.current_item[field.name].splice(idx, 1);
-				} else {
-					if (val !== undefined) this.current_item[field.name].push(val);
-				}
-				this.create_value();
-			}.bind(this);
-
-			var tx = new taxonomy_item(field.taxonomy_tree, undefined, tax_changed);
-			field.el.appendChild(tx.el);
-			return tx;
-		}.bind(this);
-
-		this.add_taxonomy_list = function(field) {
+    /**
+     * Adds the HTML structure for competence taxonomy selection.
+     * It is instantiated once and used for any of the currently selected outcome.
+     * Sets the el key with the corresponding created taxonomies element to the field object.
+     *
+     * @param field Field object with data.
+     */
+    this.add_taxonomy_list = function(field) {
 			var el = build("div", "taxonomy_list", this.el_form);
 			build("div", "title", el, field.title);
       field.el = build("div", "taxonomies", el);
 		}.bind(this);
 
+    /**
+     * Creates the structure for competence taxonomy selection.
+     * Assumes that current outcome has the values and updates that data according to checked or unchecked checkboxes.
+     * Adds click event listener to show/hide taxonomy term children.
+     * Adds click event listener to checkboxes created for the lowest level terms to update data data stores and
+     * corresponding hidden input.
+     *
+     * @param field Field object with data.
+     */
     this.fill_taxonomy_list = function(field) {
       var callback = function(child, parent) {
         var el_li = build("li", "", parent);
@@ -267,7 +199,7 @@
         if (child.children.length > 0) {
           build("div", "parent-term", el_li, child.name)
             .addEventListener("click", function() {
-              var el_direct_ul = this.parentNode.querySelector(':scope > ul.term-reference-tree-level');
+              var el_direct_ul = this.parentNode.querySelector('ul.term-reference-tree-level');
               el_direct_ul.style.display = (el_direct_ul.style.display === 'none') ? 'block': 'none';
             });
 
@@ -278,21 +210,21 @@
             callback(child, el_ul);
           });
         } else {
-          var el_label = build("label", "", el_li)
-          var el_input = build("input", "", el_label);
+          var el_label = build("label", "term-label", el_li)
+          var el_input = build("input", "term-input", el_label);
           el_input.type = "checkbox";
           el_input.value = child.tid;
-          el_input.checked = (this.current_item[field.name].indexOf(child.tid) !== -1) ? true : false;
+          el_input.checked = (this.current_item[field.name].indexOf(child.tid) !== -1);
 
           if (el_input.checked) {
-            var parent = el_input.parentNode;
+            var el_parent = el_input.parentNode;
 
-            while (parent && !parent.classList.contains('taxonomies')) {
-              if (parent.classList.contains('term-reference-tree-level')) {
-                parent.style.display = 'block';
+            while (el_parent && !el_parent.classList.contains('taxonomies')) {
+              if (el_parent.classList.contains('term-reference-tree-level') && el_parent.style.display === 'none') {
+                el_parent.style.display = 'block';
               }
 
-              parent = parent.parentNode;
+              el_parent = el_parent.parentNode;
             }
           }
 
@@ -317,6 +249,12 @@
       });
     }.bind(this);
 
+    /**
+     * Creates name input and title elements for the learning outcome.
+     * Registers a change callback function.
+     *
+     * @param field Field object with data.
+     */
 		this.add_name = function(field) {
 			var el = build("div", "text", this.el_form);
 			var el_title = build("div", "title", el, field.title);
