@@ -2373,7 +2373,7 @@ function ed_cluster_form_alter(&$form, &$form_state, $form_id)
           "name" => $outcome->title,
           "description" => $outcome->ed_field_learning_outcomes["und"][0]["value"],
           "assessment_method" => $outcome->ed_field_assessment_method["und"][0]["value"],
-          "competences" => $competences
+          "competences" => array_values(array_unique($competences)), // Remove any previously allowed duplicate values
         ];
       }
     }
