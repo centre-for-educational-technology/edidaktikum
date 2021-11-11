@@ -24,14 +24,6 @@ function edidaktikum_node_statistics_and_likes_content_type_render($subtype, $co
 
   $node = $context->data;
 
-  $node_views_counter = db_select('node_counter', 'nc')
-    ->fields('nc', array('totalcount', 'daycount'))
-    ->condition('nid', $node->nid)
-    ->execute()->fetchAssoc();
-  if (!$node_views_counter) {
-    $node_views_counter = array('totalcount' => 0, 'daycount' => 0);
-  }
-
   $content['statistics'] = array(
     '#type' => 'container',
     '#attributes' => array(
@@ -42,7 +34,7 @@ function edidaktikum_node_statistics_and_likes_content_type_render($subtype, $co
   $content['statistics']['views'] = array(
     '#type' => 'markup',
     '#prefix' => '<div class="ed-node-statistics-views">',
-    '#markup' => t('@totalcount views (@daycount today)', array('@totalcount' => $node_views_counter['totalcount'], '@daycount' => $node_views_counter['daycount'])),
+    '#markup' => t('@totalcount views (@daycount today)', ed_get_views_total_and_days_counts_t_args($node->nid)),
     '#suffix' => '</div>',
   );
 

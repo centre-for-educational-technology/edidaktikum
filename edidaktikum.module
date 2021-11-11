@@ -1102,6 +1102,44 @@ function ed_get_views($nid){
   }
 
 }
+
+/**
+ * Returns totalcount and daycount values for a node.
+ *
+ * @param $nid
+ * @return string[]
+ */
+function ed_get_views_total_and_days_counts($nid): array
+{
+  $data = db_select('node_counter', 'nc')
+    ->fields('nc', ['totalcount', 'daycount'])
+    ->condition('nid', $nid)
+    ->execute()->fetchAssoc();
+
+  return $data ?: [
+    'totalcount' => '0',
+    'daycount' => '0',
+  ];
+}
+
+/**
+ * Returns totalcount and daycount values for a node.
+ * Both keys are prepended by @ symbol so that the resulting array could be use arguments parameter of t() function.
+ *
+ * @param $nid
+ * @return array
+ */
+function ed_get_views_total_and_days_counts_t_args($nid): array
+{
+  $data = [];
+  $counts = ed_get_views_total_and_days_counts($nid);
+
+  foreach ($counts as $key => $count) {
+    $data['@'.$key] = $count;
+  }
+
+  return $data;
+}
 /*
 function edidaktikum_views_query_alter(&$view, &$query){
   dpm($view, __FUNCTION__);
