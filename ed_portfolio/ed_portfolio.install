@@ -13,14 +13,16 @@ function ed_portfolio_install()
   ed_portfolio_create_field_items();
   ed_portfolio_create_ed_portfolio_node_type();
   ed_portfolio_node_add_field_content();
-  ed_portfolio_node_add_field_featured_image();
-  ed_portfolio_node_add_field_items();
 
-  ed_portfolio_create_field_show_competence_profile();
-
-  ed_portfolio_node_add_field_show_competence_profile();
 
   ed_portfolio_set_permissions();
+
+  ed_q_portfolio_node_create_field_level();
+  ed_portfolio_node_add_field_level();
+
+  ed_portfolio_create_field_competence_desc();
+  ed_portfolio_node_add_field_competence_desc();
+
 }
 
 /**
@@ -28,9 +30,22 @@ function ed_portfolio_install()
  */
 function ed_portfolio_uninstall()
 {
+  field_delete_field('ed_portfolio_show_comp_profile');
+  field_delete_instance('ed_portfolio_show_comp_profile');
+
+  field_delete_field('ed_portfolio_field_items');
+  field_delete_instance('ed_portfolio_field_items');
+
+  field_delete_field('ed_q_portfolio_field_level');
+  field_delete_instance('ed_q_portfolio_field_level');
+
+  field_delete_field('ed_portfolio_competence_desc');
+  field_delete_instance('ed_portfolio_competence_desc');
+
+
   ed_portfolio_delete_ed_portfolio_nodes();
   ed_portfolio_delete_ed_portfolio_node_type();
-  field_delete_field('ed_portfolio_field_items');
+
 }
 
 /**
@@ -41,15 +56,15 @@ function ed_portfolio_create_field_show_competence_profile()
   $field_name = 'ed_portfolio_show_comp_profile';
   if (!field_info_field($field_name)) {
     $field = array(
-      'field_name' => $field_name,
-      'type' => 'list_boolean',
-      'cardinality' => 1,
-      'settings' => array(
-        'allowed_values' => array(
-          '0' => t('No'),
-          '1' => t('Yes'),
+        'field_name' => $field_name,
+        'type' => 'list_boolean',
+        'cardinality' => 1,
+        'settings' => array(
+            'allowed_values' => array(
+                '0' => t('No'),
+                '1' => t('Yes'),
+            ),
         ),
-      ),
     );
     $field = field_create_field($field);
   }
@@ -63,21 +78,21 @@ function ed_portfolio_create_field_items()
   $field_name = 'ed_portfolio_field_items';
   if (!field_info_field($field_name)) {
     $field = array(
-      'field_name' => $field_name,
-      'type' => 'entityreference',
-      'entity_types' => array('node'),
-      'cardinality' => FIELD_CARDINALITY_UNLIMITED,
-      'locked' => FALSE,
-      'settings' => array(
-        'handler' => 'views',
-        'handler_settings' => array(
-          'view' => array(
-            'view_name' => 'user_ed_portfolio_items',
-            'display_name' => 'entityreference',
-            'args' => '',
-          ),
+        'field_name' => $field_name,
+        'type' => 'entityreference',
+        'entity_types' => array('node'),
+        'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+        'locked' => FALSE,
+        'settings' => array(
+            'handler' => 'views',
+            'handler_settings' => array(
+                'view' => array(
+                    'view_name' => 'user_ed_portfolio_items',
+                    'display_name' => 'entityreference',
+                    'args' => '',
+                ),
+            ),
         ),
-      ),
     );
     $field = field_create_field($field);
   }
@@ -90,15 +105,15 @@ function ed_portfolio_create_ed_portfolio_node_type()
 {
   if (!in_array('ed_portfolio', node_type_get_names())) {
     $type = array(
-      'type' => 'ed_portfolio',
-      'name' => t('Portfolio'),
-      'base' => 'node_content',
-      'custom' => FALSE,
-      'modified' => FALSE,
-      'locked' => TRUE,
-      'has_title' => TRUE,
-      'title_label' => t('Title'),
-      'module' => 'ed_file',
+        'type' => 'ed_portfolio',
+        'name' => t('Portfolio'),
+        'base' => 'node_content',
+        'custom' => FALSE,
+        'modified' => FALSE,
+        'locked' => TRUE,
+        'has_title' => TRUE,
+        'title_label' => t('Title'),
+        'module' => 'ed_file',
     );
     $type = node_type_set_defaults($type);
     node_type_save($type);
@@ -112,26 +127,26 @@ function ed_portfolio_node_add_field_content()
   $field = field_info_field($field_name);
   if (!empty($field) && !field_info_instance('node', $field_name, 'ed_portfolio')) {
     $instance = array(
-      'field_name' => $field_name,
-      'entity_type' => 'node',
-      'bundle' => 'ed_portfolio',
-      'label' => t('Description'),
-      'description' => '',
-      'settings' => array(
-        'text_processing' => TRUE,
-      ),
-      'widget' => array(
+        'field_name' => $field_name,
+        'entity_type' => 'node',
+        'bundle' => 'ed_portfolio',
+        'label' => t('Description'),
+        'description' => '',
         'settings' => array(
-          'rows' => 20,
+            'text_processing' => TRUE,
         ),
-      ),
-      'required' => FALSE,
-      'display' => array(
-        'default' => array(
-          'label' => 'hidden',
-          'type' => 'text_default',
+        'widget' => array(
+            'settings' => array(
+                'rows' => 20,
+            ),
         ),
-      ),
+        'required' => FALSE,
+        'display' => array(
+            'default' => array(
+                'label' => 'hidden',
+                'type' => 'text_default',
+            ),
+        ),
     );
     field_create_instance($instance);
   }
@@ -146,22 +161,22 @@ function ed_portfolio_node_add_field_show_competence_profile()
   $field = field_info_field($field_name);
   if (!empty($field) && !field_info_instance('node', $field_name, 'ed_portfolio')) {
     $instance = array(
-      'field_name' => $field_name,
-      'entity_type' => 'node',
-      'bundle' => 'ed_portfolio',
-      'label' => t('Show competency profile'),
-      'required' => false,
-      'display' => array(
-        'default' => array(
-          'type' => 'hidden',
+        'field_name' => $field_name,
+        'entity_type' => 'node',
+        'bundle' => 'ed_portfolio',
+        'label' => t('Show competency profile'),
+        'required' => false,
+        'display' => array(
+            'default' => array(
+                'type' => 'hidden',
+            ),
         ),
-      ),
-      'widget' => array(
-        'type' => 'options_onoff',
-        'settings' => array(
-          'display_label' => 1,
+        'widget' => array(
+            'type' => 'options_onoff',
+            'settings' => array(
+                'display_label' => 1,
+            ),
         ),
-      ),
     );
     field_create_instance($instance);
   }
@@ -173,18 +188,18 @@ function ed_portfolio_node_add_field_featured_image()
   $field = field_info_field($field_name);
   if (!empty($field) && !field_info_instance('node', $field_name, 'ed_portfolio')) {
     $instance = array(
-      'field_name' => $field_name,
-      'entity_type' => 'node',
-      'bundle' => 'ed_portfolio',
-      'label' => t('Featured image'),
-      'description' => '',
-      'settings' => array(
-        'file_directory' => 'ed_portfolio_featured_images',
-      ),
-      'widget' => array(
-        'type' => 'image_image',
-      ),
-      'required' => FALSE,
+        'field_name' => $field_name,
+        'entity_type' => 'node',
+        'bundle' => 'ed_portfolio',
+        'label' => t('Featured image'),
+        'description' => '',
+        'settings' => array(
+            'file_directory' => 'ed_portfolio_featured_images',
+        ),
+        'widget' => array(
+            'type' => 'image_image',
+        ),
+        'required' => FALSE,
     );
     field_create_instance($instance);
   }
@@ -199,20 +214,20 @@ function ed_portfolio_node_add_field_items()
   $field = field_info_field($field_name);
   if (!empty($field) && !field_info_instance('node', $field_name, 'ed_portfolio')) {
     $instance = array(
-      'field_name' => $field_name,
-      'entity_type' => 'node',
-      'bundle' => 'ed_portfolio',
-      'label' => t('Portfolio items'),
-      'description' => '',
-      'required' => FALSE,
-      'widget' => array(
-        'type' => 'entityreference_dragdrop',
-      ),
-      'display' => array(
-        'default' => array(
-          'type' => 'entityreference_entities_table',
+        'field_name' => $field_name,
+        'entity_type' => 'node',
+        'bundle' => 'ed_portfolio',
+        'label' => t('Portfolio items'),
+        'description' => '',
+        'required' => FALSE,
+        'widget' => array(
+            'type' => 'entityreference_dragdrop',
         ),
-      ),
+        'display' => array(
+            'default' => array(
+                'type' => 'entityreference_entities_table',
+            ),
+        ),
     );
     field_create_instance($instance);
   }
@@ -224,19 +239,19 @@ function ed_portfolio_node_add_field_level()
   $field = field_info_field($field_name);
   if (!empty($field) && !field_info_instance('node', $field_name, 'ed_portfolio')) {
     $instance = array(
-      'field_name' => $field_name,
-      'entity_type' => 'node',
-      'label' => t('Level'),
-      'bundle' => 'ed_portfolio',
-      'required' => true,
-      'widget' => array(
-        'type' => 'options_select',
-        'module' => 'options',
-      ),
-      'display' => array(
-        'default' => array('type' => 'hidden'),
-        'teaser' => array('type' => 'hidden')
-      )
+        'field_name' => $field_name,
+        'entity_type' => 'node',
+        'label' => t('Level'),
+        'bundle' => 'ed_portfolio',
+        'required' => true,
+        'widget' => array(
+            'type' => 'options_select',
+            'module' => 'options',
+        ),
+        'display' => array(
+            'default' => array('type' => 'hidden'),
+            'teaser' => array('type' => 'hidden')
+        )
     );
 
     field_create_instance($instance);
@@ -252,9 +267,9 @@ function ed_portfolio_create_field_competence_desc()
   $field_name = 'ed_portfolio_competence_desc';
   if (!field_info_field($field_name)) {
     $field = array(
-      'field_name' => $field_name,
-      'type' => 'ed_portfolio_competence_desc',
-      'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+        'field_name' => $field_name,
+        'type' => 'ed_portfolio_competence_desc',
+        'cardinality' => FIELD_CARDINALITY_UNLIMITED,
     );
     field_create_field($field);
   }
@@ -266,14 +281,14 @@ function ed_portfolio_node_add_field_competence_desc()
   $field = field_info_field($field_name);
   if (!empty($field) && !field_info_instance('node', $field_name, 'ed_portfolio')) {
     $instance = array(
-      'field_name' => $field_name,
-      'entity_type' => 'node',
-      'bundle' => 'ed_portfolio',
-      'label' => t('Competence description'),
-      'widget' => array(
-        'type' => 'default'
-      ),
-      'required' => false,
+        'field_name' => $field_name,
+        'entity_type' => 'node',
+        'bundle' => 'ed_portfolio',
+        'label' => t('Competence description'),
+        'widget' => array(
+            'type' => 'default'
+        ),
+        'required' => false,
 //        'display' => array(
 //            'default' => array(
 //                'label' => 'hidden',
@@ -303,23 +318,27 @@ function ed_portfolio_node_add_field_competence_desc()
 function ed_portfolio_field_schema($field)
 {
   $schema = array(
-    'columns' => array(
-      'tid' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'length' => 10,
-        'not null' => TRUE,
+      'columns' => array(
+          'tid' => array(
+              'type' => 'int',
+              'unsigned' => TRUE,
+              'length' => 10,
+              'not null' => TRUE,
+          ),
+          'desc' => array(
+              'type' => 'varchar',
+              'length' => 2000,
+              'not null' => FALSE,
+          ),
+          'cid' => array(
+              'type' => 'blob',
+              'not null' => FALSE,
+          ),
+          'answers' => array(
+              'type' => 'blob',
+              'not null' => FALSE,
+          ),
       ),
-      'desc' => array(
-        'type' => 'varchar',
-        'length' => 2000,
-        'not null' => FALSE,
-      ),
-      'cid' => array(
-        'type' => 'blob',
-        'not null' => FALSE,
-      ),
-    ),
 
 
   );
@@ -335,9 +354,9 @@ function ed_portfolio_field_schema($field)
 function ed_portfolio_set_permissions()
 {
   $permissions = array(
-    'create ed_portfolio content' => TRUE,
-    'edit own ed_portfolio content' => TRUE,
-    'delete own ed_portfolio content' => TRUE,
+      'create ed_portfolio content' => TRUE,
+      'edit own ed_portfolio content' => TRUE,
+      'delete own ed_portfolio content' => TRUE,
   );
   user_role_change_permissions(DRUPAL_AUTHENTICATED_RID, $permissions);
 }
@@ -349,8 +368,8 @@ function ed_portfolio_delete_ed_portfolio_nodes()
 {
   $nids = array();
   $query = db_select('node', 'n')
-    ->fields('n', array('nid'))
-    ->condition('n.type', 'ed_portfolio');
+      ->fields('n', array('nid'))
+      ->condition('n.type', 'ed_portfolio');
   $nids = $query->execute()->fetchCol();
   if (!empty($nids)) {
     node_delete_multiple($nids);
@@ -379,15 +398,15 @@ function ed_portfolio_update_7100(&$sandbox)
   $field_name = 'ed_field_cover_image';
   if (!field_info_field($field_name)) {
     $field = array(
-      'field_name' => $field_name,
-      'type' => 'image',
-      'entity_types' => array('node'),
-      'cardinality' => 1,
-      'locked' => FALSE,
-      'settings' => array(
-        'uri_scheme' => 'public',
-        'default_image' => 0,
-      ),
+        'field_name' => $field_name,
+        'type' => 'image',
+        'entity_types' => array('node'),
+        'cardinality' => 1,
+        'locked' => FALSE,
+        'settings' => array(
+            'uri_scheme' => 'public',
+            'default_image' => 0,
+        ),
     );
     $field = field_create_field($field);
   }
@@ -396,18 +415,18 @@ function ed_portfolio_update_7100(&$sandbox)
   $field = field_info_field($field_name);
   if (!empty($field) && !field_info_instance('node', $field_name, 'ed_portfolio')) {
     $instance = array(
-      'field_name' => $field_name,
-      'entity_type' => 'node',
-      'bundle' => 'ed_portfolio',
-      'label' => t('Cover image'),
-      'description' => '',
-      'settings' => array(
-        'file_directory' => 'ed_portfolio_cover_images',
-      ),
-      'widget' => array(
-        'type' => 'image_image',
-      ),
-      'required' => FALSE,
+        'field_name' => $field_name,
+        'entity_type' => 'node',
+        'bundle' => 'ed_portfolio',
+        'label' => t('Cover image'),
+        'description' => '',
+        'settings' => array(
+            'file_directory' => 'ed_portfolio_cover_images',
+        ),
+        'widget' => array(
+            'type' => 'image_image',
+        ),
+        'required' => FALSE,
     );
     field_create_instance($instance);
   }
@@ -473,4 +492,15 @@ function ed_portfolio_update_7104(&$sandbox)
 
 }
 
+/**
+ * Add column to
+ * @param $sandbox
+ */
+function ed_portfolio_update_7105(&$sandbox)
+{
+  field_delete_field('ed_portfolio_competence_desc');
+  field_delete_instance('ed_portfolio_competence_desc');
 
+  ed_portfolio_create_field_competence_desc();
+  ed_portfolio_node_add_field_competence_desc();
+}

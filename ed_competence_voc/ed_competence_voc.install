@@ -1,13 +1,14 @@
 <?php
 
 
-function ed_competence_voc_install() {
+function ed_competence_voc_install()
+{
   _create_comp_voc();
 }
 
 
-
-function _create_comp_voc() {
+function _create_comp_voc()
+{
   $vocabulary = new stdClass();
   $vocabulary->name = 'Competence';
   $vocabulary->description = t('');
@@ -15,56 +16,57 @@ function _create_comp_voc() {
   taxonomy_vocabulary_save($vocabulary);
 
   $terms = array(
-    0 => array(
-      'title' => 'esimene vanem',
-      'description' => '',
-      'weight' => 0,
-      'terms' => array(
-        0 => array(
-          'title' => 'esimese vanema laps1',
+      0 => array(
+          'title' => 'esimene vanem',
           'description' => '',
           'weight' => 0,
-        ),
-        1 => array(
-          'title' => 'esimese vanema laps2',
-          'description' => '',
-          'weight' => 1,
-        ),
+          'terms' => array(
+              0 => array(
+                  'title' => 'esimese vanema laps1',
+                  'description' => '',
+                  'weight' => 0,
+              ),
+              1 => array(
+                  'title' => 'esimese vanema laps2',
+                  'description' => '',
+                  'weight' => 1,
+              ),
+          ),
       ),
-    ),
-    1 => array(
-      'title' => 'teine vanem',
-      'description' => '',
-      'weight' => 1,
-      'terms' => array(
-        0 => array(
-          'title' => 'teise vanema laps1',
-          'description' => '',
-          'weight' => 0,
-        ),
-        1 => array(
-          'title' => 'teise vanema laps2',
+      1 => array(
+          'title' => 'teine vanem',
           'description' => '',
           'weight' => 1,
           'terms' => array(
-            0 => array(
-              'title' => 'teise vanema lapselaps',
-              'description' => '',
-              'weight' => 0,
-            ),
+              0 => array(
+                  'title' => 'teise vanema laps1',
+                  'description' => '',
+                  'weight' => 0,
+              ),
+              1 => array(
+                  'title' => 'teise vanema laps2',
+                  'description' => '',
+                  'weight' => 1,
+                  'terms' => array(
+                      0 => array(
+                          'title' => 'teise vanema lapselaps',
+                          'description' => '',
+                          'weight' => 0,
+                      ),
+                  ),
+              ),
           ),
-        ),
       ),
-    ),
   );
 
-  foreach($terms as $term) {
+  foreach ($terms as $term) {
     _ed_competence_voc_save_term($vocabulary->vid, $term);
   }
 
 }
 
-function _ed_competence_voc_save_term($vid, $one) {
+function _ed_competence_voc_save_term($vid, $one)
+{
   $term = new stdClass();
   $term->name = $one['title'];
   $term->description = $one['description'];
@@ -74,18 +76,20 @@ function _ed_competence_voc_save_term($vid, $one) {
   $term->parent = isset($one['parent']) ? $one['parent'] : 0;
   taxonomy_term_save($term);
   if (isset($one['terms']) && is_array($one['terms']) && sizeof($one['terms']) > 0) {
-    foreach($one['terms'] as $one) {
-      $one['parent'] =  $term->tid;
+    foreach ($one['terms'] as $one) {
+      $one['parent'] = $term->tid;
       _ed_competence_voc_save_term($vid, $one);
     }
   }
 }
 
-function ed_competence_voc_uninstall() {
+function ed_competence_voc_uninstall()
+{
   ed_comp_voc_delete_voc();
 }
 
-function ed_comp_voc_delete_voc(){
+function ed_comp_voc_delete_voc()
+{
   $vocabulary = taxonomy_vocabulary_machine_name_load('ed_competence_voc');
   if (!empty($vocabulary)) {
     taxonomy_vocabulary_delete($vocabulary->vid);
@@ -95,24 +99,56 @@ function ed_comp_voc_delete_voc(){
 /**
  * Creates color field type and instanciates it to ed_competence vocabulary
  */
-function ed_competence_voc_update_7100(&$sandbox){
+function ed_competence_voc_update_7100(&$sandbox)
+{
   $field = array(
-    'field_name' => 'ed_competence_color_field',
-    'type' => 'text',
-    'label' => t('Color'),
+      'field_name' => 'ed_competence_color_field',
+      'type' => 'text',
+      'label' => t('Color'),
   );
   field_create_field($field);
-  
+
   $instance = array(
-    'field_name' => 'ed_competence_color_field',
-    'entity_type' => 'taxonomy_term',
-    'bundle' => 'ed_competence_voc',
-    'label' => t('Color'),
-    'description' => t('Color that fills progress bars'),
-    'required' => false,
-    'widget' => array(
-      'type' => 'text_textfield',
-    ),
+      'field_name' => 'ed_competence_color_field',
+      'entity_type' => 'taxonomy_term',
+      'bundle' => 'ed_competence_voc',
+      'label' => t('Color'),
+      'description' => t('Color that fills progress bars'),
+      'required' => false,
+      'widget' => array(
+          'type' => 'text_textfield',
+      ),
+  );
+  field_create_instance($instance);
+}
+
+
+/**
+ * Deletes unused color field
+ * Creates question field type and instantiate it to ed_competence vocabulary
+ */
+function ed_competence_voc_update_7101(&$sandbox)
+{
+  field_delete_field('ed_competence_color_field');
+  field_delete_instance('ed_competence_color_field');
+
+  $field = array(
+      'field_name' => 'ed_competence_question_field',
+      'type' => 'text',
+      'label' => t('Question'),
+  );
+  field_create_field($field);
+
+  $instance = array(
+      'field_name' => 'ed_competence_question_field',
+      'entity_type' => 'taxonomy_term',
+      'bundle' => 'ed_competence_voc',
+      'label' => t('Question'),
+      'description' => t('Question for a term'),
+      'required' => false,
+      'widget' => array(
+          'type' => 'text_textfield',
+      ),
   );
   field_create_instance($instance);
 }
