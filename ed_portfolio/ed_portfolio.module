@@ -118,7 +118,6 @@ function ed_competency_profile_page($node)
       $subterms_names_string = implode(', ', $subterms_names);
 
 
-
       $complete_level = _ed_portfolio_get_complete_level_for_competency($user, $term->tid);
 
       //Progress made
@@ -136,7 +135,7 @@ function ed_competency_profile_page($node)
             $desc = $value['answers'];
             $shown_content = drupal_json_decode($value['cid']);
 
-            $content['competency'][$key]['#prefix'] = '<div class="jumbotron">';
+            $content['competency'][$key]['#prefix'] = '<div class="jumbotron jumbotron-portfolio">';
             $content['competency'][$key]['#suffix'] = '</div>';
 
             // parent term
@@ -199,24 +198,20 @@ function ed_competency_profile_page($node)
         ];
 
 
-        if (!empty($desc)) {
-          $desc = array_values(drupal_json_decode($desc));
+      }
 
-          foreach ($desc as $answer_key => $value) {
-            $content['competency'][$key]['desc'][$answer_key] = array(
-                '#type' => 'markup',
-                '#markup' => '<p>' . $value . '</p>',
-            );
-          }
+      if (!empty($desc)) {
+
+        $desc = drupal_json_decode($desc);
+        foreach ($desc as $answer_key => $value) {
+          //Load term competency
+          $term_competency = taxonomy_term_load($answer_key);
+          $content['competency'][$key]['desc'][$answer_key] = array(
+              '#type' => 'markup',
+              '#prefix' => '<h6>' . $term_competency->ed_competence_question_field[LANGUAGE_NONE][0]['value'] . '</h6>',
+              '#markup' => check_markup($value['value'], $value['format'])
+          );
         }
-
-//        $content['competency'][$key]['desc'] = array(
-//            '#type' => 'markup',
-//            '#markup' => '<p>' . $desc . '</p>',
-//
-//        );
-
-
       }
 
     }
@@ -502,8 +497,6 @@ function ed_portfolio_form_alter(&$form, &$form_state, $form_id)
                   'date' => format_date($node[0]->changed, 'short'),
               );
             }
-
-
           }
 
           $header = array(
@@ -522,30 +515,25 @@ function ed_portfolio_form_alter(&$form, &$form_state, $form_id)
               '#prefix' => '<div class="alert alert-info">' . t('Check the content to show on your portfolio') . '</div>',
           );
 
-
-          //This td in $form['#node']->ed_portfolio_competence_desc
-          $key = array_search($term->tid, array_column($form['#node']->ed_portfolio_competence_desc[LANGUAGE_NONE], 'tid'));
-
-
-          $answer_array = drupal_json_decode($form['#node']->ed_portfolio_competence_desc[LANGUAGE_NONE][$key]['answers']);
-
-
-          foreach ($questions as $question) {
-            if (!empty($question['question'])) {
-              $form['competency'][$key]['questions_tids'][$question['tid']]['question'] = array(
-                  '#type' => 'textarea',
-                  '#title' => $question['question'],
-                  '#default_value' => $answer_array[$question['tid']],
-              );
-            }
-          }
-
-//          $form['competency'][$key]['desc'] = array(
-//              '#type' => 'textarea',
-//              '#title' => t('Description'),
-//              '#default_value' => $desc,
-//          );
         }
+
+        //This td in $form['#node']->ed_portfolio_competence_desc
+        $key_term = array_search($term->tid, array_column($form['#node']->ed_portfolio_competence_desc[LANGUAGE_NONE], 'tid'));
+
+        $answer_array = drupal_json_decode($form['#node']->ed_portfolio_competence_desc[LANGUAGE_NONE][$key_term]['answers']);
+
+        foreach ($questions as $question) {
+          if (!empty($question['question'])) {
+            $form['competency'][$key]['questions_tids'][$question['tid']]['question'] = array(
+                '#type' => 'text_format',
+                '#required' => false,
+                '#title' => $question['question'],
+                '#default_value' => $answer_array[$question['tid']]['value'],
+                '#wysiwyg' => false,
+            );
+          }
+        }
+
 
       }
 
