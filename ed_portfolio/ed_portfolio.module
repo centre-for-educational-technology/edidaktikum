@@ -208,7 +208,7 @@ function ed_competency_profile_page($node)
           $term_competency = taxonomy_term_load($answer_key);
           $content['competency'][$key]['desc'][$answer_key] = array(
               '#type' => 'markup',
-              '#prefix' => '<h6>' . $term_competency->ed_competence_question_field[LANGUAGE_NONE][0]['value'] . '</h6>',
+              '#prefix' => '<p style="font-size: large; font-weight: bold;">' . $term_competency->ed_competence_question_field[LANGUAGE_NONE][0]['value'] . '</p>',
               '#markup' => check_markup($value['value'], $value['format'])
           );
         }

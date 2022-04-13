@@ -7,3 +7,9 @@ translations/et.mo
 *.mo
 
 *.mo
+/ed_export_taxonomy/ed_export_taxonomy.info
+/ed_export_taxonomy/ed_export_taxonomy.install
+/ed_export_taxonomy/ed_export_taxonomy.module
+/ed_portfolio_analytics/ed_portfolio_analytics.info
+/ed_portfolio_analytics/ed_portfolio_analytics.install
+/ed_portfolio_analytics/ed_portfolio_analytics.module

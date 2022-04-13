@@ -199,6 +199,12 @@ function ed_answer_form_alter(&$form, &$form_state, $form_id)
 
     $group_node = node_load($node->og_group_ref[LANGUAGE_NONE][0]['target_id']);
 
+    //If group is inactive, no answer changes allowed
+    if($group_node->ed_field_group_state[LANGUAGE_NONE][0]['value'] == 0) {
+      $form['actions']['submit']['#disabled'] = true;
+      drupal_set_message(t('This answer cannot be changed, because it belongs to an inactive group.'), 'error');
+    }
+
     $task_comp = field_get_items('node', $group_node, 'ed_field_learning_outcome_ref');
 
     $outcomes = [];
