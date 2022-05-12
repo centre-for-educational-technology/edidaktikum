@@ -1202,14 +1202,6 @@ function _ed_get_user_unanswered_tasks_count($account)
 
 }
 
-
-function ed_task_preprocess_page(&$variables)
-{
-  if (in_array('page__dashboard__tasks', $variables['theme_hook_suggestions'])) {
-    $variables['page']['content']['metatags']['global']['title']['#attached']['metatag_set_preprocess_variable'][0][2] = _ed_task_menu_title() . ' | eDidaktikum';
-  }
-}
-
 /**
  * Implements hook_ctools_plugin_api().
  */
