@@ -8,13 +8,13 @@ require_once('ed_task_functions.inc');
 function ed_task_node_info()
 {
   $items['ed_task'] = array(
-    'name' => t('Task/Assignment'),
-    'type' => 'ed_task',
-    'base' => 'node_content',
-    'description' => t('Description2'),
-    'has_title' => '1',
-    'title_label' => t('Title'),
-    'body_label' => t('body_label'),
+      'name' => t('Task/Assignment'),
+      'type' => 'ed_task',
+      'base' => 'node_content',
+      'description' => t('Description2'),
+      'has_title' => '1',
+      'title_label' => t('Title'),
+      'body_label' => t('body_label'),
   );
   return $items;
 }
@@ -43,35 +43,35 @@ function _ed_task_menu_title()
 function ed_task_menu()
 {
   $items['dashboard/tasks'] = array(
-    'title' => 'Tasks',
-    'title callback' => '_ed_task_menu_title',
-    'page callback' => 'ed_task_listing_page',
-    'access callback' => 'user_is_logged_in',
-    'weight' => 15,
-    'menu_name' => 'ed-dashboard-menu',
-    'type' => MENU_NORMAL_ITEM,
+      'title' => 'Tasks',
+      'title callback' => '_ed_task_menu_title',
+      'page callback' => 'ed_task_listing_page',
+      'access callback' => 'user_is_logged_in',
+      'weight' => 15,
+      'menu_name' => 'ed-dashboard-menu',
+      'type' => MENU_NORMAL_ITEM,
   );
   //This view is for teachers
   $items['node/%node/task-results'] = array(
-    'title' => 'Answers and feedback',
-    'title arguments' => ['Answers and feedback', 1, 'ed_task'],
-    'page callback' => 'ed_task_results',
-    'access callback' => 'ed_task_results_access',
-    'page arguments' => array('node', 1),
-    'access arguments' => array('node', 1),
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 50,
+      'title' => 'Answers and feedback',
+      'title arguments' => ['Answers and feedback', 1, 'ed_task'],
+      'page callback' => 'ed_task_results',
+      'access callback' => 'ed_task_results_access',
+      'page arguments' => array('node', 1),
+      'access arguments' => array('node', 1),
+      'type' => MENU_LOCAL_TASK,
+      'weight' => 50,
   );
   //This view is for students
   $items['node/%node/task-feedback'] = array(
-    'title' => 'Feedback',
-    'title arguments' => ['Feedback', 1, 'ed_task'],
-    'page callback' => 'ed_task_feedback',
-    'access callback' => 'ed_task_feedback_access',
-    'page arguments' => array('node', 1),
-    'access arguments' => array('node', 1),
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 60,
+      'title' => 'Feedback',
+      'title arguments' => ['Feedback', 1, 'ed_task'],
+      'page callback' => 'ed_task_feedback',
+      'access callback' => 'ed_task_feedback_access',
+      'page arguments' => array('node', 1),
+      'access arguments' => array('node', 1),
+      'type' => MENU_LOCAL_TASK,
+      'weight' => 60,
   );
   return $items;
 }
@@ -159,13 +159,13 @@ function ed_task_results($test, $node)
   $rows = _ed_get_task_manager_rows([$task], $members);
 
   $content['table'] = array(
-    '#theme' => 'table',
-    '#rows' => $rows,
-    '#header' => [t("Name"), t("Vastus")],
-    '#sticky' => false,
-    '#attributes' => array('class' => array('table scroll')),
-    '#prefix' => '<div class="col-md-6">',
-    '#suffix' => '</div>'
+      '#theme' => 'table',
+      '#rows' => $rows,
+      '#header' => [t("Name"), t("Vastus")],
+      '#sticky' => false,
+      '#attributes' => array('class' => array('table scroll')),
+      '#prefix' => '<div class="col-md-6">',
+      '#suffix' => '</div>'
   );
 
   ed_task_build_feedback_panel($content, $node, true);
@@ -246,21 +246,20 @@ function ed_task_build_feedback_panel(&$content, $node, $is_teacher = false)
 
 
       $content['feedback'][$item['target_id']] = array(
-        '#type' => 'markup',
-        '#prefix' => '<div class="col-md-6"><div class="text-center well well-lg"><p>' . t('Group') . ': <strong>' . _ed_get_group_name_from_id($item['target_id']) . '</strong></p><p>' . t('Task') . ': <strong>' . $node->title . '</strong></p>',
-        '#suffix' => '</div></div>'
+          '#type' => 'markup',
+          '#prefix' => '<div class="col-md-6"><div class="text-center well well-lg"><p>' . t('Group') . ': <strong>' . _ed_get_group_name_from_id($item['target_id']) . '</strong></p><p>' . t('Task') . ': <strong>' . $node->title . '</strong></p>',
+          '#suffix' => '</div></div>'
       );
 
 
       //Get answers for the task in a particular group
       $query = new EntityFieldQuery;
       $entities = $query->entityCondition('entity_type', 'node')
-        ->entityCondition('bundle', 'ed_answer')
-        ->fieldCondition('field_ref_to_task', 'target_id', $node->nid)
-        ->fieldCondition('og_group_ref', 'target_id', $item['target_id'])
-        ->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT')
-        ->execute();
-
+          ->entityCondition('bundle', 'ed_answer')
+          ->fieldCondition('field_ref_to_task', 'target_id', $node->nid)
+          ->fieldCondition('og_group_ref', 'target_id', $item['target_id'])
+          ->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT')
+          ->execute();
 
 
       $satisfactions = array();
@@ -312,7 +311,6 @@ function ed_task_build_feedback_panel(&$content, $node, $is_teacher = false)
       $difficulties = array_count_values($difficulties);
 
 
-
       $emotions = call_user_func_array('array_merge', $emotions);
       $emotions = array_count_values($emotions);
 
@@ -327,10 +325,10 @@ function ed_task_build_feedback_panel(&$content, $node, $is_teacher = false)
         $hours = floor($average_time / 60);
         $minutes = $average_time % 60;
         $content['feedback'][$item['target_id']]['time']['user'] = array(
-          '#type' => 'markup',
-          '#prefix' => '<h4>' . t("Time") . '</h4><div class="row"><p><i class="glyphicon glyphicon-time"></i> ',
-          '#suffix' => '</p></div>',
-          '#markup' => t('Average time spent') . ': ' . $hours . ' t, ' . $minutes . ' min'
+            '#type' => 'markup',
+            '#prefix' => '<h4>' . t("Time") . '</h4><div class="row"><p><i class="glyphicon glyphicon-time"></i> ',
+            '#suffix' => '</p></div>',
+            '#markup' => t('Average time spent') . ': ' . $hours . ' t, ' . $minutes . ' min'
         );
 
 
@@ -339,10 +337,10 @@ function ed_task_build_feedback_panel(&$content, $node, $is_teacher = false)
         $hours = floor($max_time / 60);
         $minutes = $max_time % 60;
         $content['feedback'][$item['target_id']]['time']['max'] = array(
-          '#type' => 'markup',
-          '#prefix' => '<div class="row"><p><i class="glyphicon glyphicon-time"></i> ',
-          '#suffix' => '</p></div>',
-          '#markup' => t('Maximum time spent') . ': ' . $hours . ' t, ' . $minutes . ' min'
+            '#type' => 'markup',
+            '#prefix' => '<div class="row"><p><i class="glyphicon glyphicon-time"></i> ',
+            '#suffix' => '</p></div>',
+            '#markup' => t('Maximum time spent') . ': ' . $hours . ' t, ' . $minutes . ' min'
         );
 
 
@@ -351,10 +349,10 @@ function ed_task_build_feedback_panel(&$content, $node, $is_teacher = false)
         $hours = floor($min_time / 60);
         $minutes = $min_time % 60;
         $content['feedback'][$item['target_id']]['time']['min'] = array(
-          '#type' => 'markup',
-          '#prefix' => '<div class="row"><p><i class="glyphicon glyphicon-time"></i> ',
-          '#suffix' => '</p></div>',
-          '#markup' => t('Minimum time spent') . ': ' . $hours . ' t, ' . $minutes . ' min'
+            '#type' => 'markup',
+            '#prefix' => '<div class="row"><p><i class="glyphicon glyphicon-time"></i> ',
+            '#suffix' => '</p></div>',
+            '#markup' => t('Minimum time spent') . ': ' . $hours . ' t, ' . $minutes . ' min'
         );
       }
 
@@ -364,30 +362,30 @@ function ed_task_build_feedback_panel(&$content, $node, $is_teacher = false)
         $user_hours = floor($user_feedback['ed_answer_field_time_spent'] / 60);
         $user_minutes = $user_feedback['ed_answer_field_time_spent'] % 60;
         $content['feedback'][$item['target_id']]['time']['avg'] = array(
-          '#type' => 'markup',
-          '#prefix' => '<div class="row user-feedback"><p><i class="glyphicon glyphicon-time"></i><i class="glyphicon glyphicon-user"></i> ',
-          '#suffix' => '</p></div><br><h5><span class="label label-warning"><i class="glyphicon glyphicon-user"></i> ' . t('Your answer is marked in yellow') . '</span></h5>',
-          '#markup' => '<strong>' . t('Your time spent') . ': ' . $user_hours . ' t, ' . $user_minutes . ' min' . '</strong>'
+            '#type' => 'markup',
+            '#prefix' => '<div class="row user-feedback"><p><i class="glyphicon glyphicon-time"></i><i class="glyphicon glyphicon-user"></i> ',
+            '#suffix' => '</p></div><br><h5><span class="label label-warning"><i class="glyphicon glyphicon-user"></i> ' . t('Your answer is marked in yellow') . '</span></h5>',
+            '#markup' => '<strong>' . t('Your time spent') . ': ' . $user_hours . ' t, ' . $user_minutes . ' min' . '</strong>'
         );
       }
 
       //Satisfaction
       $content['feedback'][$item['target_id']]['charts']['satisfaction'] = array(
-        '#type' => 'markup',
-        '#markup' => '<div class="row"><h4>' . t("Satisfaction") . '</h4><div class="col-md-8 col-md-offset-2"><canvas id="animated-chart-satisf-' . $item['target_id'] . '" width="500" height="500"></canvas></div></div>',
+          '#type' => 'markup',
+          '#markup' => '<div class="row"><h4>' . t("Satisfaction") . '</h4><div class="col-md-8 col-md-offset-2"><canvas id="animated-chart-satisf-' . $item['target_id'] . '" width="500" height="500"></canvas></div></div>',
       );
 
       //Difficulty
       $content['feedback'][$item['target_id']]['charts']['difficulty'] = array(
-        '#type' => 'markup',
-        '#markup' => '<div class="row"><h4>' . t("Task difficulty") . '</h4><div class="col-md-8 col-md-offset-2"><canvas id="animated-chart-diff-' . $item['target_id'] . '" width="500" height="500"></canvas></div></div>',
+          '#type' => 'markup',
+          '#markup' => '<div class="row"><h4>' . t("Task difficulty") . '</h4><div class="col-md-8 col-md-offset-2"><canvas id="animated-chart-diff-' . $item['target_id'] . '" width="500" height="500"></canvas></div></div>',
       );
 
 
       //Emotions
       $content['feedback'][$item['target_id']]['charts']['emotions'] = array(
-        '#type' => 'markup',
-        '#markup' => '<div class="row"><h4>' . t("Emotions") . '</h4><div class="col-md-8 col-md-offset-2"><canvas id="animated-chart-emotions-' . $item['target_id'] . '" width="500" height="500"></canvas></div></div>',
+          '#type' => 'markup',
+          '#markup' => '<div class="row"><h4>' . t("Emotions") . '</h4><div class="col-md-8 col-md-offset-2"><canvas id="animated-chart-emotions-' . $item['target_id'] . '" width="500" height="500"></canvas></div></div>',
       );
 
 
@@ -455,10 +453,10 @@ function ed_task_listing_page()
 
   if (empty($groups)) {
     $content['groups-not-found'] = array(
-      '#type' => 'markup',
-      '#prefix' => '<div class="ed-message ed-message-notice">',
-      '#markup' => t('Hi! Nothing to show here at the moment. Join some group to see latest updates from it.'),
-      '#suffix' => '</div>',
+        '#type' => 'markup',
+        '#prefix' => '<div class="ed-message ed-message-notice">',
+        '#markup' => t('Hi! Nothing to show here at the moment. Join some group to see latest updates from it.'),
+        '#suffix' => '</div>',
     );
     return $content;
   } else {
@@ -469,15 +467,15 @@ function ed_task_listing_page()
     //Create button
     if (node_access('create', 'ed_task')) {
       $content['add-new-container'] = array(
-        '#type' => 'container',
-        '#attributes' => array(
-          'class' => array('ed-add-new-node', 'ed-add-new-ed-task'),
-        ),
+          '#type' => 'container',
+          '#attributes' => array(
+              'class' => array('ed-add-new-node', 'ed-add-new-ed-task'),
+          ),
       );
       $content['add-new-container']['add-task'] = array(
-        '#type' => 'link',
-        '#title' => t('Add new task'),
-        '#href' => 'node/add/ed-task',
+          '#type' => 'link',
+          '#title' => t('Add new task'),
+          '#href' => 'node/add/ed-task',
       );
     }
 
@@ -507,18 +505,18 @@ function ed_task_listing_page()
         $group_title = _ed_get_group_name_from_id($shared_to);
         $due_date_field = field_get_items('node', $node, 'ed_task_due_date');
         $rows[] = array(
-          'data' => array(
-            'title' => l($node->title, 'node/' . $node->nid),
-            'shared_to' => t(l($group_title, 'node/' . $shared_to) . $username),
-            'due_date' => format_date($due_date_field[0]['value'], 'custom', 'd/m/Y'),
-          ),
+            'data' => array(
+                'title' => l($node->title, 'node/' . $node->nid),
+                'shared_to' => t(l($group_title, 'node/' . $shared_to) . $username),
+                'due_date' => format_date($due_date_field[0]['value'], 'custom', 'd/m/Y'),
+            ),
         );
       }
 
       $content[$table_type . '-' . $table_suffix] = array(
-        '#theme' => 'table',
-        '#rows' => $rows,
-        '#header' => array(t('Tasks by me'), t('Shared To'), t('Due Date')),
+          '#theme' => 'table',
+          '#rows' => $rows,
+          '#header' => array(t('Tasks by me'), t('Shared To'), t('Due Date')),
       );
       $content['pager'] = array('#theme' => 'pager');
     }
@@ -625,10 +623,10 @@ function ed_task_listing_page()
       //this part is a hack, drupal's sorting api isn't used fully, its only used to generate clickable buttons.
 
       $header = [
-        ['data' => t('Task'), 'field' => '',],
-        ['data' => t('Group'), 'field' => ''],
-        ['data' => t('Due Date'), 'field' => '',],
-        ['data' => t('Status'), 'field' => '', 'sort' => 'asc'],
+          ['data' => t('Task'), 'field' => '',],
+          ['data' => t('Group'), 'field' => ''],
+          ['data' => t('Due Date'), 'field' => '',],
+          ['data' => t('Status'), 'field' => '', 'sort' => 'asc'],
       ];
 
       $query_parameters = drupal_get_query_parameters();
@@ -657,15 +655,15 @@ function ed_task_listing_page()
         if ($sort == 'asc') {
           uasort($tasknodes, function ($a, $b) {
             return strcmp(
-              _ed_get_group_name_from_id($a->og_group_ref[LANGUAGE_NONE][0]['target_id']),
-              _ed_get_group_name_from_id($b->og_group_ref[LANGUAGE_NONE][0]['target_id'])
+                _ed_get_group_name_from_id($a->og_group_ref[LANGUAGE_NONE][0]['target_id']),
+                _ed_get_group_name_from_id($b->og_group_ref[LANGUAGE_NONE][0]['target_id'])
             );
           });
         } else {
           uasort($tasknodes, function ($a, $b) {
             return strcmp(
-              _ed_get_group_name_from_id($b->og_group_ref[LANGUAGE_NONE][0]['target_id']),
-              _ed_get_group_name_from_id($a->og_group_ref[LANGUAGE_NONE][0]['target_id'])
+                _ed_get_group_name_from_id($b->og_group_ref[LANGUAGE_NONE][0]['target_id']),
+                _ed_get_group_name_from_id($a->og_group_ref[LANGUAGE_NONE][0]['target_id'])
             );
           });
         }
@@ -775,23 +773,23 @@ function ed_task_listing_page()
         }
 
         $rows2[] = array(
-          'data' => array(
-            'title' => l($tasknode->title, 'node/' . $tasknode->nid),
-            'group' => $shared_to_arr,
-            'due_date' => format_date($tasknode->ed_task_due_date[LANGUAGE_NONE][0]['value'], 'custom', 'd/m/Y'),
-            'status' => $tmp_data,
-          ),
+            'data' => array(
+                'title' => l($tasknode->title, 'node/' . $tasknode->nid),
+                'group' => $shared_to_arr,
+                'due_date' => format_date($tasknode->ed_task_due_date[LANGUAGE_NONE][0]['value'], 'custom', 'd/m/Y'),
+                'status' => $tmp_data,
+            ),
         );
       }
 
       $content[$table_type . '-2'] = array(
-        '#theme' => 'table',
-        '#rows' => $rows2,
-        '#header' => $header,
+          '#theme' => 'table',
+          '#rows' => $rows2,
+          '#header' => $header,
       );
       $content['pager-2'] = array(
-        '#theme' => 'pager',
-        '#element' => 2,
+          '#theme' => 'pager',
+          '#element' => 2,
       );
     }
 
@@ -816,8 +814,8 @@ function _get_user_answer_from_task($task, $uid)
   $query = db_select('node', 'n');
   $query->join('field_data_field_ref_to_task', 'b', 'n.nid = b.entity_id');
   $query->fields('n', array('nid', 'created'))
-    ->condition('n.uid', $uid)
-    ->condition('n.type', 'ed_answer');
+      ->condition('n.uid', $uid)
+      ->condition('n.type', 'ed_answer');
   $query->condition('b.field_ref_to_task_target_id', $task);
 
   $result = $query->execute()->fetchAll();
@@ -833,8 +831,8 @@ function _get_answer_from_task($task)
   $query = db_select('node', 'n');
   $query->join('field_data_field_ref_to_task', 'b', 'n.nid = b.entity_id');
   $query->fields('n', array('nid'))
-    ->condition('n.uid', $acc->uid)
-    ->condition('n.type', 'ed_answer');
+      ->condition('n.uid', $acc->uid)
+      ->condition('n.type', 'ed_answer');
   $query->condition('b.field_ref_to_task_target_id', $task);
 
   $result = $query->execute()->fetchAll();
@@ -864,33 +862,6 @@ function ed_task_form_alter(&$form, &$form_state, $form_id)
   }
 }
 
-/**
- * A callback function that would deals with field ed_field_competence
- * @param array $form Form data
- * @param array $form_state Form state data (reference)
- * @return void
- */
-// In case only parent category is selected (in group edit), this function will clean all the children selections of that parent (in task edit), so commented out
-//function ed_task_form_submit_competence($form, &$form_state) {
-//  // Make sure to remove any selected competences that do not belong to the ones
-//  // present for the selected groups
-//  if (!empty($form_state['values']['ed_field_competence'][LANGUAGE_NONE])) {
-//    $groups = [];
-//    if (!empty($form_state['values']['og_group_ref'][LANGUAGE_NONE])) {
-//      $groups = array_map(function($single) {
-//        return $single['target_id'];
-//      }, $form_state['values']['og_group_ref'][LANGUAGE_NONE]);
-//    }
-//    $allowedCompetences = ed_cluster_get_groups_competences_ids($groups);
-//
-//    $filteredCompetences = array_filter($form_state['values']['ed_field_competence'][LANGUAGE_NONE], function($single) use ($allowedCompetences) {
-//      return in_array($single['tid'], $allowedCompetences);
-//    });
-//    $form_state['values']['ed_field_competence'][LANGUAGE_NONE] = array_values($filteredCompetences);
-//
-//
-//  }
-//}
 
 /**
  * Helper and database query functions
@@ -898,9 +869,9 @@ function ed_task_form_alter(&$form, &$form_state, $form_id)
 function _ed_get_group_name_from_id($id)
 {
   $query = db_select('node', 'n')
-    ->fields('n', array('nid', 'title'))
-    ->addTag('node_access')
-    ->condition('nid', $id);
+      ->fields('n', array('nid', 'title'))
+      ->addTag('node_access')
+      ->condition('nid', $id);
   $result = $query->execute();
   $string = '';
   foreach ($result as $record) {
@@ -915,8 +886,8 @@ function _is_task_answered($task_nid)
   $query = db_select('node', 'n');
   $query->join('field_data_field_ref_to_task', 'b', 'n.nid = b.entity_id');
   $query->fields('n', array('nid'))
-    ->condition('b.field_ref_to_task_target_id', $task_nid)
-    ->condition('n.uid', $acc->uid);
+      ->condition('b.field_ref_to_task_target_id', $task_nid)
+      ->condition('n.uid', $acc->uid);
 
   $result = $query->execute()->fetchAll();
   if (empty($result)) {
@@ -979,10 +950,10 @@ function _ed_get_cur_user_tasks()
 {
   $acc = $GLOBALS['user'];
   $query = db_select('node', 'n')
-    ->fields('n', array('nid'))
-    ->addTag('node_access')
-    ->condition('n.type', 'ed_task')
-    ->condition('n.uid', $acc->uid);
+      ->fields('n', array('nid'))
+      ->addTag('node_access')
+      ->condition('n.type', 'ed_task')
+      ->condition('n.uid', $acc->uid);
 
   $query = $query->extend('TableSort')->extend('PagerDefault')->limit(ed_get_paging_nr());
 
@@ -998,9 +969,9 @@ function _ed_get_tasks_to_user()
   $query = db_select('node', 'n');
   $query->join('field_data_ed_field_to_group_member', 'tu', 'n.nid = tu.entity_id');
   $query->fields('n', array('nid'))
-    ->addTag('node_access')
-    ->condition('n.type', 'ed_task')
-    ->condition('tu.ed_field_to_group_member_target_id', $acc->uid);
+      ->addTag('node_access')
+      ->condition('n.type', 'ed_task')
+      ->condition('tu.ed_field_to_group_member_target_id', $acc->uid);
 
   $query = $query->extend('TableSort')->extend('PagerDefault')->limit(ed_get_paging_nr());
 
@@ -1016,10 +987,10 @@ function _ed_get_tasks_to_user_from_active_groups()
   $query->join('field_data_ed_field_to_group_member', 'tu', 'n.nid = tu.entity_id');
   $query->join('field_data_ed_field_group_state', 'gs', 'n.nid = gs.entity_id');
   $query->fields('n', array('nid'))
-    ->addTag('node_access')
-    ->condition('n.type', 'ed_task')
-    ->condition('gs.ed_field_group_state_value', 1)
-    ->condition('tu.ed_field_to_group_member_target_id', $acc->uid);
+      ->addTag('node_access')
+      ->condition('n.type', 'ed_task')
+      ->condition('gs.ed_field_group_state_value', 1)
+      ->condition('tu.ed_field_to_group_member_target_id', $acc->uid);
 
   $query = $query->extend('TableSort')->extend('PagerDefault')->limit(ed_get_paging_nr());
 
@@ -1033,9 +1004,9 @@ function _ed_get_tasks_specific_group($gid)
   $query = db_select('node', 'n');
   $query->join('og_membership', 'og', 'n.nid = og.etid');
   $query->fields('n', array('nid'))
-    ->addTag('node_access')
-    ->condition('n.type', 'ed_task')
-    ->condition('og.gid', $gid);
+      ->addTag('node_access')
+      ->condition('n.type', 'ed_task')
+      ->condition('og.gid', $gid);
 
   $query = $query->extend('TableSort')->extend('PagerDefault')->limit(ed_get_paging_nr());
 
@@ -1055,9 +1026,9 @@ function _ed_get_group_tasks()
   $query = db_select('node', 'n');
   $query->join('og_membership', 'og', 'n.nid = og.etid');
   $query->fields('n', array('nid'))
-    ->addTag('node_access')
-    ->condition('n.type', 'ed_task')
-    ->condition('og.gid', $helper, "IN");
+      ->addTag('node_access')
+      ->condition('n.type', 'ed_task')
+      ->condition('og.gid', $helper, "IN");
   $result = $query->execute()->fetchCol();
   return $result;
 
@@ -1077,9 +1048,9 @@ function _ed_get_active_group_tasks()
     $query = db_select('node', 'n');
     $query->join('og_membership', 'og', 'n.nid = og.etid');
     $query->fields('n', array('nid'))
-      ->addTag('node_access')
-      ->condition('n.type', 'ed_task')
-      ->condition('og.gid', $helper, "IN");
+        ->addTag('node_access')
+        ->condition('n.type', 'ed_task')
+        ->condition('og.gid', $helper, "IN");
     $result = $query->execute()->fetchCol();
     return $result;
   } else {
@@ -1265,15 +1236,15 @@ function ed_task_node_insert($node)
 
           // Excluded: task creator, any group creator or admin
           $uids = db_select('og_membership', 'ogm')
-            ->distinct()
-            ->fields('ogm', array('etid'))
-            ->condition('ogm.entity_type', 'user')
-            ->condition('ogm.group_type', 'node')
-            ->condition('ogm.gid', $group_ids, 'IN')
-            ->condition('ogm.state', OG_STATE_ACTIVE)
-            ->condition('ogm.etid', $exclude_uids, 'NOT IN')
-            ->execute()
-            ->fetchCol();
+              ->distinct()
+              ->fields('ogm', array('etid'))
+              ->condition('ogm.entity_type', 'user')
+              ->condition('ogm.group_type', 'node')
+              ->condition('ogm.gid', $group_ids, 'IN')
+              ->condition('ogm.state', OG_STATE_ACTIVE)
+              ->condition('ogm.etid', $exclude_uids, 'NOT IN')
+              ->execute()
+              ->fetchCol();
 
           if (!empty($uids)) {
             $send_to = $uids;
@@ -1290,10 +1261,10 @@ function ed_task_node_insert($node)
       foreach ($recipients as $recipient) {
         $language = user_preferred_language($recipient);
         $params = array(
-          'fullname' => $creator_fullname,
-          'taskname' => $node->title,
-          'duedate' => format_date($node->ed_task_due_date[LANGUAGE_NONE][0]['value'], 'short', '', NULL, $language->language),
-          'taskurl' => url('node/' . $node->nid, array('absolute' => TRUE)),
+            'fullname' => $creator_fullname,
+            'taskname' => $node->title,
+            'duedate' => format_date($node->ed_task_due_date[LANGUAGE_NONE][0]['value'], 'short', '', NULL, $language->language),
+            'taskurl' => url('node/' . $node->nid, array('absolute' => TRUE)),
         );
         drupal_mail('ed_task', 'task_given', $recipient->mail, $language, $params, EDIDAKTIKUM_NO_REPLY_EMAIL, TRUE);
       }
@@ -1342,6 +1313,12 @@ function ed_task_can_user_answer_task(&$node, &$account)
   // To group case
   if (!empty($node->og_group_ref[LANGUAGE_NONE])) {
 
+
+    //Get user study group field
+    $user_wrapper = entity_metadata_wrapper('user', $account->uid);
+    $user_study_group = $user_wrapper->ed_field_study_group->value();
+
+
     $group_ids = array_map(function ($element) {
       return $element['target_id'];
     }, $node->og_group_ref[LANGUAGE_NONE]);
@@ -1352,6 +1329,27 @@ function ed_task_can_user_answer_task(&$node, &$account)
 
     foreach ($group_ids as $gid) {
       if (og_is_member('node', $gid, 'user', $account)) {
+
+        //Get group study groups
+        if ($node->ed_task_field_study_group[LANGUAGE_NONE]) {
+          $task_study_groups = array_map(function ($element) {
+            return $element['value'];
+          }, $node->ed_task_field_study_group[LANGUAGE_NONE]);
+        }
+
+        if (!empty($task_study_groups)) {
+          if (isset($user_study_group)) {
+            if (in_array($user_study_group, $task_study_groups)) {
+              return TRUE;
+            }
+            return FALSE;
+          }
+
+          return FALSE;
+
+        }
+
+
         return TRUE;
       }
     }
