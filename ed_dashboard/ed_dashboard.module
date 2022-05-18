@@ -307,7 +307,7 @@ function ed_dashboard_get_student_dashboard()
 /**
  * Checks if user can answer a task
  * @param $task // comes from _ed_get_group_tasks_for_month_year
- * @param $account
+ * @param $account // current user id
  * @return bool
  * @throws EntityMetadataWrapperException
  *
@@ -320,25 +320,26 @@ function ed_is_task_applicable_for_dashboard($task, $account)
 
 
   if (count($task['ed_task_field_study_group_value']) > 0) {
-    $applicable = false;
 
     if (isset($user_study_group)) {
       if ($user_study_group == $task['ed_task_field_study_group_value']) {
         $applicable = true;
+      } else {
+        $applicable = false;
       }
+    } else {
+      $applicable = false;
     }
 
   }
 
-  if (count($task['ed_field_to_group_member_target_id']) > 0) {
-    foreach ($task['ed_field_to_group_member_target_id'] as $tid) {
-      if ($tid == $account) {
-        $applicable = true;
-        break;
-      } else {
-        $applicable = false;
-      }
+  if (!empty($task['ed_field_to_group_member_target_id'])) {
+    if ($task['ed_field_to_group_member_target_id'] == $account) {
+      $applicable = true;
+    } else {
+      $applicable = false;
     }
+
   }
 
   return $applicable;
