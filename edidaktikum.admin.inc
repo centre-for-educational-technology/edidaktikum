@@ -7,14 +7,29 @@
 
 function edidaktikum_home_page_admin_form() {
   $form = array();
-  
-  $form['ed_home_page_intro_notification_message'] = array(
+
+  $form['ed_home_page_intro_notification_message'] = [
+    '#type' => 'fieldset',
+    '#title' => 'Front page message',
+    '#collapsible' => FALSE,
+    '#collapsed' => FALSE,
+  ];
+
+  $form['ed_home_page_intro_notification_message']['ed_home_page_intro_notification_message'] = [
     '#type' => 'textarea',
     '#title' => t('Message to be displayed on front page'),
     '#description' => t('If this is empty there will be no messages displayed on front page'),
     '#default_value' => variable_get('ed_home_page_intro_notification_message', ''),
     '#required' => FALSE,
-  );
+  ];
+
+  $form['ed_home_page_intro_notification_message']['ed_show_home_page_intro_notification_message'] = [
+    '#type' => 'checkbox',
+    '#title' => t('Show notification message on the front page'),
+    '#description' => t('If this is checked and message text is not empty, then notification will be displayed.'),
+    '#default_value' => variable_get('ed_show_home_page_intro_notification_message', FALSE),
+    '#required' => FALSE,
+  ];
 
   $form['ed_home_page_what_text'] = array(
       '#type' => 'textarea',
