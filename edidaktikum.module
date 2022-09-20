@@ -52,7 +52,7 @@ function edidaktikum_init()
 
 function edidaktikum_page_build(&$page)
 {
-  if (variable_get('ed_home_page_intro_notification_message') && drupal_is_front_page()) {
+  if (variable_get('ed_home_page_intro_notification_message') && variable_get('ed_show_home_page_intro_notification_message', FALSE) && drupal_is_front_page()) {
     $page['page_top']['ed_notice'] = array(
         '#type' => 'markup',
         '#markup' => '<div class="ed-front-page-notice-container"><div class="ed-front-page-notice">' . variable_get('ed_home_page_intro_notification_message') . '</div></div>'
