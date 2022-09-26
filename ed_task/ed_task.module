@@ -54,7 +54,6 @@ function ed_task_menu()
   //This view is for teachers
   $items['node/%node/task-results'] = array(
       'title' => 'Answers and feedback',
-      'title arguments' => ['Answers and feedback', 1, 'ed_task'],
       'page callback' => 'ed_task_results',
       'access callback' => 'ed_task_results_access',
       'page arguments' => array('node', 1),
@@ -65,7 +64,6 @@ function ed_task_menu()
   //This view is for students
   $items['node/%node/task-feedback'] = array(
       'title' => 'Feedback',
-      'title arguments' => ['Feedback', 1, 'ed_task'],
       'page callback' => 'ed_task_feedback',
       'access callback' => 'ed_task_feedback_access',
       'page arguments' => array('node', 1),
