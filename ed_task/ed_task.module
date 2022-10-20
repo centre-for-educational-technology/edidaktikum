@@ -1329,7 +1329,7 @@ function ed_task_can_user_answer_task(&$node, &$account)
       if (og_is_member('node', $gid, 'user', $account)) {
 
         //Get group study groups
-        if ($node->ed_task_field_study_group[LANGUAGE_NONE]) {
+        if ($node->ed_task_field_study_group && $node->ed_task_field_study_group[LANGUAGE_NONE]) {
           $task_study_groups = array_map(function ($element) {
             return $element['value'];
           }, $node->ed_task_field_study_group[LANGUAGE_NONE]);
