@@ -762,7 +762,7 @@ function edidaktikum_username_alter(&$name, $account)
   }
 
   // UPD 2022-10-04: Added for #895 and #921
-  if(strpos($_GET['q'], 'user/register') !== 0) {
+  if (strpos($_GET['q'], 'user/register') !== 0) {
     $account2 = user_load($account->uid);
     if (!empty($account2->ed_field_full_name['und'][0]['safe_value'])) {
       $name = $account2->ed_field_full_name['und'][0]['safe_value'];
@@ -770,6 +770,21 @@ function edidaktikum_username_alter(&$name, $account)
   }
 
 
+}
+
+function edidaktikum_preprocess_field(&$variables)
+{
+  $field_name = $variables['element']['#field_name'];
+  if ($field_name === 'ed_answer_field_time_spent') {
+
+    $minutes = $variables['element']['#items'][0]['mins'];
+
+    //convert minutes to hours and minutes
+    $hours = floor($minutes / 60);
+    $minutes = $minutes % 60;
+
+    $variables['items'][0]['#markup'] = $hours . 't ' . $minutes . 'm';
+  }
 }
 
 /**
