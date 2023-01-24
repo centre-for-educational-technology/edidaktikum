@@ -18,7 +18,10 @@ define('EDIDAKTIKUM_NO_REPLY_EMAIL', 'no-reply@edidaktikum.ee');
 function edidaktikum_init()
 {
   //Used by ed_g_drive Google Drive files integration
-  drupal_add_js('https://apis.google.com/js/api.js?onload=loadPicker', array('type' => 'external', 'defer' => 'defer'));
+  drupal_add_js('https://apis.google.com/js/api.js', array('type' => 'external', 'defer' => 'defer', 'async' => 'async'));
+  drupal_add_js('https://accounts.google.com/gsi/client', array('type' => 'external', 'defer' => 'defer', 'async' => 'async'));
+
+
 
   $uservoice_api_key = variable_get('ed_uservoice_api_key');
   if (!empty($uservoice_api_key)) {
