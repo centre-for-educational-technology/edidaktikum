@@ -218,7 +218,7 @@ function ed_g_drive_field_widget_form(&$form, &$form_state, $field, $instance, $
 
 		$element['button'] = array(
 				'#type' => 'button',
-				'#value' => t('Add'),
+				'#value' => '<img src="'.base_path().drupal_get_path('module', 'ed_g_drive').'/img/google-drive-icon.png" alt="Google Drive">'. t('Add file from Google Drive'),
 				'#attributes' => array(
 						'onclick' => "return false",
 						'class' => array('ed_g_drive_file_btn'),
@@ -227,7 +227,6 @@ function ed_g_drive_field_widget_form(&$form, &$form_state, $field, $instance, $
 				'#prefix' => '<div class="ed_g_drive_file_btn_wrapper">',
 				'#suffix' => '</div>',
 				'#attached' => array(
-					// Add javascript to trigger the colorpicker.
 						'js' => array(drupal_get_path('module', 'ed_g_drive') . '/js/ed_g_drive.js'),
 				),
 
