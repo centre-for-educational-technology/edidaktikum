@@ -137,7 +137,7 @@
       $("input[name='ed_g_drive_file[und][" + orderItem + "][mime]']").val(data.docs[0].iconUrl);
 
 
-      $("input[name='ed_g_drive_file[und][" + orderItem + "][url]']").parents().eq(2).find('.ed_g_drive_file_btn_wrapper').html('<div class="ed_g_drive_file_btn_wrapper"><input onclick="return false" class="ed_g_drive_file_btn_delete btn form-submit" order="' + orderItem + '" type="submit" id="edit-ed-g-drive-file-und-0-delete" name="op" value="Kustuta">' + ' <a href="' + data.docs[0].url + '">' + data.docs[0].name + '</a> <img src="' + data.docs[0].iconUrl + '"></div>');
+      $("input[name='ed_g_drive_file[und][" + orderItem + "][url]']").parents().eq(2).find('.ed_g_drive_file_btn_wrapper').html('<div class="ed_g_drive_file_btn_wrapper"><button onclick="return false" class="ed_g_drive_file_btn_delete btn btn-danger form-submit icon-before" order="' + orderItem + '" type="submit" id="edit-ed-g-drive-file-und-0-delete" name="op"><span class="icon glyphicon glyphicon-trash" aria-hidden="true"></span> Kustuta</button>' + ' <a href="' + data.docs[0].url + '">' + data.docs[0].name + '</a> <img src="' + data.docs[0].iconUrl + '"></div>');
 
       //$("input[name='ed_g_drive_file[und]["+orderItem+"][url]']").closest('td').append('<a href="'+data.docs[0].url+'">'+data.docs[0].name+' <img src="'+data.docs[0].iconUrl+'"></a>');
     }
