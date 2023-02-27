@@ -172,10 +172,10 @@ function ed_g_drive_field_widget_form(&$form, &$form_state, $field, $instance, $
 
 		$element['button'] = array(
 				'#type' => 'button',
-				'#value' => t('Kustuta'),
+				'#value' => '<span class="icon glyphicon glyphicon-trash" aria-hidden="true"></span>'.' '.t('Kustuta'),
 				'#attributes' => array(
 						'onclick' => "return false",
-						'class' => array('ed_g_drive_file_btn_delete'),
+						'class' => array('ed_g_drive_file_btn_delete', 'btn-danger'),
 						'order' => $element['#delta']
 				),
 				'#prefix' => '<div class="ed_g_drive_file_btn_wrapper">',
@@ -221,7 +221,7 @@ function ed_g_drive_field_widget_form(&$form, &$form_state, $field, $instance, $
 				'#value' => '<img src="'.base_path().drupal_get_path('module', 'ed_g_drive').'/img/google-drive-icon.png" alt="Google Drive">'. t('Add file from Google Drive'),
 				'#attributes' => array(
 						'onclick' => "return false",
-						'class' => array('ed_g_drive_file_btn'),
+						'class' => array('ed_g_drive_file_btn', 'btn-default'),
 						'order' => $element['#delta']
 				),
 				'#prefix' => '<div class="ed_g_drive_file_btn_wrapper">',
@@ -250,10 +250,10 @@ function ed_g_drive_field_widget_form(&$form, &$form_state, $field, $instance, $
 
 		$element['button'] = array(
 				'#type' => 'button',
-				'#value' => t('Kustuta'),
+				'#value' => '<span class="icon glyphicon glyphicon-trash" aria-hidden="true"></span>'.' '.t('Kustuta'),
 				'#attributes' => array(
 						'onclick' => "return false",
-						'class' => array('ed_g_drive_file_btn_delete'),
+						'class' => array('ed_g_drive_file_btn_delete', 'btn-danger'),
 						'order' => $element['#delta']
 				),
 				'#prefix' => '<div class="ed_g_drive_file_btn_wrapper">',
