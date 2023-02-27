@@ -19,7 +19,7 @@
 
     //thisObj.closest('.ed_g_drive_file_btn_wrapper').html('<div class="ed_g_drive_file_btn_wrapper"><input onclick="return false" class="ed_g_drive_file_btn btn form-submit" order="'+thisOrder+'" type="submit" id="edit-ed-g-drive-file-und-0-delete" name="op" value="Lisa"></div>');
 
-    thisObj.closest('.ed_g_drive_file_btn_wrapper').html('<div class="ed_g_drive_file_btn_wrapper"><button class="ed_g_drive_file_btn btn btn-success form-submit" order="' + thisOrder + '" type="submit" id="edit-ed-g-drive-file-und-0-delete" name="op"><span class="icon glyphicon glyphicon-plus" aria-hidden="true"></span> Lisa</div>');
+    thisObj.closest('.ed_g_drive_file_btn_wrapper').html('<div class="ed_g_drive_file_btn_wrapper"><button class="ed_g_drive_file_btn btn btn-default form-submit" order="' + thisOrder + '" type="submit" id="edit-ed-g-drive-file-und-0-delete" name="op"><span class="icon glyphicon glyphicon-plus" aria-hidden="true"></span> Lisa</div>');
 
     return false;
   }
