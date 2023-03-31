@@ -82,6 +82,11 @@ function ed_competency_profile_page($node)
 
   $content = array();
 
+  //set title to User full name + portfolio title
+  $user = user_load($node->uid);
+  $title = $user->ed_field_full_name[LANGUAGE_NONE][0]['value'] . ' - ' . $node->title;
+  drupal_set_title($title);
+
   drupal_add_js(drupal_get_path('module', 'ed_portfolio') . '/js/progressbar.min.js', 'file');
 
 
