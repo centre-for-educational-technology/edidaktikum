@@ -1816,3 +1816,22 @@ function ed_get_curriculums_for_tlu()
 {
   return _ed_cluster_universities_with_curriculums_structure()[19]['curriculums'];
 }
+
+
+/**
+ * Remove ed_portfolio from search results
+ * @param QueryAlterableInterface $query
+ * @return void
+ */
+function edidaktikum_query_alter(QueryAlterableInterface $query) {
+  if (!$query->hasTag('custom_search_ignore') && $query->hasTag('node_access') && $query->hasTag('pager')) {
+
+      $tables = $query->getTables();
+      foreach ($tables as $table) {
+        if ($table['table'] == 'search_index') {
+          $query->condition('n.type', ['ed_portfolio'], 'NOT IN');
+        }
+      }
+
+  }
+}
