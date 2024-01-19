@@ -11,27 +11,27 @@
 function ed_portfolio_menu()
 {
   $items['dashboard/portfolio'] = array(
-      'title' => 'Portfolio',
-      'page callback' => 'ed_portfolio_listing_page',
-      'access callback' => 'user_is_logged_in',
-      'weight' => 5,
-      'menu_name' => 'ed-dashboard-menu',
-      'type' => MENU_NORMAL_ITEM,
+    'title' => 'Portfolio',
+    'page callback' => 'ed_portfolio_listing_page',
+    'access callback' => 'user_is_logged_in',
+    'weight' => 5,
+    'menu_name' => 'ed-dashboard-menu',
+    'type' => MENU_NORMAL_ITEM,
   );
   $items['portfolio/%'] = array(
-      'page callback' => 'ed_portfolio_page',
-      'page arguments' => array(1),
-      'access callback' => TRUE,
+    'page callback' => 'ed_portfolio_page',
+    'page arguments' => array(1),
+    'access callback' => TRUE,
   );
 
   $items['node/%node/competencies'] = array(
-      'title' => 'My competency profile',
-      'weight' => 2,
-      'type' => MENU_LOCAL_TASK,
-      'page arguments' => array(1),
-      'page callback' => 'ed_competency_profile_page',
-      'access callback' => 'ed_portfolio_competency_profile_access',
-      'access arguments' => array(1),
+    'title' => 'My competency profile',
+    'weight' => 2,
+    'type' => MENU_LOCAL_TASK,
+    'page arguments' => array(1),
+    'page callback' => 'ed_competency_profile_page',
+    'access callback' => 'ed_portfolio_competency_profile_access',
+    'access arguments' => array(1),
   );
   return $items;
 }
@@ -71,9 +71,13 @@ function ed_portfolio_competency_profile_access($node)
 {
   if ($node->type != 'ed_portfolio') {
     return false;
-  } else {
-    return true;
   }
+
+//if anonymous user deny
+  if (user_is_anonymous()) {
+    return false;
+  }
+  return true;
 }
 
 
@@ -145,15 +149,15 @@ function ed_competency_profile_page($node)
 
             // parent term
             $content['competency'][$key]['name'] = array(
-                '#type' => 'item',
-                '#markup' => $term->name,
-                '#prefix' => '<h3>',
-                '#suffix' => '</h3>',
+              '#type' => 'item',
+              '#markup' => $term->name,
+              '#prefix' => '<h3>',
+              '#suffix' => '</h3>',
             );
 
             $content['competency'][$key]['progress'] = array(
-                '#type' => 'item',
-                '#markup' => '<div id="progress-' . $key . '" class="progress"></div>',
+              '#type' => 'item',
+              '#markup' => '<div id="progress-' . $key . '" class="progress"></div>',
             );
 
           }
@@ -174,15 +178,15 @@ function ed_competency_profile_page($node)
           if (empty($node[0]->title)) {
             //This is answer node with no title in db
             $rows[$nid] = array(
-                'title' => l(ed_get_answer_title(node_load($nid)), 'node/' . $nid),
-                'subsection' => $subterms_names_string,
-                'date' => format_date($node[0]->changed, 'short'),
+              'title' => l(ed_get_answer_title(node_load($nid)), 'node/' . $nid),
+              'subsection' => $subterms_names_string,
+              'date' => format_date($node[0]->changed, 'short'),
             );
           } else {
             $rows[$nid] = array(
-                'title' => l($node[0]->title, 'node/' . $nid),
-                'subsection' => $subterms_names_string,
-                'date' => format_date($node[0]->changed, 'short'),
+              'title' => l($node[0]->title, 'node/' . $nid),
+              'subsection' => $subterms_names_string,
+              'date' => format_date($node[0]->changed, 'short'),
             );
           }
 
@@ -190,16 +194,16 @@ function ed_competency_profile_page($node)
         }
 
         $header = array(
-            'title' => t('Title'),
-            'subsection' => t('Competency subsection'),
-            'date' => t('Date'),
+          'title' => t('Title'),
+          'subsection' => t('Competency subsection'),
+          'date' => t('Date'),
         );
 
 
         $content['competency'][$key]['table'] = [
-            '#theme' => 'table',
-            '#rows' => $rows,
-            '#header' => $header
+          '#theme' => 'table',
+          '#rows' => $rows,
+          '#header' => $header
         ];
 
 
@@ -212,9 +216,9 @@ function ed_competency_profile_page($node)
           //Load term competency
           $term_competency = taxonomy_term_load($answer_key);
           $content['competency'][$key]['desc'][$answer_key] = array(
-              '#type' => 'markup',
-              '#prefix' => '<p style="font-size: large; font-weight: bold;">' . $term_competency->ed_competence_question_field[LANGUAGE_NONE][0]['value'] . '</p>',
-              '#markup' => check_markup($value['value'], $value['format'])
+            '#type' => 'markup',
+            '#prefix' => '<p style="font-size: large; font-weight: bold;">' . $term_competency->ed_competence_question_field[LANGUAGE_NONE][0]['value'] . '</p>',
+            '#markup' => check_markup($value['value'], $value['format'])
           );
         }
       }
@@ -242,15 +246,15 @@ function ed_portfolio_listing_page()
   $content = array();
 
   $content['add-new-container'] = array(
-      '#type' => 'container',
-      '#attributes' => array(
-          'class' => array('ed-add-new-node', 'ed-add-new-ed-portfolio'),
-      ),
+    '#type' => 'container',
+    '#attributes' => array(
+      'class' => array('ed-add-new-node', 'ed-add-new-ed-portfolio'),
+    ),
   );
   $content['add-new-container']['add-new-portfolio'] = array(
-      '#type' => 'link',
-      '#title' => t('Add new portfolio'),
-      '#href' => 'node/add/ed-portfolio',
+    '#type' => 'link',
+    '#title' => t('Add new portfolio'),
+    '#href' => 'node/add/ed-portfolio',
   );
 
   $table_type = 'pager-table';
@@ -266,17 +270,17 @@ function ed_portfolio_listing_page()
       $status = t('error');
     }
     $rows[] = array(
-        'data' => array(
-            'status' => $status,
-            'title' => l($node->title, 'node/' . $node->nid),
-            'created' => format_date($node->created, 'custom', 'd/m/Y'),
-        ),
+      'data' => array(
+        'status' => $status,
+        'title' => l($node->title, 'node/' . $node->nid),
+        'created' => format_date($node->created, 'custom', 'd/m/Y'),
+      ),
     );
   }
   $content[$table_type] = array(
-      '#theme' => 'table',
-      '#rows' => $rows,
-      '#header' => array(t('Status'), t('Title'), t('Date')),
+    '#theme' => 'table',
+    '#rows' => $rows,
+    '#header' => array(t('Status'), t('Title'), t('Date')),
   );
   $content['pager'] = array('#theme' => 'pager');
 
@@ -294,12 +298,12 @@ function ed_portfolio_get_user_portfolios()
 {
   global $user;
   $query = db_select('node', 'n')
-      ->fields('n', array('nid'))
-      ->condition('n.type', 'ed_portfolio')
-      ->condition('n.uid', $user->uid)
-      ->addTag('node_access')
-      ->range()
-      ->orderBy('n.created', 'DESC');
+    ->fields('n', array('nid'))
+    ->condition('n.type', 'ed_portfolio')
+    ->condition('n.uid', $user->uid)
+    ->addTag('node_access')
+    ->range()
+    ->orderBy('n.created', 'DESC');
   $nids = $query->execute()->fetchCol();
   return $nids;
 }
@@ -317,12 +321,12 @@ function ed_portfolio_page($portfolio_id)
 function ed_portfolio_theme($existing, $type, $theme, $path)
 {
   return array(
-      'ed_portfolio_page' => array(
-          'variables' => array('node_view' => '', 'site_name' => variable_get('site_name', 'Drupal'), 'front_page' => variable_get('site_frontpage')),
-          'template' => 'ed_portfolio_page',
-          'path' => drupal_get_path('module', 'ed_portfolio'),
-          'render element' => 'element',
-      ),
+    'ed_portfolio_page' => array(
+      'variables' => array('node_view' => '', 'site_name' => variable_get('site_name', 'Drupal'), 'front_page' => variable_get('site_frontpage')),
+      'template' => 'ed_portfolio_page',
+      'path' => drupal_get_path('module', 'ed_portfolio'),
+      'render element' => 'element',
+    ),
   );
 }
 
@@ -344,8 +348,8 @@ function ed_portfolio_ctools_plugin_api()
 function ed_portfolio_views_api()
 {
   return array(
-      'api' => 3,
-      'path' => drupal_get_path('module', 'ed_portfolio') . '/includes/views',
+    'api' => 3,
+    'path' => drupal_get_path('module', 'ed_portfolio') . '/includes/views',
   );
 }
 
@@ -378,34 +382,34 @@ function ed_portfolio_form_alter(&$form, &$form_state, $form_id)
 
     if (!empty($form['#node']->nid)) {
       $form['add_more'] = array(
-          '#type' => 'button',
-          '#value' => t('Save and continue'),
-          '#weight' => $form['ed_q_portfolio_field_level']['#weight'] + 1,
-          '#attributes' => array('class' => array('ed-add-new-node')),
-          '#disabled' => true,
+        '#type' => 'button',
+        '#value' => t('Save and continue'),
+        '#weight' => $form['ed_q_portfolio_field_level']['#weight'] + 1,
+        '#attributes' => array('class' => array('ed-add-new-node')),
+        '#disabled' => true,
       );
       $form['ed_q_portfolio_field_level']['#disabled'] = true;
     } else {
       $form['add_more'] = array(
-          '#type' => 'button',
-          '#value' => t('Save and continue'),
-          '#weight' => $form['ed_q_portfolio_field_level']['#weight'] + 1,
-          '#attributes' => array('class' => array('ed-add-new-node')),
-          '#ajax' => array(
-              'callback' => 'ed_portfolio_get_competencies_ajax_callback',
-              'wrapper' => 'names-fieldset-wrapper',
-              'method' => 'replace',
-          ),
+        '#type' => 'button',
+        '#value' => t('Save and continue'),
+        '#weight' => $form['ed_q_portfolio_field_level']['#weight'] + 1,
+        '#attributes' => array('class' => array('ed-add-new-node')),
+        '#ajax' => array(
+          'callback' => 'ed_portfolio_get_competencies_ajax_callback',
+          'wrapper' => 'names-fieldset-wrapper',
+          'method' => 'replace',
+        ),
       );
     }
 
 
     $form['competency'] = array(
-        '#type' => 'fieldset',
-        '#title' => t('My competencies'),
-        '#weight' => $form['ed_q_portfolio_field_level']['#weight'] + 2,
-        '#tree' => true,
-        '#attributes' => array('id' => 'names-fieldset-wrapper'),
+      '#type' => 'fieldset',
+      '#title' => t('My competencies'),
+      '#weight' => $form['ed_q_portfolio_field_level']['#weight'] + 2,
+      '#tree' => true,
+      '#attributes' => array('id' => 'names-fieldset-wrapper'),
     );
 
 
@@ -437,23 +441,23 @@ function ed_portfolio_form_alter(&$form, &$form_state, $form_id)
         $form['competency'][$key]['#suffix'] = '</div>';
         // parent term
         $form['competency'][$key]['name'] = array(
-            '#type' => 'item',
-            '#markup' => $term->name,
-            '#prefix' => '<h3>',
-            '#suffix' => '</h3>',
+          '#type' => 'item',
+          '#markup' => $term->name,
+          '#prefix' => '<h3>',
+          '#suffix' => '</h3>',
         );
 
         $form['competency'][$key]['progress'] = array(
-            '#type' => 'item',
-            '#markup' => '<div id="progress-' . $key . '" class="progress"></div>',
+          '#type' => 'item',
+          '#markup' => '<div id="progress-' . $key . '" class="progress"></div>',
         );
 
         //Progress made
         $js_settings[$key] = $complete_level;
 
         $form['competency'][$key]['tid'] = array(
-            '#type' => 'hidden',
-            '#value' => $term->tid,
+          '#type' => 'hidden',
+          '#value' => $term->tid,
         );
 
 
@@ -493,31 +497,31 @@ function ed_portfolio_form_alter(&$form, &$form_state, $form_id)
             if (empty($node[0]->title)) {
               //This is answer node with no title in db
               $rows[$nid] = array(
-                  'title' => l(ed_get_answer_title(node_load($nid)), 'node/' . $nid),
-                  'date' => format_date($node[0]->changed, 'short'),
+                'title' => l(ed_get_answer_title(node_load($nid)), 'node/' . $nid),
+                'date' => format_date($node[0]->changed, 'short'),
               );
             } else {
               $rows[$nid] = array(
-                  'title' => l($node[0]->title, 'node/' . $nid),
-                  'date' => format_date($node[0]->changed, 'short'),
+                'title' => l($node[0]->title, 'node/' . $nid),
+                'date' => format_date($node[0]->changed, 'short'),
               );
             }
           }
 
           $header = array(
-              'title' => t('Title'),
-              'date' => t('Date'),
+            'title' => t('Title'),
+            'date' => t('Date'),
           );
 
 
           $form['competency'][$key]['table'] = array(
-              '#type' => 'tableselect',
-              '#options' => $rows,
-              '#header' => $header,
-              '#js_select' => FALSE,
-              '#empty' => t('No content found'),
-              '#default_value' => $shown_options,
-              '#prefix' => '<div class="alert alert-info">' . t('Check the content to show on your portfolio') . '</div>',
+            '#type' => 'tableselect',
+            '#options' => $rows,
+            '#header' => $header,
+            '#js_select' => FALSE,
+            '#empty' => t('No content found'),
+            '#default_value' => $shown_options,
+            '#prefix' => '<div class="alert alert-info">' . t('Check the content to show on your portfolio') . '</div>',
           );
 
         }
@@ -530,11 +534,11 @@ function ed_portfolio_form_alter(&$form, &$form_state, $form_id)
         foreach ($questions as $question) {
           if (!empty($question['question'])) {
             $form['competency'][$key]['questions_tids'][$question['tid']]['question'] = array(
-                '#type' => 'text_format',
-                '#required' => false,
-                '#title' => $question['question'],
-                '#default_value' => $answer_array[$question['tid']]['value'],
-                '#wysiwyg' => false,
+              '#type' => 'text_format',
+              '#required' => false,
+              '#title' => $question['question'],
+              '#default_value' => $answer_array[$question['tid']]['value'],
+              '#wysiwyg' => false,
             );
           }
         }
@@ -615,10 +619,10 @@ function ed_portfolio_submit_function(&$form, &$form_state)
 
 
     $form_state['values']['ed_portfolio_competence_desc'][LANGUAGE_NONE][] = array(
-        'tid' => $value['tid'],
-        'desc' => !empty($value['desc']) ? $value['desc'] : '',
-        'cid' => drupal_json_encode($content_items_to_show),
-        'answers' => drupal_json_encode($questions_answers),
+      'tid' => $value['tid'],
+      'desc' => !empty($value['desc']) ? $value['desc'] : '',
+      'cid' => drupal_json_encode($content_items_to_show),
+      'answers' => drupal_json_encode($questions_answers),
     );
 
   }
@@ -645,9 +649,9 @@ function _ed_portfolio_get_content_for_parent_competency($uid, $parent_competenc
   $query = db_select('node', 'n');
   $query->join('field_data_ed_field_competence', 'com', 'n.nid = com.entity_id');
   $query->fields('n', array('nid'))
-      ->condition('n.status', 1)
-      ->condition('n.uid', $uid)
-      ->condition('com.ed_field_competence_tid', $child_terms, 'IN');
+    ->condition('n.status', 1)
+    ->condition('n.uid', $uid)
+    ->condition('com.ed_field_competence_tid', $child_terms, 'IN');
   $db_or = db_or();
   $db_or->condition('n.type', 'ed_blog');
   $db_or->condition('n.type', 'ed_file');
@@ -660,9 +664,9 @@ function _ed_portfolio_get_content_for_parent_competency($uid, $parent_competenc
   //For answers
   $query_answers = db_select('node', 'n');
   $query_answers->fields('n', array('nid'))
-      ->condition('n.type', 'ed_answer')
-      ->condition('n.status', 1)
-      ->condition('n.uid', $uid);
+    ->condition('n.type', 'ed_answer')
+    ->condition('n.status', 1)
+    ->condition('n.uid', $uid);
   $query_answers->join('field_data_field_ref_to_task', 'ref', 'ref.entity_id = n.nid');
   $query_answers->join('node', 'n2', 'n2.nid = ref.field_ref_to_task_target_id');
   $query_answers->join('field_data_ed_field_competence', 'com', 'n2.nid = com.entity_id');
@@ -697,9 +701,9 @@ function _ed_portfolio_get_complete_level_for_competency($uid, $parent_competenc
   $query_complete = db_select('field_data_ed_field_competence', 'com');
   $query_complete->join('node', 'n', 'n.nid = com.entity_id');
   $query_complete->fields('com', array('ed_field_competence_tid'))
-      ->condition('n.status', 1)
-      ->condition('n.uid', $uid)
-      ->condition('com.ed_field_competence_tid', $child_terms, 'IN');
+    ->condition('n.status', 1)
+    ->condition('n.uid', $uid)
+    ->condition('com.ed_field_competence_tid', $child_terms, 'IN');
   $db_or = db_or();
   $db_or->condition('n.type', 'ed_blog');
   $db_or->condition('n.type', 'ed_file');
@@ -718,9 +722,9 @@ function _ed_portfolio_get_complete_level_for_competency($uid, $parent_competenc
   $query_answers->join('field_data_ed_answer_last_status', 's', 's.entity_id = n.nid');
   $query_answers->condition('s.ed_answer_last_status_status', 'accepted', 'LIKE');
   $query_answers->fields('com', array('ed_field_competence_tid'))
-      ->condition('n.type', 'ed_answer')
-      ->condition('n.status', 1)
-      ->condition('n.uid', $uid);
+    ->condition('n.type', 'ed_answer')
+    ->condition('n.status', 1)
+    ->condition('n.uid', $uid);
 
 
   $nids_answers = $query_answers->execute()->fetchCol();
@@ -751,14 +755,14 @@ function _ed_portfolio_get_complete_level_for_competency($uid, $parent_competenc
 function ed_portfolio_field_info()
 {
   return array(
-      'ed_portfolio_competence_desc' => array(
-          'label' => t('Competence description'),
-          'description' => t('This field stores competence description'),
-          'default_widget' => 'ed_portfolio_competence_desc_widget',
-          'default_formatter' => 'ed_portfolio_competence_desc_default',
-          'property_type' => 'ed_portfolio_competence_desc', // we add the propert type here
-          'property_callbacks' => array('ed_portfolio_competence_desc_property_info_callback'), // we add the callback
-      ),
+    'ed_portfolio_competence_desc' => array(
+      'label' => t('Competence description'),
+      'description' => t('This field stores competence description'),
+      'default_widget' => 'ed_portfolio_competence_desc_widget',
+      'default_formatter' => 'ed_portfolio_competence_desc_default',
+      'property_type' => 'ed_portfolio_competence_desc', // we add the propert type here
+      'property_callbacks' => array('ed_portfolio_competence_desc_property_info_callback'), // we add the callback
+    ),
   );
 }
 
@@ -771,14 +775,14 @@ function ed_portfolio_competence_desc_property_info_callback(&$info, $entity_typ
   unset($property['query callback']);
 
   $property['property info']['tid'] = array(
-      'type' => 'integer',
-      'label' => t('tid'),
-      'setter callback' => 'entity_property_verbatim_set',
+    'type' => 'integer',
+    'label' => t('tid'),
+    'setter callback' => 'entity_property_verbatim_set',
   );
   $property['property info']['desc'] = array(
-      'type' => 'text',
-      'label' => t('desc'),
-      'setter callback' => 'entity_property_verbatim_set',
+    'type' => 'text',
+    'label' => t('desc'),
+    'setter callback' => 'entity_property_verbatim_set',
   );
 }
 
@@ -788,10 +792,10 @@ function ed_portfolio_competence_desc_property_info_callback(&$info, $entity_typ
 function ed_portfolio_field_widget_info()
 {
   return array(
-      'ed_portfolio_competence_desc_widget' => array(
-          'label' => t('Default'),
-          'field types' => array('ed_portfolio_competence_desc'),
-      ),
+    'ed_portfolio_competence_desc_widget' => array(
+      'label' => t('Default'),
+      'field types' => array('ed_portfolio_competence_desc'),
+    ),
   );
 }
 
@@ -802,18 +806,18 @@ function ed_portfolio_field_widget_form(&$form, &$form_state, $field, $instance,
 {
 
   $element['tid'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Taxonomy id'),
-      '#required' => $element['#required'],
-      '#size' => 7,
-      '#attributes' => array('maxlength' => 7),
+    '#type' => 'textfield',
+    '#title' => t('Taxonomy id'),
+    '#required' => $element['#required'],
+    '#size' => 7,
+    '#attributes' => array('maxlength' => 7),
   );
   $element['desc'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Competence desc'),
-      '#required' => $element['#required'],
-      '#size' => 2000,
-      '#attributes' => array('maxlength' => 2000),
+    '#type' => 'textfield',
+    '#title' => t('Competence desc'),
+    '#required' => $element['#required'],
+    '#size' => 2000,
+    '#attributes' => array('maxlength' => 2000),
   );
 
   return $element;
@@ -837,8 +841,8 @@ function ed_portfolio_field_validate($entity_type, $entity, $field, $instance, $
     if (isset($item['desc']) && $item['desc'] != '') {
       if (strlen($item['desc']) > 2000) {
         $errors[$field['field_name']][$langcode][$delta][] = array(
-            'error' => 'ed_portfolio_invalid_full',
-            'message' => t('%title: Competence description cannot be empty', array('%title' => $instance['label'])),
+          'error' => 'ed_portfolio_invalid_full',
+          'message' => t('%title: Competence description cannot be empty', array('%title' => $instance['label'])),
         );
       }
     }
@@ -852,10 +856,10 @@ function ed_portfolio_field_validate($entity_type, $entity, $field, $instance, $
 function ed_portfolio_field_formatter_info()
 {
   return array(
-      'ed_portfolio_competence_desc_default' => array(
-          'label' => t('Default'),
-          'field types' => array('ed_portfolio_competence_desc'),
-      ),
+    'ed_portfolio_competence_desc_default' => array(
+      'label' => t('Default'),
+      'field types' => array('ed_portfolio_competence_desc'),
+    ),
   );
 }
 
@@ -877,6 +881,16 @@ function ed_portfolio_field_formatter_view($entity_type, $entity, $field, $insta
   return $element;
 }
 
+/**
+ * Implements hook_node_access().
+ */
+function ed_portfolio_node_access($node, $op, $account)
+{
+  // Check if the node type is 'ed_portfolio' and the user is anonymous
+  if ($node->type == 'ed_portfolio' && user_is_anonymous()) {
+    return NODE_ACCESS_DENY;
+  }
 
-
-
+  // Return NODE_ACCESS_IGNORE to not affect other access checks.
+  return NODE_ACCESS_IGNORE;
+}
