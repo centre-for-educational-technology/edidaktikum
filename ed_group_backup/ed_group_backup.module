@@ -1,0 +1,214 @@
+<?php
+
+/**
+ * Implements hook_menu().
+ */
+function ed_group_backup_menu()
+{
+  $items['admin/config/edidaktikum/group-backup/export'] = array(
+    'title' => 'Export Group Nodes',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('ed_group_backup_export_form'),
+    'access arguments' => array('administer site configuration'),
+  );
+
+  $items['admin/config/edidaktikum/group-backup/import'] = array(
+    'title' => 'Import Group Nodes',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('ed_group_backup_import_form'),
+    'access arguments' => array('administer site configuration'),
+  );
+
+  return $items;
+}
+
+/**
+ * Form for exporting group nodes.
+ */
+function ed_group_backup_export_form($form, &$form_state)
+{
+  $form['node_ids'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Node IDs'),
+    '#description' => t('Enter the IDs of group nodes you want to export, separated by commas.'),
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Export Group Nodes'),
+  );
+
+  return $form;
+}
+
+
+/**
+ * Form submit handler for exporting group nodes.
+ */
+function ed_group_backup_export_form_submit($form, &$form_state)
+{
+  // Define the batch operations
+  $operations = array(
+    array('ed_group_backup_export_nodes', array($form_state['values']['node_ids'])),
+    array('ed_group_backup_complete_progress', array()),
+  );
+
+  // Start the batch
+  $batch = array(
+    'title' => t('Exporting Group Nodes'),
+    'operations' => $operations,
+    'finished' => 'ed_group_backup_export_finished',
+  );
+  batch_set($batch);
+}
+
+/**
+ * Batch operation for completing the progress bar.
+ */
+function ed_group_backup_complete_progress(&$context)
+{
+  $context['finished'] = 1;
+}
+
+/**
+ * Batch operation for exporting group nodes.
+ */
+function ed_group_backup_export_nodes($node_ids, &$context)
+{
+  // Convert the node IDs from a comma-separated string to an array
+  $node_ids = array_map('trim', explode(',', $node_ids));
+
+  // Load the specified nodes
+  $nodes = entity_load('node', $node_ids);
+
+  // Process each node
+  foreach ($nodes as $node) {
+    $wrapper = entity_metadata_wrapper('node', $node);
+    $data = (array)$wrapper->value();
+
+    // Get the group members
+    $group_members = og_get_group_members_properties($node, array(), 'members__1', 'node');
+    $data['group_members'] = $group_members;
+
+    // Add the node data to the batch context
+    $context['results'][] = $data;
+  }
+}
+
+/**
+ * Finished callback for exporting group nodes.
+ */
+function ed_group_backup_export_finished($success, $results, $operations)
+{
+  if ($success) {
+    // Write the node data to a JSON file
+    $data = json_encode($results);
+    file_unmanaged_save_data($data, 'public://group_nodes.json', FILE_EXISTS_REPLACE);
+
+    // Transfer the file
+    file_transfer('public://group_nodes.json', array('Content-Disposition' => 'attachment; filename="group_nodes.json"'));
+  }
+
+}
+
+/**
+ * Form for importing group nodes.
+ */
+function ed_group_backup_import_form($form, &$form_state)
+{
+  $form['json_file'] = array(
+    '#type' => 'managed_file',
+    '#title' => t('Upload JSON file'),
+    '#upload_location' => 'public://json_files/',
+    '#upload_validators' => array(
+      'file_validate_extensions' => array('json'),
+    ),
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Import Group Nodes'),
+  );
+
+  return $form;
+}
+
+/**
+ * Form submit handler for importing group nodes.
+ */
+function ed_group_backup_import_form_submit($form, &$form_state)
+{
+  // Load the uploaded file
+  $fid = $form_state['values']['json_file'];
+  $file = file_load($fid);
+
+  // Change the status to permanent
+  $file->status = FILE_STATUS_PERMANENT;
+  file_save($file);
+
+  // Define the batch operations
+  $operations = array(
+    array('ed_group_backup_import_nodes', array($file)),
+  );
+
+  // Start the batch
+  $batch = array(
+    'title' => t('Importing Group Nodes'),
+    'operations' => $operations,
+    'finished' => 'ed_group_backup_import_finished',
+  );
+  batch_set($batch);
+}
+
+/**
+ * Batch operation for importing group nodes.
+ */
+function ed_group_backup_import_nodes($file, &$context)
+{
+  // Load the node data from the JSON file
+  $data = file_get_contents($file->uri);
+  $nodes = json_decode($data, TRUE);
+
+  // Process each node
+  foreach ($nodes as $node_data) {
+    // Create a new node with the same data
+    $node = entity_create('node', array('type' => 'ed_cluster'));
+    $wrapper = entity_metadata_wrapper('node', $node);
+
+    // Set the field values
+    foreach ($node_data as $field => $value) {
+      if ($field == 'group_members') {
+        // Load the user entities for the group members
+        $user_entities = user_load_multiple($value);
+      } elseif ($field == 'uid') { // Set the 'author' property instead of 'uid'
+        $wrapper->author->set($value);
+      } elseif ($field == 'group_group') { // Set the 'group_group' property with a boolean value
+        $wrapper->{$field}->set((bool)$value);
+      } elseif ($field == 'ed_field_excerpt') { // Set the 'ed_field_excerpt' property with a string value
+        $wrapper->{$field}->set($value['und'][0]['value']);
+      } elseif ($field == 'group_access') { // Set the 'group_access' property with an integer value
+        $wrapper->{$field}->set((int)$value['und'][0]['value']);
+      } elseif ($field == 'ed_field_featured_image') { // Set the 'ed_field_featured_image' property with a file entity
+        $file = file_load($value['und'][0]['fid']);
+        $wrapper->{$field}->set($file);
+      } elseif ($field != 'vid' && $field != 'nid' && $field != 'changed' && $field != 'tnid' && $field != 'translate' && $field != 'revision_timestamp' && $field != 'revision_uid') {
+        $wrapper->{$field}->set($value);
+      }
+    }
+
+    // Save the node
+    $wrapper->save();
+  }
+}
+
+/**
+ * Finished callback for importing group nodes.
+ */
+function ed_group_backup_import_finished($success, $results, $operations)
+{
+  if ($success) {
+    drupal_set_message(t('Group nodes imported successfully.'));
+  } else {
+    drupal_set_message(t('An error occurred while importing group nodes.'), 'error');
+  }
+}

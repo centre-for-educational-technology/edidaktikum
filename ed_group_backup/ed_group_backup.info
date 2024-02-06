@@ -1,0 +1,10 @@
+name = eDidaktikum Group Backup
+description = A module for exporting and importing group nodes.
+core = 7.x
+package = eDidaktikum
+dependencies[] = node
+files[] = ed_group_backup.module
+dependencies[] = og
+dependencies[] = og_access
+dependencies[] = og_ui
+dependencies[] = edidaktikum

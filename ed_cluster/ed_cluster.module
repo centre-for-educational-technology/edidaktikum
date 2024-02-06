@@ -3027,6 +3027,16 @@ function ed_cluster_page_alter(&$page)
 function ed_cluster_node_access($node, $op, $account)
 {
   if (in_array('supervisor', $account->roles) && $op == 'view') return NODE_ACCESS_ALLOW;
+
+  // Group owners are disallowed to delete own ed_cluster type groups, unless system content deletion permission is
+  // given. This overrides og module "og_group_manager_full_access" value based full permissions given to owner in
+  // og_user_access function.
+  if ($op === 'delete' && $node->type === 'ed_cluster' && $account->uid === $node->uid
+    && !user_access('delete own ed_cluster content', $account)) {
+    return NODE_ACCESS_DENY;
+  }
+
+  return NODE_ACCESS_IGNORE;
 }
 
 
