@@ -184,9 +184,15 @@ function ed_group_backup_import_nodes($file, &$context)
         case 'uid':
           $wrapper->author->set($value);
           break;
+        case 'ed_field_content':
+          $wrapper->{$field}->set([
+            'value' => $value['und'][0]['value'],
+            'format' => 'filtered_html',
+          ]);
+          break;
         case 'group_group':
         case 'ed_field_group_state':
-          $wrapper->{$field}->set((bool)$value);
+          $wrapper->{$field}->set((bool)$value['und'][0]['value']);
           break;
         case 'group_access':
         case 'ed_field_group_type':
@@ -198,7 +204,7 @@ function ed_group_backup_import_nodes($file, &$context)
           $wrapper->{$field}->set($value['und'][0]['value']);
           break;
         case 'ed_field_study_year':
-          $wrapper->{$field}->set(date('Y', strtotime($value)));
+          $wrapper->{$field}->set(strtotime($value['und'][0]['value']) + 7200); // NB! Database timezone is UTC and the system uses Europe/Tallinn, this requires adding to hours to get the correct year
           break;
         case 'ed_field_curriculum':
         case 'ed_field_university':
