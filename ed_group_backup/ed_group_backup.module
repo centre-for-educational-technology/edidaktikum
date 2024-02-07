@@ -177,43 +177,35 @@ function ed_group_backup_import_nodes($file, &$context)
 
     // Set the field values
     foreach ($node_data as $field => $value) {
-      if ($field == 'group_members') {
-        // Load the user entities for the group members
-        $user_entities = user_load_multiple($value);
-      } elseif ($field == 'uid') {
-        $wrapper->author->set($value);
-      } elseif ($field == 'group_group') {
-        $wrapper->{$field}->set((bool)$value);
-      } elseif ($field == 'ed_field_excerpt') {
-        $wrapper->{$field}->set($value['und'][0]['value']);
-      } elseif ($field == 'group_access') {
-        $wrapper->{$field}->set((int)$value['und'][0]['value']);
-      } elseif ($field == 'ed_field_group_state') {
-        $wrapper->{$field}->set((bool)$value['und'][0]['value']);
-      } elseif ($field == 'ed_field_group_type') {
-        $wrapper->{$field}->set((int)$value['und'][0]['value']);
-      } elseif ($field == 'ed_field_course_code') {
-        $wrapper->{$field}->set($value['und'][0]['value']);
-      } elseif ($field == 'ed_field_course_aim') {
-        $wrapper->{$field}->set($value['und'][0]['value']);
-      } elseif ($field == 'ed_field_study_year') {
-        $wrapper->{$field}->set(date('Y', strtotime($value)));
-
-      } elseif ($field == 'group_members') {
-        // Save the node first before adding members
-        $wrapper->save();
-
-        // Load the user entities for the group members and add them to the group
-        foreach ($value as $uid) {
-          $account = user_load($uid);
-          if ($account) {
-            og_group('node', $node->nid, array('entity' => $account));
+      switch ($field) {
+        case 'group_members':
+          $user_entities = user_load_multiple($value);
+          $wrapper->save();
+          foreach ($value as $uid) {
+            $account = user_load($uid);
+            if ($account) {
+              og_group('node', $node->nid, array('entity' => $account));
+            }
           }
-        }
-
-      } elseif
-      ($field != 'vid' && $field != 'nid' && $field != 'changed' && $field != 'tnid' && $field != 'translate' && $field != 'revision_timestamp' && $field != 'revision_uid' && $field != 'ed_field_featured_image' && $field != 'rdf_mapping' && $field != 'path' && $field != 'cid' && $field != 'last_comment_timestamp' && $field != 'last_comment_name' && $field != 'last_comment_uid' && $field != 'comment_count' && $field != 'name' && $field != 'picture' && $field != 'data') {
-        $wrapper->{$field}->set($value);
+          break;
+        case 'uid':
+        case 'group_group':
+        case 'ed_field_excerpt':
+        case 'group_access':
+        case 'ed_field_group_state':
+        case 'ed_field_group_type':
+        case 'ed_field_course_code':
+        case 'ed_field_course_aim':
+          $wrapper->{$field}->set($value);
+          break;
+        case 'ed_field_study_year':
+          $wrapper->{$field}->set(date('Y', strtotime($value)));
+          break;
+        default:
+          if (!in_array($field, ['vid', 'nid', 'changed', 'tnid', 'translate', 'revision_timestamp', 'revision_uid', 'ed_field_featured_image', 'rdf_mapping', 'path', 'cid', 'last_comment_timestamp', 'last_comment_name', 'last_comment_uid', 'comment_count', 'name', 'picture', 'data'])) {
+            $wrapper->{$field}->set($value);
+          }
+          break;
       }
     }
 
