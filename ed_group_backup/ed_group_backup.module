@@ -175,18 +175,15 @@ function ed_group_backup_import_nodes($file, &$context)
     $node = entity_create('node', array('type' => 'ed_cluster'));
     $wrapper = entity_metadata_wrapper('node', $node);
 
+    // Store group members separately
+    $group_members = [];
+
     // Set the field values
     foreach ($node_data as $field => $value) {
       switch ($field) {
         case 'group_members':
-          $user_entities = user_load_multiple($value);
-          $wrapper->save();
-          foreach ($value as $uid) {
-            $account = user_load($uid);
-            if ($account) {
-              og_group('node', $node->nid, array('entity' => $account));
-            }
-          }
+          // Store group members to add later
+          $group_members = $value;
           break;
         case 'uid':
         case 'group_group':
@@ -199,7 +196,7 @@ function ed_group_backup_import_nodes($file, &$context)
           $wrapper->{$field}->set($value);
           break;
         case 'ed_field_study_year':
-          $wrapper->{$field}->set(date('Y', strtotime($value)));
+          $wrapper->{$field}->set((int)substr($value['und'][0]['value'], 0, 4));
           break;
         default:
           if (!in_array($field, ['vid', 'nid', 'changed', 'tnid', 'translate', 'revision_timestamp', 'revision_uid', 'ed_field_featured_image', 'rdf_mapping', 'path', 'cid', 'last_comment_timestamp', 'last_comment_name', 'last_comment_uid', 'comment_count', 'name', 'picture', 'data'])) {
@@ -211,6 +208,14 @@ function ed_group_backup_import_nodes($file, &$context)
 
     // Save the node
     $wrapper->save();
+
+    // Now add the group members
+    foreach ($group_members as $uid) {
+      $account = user_load($uid);
+      if ($account) {
+        og_group('node', $node->nid, array('entity' => $account));
+      }
+    }
   }
 }
 
