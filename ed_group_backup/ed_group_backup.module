@@ -175,6 +175,8 @@ function ed_group_backup_import_nodes($file, &$context)
     $node = entity_create('node', array('type' => 'ed_cluster'));
     $wrapper = entity_metadata_wrapper('node', $node);
 
+    //TODO Files, tasks?
+
     // Set the field values
     foreach ($node_data as $field => $value) {
       switch ($field) {
@@ -239,6 +241,9 @@ function ed_group_backup_import_nodes($file, &$context)
 
     // Save the node
     $wrapper->save();
+
+    // Add the node ID to the results
+    $context['results'][] = $node->nid;
   }
 }
 
@@ -248,7 +253,18 @@ function ed_group_backup_import_nodes($file, &$context)
 function ed_group_backup_import_finished($success, $results, $operations)
 {
   if ($success) {
-    drupal_set_message(t('Group nodes imported successfully.'));
+    // Load the nodes
+    $nodes = node_load_multiple($results);
+
+    // Get the node titles with links
+    $node_links = array_map(function ($node) {
+      $url = url('node/' . $node->nid);
+      return '<a href="' . $url . '">' . $node->title . '</a>';
+    }, $nodes);
+
+    // Display the node titles with links
+    $message = 'Group nodes imported successfully. Created nodes: ' . implode(', ', $node_links);
+    drupal_set_message($message);
   } else {
     drupal_set_message(t('An error occurred while importing group nodes.'), 'error');
   }
