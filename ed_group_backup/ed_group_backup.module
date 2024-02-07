@@ -175,28 +175,43 @@ function ed_group_backup_import_nodes($file, &$context)
     $node = entity_create('node', array('type' => 'ed_cluster'));
     $wrapper = entity_metadata_wrapper('node', $node);
 
-    // Store group members separately
-    $group_members = [];
-
     // Set the field values
     foreach ($node_data as $field => $value) {
       switch ($field) {
         case 'group_members':
-          // Store group members to add later
-          $group_members = $value;
+          $user_entities = user_load_multiple($value);
           break;
         case 'uid':
+          $wrapper->author->set($value);
+          break;
         case 'group_group':
-        case 'ed_field_excerpt':
-        case 'group_access':
         case 'ed_field_group_state':
+          $wrapper->{$field}->set((bool)$value);
+          break;
+        case 'group_access':
         case 'ed_field_group_type':
+          $wrapper->{$field}->set((int)$value['und'][0]['value']);
+          break;
+        case 'ed_field_excerpt':
         case 'ed_field_course_code':
         case 'ed_field_course_aim':
-          $wrapper->{$field}->set($value);
+          $wrapper->{$field}->set($value['und'][0]['value']);
           break;
         case 'ed_field_study_year':
-          $wrapper->{$field}->set((int)substr($value['und'][0]['value'], 0, 4));
+          $wrapper->{$field}->set(date('Y', strtotime($value)));
+          break;
+        case 'ed_field_curriculum':
+        case 'ed_field_university':
+          $processed_value = array_map(function ($single) {
+            return $single['value'];
+          }, $value['und']);
+          $wrapper->{$field}->set($processed_value);
+          break;
+        case 'ed_field_learning_outcome_ref':
+          $processed_value = array_map(function ($single) {
+            return $single['target_id'];
+          }, $value['und']);
+          $wrapper->{$field}->set($processed_value);
           break;
         default:
           if (!in_array($field, ['vid', 'nid', 'changed', 'tnid', 'translate', 'revision_timestamp', 'revision_uid', 'ed_field_featured_image', 'rdf_mapping', 'path', 'cid', 'last_comment_timestamp', 'last_comment_name', 'last_comment_uid', 'comment_count', 'name', 'picture', 'data'])) {
@@ -206,16 +221,18 @@ function ed_group_backup_import_nodes($file, &$context)
       }
     }
 
-    // Save the node
+// Save the node and add group members after all fields have been set
     $wrapper->save();
-
-    // Now add the group members
-    foreach ($group_members as $uid) {
-      $account = user_load($uid);
-      if ($account) {
-        og_group('node', $node->nid, array('entity' => $account));
+    if (isset($user_entities)) {
+      foreach ($user_entities as $account) {
+        if ($account) {
+          og_group('node', $node->nid, array('entity' => $account));
+        }
       }
     }
+
+    // Save the node
+    $wrapper->save();
   }
 }
 
