@@ -90,6 +90,28 @@ function ed_group_backup_export_nodes($node_ids, &$context)
     $group_members = og_get_group_members_properties($node, array(), 'members__1', 'node');
     $data['group_members'] = $group_members;
 
+    // Query for related ed_task nodes
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'node')
+      ->entityCondition('bundle', 'ed_task')
+      ->fieldCondition('og_group_ref', 'target_id', $node->nid);
+    $result = $query->execute();
+    if (isset($result['node'])) {
+      $task_ids = array_keys($result['node']);
+      $data['related_tasks'] = $task_ids;
+    }
+
+    // Query for related ed_file nodes
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'node')
+      ->entityCondition('bundle', 'ed_file')
+      ->fieldCondition('og_group_ref', 'target_id', $node->nid);
+    $result = $query->execute();
+    if (isset($result['node'])) {
+      $file_ids = array_keys($result['node']);
+      $data['related_files'] = $file_ids;
+    }
+
     // Add the node data to the batch context
     $context['results'][] = $data;
   }
@@ -175,8 +197,6 @@ function ed_group_backup_import_nodes($file, &$context)
     $node = entity_create('node', array('type' => 'ed_cluster'));
     $wrapper = entity_metadata_wrapper('node', $node);
 
-    //TODO Files, tasks?
-
     // Set the field values
     foreach ($node_data as $field => $value) {
       switch ($field) {
@@ -222,7 +242,7 @@ function ed_group_backup_import_nodes($file, &$context)
           $wrapper->{$field}->set($processed_value);
           break;
         default:
-          if (!in_array($field, ['vid', 'nid', 'changed', 'tnid', 'translate', 'revision_timestamp', 'revision_uid', 'ed_field_featured_image', 'rdf_mapping', 'path', 'cid', 'last_comment_timestamp', 'last_comment_name', 'last_comment_uid', 'comment_count', 'name', 'picture', 'data'])) {
+          if (!in_array($field, ['vid', 'nid', 'changed', 'tnid', 'translate', 'revision_timestamp', 'revision_uid', 'ed_field_featured_image', 'rdf_mapping', 'path', 'cid', 'last_comment_timestamp', 'last_comment_name', 'last_comment_uid', 'comment_count', 'name', 'picture', 'data', 'related_tasks', 'related_files'])) {
             $wrapper->{$field}->set($value);
           }
           break;
@@ -236,6 +256,26 @@ function ed_group_backup_import_nodes($file, &$context)
         if ($account) {
           og_group('node', $node->nid, array('entity' => $account));
         }
+      }
+    }
+
+// Load and add the related ed_task nodes
+    if (isset($node_data['related_tasks'])) {
+      $task_nodes = node_load_multiple($node_data['related_tasks']);
+      foreach ($task_nodes as $task_node) {
+        $task_wrapper = entity_metadata_wrapper('node', $task_node);
+        $task_wrapper->og_group_ref->set(array($node->nid));
+        $task_wrapper->save();
+      }
+    }
+
+// Load and add the related ed_file nodes
+    if (isset($node_data['related_files'])) {
+      $file_nodes = node_load_multiple($node_data['related_files']);
+      foreach ($file_nodes as $file_node) {
+        $file_wrapper = entity_metadata_wrapper('node', $file_node);
+        $file_wrapper->og_group_ref->set(array($node->nid));
+        $file_wrapper->save();
       }
     }
 
