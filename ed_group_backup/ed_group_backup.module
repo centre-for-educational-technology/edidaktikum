@@ -180,18 +180,39 @@ function ed_group_backup_import_nodes($file, &$context)
       if ($field == 'group_members') {
         // Load the user entities for the group members
         $user_entities = user_load_multiple($value);
-      } elseif ($field == 'uid') { // Set the 'author' property instead of 'uid'
+      } elseif ($field == 'uid') {
         $wrapper->author->set($value);
-      } elseif ($field == 'group_group') { // Set the 'group_group' property with a boolean value
+      } elseif ($field == 'group_group') {
         $wrapper->{$field}->set((bool)$value);
-      } elseif ($field == 'ed_field_excerpt') { // Set the 'ed_field_excerpt' property with a string value
+      } elseif ($field == 'ed_field_excerpt') {
         $wrapper->{$field}->set($value['und'][0]['value']);
-      } elseif ($field == 'group_access') { // Set the 'group_access' property with an integer value
+      } elseif ($field == 'group_access') {
         $wrapper->{$field}->set((int)$value['und'][0]['value']);
-      } elseif ($field == 'ed_field_featured_image') { // Set the 'ed_field_featured_image' property with a file entity
-        $file = file_load($value['und'][0]['fid']);
-        $wrapper->{$field}->set($file);
-      } elseif ($field != 'vid' && $field != 'nid' && $field != 'changed' && $field != 'tnid' && $field != 'translate' && $field != 'revision_timestamp' && $field != 'revision_uid') {
+      } elseif ($field == 'ed_field_group_state') {
+        $wrapper->{$field}->set((bool)$value['und'][0]['value']);
+      } elseif ($field == 'ed_field_group_type') {
+        $wrapper->{$field}->set((int)$value['und'][0]['value']);
+      } elseif ($field == 'ed_field_course_code') {
+        $wrapper->{$field}->set($value['und'][0]['value']);
+      } elseif ($field == 'ed_field_course_aim') {
+        $wrapper->{$field}->set($value['und'][0]['value']);
+      } elseif ($field == 'ed_field_study_year') {
+        $wrapper->{$field}->set(date('Y', strtotime($value)));
+
+      } elseif ($field == 'group_members') {
+        // Save the node first before adding members
+        $wrapper->save();
+
+        // Load the user entities for the group members and add them to the group
+        foreach ($value as $uid) {
+          $account = user_load($uid);
+          if ($account) {
+            og_group('node', $node->nid, array('entity' => $account));
+          }
+        }
+
+      } elseif
+      ($field != 'vid' && $field != 'nid' && $field != 'changed' && $field != 'tnid' && $field != 'translate' && $field != 'revision_timestamp' && $field != 'revision_uid' && $field != 'ed_field_featured_image' && $field != 'rdf_mapping' && $field != 'path' && $field != 'cid' && $field != 'last_comment_timestamp' && $field != 'last_comment_name' && $field != 'last_comment_uid' && $field != 'comment_count' && $field != 'name' && $field != 'picture' && $field != 'data') {
         $wrapper->{$field}->set($value);
       }
     }
