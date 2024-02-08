@@ -1,6 +1,6 @@
 <?php
 
-define('ED_NODE_TYPES', ['ed_file', 'ed_task', 'ed_learning_resource', 'ed_news', 'ed_blog', 'ed_bookmarks', 'ed_forum', 'ed_event', 'ed_page']);
+define('ED_NODE_TYPES', ['ed_answer', 'ed_file', 'ed_task', 'ed_learning_resource', 'ed_news', 'ed_blog', 'ed_bookmarks', 'ed_forum', 'ed_event', 'ed_page']);
 
 /**
  * Implements hook_menu().
@@ -235,7 +235,7 @@ function ed_group_backup_import_nodes($file, &$context)
           $wrapper->{$field}->set($processed_value);
           break;
         default:
-          if (!in_array($field, ['vid', 'nid', 'changed', 'tnid', 'translate', 'revision_timestamp', 'revision_uid', 'ed_field_featured_image', 'rdf_mapping', 'path', 'cid', 'last_comment_timestamp', 'last_comment_name', 'last_comment_uid', 'comment_count', 'name', 'picture', 'data', 'related_ed_task', 'related_ed_file', 'related_ed_learning_resource', 'related_ed_news', 'related_ed_blog', 'related_ed_bookmarks', 'related_ed_forum', 'related_ed_event', 'related_ed_page'])) {
+          if (!in_array($field, ['vid', 'nid', 'changed', 'tnid', 'translate', 'revision_timestamp', 'revision_uid', 'ed_field_featured_image', 'rdf_mapping', 'path', 'cid', 'last_comment_timestamp', 'last_comment_name', 'last_comment_uid', 'comment_count', 'name', 'picture', 'data', 'related_ed_task', 'related_ed_file', 'related_ed_learning_resource', 'related_ed_news', 'related_ed_blog', 'related_ed_bookmarks', 'related_ed_forum', 'related_ed_event', 'related_ed_page', 'related_ed_answer'])) {
             $wrapper->{$field}->set($value);
           }
           break;
