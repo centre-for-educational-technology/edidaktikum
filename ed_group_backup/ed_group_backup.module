@@ -118,10 +118,10 @@ function ed_group_backup_export_finished($success, $results, $operations)
   if ($success) {
     // Write the node data to a JSON file
     $data = json_encode($results, JSON_PRETTY_PRINT);
-    file_unmanaged_save_data($data, 'public://group_nodes.json', FILE_EXISTS_REPLACE);
+    file_unmanaged_save_data($data, 'temporary://group_nodes.json', FILE_EXISTS_REPLACE);
 
     // Transfer the file
-    file_transfer('public://group_nodes.json', array('Content-Disposition' => 'attachment; filename="group_nodes.json"'));
+    file_transfer('temporary://group_nodes.json', array('Content-Disposition' => 'attachment; filename="group_nodes.json"'));
   }
 
 }
@@ -134,7 +134,7 @@ function ed_group_backup_import_form($form, &$form_state)
   $form['json_file'] = array(
     '#type' => 'managed_file',
     '#title' => t('Upload JSON file'),
-    '#upload_location' => 'public://json_files/',
+    '#upload_location' => 'temporary://json_files/',
     '#upload_validators' => array(
       'file_validate_extensions' => array('json'),
     ),
