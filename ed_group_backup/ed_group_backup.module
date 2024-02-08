@@ -1,5 +1,7 @@
 <?php
 
+define('ED_NODE_TYPES', ['ed_file', 'ed_task', 'ed_learning_resource', 'ed_news', 'ed_blog', 'ed_bookmarks', 'ed_forum', 'ed_event', 'ed_page']);
+
 /**
  * Implements hook_menu().
  */
@@ -90,10 +92,7 @@ function ed_group_backup_export_nodes($node_ids, &$context)
     $group_members = og_get_group_members_properties($node, array(), 'members__1', 'node');
     $data['group_members'] = $group_members;
 
-    // Node types to be handled
-    $node_types = ['ed_file', 'ed_task', 'ed_learning_resource', 'ed_news', 'ed_blog', 'ed_bookmarks', 'ed_forum', 'ed_event', 'ed_page'];
-
-    foreach ($node_types as $node_type) {
+    foreach (ED_NODE_TYPES as $node_type) {
       // Query for related nodes of the current type
       $query = new EntityFieldQuery();
       $query->entityCondition('entity_type', 'node')
@@ -118,7 +117,7 @@ function ed_group_backup_export_finished($success, $results, $operations)
 {
   if ($success) {
     // Write the node data to a JSON file
-    $data = json_encode($results);
+    $data = json_encode($results, JSON_PRETTY_PRINT);
     file_unmanaged_save_data($data, 'public://group_nodes.json', FILE_EXISTS_REPLACE);
 
     // Transfer the file
@@ -253,11 +252,7 @@ function ed_group_backup_import_nodes($file, &$context)
       }
     }
 
-
-    // Node types to be handled
-    $node_types = ['ed_file', 'ed_task', 'ed_learning_resource', 'ed_news', 'ed_blog', 'ed_bookmarks', 'ed_forum', 'ed_event', 'ed_page'];
-
-    foreach ($node_types as $node_type) {
+    foreach (ED_NODE_TYPES as $node_type) {
       // Load and add the related nodes of the current type
       if (isset($node_data['related_' . $node_type])) {
         $related_nodes = node_load_multiple($node_data['related_' . $node_type]);
