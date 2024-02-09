@@ -1,5 +1,7 @@
 <?php
 
+define('ED_NODE_TYPES', ['ed_answer', 'ed_file', 'ed_task', 'ed_learning_resource', 'ed_news', 'ed_blog', 'ed_bookmarks', 'ed_forum', 'ed_event', 'ed_page']);
+
 /**
  * Implements hook_menu().
  */
@@ -90,6 +92,19 @@ function ed_group_backup_export_nodes($node_ids, &$context)
     $group_members = og_get_group_members_properties($node, array(), 'members__1', 'node');
     $data['group_members'] = $group_members;
 
+    foreach (ED_NODE_TYPES as $node_type) {
+      // Query for related nodes of the current type
+      $query = new EntityFieldQuery();
+      $query->entityCondition('entity_type', 'node')
+        ->entityCondition('bundle', $node_type)
+        ->fieldCondition('og_group_ref', 'target_id', $node->nid);
+      $result = $query->execute();
+      if (isset($result['node'])) {
+        $node_ids = array_keys($result['node']);
+        $data['related_' . $node_type] = $node_ids;
+      }
+    }
+
     // Add the node data to the batch context
     $context['results'][] = $data;
   }
@@ -102,11 +117,11 @@ function ed_group_backup_export_finished($success, $results, $operations)
 {
   if ($success) {
     // Write the node data to a JSON file
-    $data = json_encode($results);
-    file_unmanaged_save_data($data, 'public://group_nodes.json', FILE_EXISTS_REPLACE);
+    $data = json_encode($results, JSON_PRETTY_PRINT);
+    file_unmanaged_save_data($data, 'temporary://group_nodes.json', FILE_EXISTS_REPLACE);
 
     // Transfer the file
-    file_transfer('public://group_nodes.json', array('Content-Disposition' => 'attachment; filename="group_nodes.json"'));
+    file_transfer('temporary://group_nodes.json', array('Content-Disposition' => 'attachment; filename="group_nodes.json"'));
   }
 
 }
@@ -119,7 +134,7 @@ function ed_group_backup_import_form($form, &$form_state)
   $form['json_file'] = array(
     '#type' => 'managed_file',
     '#title' => t('Upload JSON file'),
-    '#upload_location' => 'public://json_files/',
+    '#upload_location' => 'temporary://json_files/',
     '#upload_validators' => array(
       'file_validate_extensions' => array('json'),
     ),
@@ -177,27 +192,83 @@ function ed_group_backup_import_nodes($file, &$context)
 
     // Set the field values
     foreach ($node_data as $field => $value) {
-      if ($field == 'group_members') {
-        // Load the user entities for the group members
-        $user_entities = user_load_multiple($value);
-      } elseif ($field == 'uid') { // Set the 'author' property instead of 'uid'
-        $wrapper->author->set($value);
-      } elseif ($field == 'group_group') { // Set the 'group_group' property with a boolean value
-        $wrapper->{$field}->set((bool)$value);
-      } elseif ($field == 'ed_field_excerpt') { // Set the 'ed_field_excerpt' property with a string value
-        $wrapper->{$field}->set($value['und'][0]['value']);
-      } elseif ($field == 'group_access') { // Set the 'group_access' property with an integer value
-        $wrapper->{$field}->set((int)$value['und'][0]['value']);
-      } elseif ($field == 'ed_field_featured_image') { // Set the 'ed_field_featured_image' property with a file entity
-        $file = file_load($value['und'][0]['fid']);
-        $wrapper->{$field}->set($file);
-      } elseif ($field != 'vid' && $field != 'nid' && $field != 'changed' && $field != 'tnid' && $field != 'translate' && $field != 'revision_timestamp' && $field != 'revision_uid') {
-        $wrapper->{$field}->set($value);
+      switch ($field) {
+        case 'group_members':
+          $user_entities = user_load_multiple($value);
+          break;
+        case 'uid':
+          $wrapper->author->set($value);
+          break;
+        case 'ed_field_content':
+          $wrapper->{$field}->set([
+            'value' => $value['und'][0]['value'],
+            'format' => 'filtered_html',
+          ]);
+          break;
+        case 'group_group':
+        case 'ed_field_group_state':
+          $wrapper->{$field}->set((bool)$value['und'][0]['value']);
+          break;
+        case 'group_access':
+        case 'ed_field_group_type':
+          $wrapper->{$field}->set((int)$value['und'][0]['value']);
+          break;
+        case 'ed_field_excerpt':
+        case 'ed_field_course_code':
+        case 'ed_field_course_aim':
+          $wrapper->{$field}->set($value['und'][0]['value']);
+          break;
+        case 'ed_field_study_year':
+          $wrapper->{$field}->set(strtotime($value['und'][0]['value']) + 7200); // NB! Database timezone is UTC and the system uses Europe/Tallinn, this requires adding to hours to get the correct year
+          break;
+        case 'ed_field_curriculum':
+        case 'ed_field_university':
+          $processed_value = array_map(function ($single) {
+            return $single['value'];
+          }, $value['und']);
+          $wrapper->{$field}->set($processed_value);
+          break;
+        case 'ed_field_learning_outcome_ref':
+          $processed_value = array_map(function ($single) {
+            return $single['target_id'];
+          }, $value['und']);
+          $wrapper->{$field}->set($processed_value);
+          break;
+        default:
+          if (!in_array($field, ['vid', 'nid', 'changed', 'tnid', 'translate', 'revision_timestamp', 'revision_uid', 'ed_field_featured_image', 'rdf_mapping', 'path', 'cid', 'last_comment_timestamp', 'last_comment_name', 'last_comment_uid', 'comment_count', 'name', 'picture', 'data', 'related_ed_task', 'related_ed_file', 'related_ed_learning_resource', 'related_ed_news', 'related_ed_blog', 'related_ed_bookmarks', 'related_ed_forum', 'related_ed_event', 'related_ed_page', 'related_ed_answer'])) {
+            $wrapper->{$field}->set($value);
+          }
+          break;
+      }
+    }
+
+// Save the node and add group members after all fields have been set
+    $wrapper->save();
+    if (isset($user_entities)) {
+      foreach ($user_entities as $account) {
+        if ($account) {
+          og_group('node', $node->nid, array('entity' => $account));
+        }
+      }
+    }
+
+    foreach (ED_NODE_TYPES as $node_type) {
+      // Load and add the related nodes of the current type
+      if (isset($node_data['related_' . $node_type])) {
+        $related_nodes = node_load_multiple($node_data['related_' . $node_type]);
+        foreach ($related_nodes as $related_node) {
+          $related_wrapper = entity_metadata_wrapper('node', $related_node);
+          $related_wrapper->og_group_ref->set(array($node->nid));
+          $related_wrapper->save();
+        }
       }
     }
 
     // Save the node
     $wrapper->save();
+
+    // Add the node ID to the results
+    $context['results'][] = $node->nid;
   }
 }
 
@@ -207,7 +278,18 @@ function ed_group_backup_import_nodes($file, &$context)
 function ed_group_backup_import_finished($success, $results, $operations)
 {
   if ($success) {
-    drupal_set_message(t('Group nodes imported successfully.'));
+    // Load the nodes
+    $nodes = node_load_multiple($results);
+
+    // Get the node titles with links
+    $node_links = array_map(function ($node) {
+      $url = url('node/' . $node->nid);
+      return '<a href="' . $url . '">' . $node->title . '</a>';
+    }, $nodes);
+
+    // Display the node titles with links
+    $message = 'Group nodes imported successfully. Created nodes: ' . implode(', ', $node_links);
+    drupal_set_message($message);
   } else {
     drupal_set_message(t('An error occurred while importing group nodes.'), 'error');
   }
