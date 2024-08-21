@@ -886,8 +886,10 @@ function ed_portfolio_field_formatter_view($entity_type, $entity, $field, $insta
  */
 function ed_portfolio_node_access($node, $op, $account)
 {
+  $type = is_string($node) ? $node : $node->type;
+
   // Check if the node type is 'ed_portfolio' and the user is anonymous
-  if ($node->type == 'ed_portfolio' && user_is_anonymous()) {
+  if ('ed_portfolio' == $type && user_is_anonymous()) {
     return NODE_ACCESS_DENY;
   }
 
