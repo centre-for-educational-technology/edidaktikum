@@ -704,13 +704,21 @@ function edidaktikum_user_view_alter(&$build)
         return $item['target_id'];
       }, $build['og_user_node']['#items']));
 
+      // Group items and link elements do not have the same order, thus we need an array of links that is keyed by group id
+      $group_links = array_filter($build['og_user_node'], function($item) {
+        return is_array($item) && isset($item['#gid']) && isset($item['#type']) && $item['#type'] == 'link';
+      });
+      $group_links = array_combine(array_map(function($item) {
+        return $item['#gid'];
+      }, $group_links), $group_links);
+
       foreach (array_values($items_nodes) as $index => $item_node) {
         if (isset($item_node->ed_field_group_state) && $item_node->ed_field_group_state[LANGUAGE_NONE][0]['value'] == 1) {
           $build['og_user_node_active']['#items'][] = $build['og_user_node']['#items'][$index];
-          $build['og_user_node_active'][sizeof($build['og_user_node_active']['#items']) - 1] = $build['og_user_node'][$index];
+          $build['og_user_node_active'][sizeof($build['og_user_node_active']['#items']) - 1] = $group_links[$item_node->nid];
         } else if (isset($item_node->ed_field_group_state) && $item_node->ed_field_group_state[LANGUAGE_NONE][0]['value'] == 0) {
           $build['og_user_node_inactive']['#items'][] = $build['og_user_node']['#items'][$index];
-          $build['og_user_node_inactive'][sizeof($build['og_user_node_inactive']['#items']) - 1] = $build['og_user_node'][$index];
+          $build['og_user_node_inactive'][sizeof($build['og_user_node_inactive']['#items']) - 1] = $group_links[$item_node->nid];
         }
       }
     }
