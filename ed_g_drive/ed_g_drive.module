@@ -10,7 +10,7 @@ function ed_g_drive_field_info() {
 					'description' => t('This field stores links to Google Drive linked files'),
 					'default_widget' => 'ed_g_drive_file_widget',
 					'default_formatter' => 'ed_g_drive_file_default',
-					'property_type' => 'ed_g_drive_file', // we add the propert type here
+					'property_type' => 'ed_g_drive_file', // we add the property type here
 					'property_callbacks' => array('ed_g_drive_file_property_info_callback'), // we add the callback
 			),
 	);
@@ -126,6 +126,13 @@ function ed_g_drive_field_widget_form(&$form, &$form_state, $field, $instance, $
 
 	//drupal_add_js(drupal_get_path('module', 'ed_g_drive') . '/js/ed_g_drive.js', 'file');
 
+  // Add an alert before the button that notifies the user about disabled functionality
+  if (empty($form['#node']->ed_g_drive_file[LANGUAGE_NONE][$element['#delta']]['url'])) {
+    $element['drive-disabled-alert'] = [
+      '#markup' => '<div class="alert alert-warning" role="alert">' . t('Attention! It is no longer possible to add Google Drive files directly in the interface. Please use links to share files.') . '</div>',
+    ];
+  }
+
 
 	//Some data
 	if(!empty($form['#node']->ed_g_drive_file[LANGUAGE_NONE][$element['#delta']]['url'])){
@@ -172,7 +179,7 @@ function ed_g_drive_field_widget_form(&$form, &$form_state, $field, $instance, $
 
 		$element['button'] = array(
 				'#type' => 'button',
-				'#value' => '<span class="icon glyphicon glyphicon-trash" aria-hidden="true"></span>'.' '.t('Kustuta'),
+				'#value' => t('Kustuta'),
 				'#attributes' => array(
 						'onclick' => "return false",
 						'class' => array('ed_g_drive_file_btn_delete', 'btn-danger'),
@@ -220,9 +227,10 @@ function ed_g_drive_field_widget_form(&$form, &$form_state, $field, $instance, $
 				'#type' => 'button',
 				'#value' => '<img src="'.base_path().drupal_get_path('module', 'ed_g_drive').'/img/google-drive-icon.png" alt="Google Drive">'. t('Add file from Google Drive'),
 				'#attributes' => array(
-						'onclick' => "return false",
-						'class' => array('ed_g_drive_file_btn', 'btn-default'),
-						'order' => $element['#delta']
+          'onclick' => "return false",
+          'class' => array('ed_g_drive_file_btn', 'btn-default'),
+          'order' => $element['#delta'],
+          'disabled' => TRUE,
 				),
 				'#prefix' => '<div class="ed_g_drive_file_btn_wrapper">',
 				'#suffix' => '</div>',
